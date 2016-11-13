@@ -142,15 +142,14 @@ public class TunerFragment extends Fragment {
 //		});
 //	}
 
-	private void start() {
-		//TODO: start audio
+//	private void start() {
 //		if (!pdService.isRunning()) {
 //			Intent intent = new Intent(mActivity,
 //					MainActivity.class);
 //			pdService.startAudio(intent, R.drawable.icon,
 //					"GuitarTuner", "Return to GuitarTuner.");
 //		}
-	}
+//	}
 
 //	private void loadPatch() throws IOException {
 //		File dir = mActivity.getFilesDir();
@@ -161,20 +160,21 @@ public class TunerFragment extends Fragment {
 //	}
 
 	private void initSystemServices() {
-		//TODO: handle phone call handoff
-//		TelephonyManager telephonyManager =
-//				(TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
-//		telephonyManager.listen(new PhoneStateListener() {
-//			@Override
-//			public void onCallStateChanged(int state, String incomingNumber) {
-//				if (pdService == null) return;
-//				if (state == TelephonyManager.CALL_STATE_IDLE) {
-//					start();
-//				} else {
-//					pdService.stopAudio();
-//				}
-//			}
-//		}, PhoneStateListener.LISTEN_CALL_STATE);
+		//TODO: needs testing with calls
+		TelephonyManager telephonyManager =
+				(TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
+		telephonyManager.listen(new PhoneStateListener() {
+			@Override
+			public void onCallStateChanged(int state, String incomingNumber) {
+				if (mActivity.audio == null) return;
+				if (state == TelephonyManager.CALL_STATE_IDLE) {
+					if (!mActivity.audio.isInitialized()) mActivity.audio.initialize(mActivity.fs, mActivity.bufferSizeInSeconds);
+					if (!mActivity.audio.isProcessing()) mActivity.audio.start();
+				} else {
+					mActivity.audio.stop();
+				}
+			}
+		}, PhoneStateListener.LISTEN_CALL_STATE);
 	}
 
 //	private void triggerNote(int n) {
