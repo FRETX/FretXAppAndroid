@@ -51,7 +51,7 @@
         android:textAlignment="center"
         />
 
-    <rocks.fretx.audioprocessingdemo.TunerView
+    <fretx.version4.TunerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tunerView"

@@ -12,11 +12,6 @@ import android.widget.TextView;
 import rocks.fretx.audioprocessing.AudioAnalyzer;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-/**
- * Sample code for "Making Musical Apps" by Peter Brinkmann
- * http://shop.oreilly.com/product/0636920022503.do
- */
-
 
 public class TunerView extends View {
 
@@ -74,7 +69,7 @@ public class TunerView extends View {
 
 		paint.setStrokeWidth(10.0f);
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(getResources().getColor(R.color.icons));
+		paint.setColor(getResources().getColor(R.color.black));
 		canvas.drawCircle(needleCenterX, needleCenterY, width * 0.05f, paint);
 //	    canvas.drawLine(halfWidth, 0, halfWidth, height, paint);
 
@@ -124,14 +119,14 @@ public class TunerView extends View {
 			//10 cents is the "just noticeable difference" for a lot of humans
 			if (Math.abs(difference) < 10) {
 				paint.setStrokeWidth(8.0f);
-				paint.setColor(getResources().getColor(R.color.primary));
+				paint.setColor(getResources().getColor(R.color.red_dark));
 				paint.setStyle(Paint.Style.FILL);
 				canvas.drawCircle(needleCenterX, needleCenterY, width * 0.04f, paint);
 				paint.setStyle(Paint.Style.STROKE);
 
 			} else {
 				paint.setStrokeWidth(8.0f);
-				paint.setColor(getResources().getColor(R.color.icons));
+				paint.setColor(getResources().getColor(R.color.black));
 			}
 
 			double angleOfIndicator = Double.NaN;

@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-
 //import org.puredata.android.io.AudioParameters;
 //import org.puredata.android.io.PdAudio;
 //import org.puredata.android.service.PdService;
@@ -58,7 +57,6 @@ public class TunerFragment extends Fragment {
 //		}
 //	};
 
-
 	private MainActivity mActivity;
 	RelativeLayout rootView = null;
 	TunerView tunerView = null;
@@ -67,6 +65,9 @@ public class TunerFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActivity = (MainActivity) getActivity();
+		mActivity.audio.enablePitchDetector();
+		mActivity.audio.disableNoteDetector();
+		mActivity.audio.disableChordDetector();
 		initSystemServices();
 	}
 
@@ -143,12 +144,12 @@ public class TunerFragment extends Fragment {
 
 	private void start() {
 		//TODO: start audio
-		if (!pdService.isRunning()) {
-			Intent intent = new Intent(mActivity,
-					MainActivity.class);
-			pdService.startAudio(intent, R.drawable.icon,
-					"GuitarTuner", "Return to GuitarTuner.");
-		}
+//		if (!pdService.isRunning()) {
+//			Intent intent = new Intent(mActivity,
+//					MainActivity.class);
+//			pdService.startAudio(intent, R.drawable.icon,
+//					"GuitarTuner", "Return to GuitarTuner.");
+//		}
 	}
 
 //	private void loadPatch() throws IOException {
@@ -161,26 +162,26 @@ public class TunerFragment extends Fragment {
 
 	private void initSystemServices() {
 		//TODO: handle phone call handoff
-		TelephonyManager telephonyManager =
-				(TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
-		telephonyManager.listen(new PhoneStateListener() {
-			@Override
-			public void onCallStateChanged(int state, String incomingNumber) {
-				if (pdService == null) return;
-				if (state == TelephonyManager.CALL_STATE_IDLE) {
-					start();
-				} else {
-					pdService.stopAudio();
-				}
-			}
-		}, PhoneStateListener.LISTEN_CALL_STATE);
+//		TelephonyManager telephonyManager =
+//				(TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
+//		telephonyManager.listen(new PhoneStateListener() {
+//			@Override
+//			public void onCallStateChanged(int state, String incomingNumber) {
+//				if (pdService == null) return;
+//				if (state == TelephonyManager.CALL_STATE_IDLE) {
+//					start();
+//				} else {
+//					pdService.stopAudio();
+//				}
+//			}
+//		}, PhoneStateListener.LISTEN_CALL_STATE);
 	}
 
-	private void triggerNote(int n) {
+//	private void triggerNote(int n) {
 //		PdBase.sendFloat("midinote", n);
 //		PdBase.sendBang("trigger");
 //		pitchView.setCenterPitch(n);
-	}
+//	}
 
 //	private View.OnClickListener tunerListener = new View.OnClickListener() {
 //		public void onClick(View v) {
