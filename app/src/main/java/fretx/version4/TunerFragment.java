@@ -72,6 +72,14 @@ public class TunerFragment extends Fragment {
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mActivity.audio.disablePitchDetector();
+		mActivity.audio.disableNoteDetector();
+		mActivity.audio.disableChordDetector();
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		Log.d("Tuner Fragment", "created");
