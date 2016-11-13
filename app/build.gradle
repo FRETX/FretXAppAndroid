@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId 'fretx.version4'
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 5
         versionName "5.0"
@@ -17,6 +17,8 @@ android {
             stl "gnustl_shared"
             abiFilter "armeabi-v7a"
         }
+        multiDexEnabled true
+
 
     }
     buildTypes {
