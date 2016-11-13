@@ -2,19 +2,25 @@ package fretx.version4;
 
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity
@@ -39,6 +45,9 @@ public class MainActivity extends ActionBarActivity
     private int mCurrentPosition = 0;
     private int mPreviousPosition = 0;
 
+
+    //This is arbitrary, so why not The Answer to Life, Universe, and Everything?
+    private final int PERMISSION_CODE_RECORD_AUDIO = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -234,6 +243,12 @@ public class MainActivity extends ActionBarActivity
     protected void onResume() {
         super.onResume();
         showConnectionState();
+
+	    boolean permissionsGranted = askForPermissions();
+
+	    if (permissionsGranted) {
+			//TODO: init audio thread
+	    }
     }
 
     @Override
@@ -280,4 +295,40 @@ public class MainActivity extends ActionBarActivity
             adapter.notifyDataSetChanged();
         }
     }*/
+
+
+    //Permissions
+    private boolean askForPermissions() {
+
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+//            Toast.makeText(MainActivity.this,"You already have the permission",Toast.LENGTH_LONG).show();
+            return true;
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+                //If the user has denied the permission previously your code will come to this block
+                //Here you can explain why you need this permission
+                //Explain here why you need this permission
+            }
+            //And finally ask for the permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_CODE_RECORD_AUDIO);
+            return false;
+        }
+    }
+
+    //This method will be called when the user will tap on allow or deny
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //Checking the request code of our request
+        if (requestCode == PERMISSION_CODE_RECORD_AUDIO) {
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Displaying a toast
+//                Toast.makeText(this,"Permission granted now you can record audio",Toast.LENGTH_LONG).show();
+            } else {
+                //Displaying another toast if permission is not granted
+                Toast.makeText(this, "FretX Tuner cannot work without this permission. Restart the app to ask for it again.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }
