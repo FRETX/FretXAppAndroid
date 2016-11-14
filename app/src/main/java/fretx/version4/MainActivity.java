@@ -271,13 +271,8 @@ public class MainActivity extends ActionBarActivity
 		    for (int i = 0; i < minorRoots.length; i++) {
 			    targetChords.add(new Chord(minorRoots[i], "m"));
 		    }
-//			targetChords.add(new Chord("A","sus2"));
-//			targetChords.add(new Chord("A", "m7"));
 
 		    if (!audio.isInitialized()) audio.initialize(fs, bufferSizeInSeconds);
-
-//			audio.setTargetChords(targetChords);
-
 		    if (!audio.isProcessing()) audio.start();
 		    Log.d("onResume", "starting audio processing");
 	    }

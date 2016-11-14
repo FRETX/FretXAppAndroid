@@ -1,13 +1,9 @@
 package fretx.version4;
 
-import android.content.ComponentName;
+
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -19,15 +15,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-//import org.puredata.android.io.AudioParameters;
-//import org.puredata.android.io.PdAudio;
-//import org.puredata.android.service.PdService;
-//import org.puredata.android.utils.PdUiDispatcher;
-//import org.puredata.core.PdBase;
-//import org.puredata.core.PdListener;
-//import org.puredata.core.utils.IoUtils;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -37,24 +24,14 @@ import static rocks.fretx.audioprocessing.MusicUtils.hzToMidiNote;
 
 
 public class LearnFragmentNotesEx extends Fragment{
-	public static final String TAG = "AndroidTuner";
-//	private PdUiDispatcher dispatcher;
-//	private MediaPlayer mediaPlayer;
-
-/*	private final boolean LAUNCHANALYZER = true;
-
-	private int nFlag = 0;*/
-
 	private Thread guiThread;
 	protected final double correctNoteThreshold = 0.5; //in semitones
-
 
 	Timer timer;
 	MyTimerTask myTimerTask;
 	int nCounter = 0;
 
 	private ArrayList<Button> buttons = new ArrayList<Button>();
-
 
 	private TextView tvTimeLapse;
 	//int oldString = 1;
@@ -64,27 +41,6 @@ public class LearnFragmentNotesEx extends Fragment{
 	//int notes[] = new int[]{41, 47, 51, 57, 60, 66};
 	ArrayList<NoteItem> notes = new ArrayList<NoteItem>();
 	String labels[];
-
-//	private PdService pdService = null;
-
-//	private final ServiceConnection pdConnection = new ServiceConnection() {
-//		@Override
-//		public void onServiceConnected(ComponentName name, IBinder service) {
-//			pdService = ((PdService.PdBinder)service).getService();
-//			try {
-//				initPd();
-//				loadPatch();
-//			} catch (IOException e) {
-//				Log.e(TAG, e.toString());
-//				mActivity.finish();
-//			}
-//		}
-//
-//		@Override
-//		public void onServiceDisconnected(ComponentName name) {
-//			// this method will never be called
-//		}
-//	};
 
 	private MainActivity mActivity;
 	private View rootView;
@@ -152,91 +108,6 @@ public class LearnFragmentNotesEx extends Fragment{
 		timer.schedule(myTimerTask, 1000, 1000);
 	}
 
-//	private void  initPd() throws IOException {
-//		// Configure the audio glue
-//		AudioParameters.init(mActivity);
-//		int sampleRate = AudioParameters.suggestSampleRate();
-//		PdAudio.initAudio(sampleRate, 1, 2, 8, true);
-//		//pdService.initAudio(sampleRate, 1, 2, 5000f);
-//
-//		ConnectThread connectThread = new ConnectThread(Util.str2array("{" + (6-newPitch) + ",0}"));
-//		connectThread.run();
-//
-//		start();
-//
-//		// Create and install the dispatcher
-//		dispatcher = new PdUiDispatcher();
-//		PdBase.setReceiver(dispatcher);
-//		dispatcher.addListener("pitch", new PdListener.Adapter() {
-//			@Override
-//			public void receiveFloat(String source, final float x) {
-//				float dx = (x - notes.get(newPitch).noteMidi) / 2;
-//				if (-0.2 < dx && dx < 0.2) {
-//					buttons.get(newPitch % 6).setBackgroundColor(Color.BLUE);
-//					if(newPitch == notes.size() - 1){
-//						completedCount++;
-//					}
-//					if(newPitch < notes.size() - 1) {
-//						newPitch++;
-//					}else{
-//						newPitch = 0;//rand.nextInt(notes.length);
-//					}
-//					buttons.get(newPitch % 6).setBackgroundColor(Color.GREEN);
-//					if(newPitch % 6 == 0){
-//						for(int j = newPitch; j < newPitch + 6; j++){
-//							if(j < labels.length) {
-//								buttons.get(j % 6).setText(labels[j]);
-//							}else{
-//								buttons.get(j % 6).setText("");
-//							}
-//						}
-//					}
-//					successPlayer();
-//					ConnectThread connectThread = new ConnectThread(Util.str2array(notes.get(newPitch).ledArray));
-//					connectThread.run();
-//				}
-//				/*if(completedCount == 2){
-//					timer.cancel();
-//					try {
-//						int highestScore = Util.updateUserHistory(mActivity, getArguments().getInt("exId"), nCounter);
-//						android.support.v4.app.FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-//						LearnFragmentNotesExResult yesnoDialog = LearnFragmentNotesExResult.newInstance(getArguments().getInt("exId"),
-//								getArguments().getString("title"),
-//								getArguments().getInt("nextExId"),
-//								Util.score(nCounter), highestScore);
-//						yesnoDialog.setCancelable(true);
-//						yesnoDialog.setDialogTitle("Congrats");
-//						yesnoDialog.show(fragmentManager, "Yes/No Dialog");
-//						mActivity.unbindService(pdConnection);
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-//				}*/
-//			}
-//		});
-//	}
-
-//	public void successPlayer(){
-//		mediaPlayer.start();
-//	}
-
-//	private void start() {
-//		if (!pdService.isRunning()) {
-//			Intent intent = new Intent(mActivity,
-//					MainActivity.class);
-//			pdService.startAudio(intent, R.drawable.icon,
-//					"GuitarTuner", "Return to GuitarTuner.");
-//		}
-//	}
-
-//	private void loadPatch() throws IOException {
-//		File dir = mActivity.getFilesDir();
-//		IoUtils.extractZipResource(
-//				getResources().openRawResource(R.raw.tuner), dir, true);
-//		File patchFile = new File(dir, "tuner.pd");
-//		PdBase.openPatch(patchFile.getAbsolutePath());
-//	}
-
 	private void initSystemServices() {
 		//TODO: needs testing with calls
 		TelephonyManager telephonyManager =
@@ -260,9 +131,7 @@ public class LearnFragmentNotesEx extends Fragment{
 
 		@Override
 		public void run() {
-
 			nCounter ++;
-
 			mActivity.runOnUiThread(new Runnable() {
 
 				@Override
@@ -273,7 +142,6 @@ public class LearnFragmentNotesEx extends Fragment{
 		}
 
 	}
-
 
 
 	@Override
@@ -289,8 +157,6 @@ public class LearnFragmentNotesEx extends Fragment{
 		mActivity.audio.disableChordDetector();
 
 		initSystemServices();
-//		mediaPlayer = MediaPlayer.create(mActivity, R.raw.success_sound);
-//		mActivity.bindService(new Intent(mActivity, PdService.class), pdConnection, mActivity.BIND_AUTO_CREATE);
 	}
 
 	@Override
@@ -303,8 +169,6 @@ public class LearnFragmentNotesEx extends Fragment{
 		mActivity.audio.enablePitchDetector();
 		mActivity.audio.enableNoteDetector();
 		mActivity.audio.disableChordDetector();
-//		mActivity.bindService(new Intent(mActivity, PdService.class), pdConnection, mActivity.BIND_AUTO_CREATE);
-
 
 		guiThread = new Thread() {
 			@Override
