@@ -58,8 +58,8 @@ public class MainActivity extends ActionBarActivity
     private final int PERMISSION_CODE_RECORD_AUDIO = 42;
 
 	AudioProcessing audio;
-	int fs = 8000;
-	double bufferSizeInSeconds = 0.25;
+	int fs = 16000;
+	double bufferSizeInSeconds = 0.15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

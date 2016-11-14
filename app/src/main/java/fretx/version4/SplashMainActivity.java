@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.ypyproductions.task.IDBCallback;
 
 /**
- * 
- * 
+ *
+ *
  * @author:YPY Productions
  * @Skype: baopfiev_k50
  * @Mobile : +84 983 028 786
@@ -26,7 +26,7 @@ import com.ypyproductions.task.IDBCallback;
  * @Website: www.ypyproductions.com
  * @Project:CloundMusicDownloader
  * @Date:Nov 13, 2014
- * 
+ *
  */
 public class SplashMainActivity extends Activity {
 

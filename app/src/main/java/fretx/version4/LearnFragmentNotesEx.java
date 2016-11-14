@@ -111,6 +111,9 @@ public class LearnFragmentNotesEx extends Fragment{
 		labels = getArguments().getStringArray("labels");
 		notes = Util.getNoteItems(mActivity, getArguments().getStringArray("labels"));
 
+		ConnectThread connectThread = new ConnectThread(Util.str2array(notes.get(newPitch).ledArray));
+		connectThread.run();
+
 		rootView = inflater.inflate(R.layout.learn_fragment_tuner, container, false);
 		LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.linearLayout);
 
