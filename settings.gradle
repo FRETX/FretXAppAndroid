@@ -1,1 +1,1 @@
-include ':app', ':circleimageview', ':pdCore', ':fretx-audio'
+include ':app', ':fretx-audio'

@@ -19,13 +19,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.puredata.android.io.AudioParameters;
-import org.puredata.android.io.PdAudio;
-import org.puredata.android.service.PdService;
-import org.puredata.android.utils.PdUiDispatcher;
-import org.puredata.core.PdBase;
-import org.puredata.core.PdListener;
-import org.puredata.core.utils.IoUtils;
+//import org.puredata.android.io.AudioParameters;
+//import org.puredata.android.io.PdAudio;
+//import org.puredata.android.service.PdService;
+//import org.puredata.android.utils.PdUiDispatcher;
+//import org.puredata.core.PdBase;
+//import org.puredata.core.PdListener;
+//import org.puredata.core.utils.IoUtils;
 
 import java.io.File;
 import java.io.IOException;
