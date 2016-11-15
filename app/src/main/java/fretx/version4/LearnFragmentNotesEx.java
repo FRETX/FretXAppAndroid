@@ -183,14 +183,13 @@ public class LearnFragmentNotesEx extends Fragment{
 						mActivity.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								double pitch;
-								if(mActivity.audio.isInitialized() && mActivity.audio.isProcessing()){
-									pitch = mActivity.audio.getPitch();
-								} else {
-									pitch = -1;
+								double pitch = -1;
+								if(mActivity.audio != null){
+									if (mActivity.audio.isInitialized() && mActivity.audio.isProcessing()) {
+										pitch = mActivity.audio.getPitch();
+									}
 								}
 
-								Log.d("pitch", Double.toString(pitch));
 								int currentNote = notes.get(newPitch).noteMidi;
 								if (pitch > -1) {
 									double pitchMidi = hzToMidiNote(pitch);

@@ -278,7 +278,15 @@ public class MainActivity extends ActionBarActivity
 	    }
     }
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+        if(audio.isInitialized() && audio.isProcessing()){
+            audio.stop();
+        }
+    }
 
+    @Override
 	protected void onStop(){
 		super.onStop();
 		if (audio != null) {
