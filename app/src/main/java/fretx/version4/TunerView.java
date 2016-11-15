@@ -75,7 +75,11 @@ public class TunerView extends View {
 
 		TextView textCurrentNote = (TextView) rootView.findViewById(R.id.textCurrentNote);
 
-		currentPitch = mActivity.audio.getPitch();
+		if(mActivity.audio.isInitialized() && mActivity.audio.isProcessing()){
+			currentPitch = mActivity.audio.getPitch();
+		} else {
+			currentPitch = -1;
+		}
 
 		if (currentPitch > -1) {
 
