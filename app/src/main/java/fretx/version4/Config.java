@@ -18,8 +18,4 @@ public final class Config {
     public static int    mResource = 0;
 
     public static String strUserID = "Jamal";
-    //public static String strUserName = "";
-    //public static String strUserProfilePic = "";
-    //public static int nPoints = 0;
-    public static SoundAnalyzer soundAnalyzer = null ;
 }
