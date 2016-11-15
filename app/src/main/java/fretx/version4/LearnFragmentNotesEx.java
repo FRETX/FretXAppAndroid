@@ -166,9 +166,11 @@ public class LearnFragmentNotesEx extends Fragment{
 		ConnectThread connectThread = new ConnectThread(Util.str2array("{0}"));
 		connectThread.run();
 		initSystemServices();
+		if(!mActivity.audio.isInitialized()) mActivity.audio.initialize(mActivity.fs,mActivity.bufferSizeInSeconds);
 		mActivity.audio.enablePitchDetector();
 		mActivity.audio.enableNoteDetector();
 		mActivity.audio.disableChordDetector();
+		if(!mActivity.audio.isProcessing()) mActivity.audio.start();
 
 		guiThread = new Thread() {
 			@Override
@@ -181,7 +183,13 @@ public class LearnFragmentNotesEx extends Fragment{
 						mActivity.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								double pitch = mActivity.audio.getPitch();
+								double pitch;
+								if(mActivity.audio.isInitialized() && mActivity.audio.isProcessing()){
+									pitch = mActivity.audio.getPitch();
+								} else {
+									pitch = -1;
+								}
+
 								Log.d("pitch", Double.toString(pitch));
 								int currentNote = notes.get(newPitch).noteMidi;
 								if (pitch > -1) {
