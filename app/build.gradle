@@ -42,4 +42,5 @@ dependencies {
     compile 'com.github.wendykierp:JTransforms:3.1'
     compile project(':fretx-audio')
     compile project(':fretx-audio')
+    compile 'com.loopj.android:android-async-http:1.4.9'
 }
