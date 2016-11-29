@@ -6,13 +6,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT =4;
-    private String titles[] ;
+    private String titles[] = new String[]{"    Play     ", "    Learn    ", "    Chords   ", "    Tuner    "};
 
-
-    public ViewPagerAdapter(FragmentManager fm, String[] titles2) {
+    public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
-        titles=titles2;
     }
+
     @Override
     public Fragment getItem(int position) {
         switch (position) {

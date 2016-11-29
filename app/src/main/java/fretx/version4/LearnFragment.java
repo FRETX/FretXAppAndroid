@@ -17,6 +17,7 @@ public class LearnFragment extends Fragment {
     public LearnFragment(){
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -30,7 +31,7 @@ public class LearnFragment extends Fragment {
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
-                fragmentTransaction.commit();
+                fragmentTransaction.commitAllowingStateLoss();
 
             }
         });
