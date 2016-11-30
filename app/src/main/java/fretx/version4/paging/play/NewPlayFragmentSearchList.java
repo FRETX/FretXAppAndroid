@@ -64,21 +64,8 @@ public class NewPlayFragmentSearchList extends Fragment implements SearchView.On
         getGuiReferences();
         setGuiEventListeners();
 
-        if (Constants.refreshed) {
-            Data = Constants.savedData;
-            lvListNews.setAdapter(new CustomGridViewAdapter(mActivity, R.layout.play_fragment_search_list_row_item, Data));
-            return rootView;
-        }
-
-        if( ! Network.isConnected() ) {
-            Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            return rootView;
-        }
-
         mainData = new ArrayList<SongItem>();
         lvListNews.setAdapter(new CustomGridViewAdapter(mActivity, R.layout.play_fragment_search_list_row_item, mainData));
-        //initData();
-        Constants.refreshed = true;
 
         Songlist.setListener(new Songlist.Callback() {
             @Override public void onBusy()  { showBusy(); }
