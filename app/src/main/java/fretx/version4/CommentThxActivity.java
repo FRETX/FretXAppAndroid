@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import fretx.version4.activities.MainActivity;
+
 public class CommentThxActivity extends AppCompatActivity {
     private Button buttonGoBack;
     @Override

@@ -52,7 +52,7 @@
             android:layout_toEndOf="@+id/tvConnectionState" />
 
 
-        <fretx.version4.SlidingTabLayout
+        <fretx.version4.paging.SlidingTabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

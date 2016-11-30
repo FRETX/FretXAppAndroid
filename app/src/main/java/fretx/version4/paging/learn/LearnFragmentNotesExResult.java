@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.paging.learn;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -10,24 +10,45 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class LearnFragmentDialog extends DialogFragment {
+import fretx.version4.LeftNavAdapter;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.R;
+
+public class LearnFragmentNotesExResult extends DialogFragment {
 	public Button btnYes,btnNo,btnRedo;
 	static String DialogBoxTitle;
 	MainActivity mActivity;
 
+	private LeftNavAdapter adapter;
+
 	public TextView tvText;
 
+
 	//---empty constructor required
-	public LearnFragmentDialog(){
+	public LearnFragmentNotesExResult(){
 		
 	}
+
+	public static LearnFragmentNotesExResult newInstance(int exId, String title, int nextExId, int score, int highestScore) {
+		LearnFragmentNotesExResult myFragment = new LearnFragmentNotesExResult();
+
+		Bundle args = new Bundle();
+		args.putInt("exId", exId);
+		args.putString("title", title);
+		args.putInt("nextExId", nextExId);
+		args.putInt("score", score);
+		args.putInt("highestScore", highestScore);
+		myFragment.setArguments(args);
+
+		return myFragment;
+	}
+
 	//---set the title of the dialog window---
 	public void setDialogTitle(String title) {
 		DialogBoxTitle= title;
 	}
 	
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState ) {
-
 		mActivity = (MainActivity)getActivity();
 
 		/*TextView totalScore = (TextView) mActivity.findViewById(R.id.tvPopularity);
@@ -41,13 +62,16 @@ public class LearnFragmentDialog extends DialogFragment {
 		btnYes = (Button) view.findViewById(R.id.btnYes);
 		btnNo = (Button) view.findViewById(R.id.btnNo);
 		btnRedo = (Button) view.findViewById(R.id.btnRedo);
+		if(getArguments().getInt("nextExId") < 0) {
+			btnNo.setVisibility(View.INVISIBLE);
+		}
 
 		tvText = (TextView) view.findViewById(R.id.tvTextView);
-		tvText.setText("You just learned how to play hold your guitar!"
-				+ "\n\nYou scored : " + Util.score(5)
-				+ "\n\nHighest score : " + Util.score(5));
-		
-		// Button listener 
+		tvText.setText("You just learned how to play " + getArguments().getString("title") + "!"
+				+ "\n\nYou scored : " + getArguments().getInt("score")
+				+ "\n\nHighest score : " + getArguments().getInt("highestScore"));
+
+		// Button listener
 		btnYes.setOnClickListener(btnListener);
 		btnNo.setOnClickListener(btnListener);
 		btnRedo.setOnClickListener(btnListener);
@@ -63,7 +87,6 @@ public class LearnFragmentDialog extends DialogFragment {
 	{
 		public void onClick(View v)
 		{
-
 			if (((Button) v).getText().toString().equals("Go to Learn Menu")){
 
 				FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
@@ -75,13 +98,13 @@ public class LearnFragmentDialog extends DialogFragment {
 
 				FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.learn_container, new LearnFragmentOne());
+				fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(getArguments().getInt("exId")));
 				fragmentTransaction.commit();
 			}else if(((Button) v).getText().toString().equals("Next Exercise")) {
 
 				FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
 				android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(2));
+				fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(getArguments().getInt("nextExId")));
 				fragmentTransaction.commit();
 			}
 			dismiss();

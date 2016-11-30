@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.paging.learn;
 
 
 import android.content.Context;
@@ -19,6 +19,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import fretx.version4.BluetoothClass;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.NoteItem;
+import fretx.version4.R;
+import fretx.version4.Util;
 
 import static rocks.fretx.audioprocessing.MusicUtils.hzToMidiNote;
 

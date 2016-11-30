@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.paging.play;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
@@ -29,6 +28,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+import fretx.version4.BluetoothClass;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.R;
+import fretx.version4.Util;
 
 
 public class PlayFragmentYoutubeFragment extends Fragment{
@@ -93,11 +97,12 @@ public class PlayFragmentYoutubeFragment extends Fragment{
 
         VIDEO_ID = getArguments().getString("URL");
         SONG_TXT = getArguments().getString("RAW");
-        if(!(new File(mActivity.getFilesDir().toString() + "/" + SONG_TXT).isFile())) {
-            new GetSongChordTxtFile().execute(SONG_TXT);
-        }else{
-            initTxt(SONG_TXT);
-        }
+        initTxt(SONG_TXT);
+//        if(!(new File(mActivity.getFilesDir().toString() + "/" + SONG_TXT).isFile())) {
+//            new GetSongChordTxtFile().execute(SONG_TXT);
+//        }else{
+//            initTxt(SONG_TXT);
+//        }
         initUI();
 
         YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
@@ -360,9 +365,8 @@ public class PlayFragmentYoutubeFragment extends Fragment{
         }
     }
 
-    public void initTxt(String txtFile) {
-        String str= Util.readRawTextFile(mActivity, txtFile);
-        String[] strArray = str.split( "\n" );
+    public void initTxt(String data) {
+        String[] strArray = data.split( "\r\n" );
         lstTimeText = new Hashtable();
         for( int nIndex= 0; nIndex < strArray.length; nIndex++ )
         {
@@ -418,14 +422,10 @@ public class PlayFragmentYoutubeFragment extends Fragment{
                 {
                     try{
                         ///Set currentTime to current time textview.
-                        if (m_player == null){
-                            return;
-                        }
-                        if (!m_player.isPlaying()){
-                            return;
-                        }
+                        if (m_player == null){ return; }
+                        if (!m_player.isPlaying()){ return; }
                         m_currentTime = m_player.getCurrentTimeMillis();
-                        showMessage("CurrnetTime==="+ m_currentTime);
+                        showMessage("CurrentTime==="+ m_currentTime);
 
                         ///Set the current title of current time.
                         changeText(m_currentTime);
@@ -463,7 +463,7 @@ public class PlayFragmentYoutubeFragment extends Fragment{
                                 }
                             }
                         }
-                        mCurTimeShowHandler.postDelayed(this, 1000);
+                        mCurTimeShowHandler.postDelayed(this, 100);
                     }catch (IllegalStateException e){
                         mCurTimeShowHandler.removeCallbacks(this);
                     }

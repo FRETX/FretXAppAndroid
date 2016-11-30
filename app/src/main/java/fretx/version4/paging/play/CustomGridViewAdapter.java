@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.paging.play;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,7 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
+
+import fretx.version4.R;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.fretxapi.SongItem;
 
 
 /**
@@ -54,7 +60,8 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 
 		final SongItem item = data.get(position);
 		holder.txtTitle.setText(item.songName);
-		holder.imageItem.setImageDrawable(item.image);
+		Picasso.with(context).load(item.imageURL()).placeholder(R.drawable.defaultthumb).into(holder.imageItem);
+		//holder.imageItem.setImageDrawable(item.image);
 		row.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -64,8 +71,8 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 				FragmentManager fragmentManager = context.getSupportFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 				Bundle args = new Bundle();
-				args.putString("URL", item.songURl);
-				args.putString("RAW", item.songTxt);
+				args.putString("URL", item.songUrl);
+				args.putString("RAW", item.songTxt());
 				fragmentYoutubeFragment.setArguments(args);
 				fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment);
 				fragmentTransaction.commit();

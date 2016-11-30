@@ -1,12 +1,17 @@
-package fretx.version4;
+package fretx.version4.paging;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import fretx.version4.paging.chords.ChordFragment;
+import fretx.version4.paging.learn.LearnFragment;
+import fretx.version4.paging.play.PlayFragment;
+import fretx.version4.paging.tuner.TunerFragment;
+
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT =4;
-    private String titles[] = new String[]{"    Play     ", "    Learn    ", "    Chords   ", "    Tuner    "};
+    private String titles[] = new String[]{"   Play    ", "   Learn   ", "   Chords  ", "   Tuner   "};
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);

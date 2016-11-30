@@ -1,8 +1,7 @@
-package fretx.version4;
+package fretx.version4.paging.learn;
 
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +13,9 @@ import android.widget.Button;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import fretx.version4.activities.MainActivity;
+import fretx.version4.R;
 
 public class LearnFragmentButton extends Fragment {
 

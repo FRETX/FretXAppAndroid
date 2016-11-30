@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.paging.chords;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -19,6 +19,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import fretx.version4.activities.BluetoothActivity;
+import fretx.version4.Config;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.ObservableVideoView;
+import fretx.version4.R;
 
 /**
  * Created by Misho on 2/4/2016.

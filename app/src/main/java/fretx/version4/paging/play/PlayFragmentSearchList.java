@@ -1,18 +1,14 @@
-package fretx.version4;
+package fretx.version4.paging.play;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -24,6 +20,13 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import fretx.version4.Config;
+import fretx.version4.Constants;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.R;
+import fretx.version4.Util;
+import fretx.version4.fretxapi.SongItem;
 
 
 public class PlayFragmentSearchList extends Fragment implements SearchView.OnQueryTextListener {
@@ -45,9 +48,9 @@ public class PlayFragmentSearchList extends Fragment implements SearchView.OnQue
     private AmazonS3Client client;
     private List<S3ObjectSummary> s3Obj;
     String input;
-    public PlayFragmentSearchList(){
 
-    }
+    public PlayFragmentSearchList(){}
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -111,10 +114,6 @@ public class PlayFragmentSearchList extends Fragment implements SearchView.OnQue
         String accessFolder = Util.checkS3Access(mActivity);
         input = accessFolder;
         new GetFileListTask().execute(accessFolder);
-        /*mainData.add(Util.setSongItem("The Beatles - Come Together",        "eTNitq77Utg",  R.raw.one, homeIcon));
-        mainData.add(Util.setSongItem("The Beatles - Here Comes The Sun",   "Y6GNEEi7x4c",  R.raw.two,homeIcon));
-        mainData.add(Util.setSongItem("Oasis - Wonderwall",                 "SLZ7uzFIMoY",  R.raw.three,homeIcon));
-        mainData.add(Util.setSongItem("Led Zeppelin - Immigrant Song", "TlmrQfSTmiY", R.raw.four,homeIcon));*/
     }
 
     @Override
@@ -184,12 +183,8 @@ public class PlayFragmentSearchList extends Fragment implements SearchView.OnQue
                     Util.downloadFile(mActivity, inputs[0], summary.getKey());
                 }
                 String keySplit[] = summary.getKey().split("\\.");
-                Drawable drawable = Util.LoadImageFromWeb("http://img.youtube.com/vi/" + keySplit[1] + "/0.jpg");
-                if(drawable != null) {
-                    mainData.add(Util.setSongItem(keySplit[0], keySplit[1], summary.getKey(), drawable));
-                }else{
-                    mainData.add(Util.setSongItem(keySplit[0], keySplit[1], summary.getKey(), ContextCompat.getDrawable(mActivity.getApplicationContext(), R.drawable.defaultthumb)));
-                }
+                //Drawable drawable = Util.LoadImageFromWeb("http://img.youtube.com/vi/" + keySplit[1] + "/0.jpg");
+                mainData.add(new SongItem(keySplit[0], keySplit[1], summary.getKey()));
                 count++;
             }
             Constants.savedData = mainData;

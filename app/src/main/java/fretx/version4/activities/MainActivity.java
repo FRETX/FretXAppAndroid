@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.activities;
 
 import android.Manifest;
 import android.content.Context;
@@ -29,22 +29,29 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
-import fretx.version4.fretxapi.FretxApi;
+import fretx.version4.Config;
+import fretx.version4.R;
+import fretx.version4.paging.SlidingTabLayout;
+import fretx.version4.Util;
+import fretx.version4.fretxapi.AppCache;
+import fretx.version4.fretxapi.Network;
+import fretx.version4.fretxapi.Songlist;
+import fretx.version4.paging.ViewPagerAdapter;
+import fretx.version4.paging.learn.LearnFragmentButton;
+import fretx.version4.paging.play.NewPlayFragmentSearchList;
+import fretx.version4.paging.play.PlayFragmentSearchList;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    ViewPager pager;
-
-    public TextView m_tvConnectionState;
-
-    SlidingTabLayout slidingTabLayout;
+    private ViewPager pager;
+    //private LeftNavAdapter adapter;
+    private SlidingTabLayout slidingTabLayout;
+    private TextView  m_tvConnectionState;
     private ImageView on_button;
     private ImageView off_button;
-
-    //private LeftNavAdapter adapter;
 
     private int mCurrentPosition = 0;
     private int mPreviousPosition = 0;
@@ -53,14 +60,10 @@ public class MainActivity extends ActionBarActivity {
 
     private final int PERMISSION_CODE_RECORD_AUDIO = 42;  //This is arbitrary, so why not The Answer to Life, Universe, and Everything.
 
-    AudioProcessing audio;
-    int fs = 16000;
-    double bufferSizeInSeconds = 0.15;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    public int fs = 16000;
+    public double bufferSizeInSeconds = 0.15;
+    public AudioProcessing audio;
+    private GoogleApiClient client;  //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +71,31 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.main_activity_back);
 
         Context ctx = getApplicationContext();
-        FretxApi.initialize(ctx);
+        Network.initialize(ctx);
+        AppCache.initialize(ctx);
+        Songlist.initialize();
 
-        off_button = (ImageView) findViewById(R.id.offb);
-        on_button = (ImageView) findViewById(R.id.onb);
-        m_tvConnectionState = (TextView) findViewById(R.id.tvConnectionState);
+        getGuiReferences();
+        setGuiEventListeners();
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        pager = (ViewPager) findViewById(R.id.viewpager);
-        pager.setAdapter(viewPagerAdapter);
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();   //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
+    }
 
-        slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+    public void getGuiReferences() {
+        pager               = (ViewPager)        findViewById(R.id.viewpager);
+        slidingTabLayout    = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        m_tvConnectionState = (TextView)         findViewById(R.id.tvConnectionState);
+        on_button           = (ImageView)        findViewById(R.id.onb);
+        off_button          = (ImageView)        findViewById(R.id.offb);
+
+        pager.setAdapter( new ViewPagerAdapter(getSupportFragmentManager() ) );
         slidingTabLayout.setViewPager(pager);
         slidingTabLayout.setBackgroundColor(Color.argb(255, 240, 240, 240));
+    }
+
+    public void setGuiEventListeners() {
+        // Was used in the past to stop Bluetooth data when leaving the Learn Tab
+        /*
         slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
@@ -92,9 +107,7 @@ public class MainActivity extends ActionBarActivity {
                 return Color.BLUE;
 
             }
-        });
-
-
+        }); */
         m_tvConnectionState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,10 +158,6 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public void showConnectionState() {
@@ -193,15 +202,12 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (audio.isInitialized() && audio.isProcessing()) {
-            audio.stop();
-        }
+        if (audio.isInitialized() && audio.isProcessing() ) { audio.stop(); }
     }
 
     @Override
     protected void onStop() {
-        super.onStop(); // ATTENTION: This was auto-generated to implement the App Indexing API.
-                        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        super.onStop(); // ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         if (audio != null) { audio.stop(); }
         audio = null;
@@ -216,7 +222,7 @@ public class MainActivity extends ActionBarActivity {
         if (mCurrentPosition == 0) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.play_container, new PlayFragmentSearchList());
+            fragmentTransaction.replace(R.id.play_container, new NewPlayFragmentSearchList());
             fragmentTransaction.commit();
         } else if (mCurrentPosition == 1) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -226,7 +232,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
     }
-
+/*
     public void changeFragments(int position) {
         if (position == 2 || position == 0) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -234,9 +240,8 @@ public class MainActivity extends ActionBarActivity {
             fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
             fragmentTransaction.commit();
         }
-
     }
-
+*/
     //Permissions
     private boolean askForPermissions() {
 

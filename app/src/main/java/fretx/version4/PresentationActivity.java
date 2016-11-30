@@ -17,6 +17,8 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 
 import java.io.File;
 
+import fretx.version4.activities.MainActivity;
+
 /**
  * Created by Misho on 2/4/2016.
  */

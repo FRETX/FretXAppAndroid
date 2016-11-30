@@ -2,8 +2,6 @@ package fretx.version4;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
@@ -16,12 +14,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +25,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import fretx.version4.activities.BluetoothActivity;
 
 /**
  * Created by Misho on 2/21/2016.
@@ -356,15 +354,6 @@ public final class Util {
         }
     }
 
-    public static SongItem setSongItem(String songName, String songUrl, String sontText, Drawable drawable){
-        SongItem itemData = new SongItem();
-        itemData.songName = songName;
-        itemData.songURl = songUrl;
-        itemData.songTxt = sontText;
-        itemData.image = drawable;
-
-        return itemData;
-    }
 
     public static Drawable LoadImageFromWeb(String url){
         try{

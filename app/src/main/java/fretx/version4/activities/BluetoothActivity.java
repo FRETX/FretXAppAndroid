@@ -1,6 +1,5 @@
-package fretx.version4;
+package fretx.version4.activities;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -12,7 +11,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +37,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import fretx.version4.Config;
+import fretx.version4.Constants;
+import fretx.version4.R;
+
 public class BluetoothActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     ArrayAdapter<String> listAdapter;
@@ -56,7 +58,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
     public static BluetoothGatt mBluetoothGatt;
     public static BluetoothDevice fretx;
     static final int DISC = 1;
-    static final int FRET = 2;
+    public static final int FRET = 2;
 
     public static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     /** Services for Nordic **/
@@ -269,7 +271,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
             return false;
         }
     };
-    static Handler mHandler = new Handler(callback);
+    public static Handler mHandler = new Handler(callback);
 
     public static void writeRXCharacteristic(byte[] value)
     {

@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.paging.play;
 
 
 import android.os.Bundle;
@@ -11,6 +11,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import fretx.version4.activities.MainActivity;
+import fretx.version4.R;
+import fretx.version4.fretxapi.SongItem;
 
 /**
  * Created by ljk on 12/11/2015.
@@ -65,7 +69,7 @@ public class SongListViewAdapter extends BaseAdapter {
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 Bundle args = new Bundle();
-                args.putString("URL", newsItem.songURl);
+                args.putString("URL", newsItem.songUrl);
                 args.putString("RAW", newsItem.songTxt);
                 fragmentYoutubeFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fretx.version4;
+package fretx.version4.paging;
 
 import android.content.Context;
 import android.graphics.Color;

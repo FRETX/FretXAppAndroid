@@ -14,8 +14,8 @@ import java.io.OutputStream;
  */
 public class BluetoothClass {
 
-    static String tag = "debug";
-    static BluetoothSocket mmSocket;
+    public static String tag = "debug";
+    public static BluetoothSocket mmSocket;
     static final int SUCCESS_CONNECT = 0;
     static final int MESSAGE_READ = 1;
     static final int ARDUINO = 2;
@@ -37,7 +37,7 @@ public class BluetoothClass {
             return false;
         }
     };
-    static Handler mHandler = new Handler(callback);
+    public static Handler mHandler = new Handler(callback);
 
     static public class ConnectedThread extends Thread {
         //private final BluetoothSocket mmSocket;

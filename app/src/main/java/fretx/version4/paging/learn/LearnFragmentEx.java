@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.paging.learn;
 
 
 import android.net.Uri;
@@ -17,6 +17,12 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import java.util.Map;
+
+import fretx.version4.Exercise;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.ObservableVideoView;
+import fretx.version4.R;
+import fretx.version4.Util;
 
 public class LearnFragmentEx extends Fragment {
 
