@@ -22,7 +22,7 @@
     <color name="light_grey">#fafafa</color>
     <color name="black_deviders">#1f000000</color>
     <color name="black_hint_text">#42000000</color>
-    <color name="black_secondary_text">#8A000000</color>
+    <color name="black_secondary_text">#8a000000</color>
     <color name="black_text">#de000000</color>
     <color name="tv_branding">#ffff5722</color>
     <color name="tv_branding_dark">#ffbf360c</color>
@@ -34,7 +34,7 @@
     <color name="error_message_background">#ffff1600</color>
     <color name="drawer_item_selected_background">#feee</color>
     <color name="drawer_item_tint_color">#ff333333</color>
-    <color name="fullscreen_secondary_line_color">#E5CCCCCC</color>
+    <color name="fullscreen_secondary_line_color">#e5cccccc</color>
     <color name="fullscreen_line_color">#E5FFFFFF</color>
     <color name="tv_search_button">#ff0097A7</color>
     <color name="background_gradient_start">#000000</color>

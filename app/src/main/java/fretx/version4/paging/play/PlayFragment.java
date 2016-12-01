@@ -33,7 +33,7 @@ public class PlayFragment extends Fragment {
             public void run() {
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.play_container, new NewPlayFragmentSearchList());
+                fragmentTransaction.replace(R.id.play_container, new PlayFragmentSearchList());
                 fragmentTransaction.commitAllowingStateLoss();
             }
         });

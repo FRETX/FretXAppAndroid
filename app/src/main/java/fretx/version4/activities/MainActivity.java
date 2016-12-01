@@ -38,7 +38,6 @@ import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.Songlist;
 import fretx.version4.paging.ViewPagerAdapter;
 import fretx.version4.paging.learn.LearnFragmentButton;
-import fretx.version4.paging.play.NewPlayFragmentSearchList;
 import fretx.version4.paging.play.PlayFragmentSearchList;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
@@ -222,7 +221,7 @@ public class MainActivity extends ActionBarActivity {
         if (mCurrentPosition == 0) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.play_container, new NewPlayFragmentSearchList());
+            fragmentTransaction.replace(R.id.play_container, new PlayFragmentSearchList());
             fragmentTransaction.commit();
         } else if (mCurrentPosition == 1) {
             FragmentManager fragmentManager = getSupportFragmentManager();

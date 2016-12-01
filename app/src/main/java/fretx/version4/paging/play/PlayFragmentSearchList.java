@@ -1,9 +1,6 @@
 package fretx.version4.paging.play;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,199 +11,107 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import fretx.version4.Config;
-import fretx.version4.Constants;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.Util;
+import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.SongItem;
+import fretx.version4.fretxapi.Songlist;
 
+public class PlayFragmentSearchList extends Fragment {
 
-public class PlayFragmentSearchList extends Fragment implements SearchView.OnQueryTextListener {
+    public  ArrayList<SongItem> mainData = new ArrayList<>();
+    public  SearchView          searchBox;
+    public  GridView            listView;
 
-    private MainActivity mActivity;
+    private MainActivity        context;
+    private View                rootView;
+    private ImageView           refreshBtn;
+    private ProgressDialog      dialog;
 
-    private View rootView = null;
-    private ImageView refresh;
+    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
 
-    public SearchView svNews = null;
+    @Override public void onResume() { super.onResume(); stop_led(); }
 
-    public ConnectivityManager connectivityManager;
-    public boolean state;
-    public Context contexts;
-
-    public GridView lvListNews = null;
-    public ArrayList<SongItem> mainData;
-    public ArrayList<SongItem> Data;
-    private AmazonS3Client client;
-    private List<S3ObjectSummary> s3Obj;
-    String input;
-
-    public PlayFragmentSearchList(){}
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        mActivity = (MainActivity) getActivity();
-
-        rootView = inflater.inflate(R.layout.play_fragment_search_list, container, false);
-
-        svNews = (SearchView) rootView.findViewById(R.id.svSongs);
-        svNews.setOnQueryTextListener(this);
-        refresh = (ImageView) rootView.findViewById(R.id.fresh);
-        refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                state = isNetworkAvailable(getActivity());
-                if(state == true) {
-                    initData();
-                }
-                else
-                {
-                    Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        if (Constants.refreshed == true) {
-            Data = Constants.savedData;
-            lvListNews = (GridView)rootView.findViewById(R.id.lvSongList);
-
-            lvListNews.setAdapter(new CustomGridViewAdapter(mActivity, R.layout.play_fragment_search_list_row_item, Data));
-            //stop_led();
-
-    }
-
-        if (Constants.refreshed == false) {
-            state = isNetworkAvailable(getActivity());
-            if(state == true) {
-                mainData = new ArrayList<SongItem>();
-                lvListNews = (GridView)rootView.findViewById(R.id.lvSongList);
-
-                lvListNews.setAdapter(new CustomGridViewAdapter(mActivity, R.layout.play_fragment_search_list_row_item, mainData));
-                initData();
-                Constants.refreshed = true;
-            }
-            else
-            {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
-        }
-
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        inflateView(inflater, container);
+        initVars();
+        setEventListeners();
+        setListData(mainData);
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        stop_led();
+    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
+
+    private void initVars() {
+        mainData   = new ArrayList<>();
+        context    = (MainActivity) getActivity();
+        searchBox  = (SearchView)   rootView.findViewById(R.id.svSongs);
+        refreshBtn = (ImageView)    rootView.findViewById(R.id.fresh);
+        listView   = (GridView)     rootView.findViewById(R.id.lvSongList);
     }
 
-    public void initData(){
-        mainData = new ArrayList<SongItem>();
-        String accessFolder = Util.checkS3Access(mActivity);
-        input = accessFolder;
-        new GetFileListTask().execute(accessFolder);
-    }
+    private void setEventListeners() {
+        searchBox.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
+            @Override public boolean onQueryTextSubmit(String query) { filterList(query); return false; }
+            @Override public boolean onQueryTextChange(String query) { filterList(query); return false; }
+        });
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        lvListNews.setVisibility(View.VISIBLE);
-        if (!query.equals(null)){
-            ArrayList<SongItem> arrResultTemp = new ArrayList<SongItem>();
-            for (int i = 0; i < mainData.size(); i ++){
-                if(mainData.get(i).songName.toLowerCase().contains(query.toLowerCase())){
-                    arrResultTemp.add(mainData.get(i));
-                }
-                lvListNews.setAdapter(new CustomGridViewAdapter(mActivity,R.layout.play_fragment_search_list_row_item, arrResultTemp));
+        refreshBtn.setOnClickListener( new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                if( Network.isConnected() ) initData();
+                else                        Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
             }
-        }
-        return false;
+        });
+
+        Songlist.setListener( new Songlist.Callback() {
+            @Override public void onBusy()  { showBusy(); }
+            @Override public void onReady() { initData(); }
+        });
     }
 
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        lvListNews.setVisibility(View.VISIBLE);
-        if (newText.equals(null)){
-            lvListNews.setAdapter(new CustomGridViewAdapter(mActivity,R.layout.play_fragment_search_list_row_item, mainData));
-        }else{
-            ArrayList<SongItem> arrResultTemp = new ArrayList<SongItem>();
-            for (int i = 0; i < mainData.size(); i ++){
-                if(mainData.get(i).songName.toLowerCase().contains(newText.toLowerCase())) {
-                    arrResultTemp.add(mainData.get(i));
-                }
-                lvListNews.setAdapter(new CustomGridViewAdapter(mActivity,R.layout.play_fragment_search_list_row_item, arrResultTemp));
-            }
-        }
-        return false;
+    private void initData() {
+        for(int i = 0; i< Songlist.length(); i++) { mainData.add(Songlist.getSongItem(i)); }
+        setListData(mainData);
+        hideBusy();
     }
 
-    private class GetFileListTask extends AsyncTask<String, Void, Void> {
-        // The list of objects we find in the S3 bucket
-        private List<S3ObjectSummary> s3ObjList;
-        // A dialog to let the user know we are retrieving the files
-        private ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            dialog = ProgressDialog.show(mActivity,
-                    getString(R.string.refreshing),
-                    getString(R.string.please_wait));
-        }
-
-        @Override
-        protected Void doInBackground(String... inputs) {
-            // Queries files in the bucket from S3.
-            AmazonS3Client s3 = Util.getS3Client(mActivity);
-            //AmazonS3Client client = Util.getS3Client(mActivity);
-            client = s3;
-            s3ObjList = s3.listObjects(inputs[0]).getObjectSummaries();
-            s3Obj = s3ObjList;
-            mainData.clear();
-            //int total = 26;
-            int count = 0;
-            //int total = s3ObjList.size();
-            for (S3ObjectSummary summary : s3ObjList) {
-                //if(count >= total)
-                if(count >= summary.getSize())                     /** This value can increase and decrease the number of items in the grid show **/
-                {
-                    break;
-                }
-                if(!(new File(mActivity.getFilesDir().toString() + "/" + summary.getKey()).isFile())) {
-                    Util.downloadFile(mActivity, inputs[0], summary.getKey());
-                }
-                String keySplit[] = summary.getKey().split("\\.");
-                //Drawable drawable = Util.LoadImageFromWeb("http://img.youtube.com/vi/" + keySplit[1] + "/0.jpg");
-                mainData.add(new SongItem(keySplit[0], keySplit[1], summary.getKey()));
-                count++;
-            }
-            Constants.savedData = mainData;
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            dialog.dismiss();
-            lvListNews.setAdapter(new CustomGridViewAdapter(mActivity, R.layout.play_fragment_search_list_row_item, mainData));
-        }
+    private View inflateView(LayoutInflater inflater, ViewGroup container) {
+        rootView = inflater.inflate(R.layout.play_fragment_search_list, container, false);
+        return rootView;
     }
 
-    public void stop_led()
-    {
-        if(Config.bBlueToothActive == true)
-        {
-            Util.stopViaData();
+    ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
+
+
+    /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////////////////////////////
+
+    public void filterList(String query) {
+        //lvListNews.setVisibility(View.VISIBLE);
+        if (query == null ) { setListData(mainData); return; }
+
+        ArrayList<SongItem> filterList = new ArrayList<>();
+        for ( int i = 0; i < mainData.size(); i++ ) {
+            String title = mainData.get(i).songName.toLowerCase();
+            if( title.contains(query.toLowerCase()) ) { filterList.add(mainData.get(i)); }
         }
+        setListData(filterList);
     }
 
-    public boolean isNetworkAvailable(final Context context) {
-        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+    public void setListData( ArrayList<SongItem> data ) {
+        listView.setAdapter( new CustomGridViewAdapter( context, R.layout.play_fragment_search_list_row_item, data) );
     }
+
+    /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////////////////////////////
+
+    public void stop_led() { if(Config.bBlueToothActive) { Util.stopViaData(); } }
+    public void showBusy() { if(getActivity() != null ) dialog = ProgressDialog.show(context, getString(R.string.refreshing), getString(R.string.please_wait)); }
+    public void hideBusy() { if( dialog != null ) dialog.dismiss(); }
+
 }

@@ -1,5 +1,7 @@
 package fretx.version4.fretxapi;
 
+import java.util.Hashtable;
+
 public class SongItem {
     public String songName;
     public String songUrl;
@@ -19,4 +21,5 @@ public class SongItem {
 
     public String songTxt()  { return AppCache.getFromCache(youtube_id + ".txt"); }
     public String songFile() { return youtube_id + ".txt"; }
+
 }

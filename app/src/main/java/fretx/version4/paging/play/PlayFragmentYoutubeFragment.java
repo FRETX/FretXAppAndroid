@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,255 +36,467 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.Util;
 
+public class PlayFragmentYoutubeFragment extends Fragment {
 
-public class PlayFragmentYoutubeFragment extends Fragment{
+    private static final int RECOVERY_REQUEST = 1;
+    public String            videoUri;
+    public int               resourceId;
 
-    MainActivity mActivity;
     private static final String API_KEY = "AIzaSyBVpnU2xvoUvbVVFw9u8xgSMYdkr4uGRbk";
 
-    private String VIDEO_ID = "";
-    private String SONG_TXT;
+    private MainActivity context;
+    private View         rootView;
+    private SeekBar      prerollSlider;
+    private TextView     prerollValue;
+    private TextView     loopStartTime;
+    private TextView     loopEndTime;
+    private Button       loopStartBtn;
+    private Button       loopEndBtn;
+    private ImageView    loopTglOn;
+    private ImageView    loopTglOff;
 
+    private int          preroll  = 0;
+    private String       VIDEO_ID = "";
+    private String       SONG_TXT;
+    static  Hashtable    punch_list;
+    static  int[]        arrayKeys;
+    static  Boolean[]    arrayCallStatus;
 
+    private YouTubePlayer               m_player = null;
 
+    static boolean bStartCheckFlag = false;    // Flag that current time is passed start time.
+    static boolean bEndCheckFlag = false;      // Flag that current time is passed end time.
 
-    static Hashtable lstTimeText;
-    static int[]                               arrayKeys;
-    static Boolean[]                           arrayCallStatus;
+    static long    lastSysClockTime = 0;
+    static long    lastYoutubeElapsedTime = 0;
+    static long    m_currentTime = 0;          // Now playing time.
 
-    private static final int            RECOVERY_REQUEST = 1;
+    static long    startPos = 0;               // start point of loop
+    static long    endPos = 0;                 // end point of loop
 
-
-    private    YouTubePlayer               m_player = null;
-    private MyPlayerStateChangeListener playerStateChangeListener;
-    private MyPlaybackEventListener     playbackEventListener;
-    public String                       videoUri;
-    public int                          resourceId;
-
-
-    //add kys 0220
-    //static private ToggleButton tgSwitch;
-    private ImageView loop_on;
-    private ImageView loop_off;
-    private Button btStartLoop;
-    private Button                      btEndLoop;
-    private TextView                    tvStartTime;
-    private TextView                    tvEndTime;
-
-    static boolean                             bStartCheckFlag = false;        ///Flag that current time is passed start time.
-    static boolean                             bEndCheckFlag = false;          ///Flag that current time is passed end time.
-
-    static int                                 m_currentTime = 0;                ////Now playing time.
-
-    static int                                 startPos = 0;                   ///start point of loop
-    static int                                 endPos = 0;                     ///end point of loop
-
-    static boolean                             mbLoopable = false;        ///flag of checking loop
-    static boolean                             mbPlaying = true;           ///Flag of now playing.
-
+    static boolean mbLoopable = false;         // flag of checking loop
+    static boolean mbPlaying = true;           // Flag of now playing.
+    static boolean mbSendingFlag = false;
 
     static private Handler mCurTimeShowHandler = new Handler();
 
-    static boolean                             mbSendingFlag = false;
+    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
 
-
-    public View rootView;
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mActivity = (MainActivity)getActivity();
-
-        rootView = inflater.inflate(R.layout.play_fragment_youtube_fragment, container, false);
-
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         VIDEO_ID = getArguments().getString("URL");
         SONG_TXT = getArguments().getString("RAW");
+        inflateView(inflater, container);
+        initVars();
+        setEventListeners();
         initTxt(SONG_TXT);
-//        if(!(new File(mActivity.getFilesDir().toString() + "/" + SONG_TXT).isFile())) {
-//            new GetSongChordTxtFile().execute(SONG_TXT);
-//        }else{
-//            initTxt(SONG_TXT);
-//        }
-        initUI();
+        initLoop();
+        buildYoutubePlayer();
+        return rootView;
+    }
 
+    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
+
+    private void initVars() {
+        context       = (MainActivity) getActivity();
+        prerollSlider = (SeekBar)  rootView.findViewById(R.id.prerollSlider);
+        prerollValue  = (TextView) rootView.findViewById(R.id.prerollValView);
+        loopStartTime = (TextView) rootView.findViewById(R.id.tvStartTime);
+        loopEndTime   = (TextView) rootView.findViewById(R.id.tvEndTime);
+        loopStartBtn   = (Button)   rootView.findViewById(R.id.btnStartLoop);
+        loopEndBtn     = (Button)   rootView.findViewById(R.id.btnEndLoop);
+        loopTglOn       = (ImageView)rootView.findViewById(R.id.onl);
+        loopTglOff      = (ImageView)rootView.findViewById(R.id.offl);
+    }
+
+    private void setEventListeners() {
+
+        loopStartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                startPos = m_currentTime;
+                //showMessage("Button Start");
+                loopStartTime.setText(String.format("%d", startPos));
+            }
+        });
+
+        loopEndBtn.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                endPos = m_currentTime;
+                //showMessage("Button End");
+                loopEndTime.setText(String.format("%d", endPos));
+            }
+        });
+
+        loopTglOn.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) { loopOn(view); }
+        });
+
+        loopTglOff.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) { loopOff(view); }
+        });
+
+        prerollSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                preroll = progress * 10;
+                prerollValue.setText(String.format("%d ms",preroll));
+            }
+
+            @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override public void onStopTrackingTouch(SeekBar seekBar)  { }
+        });
+    }
+
+    private View inflateView(LayoutInflater inflater, ViewGroup container) {
+        rootView = inflater.inflate(R.layout.play_fragment_youtube_fragment, container, false);
+        return rootView;
+    }
+
+    ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////// YOUTUBE ///////////////////////////////////////////////////////////////////////
+
+    private void buildYoutubePlayer() {
         YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
 
         youTubePlayerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-                if (!wasRestored) {
-                    m_player = player;
-                    m_player.setFullscreen(false);
-
-                    m_player.setPlayerStateChangeListener(playerStateChangeListener);
-                    m_player.setPlaybackEventListener(playbackEventListener);
-                    m_player.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
-                    m_player.setShowFullscreenButton(false);
-
-                    m_player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                    m_player.loadVideo(VIDEO_ID);
-                    m_player.play();
-                }
+            @Override public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (wasRestored) return;
+                m_player = player;
+                setYoutubePlayerProps();
+                setYoutubePlayerListeners();
+                m_player.loadVideo(VIDEO_ID);
+                m_player.play();
             }
 
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
-                // YouTube error
+            @Override public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
                 String errorMessage = error.toString();
                 Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
                 Log.d("errorMessage:", errorMessage);
             }
         });
-
-        return rootView;
     }
 
-    public void initUI(){
+    private void setYoutubePlayerProps() {
+        m_player.setFullscreen(false);
+        m_player.setShowFullscreenButton(false);
+        m_player.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
+        m_player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+    }
 
-        playerStateChangeListener = new MyPlayerStateChangeListener();
-        playbackEventListener = new MyPlaybackEventListener();
+    private void setYoutubePlayerListeners() {
+        m_player.setPlaybackEventListener( new MyPlaybackEventListener() );
+        m_player.setPlayerStateChangeListener( new MyPlayerStateChangeListener() );
+    }
 
-        tvStartTime = (TextView)rootView.findViewById(R.id.tvStartTime);
-        tvEndTime = (TextView)rootView.findViewById(R.id.tvEndTime);
+    //////////////////////////////////////// YOUTUBE ///////////////////////////////////////////////////////////////////////
 
-        tvStartTime.setText("0");
-        tvEndTime.setText("0");
+    /////////////////////////////////// YOUTUBE CALLBACKS //////////////////////////////////////////////////////////////////
 
-        btStartLoop = (Button)rootView.findViewById(R.id.btnStartLoop);  ///Button that sets startTime while playing video.
-        ///Set startPosition of video by pressing "START LOOP" Button
-        btStartLoop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startPos = m_currentTime;
-                showMessage("Button Start");
-                tvStartTime.setText(String.format("%d", startPos));
+    private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener {
+
+        @Override public void onPlaying() {
+            showMessage("Playing");
+            clearLoopFlags();
+            mbPlaying = true;
+            getStartEndTime();
+            startTimingLoop();
+        }
+
+        @Override public void onPaused() {
+            showMessage("Paused");
+            clearLoopFlags();
+            mbPlaying = false;
+            //Util.stopViaData();
+        }
+
+        @Override public void onStopped()               { mbPlaying = false; }
+        @Override public void onSeekTo(int currentTime) { checkLoopFlags(currentTime); }
+        @Override public void onBuffering(boolean b)    {}
+    }
+
+    private final class MyPlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
+        @Override public void onLoading()                            { showMessage("YOUTUBE Loading!");      }
+        @Override public void onLoaded(String s)                     { showMessage("YOUTUBE loaded!");       }
+        @Override public void onAdStarted()                          { showMessage("YOUTUBE Ad Started");    }
+        @Override public void onVideoStarted()                       { showMessage("YOUTUBE VideoStarted!"); }
+        @Override public void onVideoEnded()                         { showMessage("YOUTUBE VideoEnded!");   }
+        @Override public void onError(YouTubePlayer.ErrorReason err) { showMessage("YOUTUBE Error");         }
+    }
+
+    /////////////////////////////////// YOUTUBE CALLBACKS //////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////// TIMING LOOP /////////////////////////////////////////////////////////////////////
+
+    private void startTimingLoop() { mCurTimeShowHandler.post(playerTimingLoop); }
+
+    private void setCurrentTime() {
+        long youtubeDuration    = m_player.getDurationMillis();
+        long youtubeElapsedTime = m_player.getCurrentTimeMillis();
+
+        if( preroll > 0 ) {
+            youtubeElapsedTime += preroll;
+            youtubeElapsedTime = youtubeElapsedTime > youtubeDuration ? youtubeDuration : youtubeElapsedTime;
+        }
+
+        long    sysClockTime       = SystemClock.uptimeMillis();
+        boolean repeatedTime       = youtubeElapsedTime == lastYoutubeElapsedTime;
+        long    sysClockDelta      = lastSysClockTime == 0 ? 0 : sysClockTime - lastSysClockTime;
+        lastYoutubeElapsedTime     = youtubeElapsedTime;
+
+        if ( repeatedTime ) { m_currentTime = youtubeElapsedTime + sysClockDelta;                  }
+        else                { lastSysClockTime = sysClockTime; m_currentTime = youtubeElapsedTime; }
+
+        showMessage( "Current Time : " + m_currentTime );
+    }
+
+    Runnable playerTimingLoop = new Runnable() {
+        @Override public void run() {
+            try {
+                if ( m_player == null      ) return;
+                if ( !m_player.isPlaying() ) return;
+                setCurrentTime();
+                changeText( (int) m_currentTime );  ///Set the current title of current time.
+                if(mbLoopable){ checkLoop(); }
+                mCurTimeShowHandler.postDelayed(this, 100);
             }
-        });
-        btEndLoop = (Button)rootView.findViewById(R.id.btnEndLoop);      ///Button that sets endTime while playing video.
-        ///Set endPosition of video by pressing "END LOOP" Button
-        btEndLoop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                endPos = m_currentTime;
-                showMessage("Button End");
-                tvEndTime.setText(String.format("%d", endPos));
+            catch (IllegalStateException e) { mCurTimeShowHandler.removeCallbacks(this); }
+        }
+    };
+
+    ////////////////////////////////////// TIMING LOOP /////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////// TEXT FILE PROCESSING /////////////////////////////////////////////////////////////////
+
+    //From the first to number of hashtable keys, Search index that its value is bigger than
+    // current time. Then sets the text that was finded in hashtable keys.
+
+    public  void changeText(int currentTime) {
+        for ( int nIndex = 0; nIndex < arrayKeys.length -1; nIndex++ )
+        {
+            if ( arrayKeys[nIndex] <= currentTime && arrayKeys[nIndex + 1] > currentTime )
+            {
+                if( arrayCallStatus[nIndex] )
+                    return;
+
+                arrayCallStatus[nIndex] = true;
+                ConnectThread connectThread = new ConnectThread(Util.str2array((String) punch_list.get(arrayKeys[nIndex])));
+                connectThread.run();
+                Util.setDefaultValues(arrayCallStatus);
+                arrayCallStatus[nIndex] = true;
+
             }
-        });
+        }
 
-        /** Enter click listeners for new buttons **/
+        if ( arrayKeys[arrayKeys.length -1] <= currentTime )
+        {
+            if( arrayCallStatus[arrayKeys.length -1] )
+                return;
 
-        loop_on = (ImageView)rootView.findViewById(R.id.onl);
-        loop_off = (ImageView)rootView.findViewById(R.id.offl);
-        loop_on.setVisibility(View.INVISIBLE);
-        loop_off.setVisibility(View.VISIBLE);
+            arrayCallStatus[arrayKeys.length -1] = true;
+            ConnectThread connectThread = new ConnectThread(Util.str2array((String) punch_list.get(arrayKeys[arrayKeys.length - 1])));
+            connectThread.run();
+            Util.setDefaultValues(arrayCallStatus);
+            arrayCallStatus[arrayKeys.length -1] = true;
+        }
+    }
 
-        loop_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loop_off.setVisibility(View.INVISIBLE);
-                loop_on.setVisibility(View.VISIBLE);
-                if (mbLoopable) {
-                    tvStartTime.setTextColor(Color.parseColor("#000000"));
-                    tvEndTime.setTextColor(Color.parseColor("#000000"));
-                    mbLoopable = false;
-                } else {
-                    ///check current time is in duration of startPosition and endPosition.
-                    String strStartPos = tvStartTime.getText().toString();
-                    String strEndPos = tvEndTime.getText().toString();
-                    int nTmpStartPos, nTmpEndPos;
-                    if (strStartPos.length() != 0)
-                        nTmpStartPos = Integer.parseInt(strStartPos);
-                    else {
-                        nTmpStartPos = 0;
-                        tvStartTime.setText("0");
-                    }
-                    if (strEndPos.length() != 0)
-                        nTmpEndPos = Integer.parseInt(strEndPos);
-                    else {
-                        nTmpEndPos = 0;
-                        tvEndTime.setText("0");
-                    }
-                    ///if start position is bigger than end position then can not loop.
-                    if (nTmpStartPos >= nTmpEndPos) {
-                        tvStartTime.setTextColor(Color.parseColor("#000000"));
-                        tvEndTime.setTextColor(Color.parseColor("#000000"));
-                        mbLoopable = false;
-                        Toast.makeText(mActivity, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
-                        //tgSwitch.setChecked(false);
-                        loop_on.setVisibility(View.INVISIBLE);
-                        loop_off.setVisibility(View.VISIBLE);
-                    } else {
-                        tvStartTime.setTextColor(Color.parseColor("#FF0000"));
-                        tvEndTime.setTextColor(Color.parseColor("#0000FF"));
-                        getStartEndTime();
-                        if ((m_currentTime < startPos) || (m_currentTime > endPos)) {
-                            m_currentTime = startPos;
-                            m_player.seekToMillis(startPos);
-                        }
-                        bStartCheckFlag = false;
-                        bEndCheckFlag = false;
-                        mbLoopable = true;
-                    }
+    public Hashtable songtxtToHashtable(String data) {
+        punch_list = new Hashtable();
+        String[] strArray = data.split( "\r\n" );
+
+        for( String line : strArray ) {
+            String[] split = line.split(" ");               // Split the every line of text into two parts
+            int punch_time = Integer.parseInt(split[0]);    // The time in milliseconds
+            String strText = split[1];                      // The byte command for the lights
+
+            if( punch_list.containsKey( punch_time ) ) {               // not sure why we need to handle two chords on the same time ???
+                String strTemp = (String) punch_list.get(punch_time);
+                punch_list.put(punch_time, strTemp + ":" + strText);
+                continue;
+            }
+
+            punch_list.put(punch_time, strText);
+        }
+        return punch_list;
+    }
+
+    public void initTxt(String data) {
+        String[] strArray = data.split( "\r\n" );
+        punch_list = songtxtToHashtable(data);
+
+        ///save the key array of hashtable to int array.
+        arrayKeys = new int[punch_list.size()];
+        arrayCallStatus = new Boolean[punch_list.size()];
+
+        int i = 0;
+        for ( Enumeration e = punch_list.keys(); e.hasMoreElements(); ) {
+            arrayKeys[i] = (int) e.nextElement();
+            arrayCallStatus[i] = false;
+            i++;
+        }
+        Arrays.sort(arrayKeys);
+    }
+
+    ///////////////////////////////// TEXT FILE PROCESSING /////////////////////////////////////////////////////////////////
+
+
+    //////////////////////////////////////// LOOPING ///////////////////////////////////////////////////////////////////////
+
+    ///Set startPos and endPos from TextView of tvStartTime and tvEndTime
+    ///Convert String data of TextView to Integer data.
+    void getStartEndTime() {
+        if(loopStartTime.getText().toString().length() != 0)
+            startPos = Integer.parseInt(loopStartTime.getText().toString());
+        else
+            startPos = 0;
+        if(loopEndTime.getText().toString().length() != 0)
+            endPos = Integer.parseInt(loopEndTime.getText().toString());
+        else
+            endPos = 0;
+    }
+
+    public void initLoop(){
+        loopStartTime.setText("0");
+        loopEndTime.setText("0");
+        setLoopFb(false);
+    }
+
+    private void setLoopFb(Boolean state) {
+        loopTglOff.setVisibility ( state ? View.INVISIBLE : View.VISIBLE );
+        loopTglOn.setVisibility  ( state ? View.VISIBLE : View.INVISIBLE );
+    }
+
+    private void checkLoopFlags(int currentTime) {
+        if (!mbLoopable) return;
+        if (currentTime < startPos) { bStartCheckFlag = false; return; }
+        if (currentTime > endPos)   { bEndCheckFlag   = false; return; }
+        bStartCheckFlag = true;   // current time is in the duration of loop.
+        bEndCheckFlag = false;
+    }
+
+    private void clearLoopFlags() {
+        bStartCheckFlag = false;        //Flag that current time is passed start time.
+        bEndCheckFlag   = false;        //Flag that current time is passed end time.
+    }
+
+    private void checkLoop() {
+        if(startPos >= endPos) { mbLoopable = false; setLoopFb(false); return; }
+
+        if((m_currentTime + 500 < startPos) && (!bStartCheckFlag)){     //if currentTime is smaller than startPos then set bStartCheckFlag true
+            m_player.seekToMillis( (int) startPos );                    //and set endChekFlag to false. Set current pos to startPos. and loop video
+            bStartCheckFlag = true;
+            bEndCheckFlag = false;
+        }
+
+        if((m_currentTime > endPos) && (!bEndCheckFlag)){           //if currentTime is bigger than startPos then set bEndCheckFlag true
+            bEndCheckFlag = false;                                  //and set startChekFlag to false. Set current pos to startPos. and loop video.
+            bStartCheckFlag = true;
+            showMessage("Big Case why : begin");
+            m_player.seekToMillis( (int) startPos );
+            showMessage("Start Pos = " + startPos);
+            showMessage("Current Time = " + m_currentTime);
+            showMessage("Big Case why : end");
+        }
+    }
+
+    private void loopOff(View view) {
+        setLoopFb(true);
+
+        if (mbLoopable) {
+            loopStartTime.setTextColor(Color.parseColor("#000000"));
+            loopEndTime.setTextColor(Color.parseColor("#000000"));
+            mbLoopable = false;
+        }
+
+        else {
+            ///check current time is in duration of startPosition and endPosition.
+            String strStartPos = loopStartTime.getText().toString();
+            String strEndPos = loopEndTime.getText().toString();
+            int nTmpStartPos, nTmpEndPos;
+
+            if (strStartPos.length() != 0) { nTmpStartPos = Integer.parseInt(strStartPos); }
+            else                           { nTmpStartPos = 0; loopStartTime.setText("0");   }
+
+            if (strEndPos.length() != 0)   { nTmpEndPos = Integer.parseInt(strEndPos);     }
+            else                           { nTmpEndPos = 0; loopEndTime.setText("0");       }
+
+            ///if start position is bigger than end position then can not loop.
+
+            if (nTmpStartPos >= nTmpEndPos) {
+                loopStartTime.setTextColor(Color.parseColor("#000000"));
+                loopEndTime.setTextColor(Color.parseColor("#000000"));
+                mbLoopable = false;
+                Toast.makeText(context, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
+                //tgSwitch.setChecked(false);
+                setLoopFb(false);
+            }
+
+            else {
+                loopStartTime.setTextColor(Color.parseColor("#FF0000"));
+                loopEndTime.setTextColor(Color.parseColor("#0000FF"));
+                getStartEndTime();
+                if ((m_currentTime < startPos) || (m_currentTime > endPos)) {
+                    m_currentTime = startPos;
+                    m_player.seekToMillis((int)startPos);
                 }
+                bStartCheckFlag = false;
+                bEndCheckFlag = false;
+                mbLoopable = true;
             }
-        });
+        }
+    }
 
+    private void loopOn(View view) {
+        setLoopFb(false);
 
-        loop_on.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loop_on.setVisibility(View.INVISIBLE);
-                loop_off.setVisibility(View.VISIBLE);
-                if (mbLoopable) {
-                    tvStartTime.setTextColor(Color.parseColor("#000000"));
-                    tvEndTime.setTextColor(Color.parseColor("#000000"));
-                    mbLoopable = false;
-                } else {
-                    ///check current time is in duration of startPosition and endPosition.
-                    String strStartPos = tvStartTime.getText().toString();
-                    String strEndPos = tvEndTime.getText().toString();
-                    int nTmpStartPos, nTmpEndPos;
-                    if (strStartPos.length() != 0)
-                        nTmpStartPos = Integer.parseInt(strStartPos);
-                    else {
-                        nTmpStartPos = 0;
-                        tvStartTime.setText("0");
-                    }
-                    if (strEndPos.length() != 0)
-                        nTmpEndPos = Integer.parseInt(strEndPos);
-                    else {
-                        nTmpEndPos = 0;
-                        tvEndTime.setText("0");
-                    }
-                    ///if start position is bigger than end position then can not loop.
-                    if (nTmpStartPos >= nTmpEndPos) {
-                        tvStartTime.setTextColor(Color.parseColor("#000000"));
-                        tvEndTime.setTextColor(Color.parseColor("#000000"));
-                        mbLoopable = false;
-                        Toast.makeText(mActivity, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
-                        //tgSwitch.setChecked(false);
-                        loop_on.setVisibility(View.INVISIBLE);
-                        loop_off.setVisibility(View.VISIBLE);
-                    } else {
-                        tvStartTime.setTextColor(Color.parseColor("#FF0000"));
-                        tvEndTime.setTextColor(Color.parseColor("#0000FF"));
-                        getStartEndTime();
-                        if ((m_currentTime < startPos) || (m_currentTime > endPos)) {
-                            m_currentTime = startPos;
-                            m_player.seekToMillis(startPos);
-                        }
-                        bStartCheckFlag = false;
-                        bEndCheckFlag = false;
-                        mbLoopable = true;
-                    }
+        if (mbLoopable) {
+            loopStartTime.setTextColor(Color.parseColor("#000000"));
+            loopEndTime.setTextColor(Color.parseColor("#000000"));
+            mbLoopable = false;
+        } else {
+            ///check current time is in duration of startPosition and endPosition.
+            String strStartPos = loopStartTime.getText().toString();
+            String strEndPos = loopEndTime.getText().toString();
+            int nTmpStartPos, nTmpEndPos;
+            if (strStartPos.length() != 0)
+                nTmpStartPos = Integer.parseInt(strStartPos);
+            else {
+                nTmpStartPos = 0;
+                loopStartTime.setText("0");
+            }
+            if (strEndPos.length() != 0)
+                nTmpEndPos = Integer.parseInt(strEndPos);
+            else {
+                nTmpEndPos = 0;
+                loopEndTime.setText("0");
+            }
+            ///if start position is bigger than end position then can not loop.
+            if (nTmpStartPos >= nTmpEndPos) {
+                loopStartTime.setTextColor(Color.parseColor("#000000"));
+                loopEndTime.setTextColor(Color.parseColor("#000000"));
+                mbLoopable = false;
+                Toast.makeText(context, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
+                //tgSwitch.setChecked(false);
+                setLoopFb(false);
+            } else {
+                loopStartTime.setTextColor(Color.parseColor("#FF0000"));
+                loopEndTime.setTextColor(Color.parseColor("#0000FF"));
+                getStartEndTime();
+                if ((m_currentTime < startPos) || (m_currentTime > endPos)) {
+                    m_currentTime = startPos;
+                    m_player.seekToMillis((int)startPos);
                 }
+                bStartCheckFlag = false;
+                bEndCheckFlag = false;
+                mbLoopable = true;
             }
-        });
+        }
+    }
 
-        /*tgSwitch = (ToggleButton)rootView.findViewById(R.id.tgSwitch);   ///ToggleButton that sets loop.
+            /*tgSwitch = (ToggleButton)rootView.findViewById(R.id.tgSwitch);   ///ToggleButton that sets loop.
         tgSwitch.setChecked(false);
         tgSwitch.setOnClickListener(new View.OnClickListener() {   /////Set loopable flag.
             @Override
@@ -330,259 +544,13 @@ public class PlayFragmentYoutubeFragment extends Fragment{
                 }
             }
         });*/
-    }
 
-
-    //From the first to number of hashtable keys, Search index that its value is bigger than
-    // current time. Then sets the text that was finded in hashtable keys.
-    public  void changeText(int currentTime) {
-        for ( int nIndex = 0; nIndex < arrayKeys.length -1; nIndex++ )
-        {
-            if ( arrayKeys[nIndex] <= currentTime && arrayKeys[nIndex + 1] > currentTime )
-            {
-                if( arrayCallStatus[nIndex] )
-                    return;
-
-                arrayCallStatus[nIndex] = true;
-                ConnectThread connectThread = new ConnectThread(Util.str2array((String) lstTimeText.get(arrayKeys[nIndex])));
-                connectThread.run();
-                Util.setDefaultValues(arrayCallStatus);
-                arrayCallStatus[nIndex] = true;
-
-            }
-        }
-
-        if ( arrayKeys[arrayKeys.length -1] <= currentTime )
-        {
-            if( arrayCallStatus[arrayKeys.length -1] )
-                return;
-
-            arrayCallStatus[arrayKeys.length -1] = true;
-            ConnectThread connectThread = new ConnectThread(Util.str2array((String) lstTimeText.get(arrayKeys[arrayKeys.length - 1])));
-            connectThread.run();
-            Util.setDefaultValues(arrayCallStatus);
-            arrayCallStatus[arrayKeys.length -1] = true;
-        }
-    }
-
-    public void initTxt(String data) {
-        String[] strArray = data.split( "\r\n" );
-        lstTimeText = new Hashtable();
-        for( int nIndex= 0; nIndex < strArray.length; nIndex++ )
-        {
-            ///Split the every line of source text to two parts.
-            // Every line is splited by ' ',
-            String[] strArrTemp = strArray[nIndex].split(" ");
-            String strTime = strArrTemp[0];     ///This is time
-            String strText = strArrTemp[1];     // This is text of that strTime.
-            ///If ther's same time, then add two text to hashtable.
-            // else add one text of the time to hashtable.
-            if(lstTimeText.containsKey(Integer.parseInt(strTime)))
-            // if there's same key in the
-            // hashtable then add other text of same time.
-            {
-                String strTemp = (String)lstTimeText.get(Integer.parseInt(strTime));
-                lstTimeText.put(Integer.parseInt(strTime), strTemp + ":" + strText);
-            }else
-                lstTimeText.put(Integer.parseInt(strTime), strText);
-
-        }
-        ///save the key array of hashtable to int array.
-        arrayKeys = new int[lstTimeText.size()];
-        arrayCallStatus = new Boolean[lstTimeText.size()];
-
-        int i = 0;
-        for ( Enumeration e = lstTimeText.keys(); e.hasMoreElements(); ) {
-            arrayKeys[i] = (int) e.nextElement();
-            arrayCallStatus[i] = false;
-            i++;
-        }
-        Arrays.sort(arrayKeys);
-    }
-
-    ///Set startPos and endPos from TextView of tvStartTime and tvEndTime
-    ///Convert String data of TextView to Integer data.
-    void getStartEndTime() {
-        if(tvStartTime.getText().toString().length() != 0)
-            startPos = Integer.parseInt(tvStartTime.getText().toString());
-        else
-            startPos = 0;
-        if(tvEndTime.getText().toString().length() != 0)
-            endPos = Integer.parseInt(tvEndTime.getText().toString());
-        else
-            endPos = 0;
-    }
-
-
-    private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener {
-
-        Runnable runnable1 = new Runnable() {
-            @Override
-            public void run() {
-                {
-                    try{
-                        ///Set currentTime to current time textview.
-                        if (m_player == null){ return; }
-                        if (!m_player.isPlaying()){ return; }
-                        m_currentTime = m_player.getCurrentTimeMillis();
-                        showMessage("CurrentTime==="+ m_currentTime);
-
-                        ///Set the current title of current time.
-                        changeText(m_currentTime);
-                        if(mbLoopable){
-                            if(startPos >= endPos) {
-                                mbLoopable = false;
-                                //tgSwitch.setChecked(false);
-                                loop_on.setVisibility(View.INVISIBLE);
-                                loop_off.setVisibility(View.VISIBLE);
-                            }else{
-                                ///if currentTime is smaller than startPos then set bStartCheckFlag
-                                // true.
-                                //and set endChekFlag to false. Set current pos to startPos. and loop
-                                // video.
-                                if((m_currentTime + 500 < startPos) && (!bStartCheckFlag)){
-                                    m_player.seekToMillis(startPos);
-                                    bStartCheckFlag = true;
-                                    bEndCheckFlag = false;
-                                }
-
-                                ///if currentTime is bigger than startPos then set bEndCheckFlag
-                                // true.
-                                //and set startChekFlag to false.
-                                ///Set current pos to startPos. and loop video.
-                                if((m_currentTime > endPos) && (!bEndCheckFlag)){
-                                    bEndCheckFlag = false;
-                                    bStartCheckFlag = true;
-                                    showMessage("Big Case why : begin");
-
-                                    m_player.seekToMillis(startPos);
-
-                                    showMessage("Current Time =====" + startPos);
-                                    showMessage("Current Time =====" + m_currentTime);
-                                    showMessage("Big Case why : end");
-                                }
-                            }
-                        }
-                        mCurTimeShowHandler.postDelayed(this, 100);
-                    }catch (IllegalStateException e){
-                        mCurTimeShowHandler.removeCallbacks(this);
-                    }
-                }
-            }
-        };
-        @Override
-        public void onPlaying() {
-            // Called when playback starts, either due to user action or call to play().
-
-            bStartCheckFlag = false;        ///Flag that current time is passed start time.
-            bEndCheckFlag = false;          ///Flag that current time is passed end time.
-
-            showMessage("Playing");
-            mbPlaying = true;
-
-            getStartEndTime();
-            //  This is runnable thread that sets currentTime to tvCurTime TextView and check loop
-            //  available through startPos and endPos
-
-            mCurTimeShowHandler.post(runnable1);
-        }
-
-        @Override
-        public void onPaused() {
-            // Called when playback is paused, either due to user action or call to pause().
-            showMessage("Paused");
-
-            mbPlaying = false;
-
-            //Util.stopViaData();
-
-            bStartCheckFlag = false;        ///Flag that current time is passed start time.
-
-            bEndCheckFlag = false;          ///Flag that current time is passed end time.
-
-        }
-
-        @Override
-        public void onStopped() {
-            // Called when playback stops for a reason other than being paused.
-            mbPlaying = false;
-        }
-
-        @Override
-        public void onBuffering(boolean b) {
-            // Called when buffering starts or ends.
-        }
-
-        @Override
-        public void onSeekTo(int currentTime) {
-            // Called when a jump in playback position occurs, either
-            // due to user scrubbing or call to seekRelativeMillis() or seekToMillis()
-
-
-            if (mbLoopable) {
-                ///When current time is setted from seeking timeline,
-                ///If current time is smaller than start position then set bStartChekFlag false.
-                ///current time is smaller than start position, compare start position and
-                // current time in thread.it must check in thread.
-                ///Also sets bEndCheckFlag false when current time is bigger than end position.
-                ///So the thread have to compare between end position and current time.
-                if (currentTime < startPos) {
-                    bStartCheckFlag = false;
-                } else if (currentTime > endPos){
-                    bEndCheckFlag = false;
-                } else {
-                    ///When current time is in the duration of loop.
-                    bStartCheckFlag = true;
-                    bEndCheckFlag = false;
-                }
-            }
-        }
-    }
-    ////////////////////////////////StateChangeListener//////////////
-    private final class MyPlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
-
-        @Override
-        public void onLoading() {
-            // Called when the player is loading a video
-            // At this point, it's not ready to accept commands affecting playback such as play() or pause()
-            showMessage("Loading!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
-
-        @Override
-        public void onLoaded(String s) {
-            // Called when a video is done loading.
-            // Playback methods such as play(), pause() or seekToMillis(int) may be called after this callback.
-            showMessage("loaded!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
-
-        @Override
-        public void onAdStarted() {
-            // Called when playback of an advertisement starts.
-            showMessage("AdStarted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
-
-        @Override
-        public void onVideoStarted() {
-            // Called when playback of the video starts.
-            showMessage("VideoStarted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
-
-        @Override
-        public void onVideoEnded() {
-            // Called when the video reaches its end.
-            showMessage("VideoEnded!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
-
-        @Override
-        public void onError(YouTubePlayer.ErrorReason errorReason) {
-            // Called when an error occurs.
-        }
-    }
+    //////////////////////////////////////// LOOPING ///////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////BlueToothConnection/////////////////////////
     static private class ConnectThread extends Thread {
         byte[] array;
-        public ConnectThread(byte[] tmp) {
+        protected ConnectThread(byte[] tmp) {
             array = tmp;
         }
 
@@ -619,19 +587,19 @@ public class PlayFragmentYoutubeFragment extends Fragment{
 
         @Override
         protected void onPreExecute() {
-            dialog = ProgressDialog.show(mActivity,
-                    mActivity.getString(R.string.refreshing),
-                    mActivity.getString(R.string.please_wait));
+            dialog = ProgressDialog.show(context,
+                    context.getString(R.string.refreshing),
+                    context.getString(R.string.please_wait));
         }
 
         @Override
         protected Void doInBackground(String... inputs) {
-            String accessFolder = Util.checkS3Access(mActivity);
+            String accessFolder = Util.checkS3Access(context);
 
             // Queries files in the bucket from S3.
-            File chordFile = new File(mActivity.getFilesDir().toString()+ "/" + inputs[0]);
+            File chordFile = new File(context.getFilesDir().toString()+ "/" + inputs[0]);
             if(!chordFile.isFile()) {
-                TransferObserver observer = Util.downloadFile(mActivity, accessFolder, inputs[0]);
+                TransferObserver observer = Util.downloadFile(context, accessFolder, inputs[0]);
                 observer.setTransferListener(new DownloadListener());
                 while (true) {
                     if (TransferState.COMPLETED.equals(observer.getState())
