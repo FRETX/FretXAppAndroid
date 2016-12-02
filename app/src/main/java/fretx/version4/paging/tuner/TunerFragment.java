@@ -34,13 +34,10 @@ public class TunerFragment extends Fragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if(mActivity != null){
-			if(mActivity.audio != null){
-				mActivity.audio.disablePitchDetector();
-				mActivity.audio.disableNoteDetector();
-				mActivity.audio.disableChordDetector();
-			}
-		}
+		if(mActivity == null || mActivity.audio == null) return;
+		mActivity.audio.disablePitchDetector();
+		mActivity.audio.disableNoteDetector();
+		mActivity.audio.disableChordDetector();
 	}
 
 	@Override
