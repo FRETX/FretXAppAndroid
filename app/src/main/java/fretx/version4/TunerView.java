@@ -124,7 +124,7 @@ public class TunerView extends View {
 			//10 cents is the "just noticeable difference" for a lot of humans
 			if (Math.abs(difference) < 10) {
 				paint.setStrokeWidth(8.0f);
-				paint.setColor(getResources().getColor(R.color.red_dark));
+				paint.setColor(getResources().getColor(R.color.green));
 				paint.setStyle(Paint.Style.FILL);
 				canvas.drawCircle(needleCenterX, needleCenterY, width * 0.04f, paint);
 				paint.setStyle(Paint.Style.STROKE);
