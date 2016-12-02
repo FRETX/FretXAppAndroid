@@ -65,15 +65,8 @@ public class PlayFragmentSearchList extends Fragment {
 
         refreshBtn.setOnClickListener( new View.OnClickListener() {
             @Override public void onClick(View view) {
-                if( Network.isConnected() ) //initData();
-                {
-                    mainData.clear();
-                    Songlist.initialize();
-                    initData();
-                }
-                else{
-                    Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-                }
+                if( Network.isConnected() ) { Songlist.initialize(); }
+                else                        { Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show(); }
             }
         });
 
@@ -84,6 +77,7 @@ public class PlayFragmentSearchList extends Fragment {
     }
 
     private void initData() {
+        mainData.clear();
         for(int i = 0; i< Songlist.length(); i++) { mainData.add(Songlist.getSongItem(i)); }
         setListData(mainData);
         hideBusy();

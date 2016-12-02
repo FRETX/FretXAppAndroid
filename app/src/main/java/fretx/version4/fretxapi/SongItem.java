@@ -1,7 +1,5 @@
 package fretx.version4.fretxapi;
 
-import java.util.Hashtable;
-
 public class SongItem {
     public String songName;
     public String songUrl;
@@ -18,8 +16,7 @@ public class SongItem {
     public String imageURL() {
         return "http://img.youtube.com/vi/" + songUrl + "/0.jpg";
     }
-
-    public String songTxt()  { return AppCache.getFromCache(youtube_id + ".txt"); }
+    public String songTxt()  { return AppCache.getFromCache(songFile()); }
     public String songFile() { return youtube_id + ".txt"; }
 
 }
