@@ -3,8 +3,10 @@ package fretx.version4;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +23,8 @@ public class TunerView extends View {
 
 	private float centerPitch, currentPitch;
 	private int width, height;
+	private double lastAngle = Double.NaN;
+	private int lastColor = getResources().getColor(R.color.black);
 	private final Paint paint = new Paint();
 	protected double pitchRangeInCents = 200;
 
@@ -82,9 +86,9 @@ public class TunerView extends View {
 			currentPitch = -1;
 		}
 
+		double angleOfIndicator = Double.NaN;
+		angleOfIndicator = lastAngle;
 		if (currentPitch > -1) {
-
-			//TODO: centerPitch
 			int[] tuningMidi = MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD);
 			double[] tuning = new double[tuningMidi.length];
 			for (int i = 0; i < tuningMidi.length; i++) {
@@ -100,22 +104,25 @@ public class TunerView extends View {
 			int minIndex = AudioAnalyzer.findMinIndex(differences);
 			centerPitch = (float) tuning[minIndex];
 			int centerMidiNote = tuningMidi[minIndex];
-			textCurrentNote.setText(MusicUtils.midiNoteToName(centerMidiNote));
 
+			//TODO: add "note name without number" method to MusicUtils
+			String noteString;
+			noteString = MusicUtils.midiNoteToName(centerMidiNote);
+			noteString = noteString.substring(0,noteString.length()-1); //remove the number
+			textCurrentNote.setText(noteString);
 
 			int prevNoteIndex = centerMidiNote - 1;
 			int nextNoteIndex = centerMidiNote + 1;
 			if (centerMidiNote == 0) prevNoteIndex = 0;
-
 			TextView textPreviousNote = (TextView) rootView.findViewById(R.id.textPreviousNote);
 			TextView textNextNote = (TextView) rootView.findViewById(R.id.textNextNote);
 
-			textPreviousNote.setText(MusicUtils.midiNoteToName(prevNoteIndex));
-			textNextNote.setText(MusicUtils.midiNoteToName(nextNoteIndex));
-
-			//TODO: set text for note name
-			//TODO: show how much you are off by
-
+			noteString = MusicUtils.midiNoteToName(prevNoteIndex);
+			noteString = noteString.substring(0,noteString.length()-1); //remove the number
+			textPreviousNote.setText(noteString);
+			noteString = MusicUtils.midiNoteToName(nextNoteIndex);
+			noteString = noteString.substring(0,noteString.length()-1); //remove the number
+			textNextNote.setText(noteString);
 
 			double currentPitchInCents = MusicUtils.hzToCent(currentPitch);
 			double centerPitchInCents = MusicUtils.hzToCent(centerPitch);
@@ -123,18 +130,15 @@ public class TunerView extends View {
 
 			//10 cents is the "just noticeable difference" for a lot of humans
 			if (Math.abs(difference) < 10) {
-				paint.setStrokeWidth(8.0f);
-				paint.setColor(getResources().getColor(R.color.green));
-				paint.setStyle(Paint.Style.FILL);
-				canvas.drawCircle(needleCenterX, needleCenterY, width * 0.04f, paint);
-				paint.setStyle(Paint.Style.STROKE);
-
+				lastColor = getResources().getColor(R.color.green);
 			} else {
-				paint.setStrokeWidth(8.0f);
-				paint.setColor(getResources().getColor(R.color.black));
+				lastColor = getResources().getColor(R.color.black);
 			}
 
-			double angleOfIndicator = Double.NaN;
+			paint.setColor(lastColor);
+			paint.setStyle(Paint.Style.FILL);
+			canvas.drawCircle(needleCenterX, needleCenterY, width * 0.04f, paint);
+
 			//Draw the line between an interval of one semitone lower and one semitone higher than center pitch
 			if (currentPitchInCents > centerPitchInCents + pitchRangeInCents) {
 				//Draw a straight line to the right
@@ -163,79 +167,15 @@ public class TunerView extends View {
 //		    Log.d("angle", Double.toString(angleOfIndicator));
 
 			angleOfIndicator = Math.toRadians(angleOfIndicator);
-
-			canvas.drawLine(needleCenterX, needleCenterY,
-					halfWidth + (float) Math.sin(angleOfIndicator) * height * 0.9f,
-					height - (float) Math.cos(Math.abs(angleOfIndicator)) * height * 0.9f, paint);
+			lastAngle = angleOfIndicator;
 		}
 
-
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setStrokeWidth(8.0f);
+		paint.setColor(lastColor);
+		canvas.drawLine(needleCenterX, needleCenterY,
+				halfWidth + (float) Math.sin(angleOfIndicator) * height * 0.9f,
+				height - (float) Math.cos(Math.abs(angleOfIndicator)) * height * 0.9f, paint);
 		invalidate();
-
 	}
-
 }
-//
-//import android.content.Context;
-//import android.content.res.Resources;
-//import android.graphics.Canvas;
-//import android.graphics.Paint;
-//import android.graphics.Paint.Style;
-//import android.graphics.Rect;
-//import android.graphics.RectF;
-//import android.util.AttributeSet;
-//import android.view.View;
-//
-//// Tuner View
-//public abstract class TunerView extends View
-//{
-//    //protected Audio audio;
-//    protected Resources resources;
-//
-//    protected int width;
-//    protected int height;
-//    protected Paint paint;
-//    protected Rect clipRect;
-//    private RectF outlineRect;
-//
-//    // Constructor
-//    protected TunerView(Context context, AttributeSet attrs)
-//    {
-//	super(context, attrs);
-//
-//	paint = new Paint();
-//	resources = getResources();
-//    }
-//
-//    // On Size Changed
-//    @Override
-//    protected void onSizeChanged(int w, int h, int oldw, int oldh)
-//    {
-//	// Save the new width and height
-//	width = w;
-//	height = h;
-//
-//	// Create some rects for
-//	// the outline and clipping
-//	outlineRect = new RectF(1, 1, width - 1, height - 1);
-//	clipRect = new Rect(3, 3, width - 3, height - 3);
-//    }
-//
-//    // On Draw
-//    @Override
-//    protected void onDraw(Canvas canvas)
-//    {
-//	// Set up the paint and draw the outline
-//	paint.setStrokeWidth(3);
-//	paint.setAntiAlias(true);
-//	paint.setColor(resources.getColor(android.R.color.darker_gray));
-//	paint.setStyle(Style.STROKE);
-//	canvas.drawRoundRect(outlineRect, 10, 10, paint);
-//
-//	// Set the cliprect
-//	canvas.clipRect(clipRect);
-//
-//	// Translate to the clip rect
-//	canvas.translate(clipRect.left, clipRect.top);
-//    }
-//}

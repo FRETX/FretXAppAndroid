@@ -26,9 +26,9 @@ public class TunerFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		mActivity = (MainActivity) getActivity();
 		if(mActivity == null || mActivity.audio == null) return;
-			mActivity.audio.enablePitchDetector();
-			mActivity.audio.disableNoteDetector();
-			mActivity.audio.disableChordDetector();
+		mActivity.audio.enablePitchDetector();
+		mActivity.audio.disableNoteDetector();
+		mActivity.audio.disableChordDetector();
 		initSystemServices();
 	}
 
