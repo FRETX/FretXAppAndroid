@@ -59,14 +59,8 @@ public class MainActivity extends ActionBarActivity {
 	private boolean AUDIO_PERMISSIONS_GRANTED = false;
 
     //AUDIO STUFF
-
-    private final int PERMISSION_CODE_RECORD_AUDIO = 42;  //This is arbitrary, so why not The Answer to Life, Universe, and Everything.
-    private final int PERMISSION_CODE_PHONE = 43;
-	private final int PERMISSION_CODE_STORAGE = 44;
-	private final int PERMISSION_CODE_LOCATION = 45;
-
     public int fs = 16000;
-    public double bufferSizeInSeconds = 0.15;
+    public double bufferSizeInSeconds = 0.05;
     public AudioProcessing audio;
     private GoogleApiClient client;  //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
 

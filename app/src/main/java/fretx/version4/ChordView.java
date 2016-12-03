@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -28,7 +29,7 @@ public class ChordView extends View {
 	private Rect imageBounds = new Rect();
 	private int[] strings = new int[6];
 
-	private int color = getResources().getColor(R.color.black);
+	private int color = getResources().getColor(R.color.red_dark);
 	private final Paint paint = new Paint();
 
 	public ChordView(Context context, AttributeSet attrs){
@@ -57,16 +58,36 @@ public class ChordView extends View {
 
 		for (int i = 0; i < strings.length; i++) {
 			int fret = strings[i];
+			if(fingerPositions.baseFret > 0) { fret -= fingerPositions.baseFret; }
 			float x =  (float) imageBounds.width() * (xOffset + i * xStep);
 			float y =  (float) imageBounds.height() * (yOffset + yStep * (fret - 0.5f));
 //			Log.d("x", Float.toString(x));
 //			Log.d("y", Float.toString(y));
 
-//			paint.setStrokeWidth(1.0f);
 			paint.setStyle(Paint.Style.FILL);
 			paint.setColor(color);
+
+			if(fret == 0){
+				y += (yOffset*0.25)* (float) imageBounds.height();
+				paint.setColor(getResources().getColor(R.color.blue2));
+			}
+//			paint.setStrokeWidth(1.0f);
+
+
 			canvas.drawCircle(x, y, imageBounds.width() * 0.03f, paint);
 
+		}
+
+		if(fingerPositions.baseFret > 0){
+			paint.setColor(color);
+			paint.setTextSize(xOffset*1.2f*imageBounds.width());
+			paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+			canvas.drawText( Integer.toString(fingerPositions.baseFret), xOffset/10*imageBounds.width(), yOffset*imageBounds.height(), paint);
+
+			paint.setStyle(Paint.Style.STROKE);
+			paint.setStrokeWidth(yOffset*imageBounds.height()/4);
+			paint.setColor(color);
+			canvas.drawLine(xOffset*0.8f*imageBounds.width(),yOffset*0.75f*imageBounds.height(),(1-xOffset*0.8f)*imageBounds.width(),yOffset*0.75f*imageBounds.height(),paint);
 		}
 
 

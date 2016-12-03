@@ -218,7 +218,6 @@ public class ChordFragment extends Fragment
 		Log.d("Chord Selector",currentChord.toString());
 //		FingerPositions fp = chordFingerings.get(currentChord.toString());
 
-
 		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(currentChord.toString(),chordFingerings);
 
 		chordView.setFingerPositions(chordFingerings.get(currentChord.toString()));
