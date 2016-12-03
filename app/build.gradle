@@ -41,8 +41,9 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.github.wendykierp:JTransforms:3.1'
     compile project(':fretx-audio')
-    compile project(':fretx-audio')
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile project(':fretx-audio')
+    compile project(':fretx-audio')
 }
