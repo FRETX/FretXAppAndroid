@@ -43,47 +43,48 @@ public class LearnFragmentButton extends Fragment {
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.learn_container, new LearnFragmentOne());
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
             }
         });
-        btExerciseTwo = (Button)rootView.findViewById(R.id.btExerciseTwo);
-        btExerciseTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(2));
-                fragmentTransaction.commit();
-
-            }
-        });
-        btExerciseThree = (Button)rootView.findViewById(R.id.btExerciseThree);
-        btExerciseThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(3));
-                fragmentTransaction.commit();
-
-            }
-        });
-        btExerciseFour = (Button)rootView.findViewById(R.id.btExerciseFour);
-        btExerciseFour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(4));
-                fragmentTransaction.commit();
-
-            }
-        });
-
-        btExerciseTwo.setEnabled(true);
-        btExerciseThree.setEnabled(true);
-        btExerciseFour.setEnabled(true);
+//        btExerciseTwo = (Button)rootView.findViewById(R.id.btExerciseTwo);
+//        btExerciseTwo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(2));
+//                fragmentTransaction.commit();
+//
+//            }
+//        });
+//        btExerciseThree = (Button)rootView.findViewById(R.id.btExerciseThree);
+//        btExerciseThree.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(3));
+//                fragmentTransaction.commit();
+//
+//            }
+//        });
+//        btExerciseFour = (Button)rootView.findViewById(R.id.btExerciseFour);
+//        btExerciseFour.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.learn_container, LearnFragmentEx.newInstance(4));
+//                fragmentTransaction.commit();
+//
+//            }
+//        });
+//
+//        btExerciseTwo.setEnabled(true);
+//        btExerciseThree.setEnabled(true);
+//        btExerciseFour.setEnabled(true);
 
         /*userHistory = Util.checkUserHistory(mActivity);
         int highestExercise = 0;

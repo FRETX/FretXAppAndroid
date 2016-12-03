@@ -262,17 +262,26 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if (mCurrentPosition == 0) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.play_container, new PlayFragmentSearchList());
-            fragmentTransaction.commit();
-        } else if (mCurrentPosition == 1) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
-            fragmentTransaction.commit();
-        }
+		int count = getFragmentManager().getBackStackEntryCount();
+
+		if (count == 0) {
+		    super.onBackPressed();
+		    //additional code
+		} else {
+		    getFragmentManager().popBackStack();
+		}
+
+//        if (mCurrentPosition == 0) {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.play_container, new PlayFragmentSearchList());
+//            fragmentTransaction.commit();
+//        } else if (mCurrentPosition == 1) {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
+//            fragmentTransaction.commit();
+//        }
 
     }
 /*

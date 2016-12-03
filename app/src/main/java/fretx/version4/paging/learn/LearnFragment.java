@@ -28,16 +28,15 @@ public class LearnFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.learn_fragment, container, false);
 
-//        mActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-//                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
-//                fragmentTransaction.commitAllowingStateLoss();
-//
-//            }
-//        });
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        });
         return rootView;
     }
 }
