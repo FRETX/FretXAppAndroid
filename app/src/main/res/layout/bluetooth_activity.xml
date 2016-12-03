@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect to FRETX!"
+        android:text="Connect to FretX"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -27,18 +27,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
-        android:layout_below="@+id/textView3"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
         android:background="#f0f0f0"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp" />
+        android:layout_marginBottom="100dp"
+        android:layout_below="@+id/textView2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="List of available device"
+        android:text="Bluetooth Devices"
         android:id="@+id/textView2"
         android:textColor="#050505"
         android:textSize="20sp"
@@ -46,28 +45,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CONNECT TO FRETX"
-        android:id="@+id/textView3"
-        android:textColor="#050505"
-        android:textSize="20sp"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:background="@drawable/start_button"
-        android:text="Do not Connect Now"
+        android:text="Cancel"
         android:id="@+id/btGoBack"
         android:textColor="#ffffff"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/listView"
         android:layout_alignEnd="@+id/listView"
-        android:layout_margin="10dp" />
+        android:layout_margin="10dp"
+        android:background="@color/red_dark" />
 
 </RelativeLayout>
