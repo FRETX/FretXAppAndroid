@@ -146,8 +146,8 @@ public class ChordFragment extends Fragment
 		ConnectThread connectThread = new ConnectThread(Util.str2array("{0}"));
 		connectThread.run();
 
-		String[] rootNotes = {"A","B","C","D","E","F","G"};
-		String [] chordTypes = {"maj","m"};
+		String[] rootNotes = {"C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"};
+		String [] chordTypes = {"maj","m","maj7","m7","sus2","sus4","dim","dim7","aug",};
 
 		LinearLayout rootNoteView = (LinearLayout) mActivity.findViewById(R.id.chordPickerRootNoteView);
 		LinearLayout chordTypeView = (LinearLayout) mActivity.findViewById(R.id.chordPickerTypeView);

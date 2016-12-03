@@ -59,8 +59,8 @@ public class ChordView extends View {
 			int fret = strings[i];
 			float x =  (float) imageBounds.width() * (xOffset + i * xStep);
 			float y =  (float) imageBounds.height() * (yOffset + yStep * (fret - 0.5f));
-			Log.d("x", Float.toString(x));
-			Log.d("y", Float.toString(y));
+//			Log.d("x", Float.toString(x));
+//			Log.d("y", Float.toString(y));
 
 //			paint.setStrokeWidth(1.0f);
 			paint.setStyle(Paint.Style.FILL);

@@ -26,6 +26,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.greysonparrelli.permiso.Permiso;
 
 import java.util.ArrayList;
 
@@ -55,9 +56,14 @@ public class MainActivity extends ActionBarActivity {
     private int mCurrentPosition = 0;
     private int mPreviousPosition = 0;
 
+	private boolean AUDIO_PERMISSIONS_GRANTED = false;
+
     //AUDIO STUFF
 
     private final int PERMISSION_CODE_RECORD_AUDIO = 42;  //This is arbitrary, so why not The Answer to Life, Universe, and Everything.
+    private final int PERMISSION_CODE_PHONE = 43;
+	private final int PERMISSION_CODE_STORAGE = 44;
+	private final int PERMISSION_CODE_LOCATION = 45;
 
     public int fs = 16000;
     public double bufferSizeInSeconds = 0.15;
@@ -68,6 +74,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity_back);
+	    Permiso.getInstance().setActivity(this);
 
         Context ctx = getApplicationContext();
         Network.initialize(ctx);
@@ -175,10 +182,31 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         showConnectionState();
+	    Permiso.getInstance().setActivity(this);
+	    Permiso.getInstance().requestPermissions(new Permiso.IOnPermissionResult() {
+		    @Override
+		    public void onPermissionResult(Permiso.ResultSet resultSet) {
+			    if (resultSet.isPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
+				    Log.d("Permissions","Audio permissions granted");
+				    AUDIO_PERMISSIONS_GRANTED = true;
+				    // Audio permission granted!
+			    }
+			    if (resultSet.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)) {
+				    // Phone permission granted!
+				    Log.d("Permissions","Phone permissions granted");
+			    }
+			    if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+				    // Phone permission granted!
+				    Log.d("Permissions","Phone permissions granted");
+			    }
+		    }
+		    @Override
+		    public void onRationaleRequested(Permiso.IOnRationaleProvided callback, String... permissions) {
+			    Permiso.getInstance().showRationaleInDialog("Title", "Message", null, callback);
+		    }
+	    }, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_COARSE_LOCATION);
 
-        boolean permissionsGranted = askForPermissions();
-
-        if (permissionsGranted) {
+	    if(AUDIO_PERMISSIONS_GRANTED){
             if (audio == null) audio = new AudioProcessing();
 
             //Set target chords
@@ -195,13 +223,35 @@ public class MainActivity extends ActionBarActivity {
             if (!audio.isInitialized()) audio.initialize(fs, bufferSizeInSeconds);
             if (!audio.isProcessing()) audio.start();
             Log.d("onResume", "starting audio processing");
-        }
+	    }
+//        boolean permissionsGranted = askForPermissions();
+
+//        if (permissionsGranted) {
+//            if (audio == null) audio = new AudioProcessing();
+//
+//            //Set target chords
+//            ArrayList<Chord> targetChords = new ArrayList<Chord>(0);
+//            String[] majorRoots = new String[]{"A", "C", "D", "E", "F", "G"};
+//            for (int i = 0; i < majorRoots.length; i++) {
+//                targetChords.add(new Chord(majorRoots[i], "maj"));
+//            }
+//            String[] minorRoots = new String[]{"A", "B", "D", "E"};
+//            for (int i = 0; i < minorRoots.length; i++) {
+//                targetChords.add(new Chord(minorRoots[i], "m"));
+//            }
+//
+//            if (!audio.isInitialized()) audio.initialize(fs, bufferSizeInSeconds);
+//            if (!audio.isProcessing()) audio.start();
+//            Log.d("onResume", "starting audio processing");
+//        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (audio.isInitialized() && audio.isProcessing() ) { audio.stop(); }
+	    if(audio != null){
+		    if (audio.isInitialized() && audio.isProcessing() ) { audio.stop(); }
+	    }
     }
 
     @Override
@@ -242,38 +292,41 @@ public class MainActivity extends ActionBarActivity {
     }
 */
     //Permissions
-    private boolean askForPermissions() {
-
-        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
-        if (result == PackageManager.PERMISSION_GRANTED) {
-//            Toast.makeText(MainActivity.this,"You already have the permission",Toast.LENGTH_LONG).show();
-            return true;
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-                //If the user has denied the permission previously your code will come to this block
-                //Here you can explain why you need this permission
-                //Explain here why you need this permission
-            }
-            //And finally ask for the permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_CODE_RECORD_AUDIO);
-            return false;
-        }
-    }
+//    private boolean askForPermissions() {
+//
+//        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+//        if (result == PackageManager.PERMISSION_GRANTED) {
+////            Toast.makeText(MainActivity.this,"You already have the permission",Toast.LENGTH_LONG).show();
+//            return true;
+//        } else {
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+//                //If the user has denied the permission previously your code will come to this block
+//                //Here you can explain why you need this permission
+//                //Explain here why you need this permission
+//            }
+//            //And finally ask for the permission
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_CODE_RECORD_AUDIO);
+//            return false;
+//        }
+//    }
 
     //This method will be called when the user will tap on allow or deny
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //Checking the request code of our request
-        if (requestCode == PERMISSION_CODE_RECORD_AUDIO) {
-            //If permission is granted
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //Displaying a toast
-//                Toast.makeText(this,"Permission granted now you can record audio",Toast.LENGTH_LONG).show();
-            } else {
-                //Displaying another toast if permission is not granted
-                Toast.makeText(this, "FretX Tuner cannot work without this permission. Restart the app to ask for it again.", Toast.LENGTH_LONG).show();
-            }
-        }
+	    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	    Permiso.getInstance().onRequestPermissionResult(requestCode, permissions, grantResults);
+
+//        //Checking the request code of our request
+//        if (requestCode == PERMISSION_CODE_RECORD_AUDIO) {
+//            //If permission is granted
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                //Displaying a toast
+////                Toast.makeText(this,"Permission granted now you can record audio",Toast.LENGTH_LONG).show();
+//            } else {
+//                //Displaying another toast if permission is not granted
+//                Toast.makeText(this, "FretX Tuner cannot work without this permission. Restart the app to ask for it again.", Toast.LENGTH_LONG).show();
+//            }
+//        }
     }
 
     /**

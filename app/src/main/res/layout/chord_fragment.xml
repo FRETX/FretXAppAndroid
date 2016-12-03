@@ -11,8 +11,8 @@ android:background="#fcfbfc">
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:scrollbars="none"
+        >
 
         <LinearLayout
             android:id="@+id/chordPickerRootNoteView"
@@ -25,7 +25,8 @@ android:background="#fcfbfc">
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true">
+        android:scrollbars="none"
+        >
 
         <LinearLayout
             android:id="@+id/chordPickerTypeView"
