@@ -269,7 +269,7 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 
     private final class MyPlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
         @Override public void onLoading()                            { showMessage("YOUTUBE Loading!");      }
-        @Override public void onLoaded(String s)                     { showMessage("YOUTUBE loaded!"); endPos = m_player.getDurationMillis(); Log.d("endPos",Long.toString(endPos));}
+        @Override public void onLoaded(String s)                     { showMessage("YOUTUBE loaded!"); endPos = m_player.getDurationMillis();}
         @Override public void onAdStarted()                          { showMessage("YOUTUBE Ad Started");    }
         @Override public void onVideoStarted()                       { showMessage("YOUTUBE VideoStarted!"); }
         @Override public void onVideoEnded()                         { showMessage("YOUTUBE VideoEnded!");   }

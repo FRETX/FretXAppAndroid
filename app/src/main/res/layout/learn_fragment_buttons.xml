@@ -12,27 +12,21 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:background="@color/red_dark"
-        android:text="Chord Exercise"
+        android:text="Chord Exercises"
         android:id="@+id/btExerciseOne"
         android:textColor="#ffffff"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/button"
-        android:layout_alignStart="@+id/button"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginTop="30dp" />
 
-    <!--<Button-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:background="@drawable/start_button"-->
-        <!--android:text="Ex 2: Open Strings"-->
-        <!--android:id="@+id/btExerciseTwo"-->
-        <!--android:textColor="#ffffff"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_alignLeft="@+id/button"-->
-        <!--android:layout_alignStart="@+id/button"-->
-        <!--android:layout_gravity="center_horizontal|top"-->
-        <!--android:layout_marginTop="30dp" />-->
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:background="@color/red_dark"
+        android:text="Scale Exercises"
+        android:id="@+id/btExerciseTwo"
+        android:textColor="#ffffff"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="30dp" />
 
     <!--<Button-->
         <!--android:layout_width="300dp"-->

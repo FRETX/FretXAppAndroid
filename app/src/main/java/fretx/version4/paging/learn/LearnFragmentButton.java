@@ -48,7 +48,18 @@ public class LearnFragmentButton extends Fragment {
 
             }
         });
-//        btExerciseTwo = (Button)rootView.findViewById(R.id.btExerciseTwo);
+        btExerciseTwo = (Button)rootView.findViewById(R.id.btExerciseTwo);
+	    btExerciseTwo.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+			    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			    fragmentTransaction.replace(R.id.learn_container, new LearnFragmentTwo());
+			    fragmentTransaction.addToBackStack(null);
+			    fragmentTransaction.commit();
+
+		    }
+	    });
 //        btExerciseTwo.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
