@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_background"
+    android:orientation="vertical"
+    >
+
+    <Space
+        android:id="@+id/chordSpacer"
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_height="20sp" />
+
+    <fretx.version4.paging.learn.LearnChordExerciseView
+        android:id="@+id/chordExerciseView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@id/chordSpacer"
+        android:orientation="vertical"
+        >
+
+        <fretx.version4.FretboardView
+            android:id="@+id/fretboardView"
+            android:layout_below="@+id/textChord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:background="@color/grey_background"
+            android:id="@+id/textChord"
+            android:layout_gravity="center_vertical"
+            android:textSize="80dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </fretx.version4.paging.learn.LearnChordExerciseView>
+
+
+</RelativeLayout>
