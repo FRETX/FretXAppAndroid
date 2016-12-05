@@ -46,9 +46,9 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 	private int chordsIndex = 0;
 
-	private final long TIMER_TICK = 10;
+	private final long TIMER_TICK = 30;
 	private final long ONSET_IGNORE_DURATION = 80; //in miliseconds
-	private final long CHORD_LISTEN_DURATION = 1000; //in miliseconds
+	private final long CHORD_LISTEN_DURATION = 800; //in miliseconds
 	private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
 	private final long CORRECTLY_PLAYED_DURATION = 180; //in milliseconds
 	private long correctlyPlayedAccumulator = 0;
@@ -165,21 +165,18 @@ public class LearnChordExerciseView extends RelativeLayout {
 		connectThread.run();
 
 		//I know this is shitty Ben but bear with me, Imma tidy up all this
-		if(mActivity != null){
-			if(mActivity.audio != null){
-				if(mActivity.audio.getVolume() > VOLUME_THRESHOLD){
-					if(!listening){
-						startListening();
-					}
-				} else {
-//			textChord.setText("");
+		if(mActivity == null) return;
+		if(mActivity.audio == null) return;
+			if(mActivity.audio.getVolume() > VOLUME_THRESHOLD){
+				if(!listening){
+					startListening();
 				}
+			} else {
+//			textChord.setText("");
 			}
+		invalidate();
 		}
 
-		invalidate();
-
-	}
 
 	/////////////////////////////////BlueToothConnection/////////////////////////
 	static private class ConnectThread extends Thread {
@@ -212,4 +209,6 @@ public class LearnChordExerciseView extends RelativeLayout {
 		}
 	}
 
-}
+	}
+
+

@@ -113,6 +113,8 @@ public class LearnScaleExerciseView extends View {
 
 	protected void onDraw(Canvas canvas){
 
+		if(mActivity==null) return;
+		if(mActivity.audio==null) return;
 		double pitch = mActivity.audio.getPitch();
 		int currentNote = notes[notesIndex];
 

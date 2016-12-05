@@ -44,15 +44,19 @@ public class LearnFragmentOne extends Fragment {
 	    chordExerciseView.setFretBoardView(fretboardView);
 
 	    ArrayList<Chord> exerciseChords = new ArrayList<Chord>(0);
-	    String[] majorRoots = new String[]{"G","D"};
+   	    String[] majorRoots = new String[]{"G","C","D"};
 	    for (int i = 0; i < majorRoots.length; i++) {
 		    exerciseChords.add(new Chord(majorRoots[i], "maj"));
 	    }
-	    String[] minorRoots = new String[]{"A"};
-	    for (int i = 0; i < minorRoots.length; i++) {
-		    exerciseChords.add(new Chord(minorRoots[i], "m"));
-	    }
-	    exerciseChords.add(new Chord("C","maj"));
+//	    String[] majorRoots = new String[]{"G","D"};
+//	    for (int i = 0; i < majorRoots.length; i++) {
+//		    exerciseChords.add(new Chord(majorRoots[i], "maj"));
+//	    }
+//	    String[] minorRoots = new String[]{"A"};
+//	    for (int i = 0; i < minorRoots.length; i++) {
+//		    exerciseChords.add(new Chord(minorRoots[i], "m"));
+//	    }
+//	    exerciseChords.add(new Chord("C","maj"));
 
 	    chordExerciseView.setChords(exerciseChords);
 
