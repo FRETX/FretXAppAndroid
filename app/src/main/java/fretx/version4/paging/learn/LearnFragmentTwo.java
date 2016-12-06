@@ -57,10 +57,10 @@ public class LearnFragmentTwo extends Fragment {
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.black_secondary_text));
+							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondary_text));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.black));
+					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primary_text));
 					updateScale(((TextView) view).getText().toString());
 				}
 			});

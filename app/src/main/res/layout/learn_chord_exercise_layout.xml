@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_background"
+    android:background="@color/background"
     android:orientation="vertical"
     >
 
@@ -31,8 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textColor="@color/black"
-            android:background="@color/grey_background"
+            android:textColor="@color/primary_text"
+            android:background="@color/background"
             android:id="@+id/textChord"
             android:layout_gravity="center_vertical"
             android:textSize="80dp"

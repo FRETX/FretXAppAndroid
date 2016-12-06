@@ -4,6 +4,6 @@ android:layout_width="match_parent"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 android:id="@+id/learn_container"
 android:layout_height="match_parent"
-android:background="#fcfbfc">
+android:background="@color/background">
 
 </FrameLayout>

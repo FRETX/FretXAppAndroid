@@ -37,8 +37,6 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.Util;
 
-import static fretx.version4.R.color.black;
-
 public class PlayFragmentYoutubeFragment extends Fragment {
 
     private static final int RECOVERY_REQUEST = 1;
@@ -168,13 +166,13 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 					TimeUnit.MILLISECONDS.toMinutes(m_currentTime),
 					TimeUnit.MILLISECONDS.toSeconds(m_currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(m_currentTime))
 			));
-			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.red_light));
+			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.primary_dark));
 			startButtonPressed = true;
 		} else {
 			startPos = 0;
 			//TODO: do these with proper strings.xml values
 			loopStartBtn.setText("[[START");
-			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.gray));
+			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.secondary_text));
 			startButtonPressed = false;
 		}
 	}
@@ -188,12 +186,12 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 					TimeUnit.MILLISECONDS.toMinutes(m_currentTime),
 					TimeUnit.MILLISECONDS.toSeconds(m_currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(m_currentTime))
 			));
-			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.red_light));
+			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.primary_dark));
 			endButtonPressed = true;
 		} else {
 			endPos = m_player.getDurationMillis();
 			loopEndBtn.setText("END]]");
-			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.gray));
+			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.secondary_text));
 			endButtonPressed = false;
 		}
 	}

@@ -45,7 +45,7 @@ public class LearnScaleExerciseView extends View {
 	private Rect imageBounds = new Rect();
 	private int[] strings = new int[6];
 
-	private int color = getResources().getColor(R.color.red_dark);
+	private int color = getResources().getColor(R.color.primary_dark);
 	private final Paint paint = new Paint();
 
 	private MainActivity mActivity;
@@ -139,7 +139,7 @@ public class LearnScaleExerciseView extends View {
 			paint.setColor(color);
 			if(tmpFp.getFret() == 0){
 				y += (yOffset*0.25)* (float) imageBounds.height();
-				paint.setColor(getResources().getColor(R.color.blue2));
+				paint.setColor(getResources().getColor(R.color.accent));
 			}
 			canvas.drawCircle(x, y, imageBounds.width() * 0.03f, paint);
 		}

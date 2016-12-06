@@ -170,10 +170,10 @@ public class ChordFragment extends Fragment
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.black_secondary_text));
+							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondary_text));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.black));
+					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primary_text));
 					updateCurrentChord(((TextView) view).getText().toString(),currentChord.type);
 				}
 			});
@@ -195,10 +195,10 @@ public class ChordFragment extends Fragment
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.black_secondary_text));
+							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondary_text));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.black));
+					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primary_text));
 					updateCurrentChord(currentChord.root,((TextView) view).getText().toString());
 				}
 			});
@@ -206,8 +206,8 @@ public class ChordFragment extends Fragment
 
 		TextView initialRoot = (TextView) rootNoteView.getChildAt(0);
 		TextView initialType = (TextView) chordTypeView.getChildAt(0);
-		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.black));
-		initialType.setTextColor(mActivity.getResources().getColor(R.color.black));
+		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.primary_text));
+		initialType.setTextColor(mActivity.getResources().getColor(R.color.primary_text));
 		updateCurrentChord(initialRoot.getText().toString(),initialType.getText().toString());
 
 

@@ -24,7 +24,7 @@ public class TunerView extends View {
 	private float centerPitch, currentPitch;
 	private int width, height;
 	private double lastAngle = Double.NaN;
-	private int lastColor = getResources().getColor(R.color.black);
+	private int lastColor = getResources().getColor(R.color.primary_text);
 	private final Paint paint = new Paint();
 	protected double pitchRangeInCents = 200;
 
@@ -74,7 +74,7 @@ public class TunerView extends View {
 
 		paint.setStrokeWidth(10.0f);
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(getResources().getColor(R.color.black));
+		paint.setColor(getResources().getColor(R.color.primary_text));
 		canvas.drawCircle(needleCenterX, needleCenterY, width * 0.05f, paint);
 //	    canvas.drawLine(halfWidth, 0, halfWidth, height, paint);
 
@@ -130,9 +130,9 @@ public class TunerView extends View {
 
 			//10 cents is the "just noticeable difference" for a lot of humans
 			if (Math.abs(difference) < 10) {
-				lastColor = getResources().getColor(R.color.green);
+				lastColor = getResources().getColor(R.color.tuner_correct);
 			} else {
-				lastColor = getResources().getColor(R.color.black);
+				lastColor = getResources().getColor(R.color.primary_text);
 			}
 
 			paint.setColor(lastColor);
