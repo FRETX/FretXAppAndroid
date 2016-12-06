@@ -1,7 +1,6 @@
 package fretx.version4.paging.play;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -166,13 +164,13 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 					TimeUnit.MILLISECONDS.toMinutes(m_currentTime),
 					TimeUnit.MILLISECONDS.toSeconds(m_currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(m_currentTime))
 			));
-			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.primary_dark));
+			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.primaryDark));
 			startButtonPressed = true;
 		} else {
 			startPos = 0;
 			//TODO: do these with proper strings.xml values
 			loopStartBtn.setText("[[START");
-			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.secondary_text));
+			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.secondaryText));
 			startButtonPressed = false;
 		}
 	}
@@ -186,12 +184,12 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 					TimeUnit.MILLISECONDS.toMinutes(m_currentTime),
 					TimeUnit.MILLISECONDS.toSeconds(m_currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(m_currentTime))
 			));
-			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.primary_dark));
+			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.primaryDark));
 			endButtonPressed = true;
 		} else {
 			endPos = m_player.getDurationMillis();
 			loopEndBtn.setText("END]]");
-			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.secondary_text));
+			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.secondaryText));
 			endButtonPressed = false;
 		}
 	}

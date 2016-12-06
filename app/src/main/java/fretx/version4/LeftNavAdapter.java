@@ -94,7 +94,7 @@ public class LeftNavAdapter extends BaseAdapter
 
 		if (position == selected)
 			lbl.setBackgroundColor(context.getResources().getColor(
-					R.color.primary_dark));
+					R.color.primaryDark));
 		else
 			lbl.setBackgroundResource(0);
 		return lbl;

@@ -71,9 +71,4 @@ public class PitchView extends View {
                 height - (float)Math.cos(phi) * height * 0.9f, paint);
     }
 
-    public void successPlayer(){
-        Context context = getContext();
-        MediaPlayer mediaPlayer= MediaPlayer.create(context, R.raw.success_sound);
-        mediaPlayer.start();
-    }
 }

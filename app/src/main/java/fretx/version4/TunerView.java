@@ -3,10 +3,8 @@ package fretx.version4;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,7 +22,7 @@ public class TunerView extends View {
 	private float centerPitch, currentPitch;
 	private int width, height;
 	private double lastAngle = Double.NaN;
-	private int lastColor = getResources().getColor(R.color.primary_text);
+	private int lastColor = getResources().getColor(R.color.primaryText);
 	private final Paint paint = new Paint();
 	protected double pitchRangeInCents = 200;
 
@@ -74,7 +72,7 @@ public class TunerView extends View {
 
 		paint.setStrokeWidth(10.0f);
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setColor(getResources().getColor(R.color.primary_text));
+		paint.setColor(getResources().getColor(R.color.primaryText));
 		canvas.drawCircle(needleCenterX, needleCenterY, width * 0.05f, paint);
 //	    canvas.drawLine(halfWidth, 0, halfWidth, height, paint);
 
@@ -130,9 +128,9 @@ public class TunerView extends View {
 
 			//10 cents is the "just noticeable difference" for a lot of humans
 			if (Math.abs(difference) < 10) {
-				lastColor = getResources().getColor(R.color.tuner_correct);
+				lastColor = getResources().getColor(R.color.tunerCorrect);
 			} else {
-				lastColor = getResources().getColor(R.color.primary_text);
+				lastColor = getResources().getColor(R.color.primaryText);
 			}
 
 			paint.setColor(lastColor);

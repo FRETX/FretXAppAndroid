@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import rocks.fretx.audioprocessing.FingerPositions;
@@ -29,7 +28,7 @@ public class ChordView extends View {
 	private Rect imageBounds = new Rect();
 	private int[] strings = new int[6];
 
-	private int color = getResources().getColor(R.color.primary_dark);
+	private int color = getResources().getColor(R.color.primaryDark);
 	private final Paint paint = new Paint();
 
 	public ChordView(Context context, AttributeSet attrs){

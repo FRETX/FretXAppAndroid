@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,8 +17,6 @@ import fretx.version4.FretboardPosition;
 import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
-import rocks.fretx.audioprocessing.Chord;
-import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
 /**
@@ -45,7 +42,7 @@ public class LearnScaleExerciseView extends View {
 	private Rect imageBounds = new Rect();
 	private int[] strings = new int[6];
 
-	private int color = getResources().getColor(R.color.primary_dark);
+	private int color = getResources().getColor(R.color.primaryDark);
 	private final Paint paint = new Paint();
 
 	private MainActivity mActivity;

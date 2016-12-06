@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/primaryText"
             android:background="@color/background"
             android:id="@+id/textChord"
             android:layout_gravity="center_vertical"

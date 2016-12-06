@@ -43,7 +43,7 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:background="@color/secondary_text"
+                android:background="@color/secondaryText"
                 android:text="[[ start"
                 android:textColor="@color/icons"
                 android:id="@+id/btnStartLoop"
@@ -58,7 +58,7 @@
             <Button
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:background="@color/secondary_text"
+                android:background="@color/secondaryText"
                 android:text="end ]]"
                 android:id="@+id/btnEndLoop"
                 android:layout_weight="0.5"

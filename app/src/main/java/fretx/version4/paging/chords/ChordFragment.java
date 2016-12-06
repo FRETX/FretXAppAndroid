@@ -1,9 +1,5 @@
 package fretx.version4.paging.chords;
 
-import android.app.ActionBar;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,33 +7,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import fretx.version4.BluetoothClass;
 import fretx.version4.ChordView;
 import fretx.version4.Util;
-import fretx.version4.activities.BluetoothActivity;
-import fretx.version4.Config;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.ObservableVideoView;
 import fretx.version4.R;
-import fretx.version4.paging.play.PlayFragmentYoutubeFragment;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
-import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.MusicUtils;
 
 /**
@@ -170,10 +155,10 @@ public class ChordFragment extends Fragment
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondary_text));
+							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primary_text));
+					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
 					updateCurrentChord(((TextView) view).getText().toString(),currentChord.type);
 				}
 			});
@@ -195,10 +180,10 @@ public class ChordFragment extends Fragment
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondary_text));
+							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primary_text));
+					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
 					updateCurrentChord(currentChord.root,((TextView) view).getText().toString());
 				}
 			});
@@ -206,8 +191,8 @@ public class ChordFragment extends Fragment
 
 		TextView initialRoot = (TextView) rootNoteView.getChildAt(0);
 		TextView initialType = (TextView) chordTypeView.getChildAt(0);
-		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.primary_text));
-		initialType.setTextColor(mActivity.getResources().getColor(R.color.primary_text));
+		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+		initialType.setTextColor(mActivity.getResources().getColor(R.color.primaryText));
 		updateCurrentChord(initialRoot.getText().toString(),initialType.getText().toString());
 
 

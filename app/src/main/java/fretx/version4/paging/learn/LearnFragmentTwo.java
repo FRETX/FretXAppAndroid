@@ -6,12 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 
@@ -57,10 +54,10 @@ public class LearnFragmentTwo extends Fragment {
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondary_text));
+							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primary_text));
+					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
 					updateScale(((TextView) view).getText().toString());
 				}
 			});

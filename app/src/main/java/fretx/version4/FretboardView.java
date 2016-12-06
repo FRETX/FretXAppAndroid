@@ -28,7 +28,7 @@ public class FretboardView extends View {
 	private Rect imageBounds = new Rect();
 	private int[] strings = new int[6];
 
-	private int color = getResources().getColor(R.color.primary_dark);
+	private int color = getResources().getColor(R.color.primaryDark);
 	private final Paint paint = new Paint();
 
 
