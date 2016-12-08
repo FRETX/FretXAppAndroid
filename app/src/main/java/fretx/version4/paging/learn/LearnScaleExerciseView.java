@@ -110,9 +110,15 @@ public class LearnScaleExerciseView extends View {
 
 	protected void onDraw(Canvas canvas){
 
-		if(mActivity==null) return;
-		if(mActivity.audio==null) return;
-		double pitch = mActivity.audio.getPitch();
+//		if(mActivity==null) return;
+//		if(mActivity.audio==null) return;
+		//for some reason this way of handling null objects doesn't work, reverting back to nested ifs for now, until I figure out proper release of activities and/or make the bluetooth into a non-activity popup, maybe a fragment
+		double pitch = -1;
+		if(mActivity == null) return;
+		if(mActivity.audio == null) return;
+		if(!mActivity.audio.isProcessing()) return;
+
+		pitch = mActivity.audio.getPitch();
 		int currentNote = notes[notesIndex];
 
 		if(pitch > -1){

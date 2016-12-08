@@ -59,7 +59,7 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 		}
 
 		final SongItem item = data.get(position);
-		holder.txtTitle.setText(item.songName);
+		holder.txtTitle.setText(item.songName.replaceFirst("-","\n"));
 		Picasso.with(context).load(item.imageURL()).placeholder(R.drawable.defaultthumb).into(holder.imageItem);
 		//holder.imageItem.setImageDrawable(item.image);
 		row.setOnClickListener(new View.OnClickListener() {

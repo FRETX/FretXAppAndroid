@@ -58,6 +58,11 @@ public class PlayFragmentSearchList extends Fragment {
     }
 
     private void setEventListeners() {
+        searchBox.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                searchBox.setIconified(false);
+            }
+        });
         searchBox.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) { filterList(query); return false; }
             @Override public boolean onQueryTextChange(String query) { filterList(query); return false; }

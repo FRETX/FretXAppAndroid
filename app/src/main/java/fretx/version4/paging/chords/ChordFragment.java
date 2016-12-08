@@ -198,6 +198,15 @@ public class ChordFragment extends Fragment
 
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(mActivity == null || mActivity.audio == null) return;
+		mActivity.audio.disablePitchDetector();
+		mActivity.audio.disableNoteDetector();
+		mActivity.audio.disableChordDetector();
+	}
+
 	private void updateCurrentChord(String root , String type){
 		currentChord = new Chord(root,type);
 		Log.d("Chord Selector",currentChord.toString());

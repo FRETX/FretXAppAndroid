@@ -58,19 +58,24 @@ public class LearnChordExerciseView extends RelativeLayout {
 		listening = true;
 		chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
 			public void onTick(long millisUntilFinished) {
-				if(mActivity.audio == null) return;
-				if(mActivity.audio.getVolume() < VOLUME_THRESHOLD) {
-					this.cancel();
-					listening = false;
-					correctlyPlayedAccumulator = 0;
-					Log.d("timer","prematurely canceled due to low volume");
+				if(mActivity.audio == null){
+					if(mActivity.audio.getVolume() < VOLUME_THRESHOLD) {
+						this.cancel();
+						listening = false;
+						correctlyPlayedAccumulator = 0;
+						Log.d("timer","prematurely canceled due to low volume");
+					}
 				}
+
 
 				if(millisUntilFinished > CHORD_LISTEN_DURATION){
 					//ignore the onset
 				} else {
 					//listen and accumulate the correctly played durations
 					//TODO: proper object comparison for Chord
+					if(mActivity == null) return;
+					if(mActivity.audio == null) return;
+					if(!mActivity.audio.isProcessing()) return;
 					Chord targetChord = chords.get(chordsIndex);
 					Chord playedChord = mActivity.audio.getChord();
 					if(playedChord != null){
@@ -167,13 +172,12 @@ public class LearnChordExerciseView extends RelativeLayout {
 		//I know this is shitty Ben but bear with me, Imma tidy up all this
 		if(mActivity == null) return;
 		if(mActivity.audio == null) return;
-			if(mActivity.audio.getVolume() > VOLUME_THRESHOLD){
-				if(!listening){
-					startListening();
-				}
-			} else {
-//			textChord.setText("");
-			}
+		if(!mActivity.audio.isProcessing()) return;
+		if(!listening){
+			startListening();
+		} else {
+	//		textChord.setText("");
+		}
 		invalidate();
 		}
 

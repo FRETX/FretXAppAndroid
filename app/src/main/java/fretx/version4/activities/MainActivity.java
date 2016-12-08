@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,7 +58,9 @@ public class MainActivity extends ActionBarActivity {
 //    private SlidingTabLayout slidingTabLayout;
     private TextView  m_tvConnectionState;
     private ImageView on_button;
+	private boolean bluetoothConnected = false;
     private ImageView off_button;
+	private ImageView bluetoothButton;
 
     private int mCurrentPosition = 0;
     private int mPreviousPosition = 0;
@@ -98,6 +101,7 @@ public class MainActivity extends ActionBarActivity {
     public void getGuiReferences() {
 //        pager               = (ViewPager)        findViewById(R.id.viewpager);
 //        slidingTabLayout    = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+	    bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
         m_tvConnectionState = (TextView)         findViewById(R.id.tvConnectionState);
         on_button           = (ImageView)        findViewById(R.id.onb);
         off_button          = (ImageView)        findViewById(R.id.offb);
@@ -225,15 +229,51 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+
+	    bluetoothButton.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+
+			    if (Config.bBlueToothActive == false) {
+				    Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
+				    startActivity(intent);
+			    } else {
+				    try {
+					    Util.stopViaData();
+				    } catch (Exception e) {
+					    e.printStackTrace();
+				    }
+				    new Handler().postDelayed(new Runnable() {
+					    public void run() {
+						    Config.bBlueToothActive = false;
+						    showConnectionState();
+						    BluetoothActivity.mBluetoothGatt.disconnect();
+					    }
+				    }, 200);
+
+
+			    }
+
+
+//			    Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
+//			    startActivity(intent);
+		    }
+	    });
+
+
     }
 
     public void showConnectionState() {
         if (Config.bBlueToothActive == true) {
             m_tvConnectionState.setText("FRETX is Connected");
+	        bluetoothButton.setImageResource(R.drawable.fretx_logo);
 //            on_button.setVisibility(View.VISIBLE);
 //            off_button.setVisibility(View.INVISIBLE);
         } else {
             m_tvConnectionState.setText("FRETX not Connected");
+	        bluetoothButton.setImageResource(R.drawable.fretx_logo_grayscale);
+
 //            off_button.setVisibility(View.VISIBLE);
 //            on_button.setVisibility(View.INVISIBLE);
         }
