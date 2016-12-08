@@ -175,10 +175,10 @@ public class LearnChordExerciseView extends RelativeLayout {
 		if(!mActivity.audio.isProcessing()) return;
 		if(!listening){
 			startListening();
-		} else {
-	//		textChord.setText("");
 		}
+
 		invalidate();
+
 		}
 
 

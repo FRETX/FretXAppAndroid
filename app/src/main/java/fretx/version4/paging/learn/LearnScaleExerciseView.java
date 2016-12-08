@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -24,15 +25,13 @@ import rocks.fretx.audioprocessing.MusicUtils;
  */
 
 public class LearnScaleExerciseView extends View {
-	private Drawable fretboardImage;
+//	private Drawable fretboardImage;
 	private ArrayList<FretboardPosition> notePositions;
 	private rocks.fretx.audioprocessing.FretboardPosition tmpFp;
 	private float x,y;
 	//The image is 345x311
-	private final float xOffset = 26f / 345f;
-	private final float yOffset = 32f / 311f;
-	private final float xStep = 60f / 345f;
-	private final float yStep = 58f / 311f;
+	private float width, height, nStrings, nFrets, xPadding, yPadding, stringStep, fretStep, rx, ry;
+	private float xString, yFret, left, top, right, bottom;
 
 	private int[] notes;
 	private int notesIndex = 0;
@@ -50,7 +49,8 @@ public class LearnScaleExerciseView extends View {
 	public LearnScaleExerciseView(Context context) {
 		super(context);
 		setWillNotDraw(false);
-		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
+		initParameters();
+//		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
 		invalidate();
 
 	}
@@ -58,14 +58,16 @@ public class LearnScaleExerciseView extends View {
 	public LearnScaleExerciseView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setWillNotDraw(false);
-		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
+		initParameters();
+//		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
 		invalidate();
 	}
 
 	public LearnScaleExerciseView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		setWillNotDraw(false);
-		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
+		initParameters();
+//		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
 		invalidate();
 	}
 
@@ -108,6 +110,16 @@ public class LearnScaleExerciseView extends View {
 //		invalidate();
 //	}
 
+	private void initParameters(){
+		nStrings = 6;
+		nFrets = 4;
+		nFrets++; //increment to include the nut, and the bottom-most line and keep the "fret" semantics understandable
+		xPadding = 0.1f;
+		yPadding = 0.1f;
+		rx = 0.054f;
+		ry = 0.05f;
+	}
+
 	protected void onDraw(Canvas canvas){
 
 //		if(mActivity==null) return;
@@ -117,7 +129,6 @@ public class LearnScaleExerciseView extends View {
 		if(mActivity == null) return;
 		if(mActivity.audio == null) return;
 		if(!mActivity.audio.isProcessing()) return;
-
 		pitch = mActivity.audio.getPitch();
 		int currentNote = notes[notesIndex];
 
@@ -130,21 +141,42 @@ public class LearnScaleExerciseView extends View {
 		}
 
 		canvas.getClipBounds(imageBounds);
-		fretboardImage.setBounds(imageBounds);
-		fretboardImage.draw(canvas);
+		width = imageBounds.width();
+		height = imageBounds.height();
+		stringStep = (1 - (2 * xPadding)) / (nStrings - 1);
+		fretStep = (1 - (2 * yPadding)) / (nFrets - 1);
+		paint.setStyle(Paint.Style.STROKE);
+		paint.setStrokeWidth(10);
+		paint.setColor(getResources().getColor(R.color.primaryText));
+		left = xPadding*width;
+		top = yPadding*height;
+		right = (1-xPadding)*width;
+		bottom = (1-yPadding)*height;
+		canvas.drawRoundRect(left,top,right,bottom,rx*width,ry*width,paint);
+		for (int i = 1; i < nStrings-1; i++) {
+			xString = (xPadding + (i*stringStep)) * width;
+			canvas.drawLine(xString,top,xString,bottom,paint);
+		}
+		for (int i = 1; i < nFrets-1; i++) {
+			yFret = (yPadding + (i*fretStep)) * height;
+			canvas.drawLine(left,yFret,right,yFret,paint);
+		}
 
 		for (int i = 0; i < notes.length; i++) {
 			tmpFp = MusicUtils.midiNoteToFretboardPosition(notes[i]);
-			x =  (float) imageBounds.width() * (xOffset + (6 - tmpFp.getString()) * xStep);
-			y =  (float) imageBounds.height() * (yOffset + yStep * (tmpFp.getFret() - 0.5f));
+		}
 
+		for (int i = 0; i < notes.length; i++) {
+			tmpFp = MusicUtils.midiNoteToFretboardPosition(notes[i]);
+			xString = (xPadding + (tmpFp.getString()*stringStep)) * width;
+			yFret = (yPadding + ((tmpFp.getFret()-0.5f)*fretStep)) * height;
 			paint.setStyle(Paint.Style.FILL);
 			paint.setColor(color);
 			if(tmpFp.getFret() == 0){
-				y += (yOffset*0.25)* (float) imageBounds.height();
+				yFret = (yPadding + ((tmpFp.getFret()-0.25f)*fretStep)) * height;
 				paint.setColor(getResources().getColor(R.color.blueLed));
 			}
-			canvas.drawCircle(x, y, imageBounds.width() * 0.03f, paint);
+			canvas.drawCircle(xString, yFret, width * 0.03f, paint);
 		}
 		invalidate();
 	}

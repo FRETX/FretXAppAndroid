@@ -16,8 +16,9 @@
     <fretx.version4.paging.learn.LearnChordExerciseView
         android:id="@+id/chordExerciseView"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/chordSpacer"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical"
         >
 
@@ -37,7 +38,6 @@
             android:layout_gravity="center_vertical"
             android:textSize="80dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
     </fretx.version4.paging.learn.LearnChordExerciseView>

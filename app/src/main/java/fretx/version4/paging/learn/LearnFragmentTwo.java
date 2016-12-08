@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 
@@ -20,7 +21,7 @@ public class LearnFragmentTwo extends Fragment {
 	LearnScaleExerciseView scaleView;
 	LinearLayout scalePicker;
 	String[] scaleNames = {"MinorPentatonic","Blues"};
-//	FretboardView fretboardView;
+	FretboardView fretboardView;
 
 	public LearnFragmentTwo(){
 
@@ -75,7 +76,6 @@ public class LearnFragmentTwo extends Fragment {
 //		exerciseChords.add(new Chord("C","maj"));
 //
 //		chordExerciseView.setChords(exerciseChords);
-
 		return rootView;
 	}
 	//shitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcode :(((
