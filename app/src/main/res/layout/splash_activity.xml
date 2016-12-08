@@ -15,7 +15,7 @@
             android:id="@+id/img_logo"
             android:layout_width="170dp"
             android:layout_height="80dp"
-            android:background="@drawable/logo_splash"
+            android:background="@drawable/fretx_logo"
             android:layout_marginTop="5dp" />
 
         <TextView

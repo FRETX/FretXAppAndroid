@@ -28,7 +28,7 @@ public class FretboardView extends View {
 	private Rect imageBounds = new Rect();
 	private int[] strings = new int[6];
 
-	private int color = getResources().getColor(R.color.primaryDark);
+	private int color = getResources().getColor(R.color.primary);
 	private final Paint paint = new Paint();
 
 
@@ -79,7 +79,7 @@ public class FretboardView extends View {
 
 					if(fret == 0){
 						y += (yOffset*0.25)* (float) imageBounds.height();
-						paint.setColor(getResources().getColor(R.color.accent));
+						paint.setColor(getResources().getColor(R.color.blueLed));
 					}
 //			paint.setStrokeWidth(1.0f);
 

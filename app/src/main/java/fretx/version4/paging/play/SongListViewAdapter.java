@@ -73,6 +73,7 @@ public class SongListViewAdapter extends BaseAdapter {
                 args.putString("RAW", newsItem.songTxt);
                 fragmentYoutubeFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

@@ -136,7 +136,7 @@ public class LearnScaleExerciseView extends View {
 			paint.setColor(color);
 			if(tmpFp.getFret() == 0){
 				y += (yOffset*0.25)* (float) imageBounds.height();
-				paint.setColor(getResources().getColor(R.color.accent));
+				paint.setColor(getResources().getColor(R.color.blueLed));
 			}
 			canvas.drawCircle(x, y, imageBounds.width() * 0.03f, paint);
 		}

@@ -68,7 +68,7 @@ public class ChordView extends View {
 
 			if(fret == 0){
 				y += (yOffset*0.25)* (float) imageBounds.height();
-				paint.setColor(getResources().getColor(R.color.accent));
+				paint.setColor(getResources().getColor(R.color.blueLed));
 			}
 //			paint.setStrokeWidth(1.0f);
 

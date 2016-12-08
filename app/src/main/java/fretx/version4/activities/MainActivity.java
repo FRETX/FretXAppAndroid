@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,17 +40,21 @@ import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.Songlist;
 import fretx.version4.paging.ViewPagerAdapter;
+import fretx.version4.paging.chords.ChordFragment;
+import fretx.version4.paging.learn.LearnFragment;
 import fretx.version4.paging.learn.LearnFragmentButton;
+import fretx.version4.paging.play.PlayFragment;
 import fretx.version4.paging.play.PlayFragmentSearchList;
+import fretx.version4.paging.tuner.TunerFragment;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    private ViewPager pager;
+//    private ViewPager pager;
     //private LeftNavAdapter adapter;
-    private SlidingTabLayout slidingTabLayout;
+//    private SlidingTabLayout slidingTabLayout;
     private TextView  m_tvConnectionState;
     private ImageView on_button;
     private ImageView off_button;
@@ -58,6 +64,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private boolean AUDIO_PERMISSIONS_GRANTED = false;
 
+    private BottomNavigationView bottomNavigationView;
     //AUDIO STUFF
     public int fs = 16000;
     public double bufferSizeInSeconds = 0.05;
@@ -78,19 +85,27 @@ public class MainActivity extends ActionBarActivity {
         getGuiReferences();
         setGuiEventListeners();
 
+
+
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();   //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
+	    getSupportFragmentManager()
+			    .beginTransaction()
+			    .replace(R.id.main_relative_layout, new PlayFragment())
+			    .commit();
+
     }
 
     public void getGuiReferences() {
-        pager               = (ViewPager)        findViewById(R.id.viewpager);
-        slidingTabLayout    = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+//        pager               = (ViewPager)        findViewById(R.id.viewpager);
+//        slidingTabLayout    = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         m_tvConnectionState = (TextView)         findViewById(R.id.tvConnectionState);
         on_button           = (ImageView)        findViewById(R.id.onb);
         off_button          = (ImageView)        findViewById(R.id.offb);
 
-        pager.setAdapter( new ViewPagerAdapter(getSupportFragmentManager() ) );
-        slidingTabLayout.setViewPager(pager);
-        slidingTabLayout.setBackgroundColor(Color.argb(255, 240, 240, 240));
+//        pager.setAdapter( new ViewPagerAdapter(getSupportFragmentManager() ) );
+//        slidingTabLayout.setViewPager(pager);
+//        slidingTabLayout.setBackgroundColor(Color.argb(255, 240, 240, 240));
+	    bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
     }
 
     public void setGuiEventListeners() {
@@ -108,7 +123,59 @@ public class MainActivity extends ActionBarActivity {
 
             }
         }); */
-        m_tvConnectionState.setOnClickListener(new View.OnClickListener() {
+	    bottomNavigationView.setOnNavigationItemSelectedListener(
+			    new BottomNavigationView.OnNavigationItemSelectedListener() {
+				    @Override
+				    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+					    switch (item.getItemId()) {
+						    case R.id.action_play:
+							    for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+								    bottomNavigationView.getMenu().getItem(i).setChecked(false);
+							    }
+							    item.setChecked(true);
+							    getSupportFragmentManager()
+									    .beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+									    .replace(R.id.main_relative_layout, new PlayFragment())
+									    .commit();
+							    break;
+						    case R.id.action_learn:
+							    for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+								    bottomNavigationView.getMenu().getItem(i).setChecked(false);
+							    }
+							    item.setChecked(true);
+							    getSupportFragmentManager()
+									    .beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+									    .replace(R.id.main_relative_layout, new LearnFragment())
+									    .commit();
+							    break;
+						    case R.id.action_chords:
+							    for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+								    bottomNavigationView.getMenu().getItem(i).setChecked(false);
+							    }
+							    item.setChecked(true);
+							    getSupportFragmentManager()
+									    .beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+									    .replace(R.id.main_relative_layout, new ChordFragment())
+									    .commit();
+							    break;
+						    case R.id.action_tuner:
+							    for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+								    bottomNavigationView.getMenu().getItem(i).setChecked(false);
+							    }
+							    item.setChecked(true);
+							    getSupportFragmentManager()
+									    .beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+									    .replace(R.id.main_relative_layout, new TunerFragment())
+									    .commit();
+							    break;
+					    }
+					    return false;
+				    }
+			    });
+
+
+
+	    m_tvConnectionState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Config.bBlueToothActive == false) {
@@ -163,12 +230,12 @@ public class MainActivity extends ActionBarActivity {
     public void showConnectionState() {
         if (Config.bBlueToothActive == true) {
             m_tvConnectionState.setText("FRETX is Connected");
-            on_button.setVisibility(View.VISIBLE);
-            off_button.setVisibility(View.INVISIBLE);
+//            on_button.setVisibility(View.VISIBLE);
+//            off_button.setVisibility(View.INVISIBLE);
         } else {
             m_tvConnectionState.setText("FRETX not Connected");
-            off_button.setVisibility(View.VISIBLE);
-            on_button.setVisibility(View.INVISIBLE);
+//            off_button.setVisibility(View.VISIBLE);
+//            on_button.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -240,6 +307,7 @@ public class MainActivity extends ActionBarActivity {
 //        }
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -262,26 +330,14 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-		int count = getFragmentManager().getBackStackEntryCount();
-
-		if (count == 0) {
-		    super.onBackPressed();
-		    //additional code
-		} else {
-		    getFragmentManager().popBackStack();
-		}
-
-//        if (mCurrentPosition == 0) {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.replace(R.id.play_container, new PlayFragmentSearchList());
-//            fragmentTransaction.commit();
-//        } else if (mCurrentPosition == 1) {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
-//            fragmentTransaction.commit();
-//        }
+//		int count = getFragmentManager().getBackStackEntryCount();
+//
+//		if (count == 0) {
+//		    super.onBackPressed();
+//		    //additional code
+//		} else {
+//		    getFragmentManager().popBackStack();
+//		}
 
     }
 /*

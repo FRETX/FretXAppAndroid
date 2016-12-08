@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_play"
+        android:enabled="true"
+        android:checked="true"
+        android:icon="@drawable/ic_music_video"
+        android:title="Play"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_learn"
+        android:enabled="true"
+        android:icon="@drawable/ic_learn"
+        android:title="Learn"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_chords"
+        android:enabled="true"
+        android:icon="@drawable/ic_library"
+        android:title="Chords"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_tuner"
+        android:enabled="true"
+        android:icon="@drawable/ic_microphone"
+        android:title="Tuner"
+        app:showAsAction="ifRoom" />
+</menu>

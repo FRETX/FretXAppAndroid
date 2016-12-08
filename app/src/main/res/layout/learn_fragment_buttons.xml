@@ -11,7 +11,7 @@
     <Button
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@color/primaryDark"
+        android:background="@color/primary"
         android:text="Chord Exercises"
         android:id="@+id/btExerciseOne"
         android:textColor="@color/icons"
@@ -21,7 +21,7 @@
     <Button
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@color/primaryDark"
+        android:background="@color/primary"
         android:text="Scale Exercises"
         android:id="@+id/btExerciseTwo"
         android:textColor="@color/icons"

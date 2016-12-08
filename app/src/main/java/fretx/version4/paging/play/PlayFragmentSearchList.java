@@ -53,7 +53,7 @@ public class PlayFragmentSearchList extends Fragment {
         mainData   = new ArrayList<>();
         context    = (MainActivity) getActivity();
         searchBox  = (SearchView)   rootView.findViewById(R.id.svSongs);
-        refreshBtn = (ImageView)    rootView.findViewById(R.id.fresh);
+//        refreshBtn = (ImageView)    rootView.findViewById(R.id.fresh);
         listView   = (GridView)     rootView.findViewById(R.id.lvSongList);
     }
 
@@ -63,12 +63,12 @@ public class PlayFragmentSearchList extends Fragment {
             @Override public boolean onQueryTextChange(String query) { filterList(query); return false; }
         });
 
-        refreshBtn.setOnClickListener( new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                if( Network.isConnected() ) { Songlist.initialize(); }
-                else                        { Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show(); }
-            }
-        });
+//        refreshBtn.setOnClickListener( new View.OnClickListener() {
+//            @Override public void onClick(View view) {
+//                if( Network.isConnected() ) { Songlist.initialize(); }
+//                else                        { Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show(); }
+//            }
+//        });
 
         Songlist.setListener( new Songlist.Callback() {
             @Override public void onBusy()  { showBusy(); }
