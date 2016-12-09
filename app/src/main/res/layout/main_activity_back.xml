@@ -21,43 +21,9 @@
             android:src="@drawable/fretx_logo_grayscale"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:padding="5dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FRETX is Connected!"
-            android:id="@+id/tvConnectionState"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/imageView"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="30dp"
-            android:id="@+id/onb"
-            android:src="@drawable/on"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/tvConnectionState"
-            android:layout_marginRight="10dp"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="30dp"
-            android:id="@+id/offb"
-            android:src="@drawable/off"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/tvConnectionState"
-            android:layout_marginRight="10dp"
-            android:visibility="gone"/>
-
-
+            android:padding="5dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginRight="150dp"/>
         <!--<fretx.version4.paging.SlidingTabLayout-->
             <!--android:id="@+id/sliding_tabs"-->
             <!--android:layout_width="match_parent"-->

@@ -13,6 +13,7 @@
     <color name="background">#FFFFFF</color>
     <color name="tunerCorrect">#64dd17</color>
     <color name="blueLed">#002fff</color>
+    <color name="showcaseOverlay">#EED32F2F</color>
 </resources>
 
 

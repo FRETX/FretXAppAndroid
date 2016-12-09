@@ -49,235 +49,48 @@ import fretx.version4.paging.play.PlayFragmentSearchList;
 import fretx.version4.paging.tuner.TunerFragment;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
 public class MainActivity extends ActionBarActivity {
-
-//    private ViewPager pager;
-    //private LeftNavAdapter adapter;
-//    private SlidingTabLayout slidingTabLayout;
-    private TextView  m_tvConnectionState;
-    private ImageView on_button;
-	private boolean bluetoothConnected = false;
-    private ImageView off_button;
+	//VIEWS
 	private ImageView bluetoothButton;
-
-    private int mCurrentPosition = 0;
-    private int mPreviousPosition = 0;
-
+	private BottomNavigationView bottomNavigationView;
+	//FLAGS
 	private boolean AUDIO_PERMISSIONS_GRANTED = false;
+	private String SHOWCASE_ID = "bluetoothConnect";
 
-    private BottomNavigationView bottomNavigationView;
-    //AUDIO STUFF
+    //AUDIO PARAMETERS
     public int fs = 16000;
     public double bufferSizeInSeconds = 0.05;
     public AudioProcessing audio;
-    private GoogleApiClient client;  //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity_back);
-	    Permiso.getInstance().setActivity(this);
-
-        Context ctx = getApplicationContext();
-        Network.initialize(ctx);
-        AppCache.initialize(ctx);
-        Songlist.initialize();
-
-        getGuiReferences();
-        setGuiEventListeners();
+	private GoogleApiClient client;  //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
 
 
+	//LIFECYCLE
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main_activity_back);
+		Permiso.getInstance().setActivity(this);
 
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();   //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
-	    getSupportFragmentManager()
-			    .beginTransaction()
-			    .replace(R.id.main_relative_layout, new PlayFragment())
-			    .commit();
+		Context ctx = getApplicationContext();
+		Network.initialize(ctx);
+		AppCache.initialize(ctx);
+		Songlist.initialize();
 
-    }
+		getGuiReferences();
+		setGuiEventListeners();
 
-    public void getGuiReferences() {
-//        pager               = (ViewPager)        findViewById(R.id.viewpager);
-//        slidingTabLayout    = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
-	    bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
-        m_tvConnectionState = (TextView)         findViewById(R.id.tvConnectionState);
-        on_button           = (ImageView)        findViewById(R.id.onb);
-        off_button          = (ImageView)        findViewById(R.id.offb);
+		client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();   //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.main_relative_layout, new PlayFragment())
+				.commit();
 
-//        pager.setAdapter( new ViewPagerAdapter(getSupportFragmentManager() ) );
-//        slidingTabLayout.setViewPager(pager);
-//        slidingTabLayout.setBackgroundColor(Color.argb(255, 240, 240, 240));
-	    bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-    }
-
-    public void setGuiEventListeners() {
-        // Was used in the past to stop Bluetooth data when leaving the Learn Tab
-        /*
-        slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                mPreviousPosition = mCurrentPosition;
-                mCurrentPosition = position;
-                if (mPreviousPosition == 1)
-                    changeFragments(position);
-                //Util.stopViaData();
-                return Color.BLUE;
-
-            }
-        }); */
-	    bottomNavigationView.setOnNavigationItemSelectedListener(
-			    new BottomNavigationView.OnNavigationItemSelectedListener() {
-				    @Override
-				    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-					    switch (item.getItemId()) {
-						    case R.id.action_play:
-							    for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-								    bottomNavigationView.getMenu().getItem(i).setChecked(false);
-							    }
-							    item.setChecked(true);
-							    getSupportFragmentManager()
-									    .beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-									    .replace(R.id.main_relative_layout, new PlayFragment())
-									    .commit();
-							    break;
-						    case R.id.action_learn:
-							    for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-								    bottomNavigationView.getMenu().getItem(i).setChecked(false);
-							    }
-							    item.setChecked(true);
-							    getSupportFragmentManager()
-									    .beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-									    .replace(R.id.main_relative_layout, new LearnFragment())
-									    .commit();
-							    break;
-						    case R.id.action_chords:
-							    for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-								    bottomNavigationView.getMenu().getItem(i).setChecked(false);
-							    }
-							    item.setChecked(true);
-							    getSupportFragmentManager()
-									    .beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-									    .replace(R.id.main_relative_layout, new ChordFragment())
-									    .commit();
-							    break;
-						    case R.id.action_tuner:
-							    for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-								    bottomNavigationView.getMenu().getItem(i).setChecked(false);
-							    }
-							    item.setChecked(true);
-							    getSupportFragmentManager()
-									    .beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-									    .replace(R.id.main_relative_layout, new TunerFragment())
-									    .commit();
-							    break;
-					    }
-					    return false;
-				    }
-			    });
-
-
-
-	    m_tvConnectionState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Config.bBlueToothActive == false) {
-                    Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
-                    startActivity(intent);
-                } else {
-                    try {
-                        Util.stopViaData();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            Config.bBlueToothActive = false;
-                            showConnectionState();
-                            BluetoothActivity.mBluetoothGatt.disconnect();
-                        }
-                    }, 200);
-
-
-                }
-            }
-        });
-
-        on_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Util.stopViaData();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        Config.bBlueToothActive = false;
-                        showConnectionState();
-                        BluetoothActivity.mBluetoothGatt.disconnect();
-                    }
-                }, 200);
-            }
-        });
-
-        off_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-	    bluetoothButton.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-
-			    if (Config.bBlueToothActive == false) {
-				    Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
-				    startActivity(intent);
-			    } else {
-				    try {
-					    Util.stopViaData();
-				    } catch (Exception e) {
-					    e.printStackTrace();
-				    }
-				    new Handler().postDelayed(new Runnable() {
-					    public void run() {
-						    Config.bBlueToothActive = false;
-						    showConnectionState();
-						    BluetoothActivity.mBluetoothGatt.disconnect();
-					    }
-				    }, 200);
-
-
-			    }
-
-
-//			    Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
-//			    startActivity(intent);
-		    }
-	    });
-
-
-    }
-
-    public void showConnectionState() {
-        if (Config.bBlueToothActive == true) {
-            m_tvConnectionState.setText("FRETX is Connected");
-	        bluetoothButton.setImageResource(R.drawable.fretx_logo);
-//            on_button.setVisibility(View.VISIBLE);
-//            off_button.setVisibility(View.INVISIBLE);
-        } else {
-            m_tvConnectionState.setText("FRETX not Connected");
-	        bluetoothButton.setImageResource(R.drawable.fretx_logo_grayscale);
-
-//            off_button.setVisibility(View.VISIBLE);
-//            on_button.setVisibility(View.INVISIBLE);
-        }
-    }
+		showTutorial();
+	}
 
     @Override
     protected void onResume() {
@@ -325,28 +138,7 @@ public class MainActivity extends ActionBarActivity {
             if (!audio.isProcessing()) audio.start();
             Log.d("onResume", "starting audio processing");
 	    }
-//        boolean permissionsGranted = askForPermissions();
-
-//        if (permissionsGranted) {
-//            if (audio == null) audio = new AudioProcessing();
-//
-//            //Set target chords
-//            ArrayList<Chord> targetChords = new ArrayList<Chord>(0);
-//            String[] majorRoots = new String[]{"A", "C", "D", "E", "F", "G"};
-//            for (int i = 0; i < majorRoots.length; i++) {
-//                targetChords.add(new Chord(majorRoots[i], "maj"));
-//            }
-//            String[] minorRoots = new String[]{"A", "B", "D", "E"};
-//            for (int i = 0; i < minorRoots.length; i++) {
-//                targetChords.add(new Chord(minorRoots[i], "m"));
-//            }
-//
-//            if (!audio.isInitialized()) audio.initialize(fs, bufferSizeInSeconds);
-//            if (!audio.isProcessing()) audio.start();
-//            Log.d("onResume", "starting audio processing");
-//        }
     }
-
 
     @Override
     protected void onPause() {
@@ -370,64 +162,137 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-//		int count = getFragmentManager().getBackStackEntryCount();
-//
-//		if (count == 0) {
-//		    super.onBackPressed();
-//		    //additional code
-//		} else {
-//		    getFragmentManager().popBackStack();
-//		}
-
+		//Intentionally do nothing so that back button is disabled
     }
-/*
-    public void changeFragments(int position) {
-        if (position == 2 || position == 0) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
-            fragmentTransaction.commit();
-        }
-    }
-*/
-    //Permissions
-//    private boolean askForPermissions() {
-//
-//        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
-//        if (result == PackageManager.PERMISSION_GRANTED) {
-////            Toast.makeText(MainActivity.this,"You already have the permission",Toast.LENGTH_LONG).show();
-//            return true;
-//        } else {
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-//                //If the user has denied the permission previously your code will come to this block
-//                //Here you can explain why you need this permission
-//                //Explain here why you need this permission
-//            }
-//            //And finally ask for the permission
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSION_CODE_RECORD_AUDIO);
-//            return false;
-//        }
-//    }
 
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// ATTENTION: This was auto-generated to implement the App Indexing API.
+		// See https://g.co/AppIndexing/AndroidStudio for more information.
+		client.connect();
+		AppIndex.AppIndexApi.start(client, getIndexApiAction());
+	}
+
+
+	//INITIALIZATION
+	public void getGuiReferences() {
+		bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
+		bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+	}
+
+	public void setGuiEventListeners() {
+		bottomNavigationView.setOnNavigationItemSelectedListener(
+				new BottomNavigationView.OnNavigationItemSelectedListener() {
+					@Override
+					public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+						switch (item.getItemId()) {
+							case R.id.action_play:
+								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+									bottomNavigationView.getMenu().getItem(i).setChecked(false);
+								}
+								item.setChecked(true);
+								getSupportFragmentManager()
+										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+										.replace(R.id.main_relative_layout, new PlayFragment())
+										.commit();
+								break;
+							case R.id.action_learn:
+								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+									bottomNavigationView.getMenu().getItem(i).setChecked(false);
+								}
+								item.setChecked(true);
+								getSupportFragmentManager()
+										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+										.replace(R.id.main_relative_layout, new LearnFragment())
+										.commit();
+								break;
+							case R.id.action_chords:
+								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+									bottomNavigationView.getMenu().getItem(i).setChecked(false);
+								}
+								item.setChecked(true);
+								getSupportFragmentManager()
+										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+										.replace(R.id.main_relative_layout, new ChordFragment())
+										.commit();
+								break;
+							case R.id.action_tuner:
+								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+									bottomNavigationView.getMenu().getItem(i).setChecked(false);
+								}
+								item.setChecked(true);
+								getSupportFragmentManager()
+										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+										.replace(R.id.main_relative_layout, new TunerFragment())
+										.commit();
+								break;
+						}
+						return false;
+					}
+				});
+
+		bluetoothButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+
+				if (Config.bBlueToothActive == false) {
+					Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
+					startActivity(intent);
+				} else {
+					try {
+						Util.stopViaData();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					new Handler().postDelayed(new Runnable() {
+						public void run() {
+							Config.bBlueToothActive = false;
+							showConnectionState();
+							BluetoothActivity.mBluetoothGatt.disconnect();
+						}
+					}, 200);
+				}
+			}
+		});
+
+
+	}
+
+
+	//PERMISSIONS
     //This method will be called when the user will tap on allow or deny
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 	    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	    Permiso.getInstance().onRequestPermissionResult(requestCode, permissions, grantResults);
-
-//        //Checking the request code of our request
-//        if (requestCode == PERMISSION_CODE_RECORD_AUDIO) {
-//            //If permission is granted
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                //Displaying a toast
-////                Toast.makeText(this,"Permission granted now you can record audio",Toast.LENGTH_LONG).show();
-//            } else {
-//                //Displaying another toast if permission is not granted
-//                Toast.makeText(this, "FretX Tuner cannot work without this permission. Restart the app to ask for it again.", Toast.LENGTH_LONG).show();
-//            }
-//        }
     }
 
+
+	//UTILITY
+	public void showConnectionState() {
+		if (Config.bBlueToothActive == true) {
+			bluetoothButton.setImageResource(R.drawable.fretx_logo);
+		} else {
+			bluetoothButton.setImageResource(R.drawable.fretx_logo_grayscale);
+		}
+	}
+
+	private void showTutorial(){
+		new MaterialShowcaseView.Builder(this)
+				.setTarget((ImageView) findViewById(R.id.bluetoothLogo))
+				.setDismissText("GOT IT")
+				.setContentText("Turn on your FretX device and tap the FretX logo to connect to it")
+				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
+//				.singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
+				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
+				.setShapePadding(20)
+				.show();
+	}
+
+
+	//COMPAT STUFF
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -444,13 +309,4 @@ public class MainActivity extends ActionBarActivity {
                 .build();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
 }
