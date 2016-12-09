@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.paging.tuner;
 
 
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import rocks.fretx.audioprocessing.AudioAnalyzer;
 import rocks.fretx.audioprocessing.MusicUtils;

@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.TunerView;
 
 
 public class TunerFragment extends Fragment {
