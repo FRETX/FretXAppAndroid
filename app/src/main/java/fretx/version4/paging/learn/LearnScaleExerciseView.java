@@ -81,16 +81,6 @@ public class LearnScaleExerciseView extends View {
 		advanceNote();
 
 		invalidate();
-
-		byte[] bluetoothArray = new byte[notes.length];
-		for (int i = 0; i < notes.length; i++) {
-			bluetoothArray[i] = MusicUtils.midiNoteToFretboardPosition(currentNote).getByteCode();
-		}
-//		bluetoothArray[0] = MusicUtils.midiNoteToFretboardPosition(currentNote).getByteCode();
-		ConnectThread connectThread = new ConnectThread(bluetoothArray);
-		connectThread.run();
-
-		//TODO: flash whole scale
 	}
 
 	private void advanceNote() {
@@ -126,20 +116,6 @@ public class LearnScaleExerciseView extends View {
 //		if(mActivity.audio==null) return;
 		//for some reason this way of handling null objects doesn't work, reverting back to nested ifs for now, until I figure out proper release of activities and/or make the bluetooth into a non-activity popup, maybe a fragment
 		double pitch = -1;
-		if(mActivity == null) return;
-		if(mActivity.audio == null) return;
-		if(!mActivity.audio.isProcessing()) return;
-		pitch = mActivity.audio.getPitch();
-		int currentNote = notes[notesIndex];
-
-		if(pitch > -1){
-			double pitchMidi = MusicUtils.hzToMidiNote(pitch);
-
-			if (Math.abs(currentNote - pitchMidi) < correctNoteThreshold) {
-				advanceNote();
-			}
-		}
-
 		canvas.getClipBounds(imageBounds);
 		width = imageBounds.width();
 		height = imageBounds.height();
@@ -162,18 +138,38 @@ public class LearnScaleExerciseView extends View {
 			canvas.drawLine(left,yFret,right,yFret,paint);
 		}
 
+
+//		if(mActivity == null) return;
+//		if(mActivity.audio == null) return;
+//		if(!mActivity.audio.isProcessing()) return;
+		if(notes == null) return;
+//		pitch = mActivity.audio.getPitch();
+//		int currentNote = notes[notesIndex];
+
+//		if(pitch > -1){
+//			double pitchMidi = MusicUtils.hzToMidiNote(pitch);
+//
+//			if (Math.abs(currentNote - pitchMidi) < correctNoteThreshold) {
+//				advanceNote();
+//			}
+//		}
+
+
+
 		for (int i = 0; i < notes.length; i++) {
 			tmpFp = MusicUtils.midiNoteToFretboardPosition(notes[i]);
 		}
 
 		for (int i = 0; i < notes.length; i++) {
 			tmpFp = MusicUtils.midiNoteToFretboardPosition(notes[i]);
-			xString = (xPadding + (tmpFp.getString()*stringStep)) * width;
-			yFret = (yPadding + ((tmpFp.getFret()-0.5f)*fretStep)) * height;
+			int fret = tmpFp.getFret();
+			int string = ((int)nStrings-1) - (tmpFp.getString()-1);
+			xString = (xPadding + (string*stringStep)) * width;
+			yFret = (yPadding + ((fret-0.5f)*fretStep)) * height;
 			paint.setStyle(Paint.Style.FILL);
 			paint.setColor(color);
 			if(tmpFp.getFret() == 0){
-				yFret = (yPadding + ((tmpFp.getFret()-0.25f)*fretStep)) * height;
+				yFret = (yPadding + ((fret-0.25f)*fretStep)) * height;
 				paint.setColor(getResources().getColor(R.color.blueLed));
 			}
 			canvas.drawCircle(xString, yFret, width * 0.03f, paint);

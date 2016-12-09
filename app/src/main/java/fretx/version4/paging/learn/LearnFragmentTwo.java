@@ -2,16 +2,24 @@ package fretx.version4.paging.learn;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
+
+import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
+import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import rocks.fretx.audioprocessing.FretboardPosition;
+import rocks.fretx.audioprocessing.MusicUtils;
 
 public class LearnFragmentTwo extends Fragment {
 
@@ -20,7 +28,8 @@ public class LearnFragmentTwo extends Fragment {
 	LinearLayout rootView = null;
 	LearnScaleExerciseView scaleView;
 	LinearLayout scalePicker;
-	String[] scaleNames = {"MinorPentatonic","Blues"};
+	String[] scaleNames = {"FMinorPentatonic","Blues"};
+	int[] notes;
 	FretboardView fretboardView;
 
 	public LearnFragmentTwo(){
@@ -36,7 +45,7 @@ public class LearnFragmentTwo extends Fragment {
 
 		scalePicker = (LinearLayout) rootView.findViewById(R.id.scalePickerView);
 		//shitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcode
-		updateScale("MinorPentatonic");
+		updateScale("FMinorPentatonic");
 
 		TextView tmpTextView;
 		for (String str :scaleNames) {
@@ -80,17 +89,74 @@ public class LearnFragmentTwo extends Fragment {
 	}
 	//shitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcode :(((
 	private void updateScale(String scaleName){
-		int [] notes = new int[0];
 		switch(scaleName){
-			case "MinorPentatonic" :
-				notes = new int[] {41,44,46,48,51,53,56,58,60,63,65,68};
+			case "FMinorPentatonic" :
+				notes = new int[] {41,46,51,56,60,65,48,53,58,44,63,68};
+//				notes = new int[] {41,44,46,48,51,53,56,58,60,63,65,68};
 				break;
 			case "Blues" :
 				notes = new int[] {41,44,46,47,48,51,53,56,58,59,60,63,65,68};
 				break;
 			default:
+				notes = new int[0];
 				break;
 		}
+
+		byte[] bluetoothArray = new byte[notes.length+1];
+		for (int i = 0; i < notes.length; i++) {
+			FretboardPosition tmpFp =  MusicUtils.midiNoteToFretboardPosition(notes[i]);
+			bluetoothArray[i] = Byte.valueOf(Integer.toString(tmpFp.getFret() * 10 + tmpFp.getString()));
+		}
+		bluetoothArray[notes.length] = 0;
+		ConnectThread connectThread = new ConnectThread(bluetoothArray);
+		connectThread.run();
 		scaleView.setNotes(notes);
+
+//		rootView.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				byte[] tempByte = {Byte.valueOf("0")};
+//				ConnectThread connectThread = new ConnectThread(tempByte);
+//				connectThread.run();
+//				scaleView.setNotes(notes);
+//			}
+//		}, 2000); // 5000ms delay
 	}
+
+
+
+
+
+	/////////////////////////////////BlueToothConnection/////////////////////////
+	static private class ConnectThread extends Thread {
+		byte[] array;
+
+		public ConnectThread(byte[] tmp) {
+			array = tmp;
+		}
+
+		public void run() {
+			try {
+				// Connect the device through the socket. This will block
+				// until it succeeds or throws an exception
+				Util.startViaData(array);
+			} catch (Exception connectException) {
+				Log.i(BluetoothClass.tag, "connect failed");
+				// Unable to connect; close the socket and get out
+				try {
+					BluetoothClass.mmSocket.close();
+				} catch (IOException closeException) {
+					Log.e(BluetoothClass.tag, "mmSocket.close");
+				}
+				return;
+			}
+			// Do work to manage the connection (in a separate thread)
+			if (BluetoothClass.mHandler == null)
+				Log.v("debug", "mHandler is null @ obtain message");
+			else
+				Log.v("debug", "mHandler is not null @ obtain message");
+		}
+	}
+
+
 }

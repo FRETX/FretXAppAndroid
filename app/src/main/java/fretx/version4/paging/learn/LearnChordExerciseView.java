@@ -35,7 +35,7 @@ public class LearnChordExerciseView extends RelativeLayout {
 	private RelativeLayout rootView;
 	private FretboardView fretBoardView;
 
-	private final double VOLUME_THRESHOLD = -11;
+	private final double VOLUME_THRESHOLD = -10.5   ;
 	private int width, height;
 
 	private ArrayList<Chord> chords = new ArrayList<Chord>(0);
@@ -46,11 +46,11 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 	private int chordsIndex = 0;
 
-	private final long TIMER_TICK = 30;
-	private final long ONSET_IGNORE_DURATION = 80; //in miliseconds
-	private final long CHORD_LISTEN_DURATION = 800; //in miliseconds
+	private final long TIMER_TICK = 20;
+	private final long ONSET_IGNORE_DURATION = 50; //in miliseconds
+	private final long CHORD_LISTEN_DURATION = 700; //in miliseconds
 	private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
-	private final long CORRECTLY_PLAYED_DURATION = 180; //in milliseconds
+	private final long CORRECTLY_PLAYED_DURATION = 120; //in milliseconds
 	private long correctlyPlayedAccumulator = 0;
 
 	private void startListening() {
@@ -58,7 +58,7 @@ public class LearnChordExerciseView extends RelativeLayout {
 		listening = true;
 		chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
 			public void onTick(long millisUntilFinished) {
-				if(mActivity.audio == null){
+				if(mActivity.audio != null){
 					if(mActivity.audio.getVolume() < VOLUME_THRESHOLD) {
 						this.cancel();
 						listening = false;
@@ -82,7 +82,10 @@ public class LearnChordExerciseView extends RelativeLayout {
 						if (targetChord.toString().equals(playedChord.toString())) {
 							correctlyPlayedAccumulator += TIMER_TICK;
 							Log.d("correctlyPlayedAcc", Long.toString(correctlyPlayedAccumulator));
+						} else{
+							correctlyPlayedAccumulator = 0;
 						}
+
 					}
 				}
 				if(correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION){

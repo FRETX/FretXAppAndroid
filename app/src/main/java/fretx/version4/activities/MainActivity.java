@@ -271,7 +271,7 @@ public class MainActivity extends ActionBarActivity {
 				.setDismissText("GOT IT")
 				.setContentText("Turn on your FretX device and tap the FretX logo to connect to it")
 				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
-//				.singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
+				.singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
 				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
 				.setShapePadding(20)
 				.show();

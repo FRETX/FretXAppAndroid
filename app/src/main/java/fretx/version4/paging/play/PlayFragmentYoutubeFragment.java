@@ -96,6 +96,14 @@ public class PlayFragmentYoutubeFragment extends Fragment {
         return rootView;
     }
 
+    @Override public void onStop(){
+        super.onStop();
+        Log.d("PlayFragmentYT","onStop");
+        if(m_player != null){
+            m_player.pause();
+        }
+    }
+
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
@@ -104,8 +112,6 @@ public class PlayFragmentYoutubeFragment extends Fragment {
         context       = (MainActivity) getActivity();
         prerollSlider = (SeekBar)  rootView.findViewById(R.id.prerollSlider);
         prerollValue  = (TextView) rootView.findViewById(R.id.prerollValView);
-//        loopStartTime = (TextView) rootView.findViewById(R.id.tvStartTime);
-//        loopEndTime   = (TextView) rootView.findViewById(R.id.tvEndTime);
         loopStartBtn   = (Button)   rootView.findViewById(R.id.btnStartLoop);
         loopEndBtn     = (Button)   rootView.findViewById(R.id.btnEndLoop);
     }

@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
 public class TunerFragment extends Fragment {
@@ -29,6 +30,18 @@ public class TunerFragment extends Fragment {
 		mActivity.audio.disableNoteDetector();
 		mActivity.audio.disableChordDetector();
 		initSystemServices();
+	}
+
+	private void showTutorial(){
+		new MaterialShowcaseView.Builder(mActivity)
+				.setTarget(tunerView)
+				.setDismissText("GOT IT")
+				.setContentText("Play and adjust each string one by one until the needle is green for all of them. Then you're ready to play!")
+				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
+				.singleUse("tunerShowcase") // provide a unique ID used to ensure it is only shown once
+				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
+				.setShapePadding(0)
+				.show();
 	}
 
 	@Override
@@ -48,6 +61,7 @@ public class TunerFragment extends Fragment {
 		tunerView = (TunerView) rootView.findViewById(R.id.tunerView);
 		tunerView.setmActivity(mActivity);
 		tunerView.setRootView(rootView);
+		showTutorial();
 		return rootView;
 	}
 

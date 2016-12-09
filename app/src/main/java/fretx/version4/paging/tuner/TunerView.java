@@ -149,23 +149,18 @@ public class TunerView extends View {
 				angleOfIndicator = (difference / pitchRangeInCents) * 90;
 			}
 
-
 			//arbitrary mapping for better display
 			angleOfIndicator = (Math.exp((90 - Math.abs(angleOfIndicator)) / -30) - 0.0498) * 90 / 85.52 * 90 * Math.signum(angleOfIndicator);
-
 			//convert to radians from degrees
 			angleOfIndicator = Math.toRadians(angleOfIndicator);
 			//reverse direction to match the left-to-right increasing frequency
 			angleOfIndicator *= -1;
-
 			angleOfIndicator = Math.toDegrees(angleOfIndicator);
 			double maxAngle = 20;
 			if (angleOfIndicator < -maxAngle) angleOfIndicator = -maxAngle;
 			if (angleOfIndicator > maxAngle) angleOfIndicator = maxAngle;
-
-//		    Log.d("angle", Double.toString(angleOfIndicator));
-
 			angleOfIndicator = Math.toRadians(angleOfIndicator);
+
 			lastAngle = angleOfIndicator;
 		}
 
