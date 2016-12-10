@@ -337,8 +337,7 @@ public class PlayFragmentYoutubeFragment extends Fragment {
                     return;
 
                 arrayCallStatus[nIndex] = true;
-                ConnectThread connectThread = new ConnectThread(Util.str2array((String) punch_list.get(arrayKeys[nIndex])));
-                connectThread.run();
+                BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[nIndex])));
                 Util.setDefaultValues(arrayCallStatus);
                 arrayCallStatus[nIndex] = true;
 
@@ -351,8 +350,7 @@ public class PlayFragmentYoutubeFragment extends Fragment {
                 return;
 
             arrayCallStatus[arrayKeys.length -1] = true;
-            ConnectThread connectThread = new ConnectThread(Util.str2array((String) punch_list.get(arrayKeys[arrayKeys.length - 1])));
-            connectThread.run();
+            BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[arrayKeys.length - 1])));
             Util.setDefaultValues(arrayCallStatus);
             arrayCallStatus[arrayKeys.length -1] = true;
         }
@@ -604,36 +602,6 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 
     //////////////////////////////////////// LOOPING ///////////////////////////////////////////////////////////////////////
 
-    /////////////////////////////////BlueToothConnection/////////////////////////
-    static private class ConnectThread extends Thread {
-        byte[] array;
-        protected ConnectThread(byte[] tmp) {
-            array = tmp;
-        }
-
-        public void run() {
-            try {
-                // Connect the device through the socket. This will block
-                // until it succeeds or throws an exception
-                Util.startViaData(array);
-            } catch (Exception connectException) {
-                Log.i(BluetoothClass.tag, "connect failed");
-                // Unable to connect; close the socket and get out
-                try {
-                    BluetoothClass.mmSocket.close();
-                } catch (IOException closeException) {
-                    Log.e(BluetoothClass.tag, "mmSocket.close");
-                }
-                return;
-            }
-            // Do work to manage the connection (in a separate thread)
-            if (BluetoothClass.mHandler == null)
-                Log.v("debug", "mHandler is null @ obtain message");
-            else
-                Log.v("debug", "mHandler is not null @ obtain message");
-            mbSendingFlag = false;
-        }
-    }
 
     private static void showMessage(String message) {
         Log.d("+++", message);

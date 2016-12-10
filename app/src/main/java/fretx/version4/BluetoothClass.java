@@ -8,6 +8,9 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+
+import rocks.fretx.audioprocessing.*;
 
 /**
  * Created by AsmodeusStudio on 29/12/2015.
@@ -85,6 +88,69 @@ public class BluetoothClass {
             } catch (IOException e) {
                 Log.e(tag, "mmOutStream");
             }
+        }
+    }
+
+
+    public static void sendToFretX(Object o){
+        byte[] bluetoothArray = new byte[] {Byte.valueOf("0")};
+        if(o instanceof byte[]){
+            bluetoothArray = (byte[])o;
+            //TODO: make consistent with methods that already add a terminating 0
+        }
+        else if(o instanceof Integer){
+            bluetoothArray = new byte[]  {Byte.valueOf( Integer.toString((int)o) ),Byte.valueOf("0")};
+        } else if (o instanceof int[]){
+            int[] intArray = ((int[]) o);
+            bluetoothArray = new byte[intArray.length+1];
+            for (int i = 0; i < intArray.length; i++) {
+                bluetoothArray[i] = Byte.valueOf(Integer.toString(intArray[i]));
+            }
+            bluetoothArray[intArray.length] = Byte.valueOf("0");
+        } else if (o instanceof String){
+            bluetoothArray = new byte[] {Byte.valueOf((String)o),Byte.valueOf("0")};
+        } else if (o instanceof String[]){
+            String[] stringArray = (String[])o;
+            bluetoothArray = new byte[stringArray.length+1];
+            for (int i = 0; i < stringArray.length; i++) {
+                bluetoothArray[i] = Byte.valueOf(stringArray[i]);
+            }
+            bluetoothArray[stringArray.length] = Byte.valueOf("0");
+        } else {
+            Log.d("sendToFretX","data type could not be resolved, turning off lights");
+        }
+        ConnectThread connectThread = new ConnectThread(bluetoothArray);
+        connectThread.run();
+    }
+
+    /////////////////////////////////BlueToothConnection/////////////////////////
+    static private class ConnectThread extends Thread {
+        byte[] array;
+
+        public ConnectThread(byte[] tmp) {
+            array = tmp;
+        }
+
+        public void run() {
+            try {
+                // Connect the device through the socket. This will block
+                // until it succeeds or throws an exception
+                Util.startViaData(array);
+            } catch (Exception connectException) {
+                Log.i(BluetoothClass.tag, "connect failed");
+                // Unable to connect; close the socket and get out
+                try {
+                    BluetoothClass.mmSocket.close();
+                } catch (IOException closeException) {
+                    Log.e(BluetoothClass.tag, "mmSocket.close");
+                }
+                return;
+            }
+            // Do work to manage the connection (in a separate thread)
+            if (BluetoothClass.mHandler == null)
+                Log.v("debug", "mHandler is null @ obtain message");
+            else
+                Log.v("debug", "mHandler is not null @ obtain message");
         }
     }
 }

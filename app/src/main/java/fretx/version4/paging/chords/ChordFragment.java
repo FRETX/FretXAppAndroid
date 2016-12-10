@@ -202,9 +202,9 @@ public class ChordFragment extends Fragment
 	public void onDestroy() {
 		super.onDestroy();
 		if(mActivity == null || mActivity.audio == null) return;
-		mActivity.audio.disablePitchDetector();
-		mActivity.audio.disableNoteDetector();
-		mActivity.audio.disableChordDetector();
+//		mActivity.audio.disablePitchDetector();
+//		mActivity.audio.disableNoteDetector();
+//		mActivity.audio.disableChordDetector();
 	}
 
 	private void updateCurrentChord(String root , String type){
@@ -226,9 +226,10 @@ public class ChordFragment extends Fragment
 
 		Log.d("Chord picker BT","sending :" + bluetoothArray.toString());
 
-		ConnectThread connectThread = new ConnectThread(bluetoothArray);
-		connectThread.run();
+//		ConnectThread connectThread = new ConnectThread(bluetoothArray);
+//		connectThread.run();
 
+		BluetoothClass.sendToFretX(bluetoothArray);
 	}
     // data convert to array
 //    public byte[] data2array(int resID){

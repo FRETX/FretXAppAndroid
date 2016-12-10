@@ -58,16 +58,14 @@ public class LearnChordExerciseView extends RelativeLayout {
 		listening = true;
 		chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
 			public void onTick(long millisUntilFinished) {
-				if(mActivity.audio != null){
-					if(mActivity.audio.getVolume() < VOLUME_THRESHOLD) {
-						this.cancel();
-						listening = false;
-						correctlyPlayedAccumulator = 0;
-						Log.d("timer","prematurely canceled due to low volume");
-					}
+				if(mActivity == null)return;
+				if(mActivity.audio == null) return;
+				if(mActivity.audio.getVolume() < VOLUME_THRESHOLD) {
+					this.cancel();
+					listening = false;
+					correctlyPlayedAccumulator = 0;
+					Log.d("timer","prematurely canceled due to low volume");
 				}
-
-
 				if(millisUntilFinished > CHORD_LISTEN_DURATION){
 					//ignore the onset
 				} else {
@@ -110,10 +108,14 @@ public class LearnChordExerciseView extends RelativeLayout {
 		if (chordsIndex == chords.size()) chordsIndex = 0;
 //		Chord currentChord = chords.get(chordsIndex);
 //		Log.d("NoteView-current note", currentChord.toString());
+		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chords.get(chordsIndex).toString(),chordDb);
+		BluetoothClass.sendToFretX(bluetoothArray);
 	}
 
 	public void setChords(ArrayList<Chord> c) {
 		this.chords = c;
+		chordsIndex = -1;
+		advanceChord();
 	}
 
 	public void resetChords(){
@@ -168,9 +170,8 @@ public class LearnChordExerciseView extends RelativeLayout {
 		textChord.setText(chords.get(chordsIndex).toString());
 		fretBoardView.setFingerPositions(MusicUtils.getFingering(chords.get(chordsIndex).toString(),chordDb));
 
-		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chords.get(chordsIndex).toString(),chordDb);
-		ConnectThread connectThread = new ConnectThread(bluetoothArray);
-		connectThread.run();
+//		ConnectThread connectThread = new ConnectThread(bluetoothArray);
+//		connectThread.run();
 
 		//I know this is shitty Ben but bear with me, Imma tidy up all this
 		if(mActivity == null) return;
@@ -184,37 +185,6 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 		}
 
-
-	/////////////////////////////////BlueToothConnection/////////////////////////
-	static private class ConnectThread extends Thread {
-		byte[] array;
-
-		public ConnectThread(byte[] tmp) {
-			array = tmp;
-		}
-
-		public void run() {
-			try {
-				// Connect the device through the socket. This will block
-				// until it succeeds or throws an exception
-				Util.startViaData(array);
-			} catch (Exception connectException) {
-				Log.i(BluetoothClass.tag, "connect failed");
-				// Unable to connect; close the socket and get out
-				try {
-					BluetoothClass.mmSocket.close();
-				} catch (IOException closeException) {
-					Log.e(BluetoothClass.tag, "mmSocket.close");
-				}
-				return;
-			}
-			// Do work to manage the connection (in a separate thread)
-			if (BluetoothClass.mHandler == null)
-				Log.v("debug", "mHandler is null @ obtain message");
-			else
-				Log.v("debug", "mHandler is not null @ obtain message");
-		}
-	}
 
 	}
 

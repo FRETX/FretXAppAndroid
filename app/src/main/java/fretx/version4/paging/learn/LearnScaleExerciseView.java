@@ -34,7 +34,7 @@ public class LearnScaleExerciseView extends View {
 	private float xString, yFret, left, top, right, bottom;
 
 	private int[] notes;
-	private int notesIndex = 0;
+	private int notesIndex = -1;
 	private int currentNote = 0;
 
 	private final double correctNoteThreshold = 0.25; //in semitones
@@ -50,7 +50,6 @@ public class LearnScaleExerciseView extends View {
 		super(context);
 		setWillNotDraw(false);
 		initParameters();
-//		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
 		invalidate();
 
 	}
@@ -59,7 +58,6 @@ public class LearnScaleExerciseView extends View {
 		super(context, attrs);
 		setWillNotDraw(false);
 		initParameters();
-//		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
 		invalidate();
 	}
 
@@ -67,7 +65,6 @@ public class LearnScaleExerciseView extends View {
 		super(context, attrs, defStyle);
 		setWillNotDraw(false);
 		initParameters();
-//		fretboardImage = context.getResources().getDrawable(R.drawable.fretboard);
 		invalidate();
 	}
 
@@ -79,7 +76,6 @@ public class LearnScaleExerciseView extends View {
 		notes = nts;
 		notesIndex = -1;
 		advanceNote();
-
 		invalidate();
 	}
 
@@ -89,8 +85,9 @@ public class LearnScaleExerciseView extends View {
 		currentNote = notes[notesIndex];
 		byte[] bluetoothArray = new byte[1];
 		bluetoothArray[0] = MusicUtils.midiNoteToFretboardPosition(currentNote).getByteCode();
-		ConnectThread connectThread = new ConnectThread(bluetoothArray);
-		connectThread.run();
+		BluetoothClass.sendToFretX(bluetoothArray);
+//		ConnectThread connectThread = new ConnectThread(bluetoothArray);
+//		connectThread.run();
 		//TODO: Send BT code here
 	}
 
@@ -178,36 +175,6 @@ public class LearnScaleExerciseView extends View {
 	}
 
 
-	/////////////////////////////////BlueToothConnection/////////////////////////
-	static private class ConnectThread extends Thread {
-		byte[] array;
-
-		public ConnectThread(byte[] tmp) {
-			array = tmp;
-		}
-
-		public void run() {
-			try {
-				// Connect the device through the socket. This will block
-				// until it succeeds or throws an exception
-				Util.startViaData(array);
-			} catch (Exception connectException) {
-				Log.i(BluetoothClass.tag, "connect failed");
-				// Unable to connect; close the socket and get out
-				try {
-					BluetoothClass.mmSocket.close();
-				} catch (IOException closeException) {
-					Log.e(BluetoothClass.tag, "mmSocket.close");
-				}
-				return;
-			}
-			// Do work to manage the connection (in a separate thread)
-			if (BluetoothClass.mHandler == null)
-				Log.v("debug", "mHandler is null @ obtain message");
-			else
-				Log.v("debug", "mHandler is not null @ obtain message");
-		}
-	}
 
 
 

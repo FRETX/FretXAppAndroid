@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -21,8 +22,10 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.greysonparrelli.permiso.Permiso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import fretx.version4.BluetoothClass;
 import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.Util;
@@ -45,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
 	//FLAGS
 	private boolean AUDIO_PERMISSIONS_GRANTED = false;
 	private String SHOWCASE_ID = "bluetoothConnect";
+	private MainActivity mActivity = this;
 
     //AUDIO PARAMETERS
     public int fs = 16000;
@@ -52,7 +56,9 @@ public class MainActivity extends ActionBarActivity {
     public AudioProcessing audio;
 
 	private GoogleApiClient client;  //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
-
+	static boolean mbSendingFlag = false;
+	byte[] btNoLightsArray = {Byte.valueOf("0")};
+	ConnectThread btTurnOffLightsThread = new ConnectThread(btNoLightsArray);
 
 	//LIFECYCLE
 	@Override
@@ -179,40 +185,56 @@ public class MainActivity extends ActionBarActivity {
 									bottomNavigationView.getMenu().getItem(i).setChecked(false);
 								}
 								item.setChecked(true);
+								btTurnOffLightsThread.run();
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new PlayFragment())
 										.commit();
+								mActivity.audio.disableNoteDetector();
+								mActivity.audio.disablePitchDetector();
+								mActivity.audio.disableChordDetector();
 								break;
 							case R.id.action_learn:
 								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
 									bottomNavigationView.getMenu().getItem(i).setChecked(false);
 								}
 								item.setChecked(true);
+								btTurnOffLightsThread.run();
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new LearnFragment())
 										.commit();
+								mActivity.audio.enablePitchDetector();
+								mActivity.audio.enableNoteDetector();
+								mActivity.audio.enableChordDetector();
 								break;
 							case R.id.action_chords:
 								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
 									bottomNavigationView.getMenu().getItem(i).setChecked(false);
 								}
 								item.setChecked(true);
+								btTurnOffLightsThread.run();
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new ChordFragment())
 										.commit();
+								mActivity.audio.disableNoteDetector();
+								mActivity.audio.disablePitchDetector();
+								mActivity.audio.disableChordDetector();
 								break;
 							case R.id.action_tuner:
 								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
 									bottomNavigationView.getMenu().getItem(i).setChecked(false);
 								}
 								item.setChecked(true);
+								btTurnOffLightsThread.run();
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new TunerFragment())
 										.commit();
+								mActivity.audio.enablePitchDetector();
+								mActivity.audio.disableNoteDetector();
+								mActivity.audio.disableChordDetector();
 								break;
 						}
 						return false;
@@ -243,6 +265,15 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 
+		//Hidden setting for us to use during testing
+		bluetoothButton.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				MaterialShowcaseView.resetAll(mActivity);
+				Toast.makeText(mActivity,"All tutorials reset",Toast.LENGTH_SHORT).show( );
+				return true;
+			}
+		});
 
 	}
 
@@ -294,5 +325,37 @@ public class MainActivity extends ActionBarActivity {
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
     }
+
+
+	/////////////////////////////////BlueToothConnection/////////////////////////
+	static private class ConnectThread extends Thread {
+		byte[] array;
+		protected ConnectThread(byte[] tmp) {
+			array = tmp;
+		}
+
+		public void run() {
+			try {
+				// Connect the device through the socket. This will block
+				// until it succeeds or throws an exception
+				Util.startViaData(array);
+			} catch (Exception connectException) {
+				Log.i(BluetoothClass.tag, "connect failed");
+				// Unable to connect; close the socket and get out
+				try {
+					BluetoothClass.mmSocket.close();
+				} catch (IOException closeException) {
+					Log.e(BluetoothClass.tag, "mmSocket.close");
+				}
+				return;
+			}
+			// Do work to manage the connection (in a separate thread)
+			if (BluetoothClass.mHandler == null)
+				Log.v("debug", "mHandler is null @ obtain message");
+			else
+				Log.v("debug", "mHandler is not null @ obtain message");
+			mbSendingFlag = false;
+		}
+	}
 
 }

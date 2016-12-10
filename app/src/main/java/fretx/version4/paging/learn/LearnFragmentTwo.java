@@ -69,6 +69,7 @@ public class LearnFragmentTwo extends Fragment {
 					}
 					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
 					updateScale(((TextView) view).getText().toString());
+					scalePicker.getChildAt(0).setSelected(true);
 				}
 			});
 		}
@@ -108,8 +109,9 @@ public class LearnFragmentTwo extends Fragment {
 			bluetoothArray[i] = Byte.valueOf(Integer.toString(tmpFp.getFret() * 10 + tmpFp.getString()));
 		}
 		bluetoothArray[notes.length] = 0;
-		ConnectThread connectThread = new ConnectThread(bluetoothArray);
-		connectThread.run();
+		BluetoothClass.sendToFretX(bluetoothArray);
+//		ConnectThread connectThread = new ConnectThread(bluetoothArray);
+//		connectThread.run();
 		scaleView.setNotes(notes);
 
 //		rootView.postDelayed(new Runnable() {
@@ -126,37 +128,6 @@ public class LearnFragmentTwo extends Fragment {
 
 
 
-
-	/////////////////////////////////BlueToothConnection/////////////////////////
-	static private class ConnectThread extends Thread {
-		byte[] array;
-
-		public ConnectThread(byte[] tmp) {
-			array = tmp;
-		}
-
-		public void run() {
-			try {
-				// Connect the device through the socket. This will block
-				// until it succeeds or throws an exception
-				Util.startViaData(array);
-			} catch (Exception connectException) {
-				Log.i(BluetoothClass.tag, "connect failed");
-				// Unable to connect; close the socket and get out
-				try {
-					BluetoothClass.mmSocket.close();
-				} catch (IOException closeException) {
-					Log.e(BluetoothClass.tag, "mmSocket.close");
-				}
-				return;
-			}
-			// Do work to manage the connection (in a separate thread)
-			if (BluetoothClass.mHandler == null)
-				Log.v("debug", "mHandler is null @ obtain message");
-			else
-				Log.v("debug", "mHandler is not null @ obtain message");
-		}
-	}
 
 
 }
