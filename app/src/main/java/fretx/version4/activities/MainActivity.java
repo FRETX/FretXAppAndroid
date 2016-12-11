@@ -38,7 +38,9 @@ import fretx.version4.paging.play.PlayFragment;
 import fretx.version4.paging.tuner.TunerFragment;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -297,15 +299,31 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void showTutorial(){
-		new MaterialShowcaseView.Builder(this)
-				.setTarget((ImageView) findViewById(R.id.bluetoothLogo))
-				.setDismissText("GOT IT")
-				.setContentText("Turn on your FretX device and tap the FretX logo to connect to it")
-				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
-				.singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
-				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
-				.setShapePadding(20)
-				.show();
+//		new MaterialShowcaseView.Builder(this)
+//				.setTarget((ImageView) findViewById(R.id.bluetoothLogo))
+//				.setDismissText("GOT IT")
+//				.setContentText("Turn on your FretX device and tap the FretX logo to connect to it")
+//				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
+//				.singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
+//				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
+//				.setShapePadding(20)
+//				.show();
+
+		ShowcaseConfig config = new ShowcaseConfig();
+		config.setDelay(150); // half second between each showcase view
+		config.setMaskColor(getResources().getColor(R.color.showcaseOverlay));
+		config.setShapePadding(20);
+		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+
+		sequence.setConfig(config);
+
+
+		sequence.addSequenceItem((ImageView) findViewById(R.id.bluetoothLogo),
+				"Turn on your FretX device and tap the FretX logo to connect to it", "GOT IT");
+
+		sequence.addSequenceItem((View) findViewById(R.id.action_learn),
+				"Tap here to learn your first chords", "OKAY");
+		sequence.start();
 	}
 
 

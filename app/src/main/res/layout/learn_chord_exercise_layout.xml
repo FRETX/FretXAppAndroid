@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<FrameLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/background"
+                    android:orientation="vertical"
     >
 
     <Space
@@ -40,7 +46,43 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
+        <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/blueLightsView"
+            android:clickable="false"
+            android:visibility="invisible"
+            android:layout_marginEnd="42dp"
+            android:layout_below="@+id/textChord"
+            android:layout_toStartOf="@+id/redLightsView"/>
+
+        <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/redLightsView"
+            android:layout_marginEnd="45dp"
+            android:clickable="false"
+            android:visibility="invisible"
+            android:layout_marginBottom="144dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"/>
+
+        <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/noLightsView"
+            android:clickable="false"
+            android:visibility="invisible"
+            android:layout_marginTop="21dp"
+            android:layout_below="@+id/textChord"
+            android:layout_toStartOf="@+id/blueLightsView"/>
+
     </fretx.version4.paging.learn.LearnChordExerciseView>
 
 
 </RelativeLayout>
+
+</FrameLayout>

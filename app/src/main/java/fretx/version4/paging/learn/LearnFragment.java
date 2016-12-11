@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
 public class LearnFragment extends Fragment {
@@ -28,15 +31,12 @@ public class LearnFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.learn_fragment, container, false);
 
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
-                fragmentTransaction.commitAllowingStateLoss();
-            }
-        });
+        FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
+        fragmentTransaction.commit();
+
+
         return rootView;
     }
 }

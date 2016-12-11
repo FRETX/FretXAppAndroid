@@ -16,6 +16,7 @@ import java.util.Map;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class LearnFragmentButton extends Fragment {
 
@@ -26,7 +27,8 @@ public class LearnFragmentButton extends Fragment {
     Button btExerciseTwo;
     Button btExerciseThree;
     Button btExerciseFour;
-    Map userHistory = new HashMap();
+
+	private String SHOWCASE_CHORD_ID = "ShowcaseChordId";
 
     public LearnFragmentButton(){
 
@@ -117,4 +119,17 @@ public class LearnFragmentButton extends Fragment {
         return rootView;
         //return null;
     }
+
+	@Override public void onViewCreated(View v, Bundle savedInstanceState){
+		new MaterialShowcaseView.Builder(mActivity)
+				.setTarget((Button) getActivity().findViewById(R.id.btExerciseOne))
+				.setDismissText("LET'S GO!")
+				.setContentText("Start the chord exercise here")
+				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
+				.singleUse(SHOWCASE_CHORD_ID) // provide a unique ID used to ensure it is only shown once
+				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
+				.setShapePadding(20)
+				.show();
+	}
+
 }

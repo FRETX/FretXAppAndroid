@@ -7,6 +7,7 @@ package fretx.version4.paging.learn;
 		import android.util.AttributeSet;
 		import android.util.Log;
 		import android.view.View;
+		import android.widget.FrameLayout;
 		import android.widget.RelativeLayout;
 		import android.widget.TextView;
 
@@ -32,7 +33,7 @@ package fretx.version4.paging.learn;
 public class LearnChordExerciseView extends RelativeLayout {
 
 	private fretx.version4.activities.MainActivity mActivity;
-	private RelativeLayout rootView;
+	private FrameLayout rootView;
 	private FretboardView fretBoardView;
 
 	private final double VOLUME_THRESHOLD = -10.5   ;
@@ -60,6 +61,7 @@ public class LearnChordExerciseView extends RelativeLayout {
 			public void onTick(long millisUntilFinished) {
 				if(mActivity == null)return;
 				if(mActivity.audio == null) return;
+				if(!mActivity.audio.isProcessing() || !mActivity.audio.isInitialized()) return;
 				if(mActivity.audio.getVolume() < VOLUME_THRESHOLD) {
 					this.cancel();
 					listening = false;
@@ -149,7 +151,7 @@ public class LearnChordExerciseView extends RelativeLayout {
 		this.mActivity = mActivity;
 	}
 
-	public void setRootView(RelativeLayout rv) {
+	public void setRootView(FrameLayout rv) {
 		this.rootView = rv;
 	}
 
@@ -164,7 +166,6 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-
 		//TODO: better architecture, this shouldn't be in the GUI thread, but eh.
 		TextView textChord = (TextView) rootView.findViewById(R.id.textChord);
 		textChord.setText(chords.get(chordsIndex).toString());
