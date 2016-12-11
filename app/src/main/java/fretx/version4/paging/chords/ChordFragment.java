@@ -1,25 +1,21 @@
 package fretx.version4.paging.chords;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import fretx.version4.BluetoothClass;
 import fretx.version4.ChordView;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.ObservableVideoView;
 import fretx.version4.R;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
@@ -31,42 +27,14 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 public class ChordFragment extends Fragment
 {
-    //the images to display
-//    Integer[] imageIDs = {
-//            R.drawable.dor,
-//            R.drawable.re,
-//            R.drawable.mi,
-//            R.drawable.fa,
-//            R.drawable.so,
-//            R.drawable.la,
-//            R.drawable.si
-//    };
-//    Integer[] imageBackgroundIDs = {
-//            R.drawable.backone,
-//            R.drawable.backtwo,
-//            R.drawable.backthree,
-//            R.drawable.backfour,
-//            R.drawable.backfive,
-//            R.drawable.backsix,
-//            R.drawable.backseven
-//    };
-    ObservableVideoView vvMain;
-    Uri[] videoUri = new Uri[7];
-    ArrayList<byte[]> musicArray = new ArrayList<>(7);
-    ImageView imgBack;
-
 	Chord currentChord;
-
     MainActivity mActivity;
-
     View rootView;
 	ChordView chordView;
 
 	HashMap<String,FingerPositions> chordFingerings;
 
-
-
-    public ChordFragment(){
+	public ChordFragment(){
 
     }
     @Override

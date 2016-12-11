@@ -4,19 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import fretx.version4.BluetoothClass;
-import fretx.version4.FretboardPosition;
 import fretx.version4.R;
-import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import rocks.fretx.audioprocessing.MusicUtils;
 
@@ -26,7 +20,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 public class LearnScaleExerciseView extends View {
 //	private Drawable fretboardImage;
-	private ArrayList<FretboardPosition> notePositions;
+	private ArrayList<rocks.fretx.audioprocessing.FretboardPosition> notePositions;
 	private rocks.fretx.audioprocessing.FretboardPosition tmpFp;
 	private float x,y;
 	//The image is 345x311
