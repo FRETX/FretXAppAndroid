@@ -11,12 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 public class LearnFragmentButton extends Fragment {
 
@@ -44,7 +41,7 @@ public class LearnFragmentButton extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.learn_container, new LearnFragmentOne());
+                fragmentTransaction.replace(R.id.learn_container, new LearnFragmentChordExercise());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -121,15 +118,15 @@ public class LearnFragmentButton extends Fragment {
     }
 
 	@Override public void onViewCreated(View v, Bundle savedInstanceState){
-		new MaterialShowcaseView.Builder(mActivity)
-				.setTarget((Button) getActivity().findViewById(R.id.btExerciseOne))
-				.setDismissText("LET'S GO!")
-				.setContentText("Start the chord exercise here")
-				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
-				.singleUse(SHOWCASE_CHORD_ID) // provide a unique ID used to ensure it is only shown once
-				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
-				.setShapePadding(20)
-				.show();
+//		new MaterialShowcaseView.Builder(mActivity)
+//				.setTarget((Button) getActivity().findViewById(R.id.btExerciseOne))
+//				.setDismissText("LET'S GO!")
+//				.setContentText("Start the chord exercise here")
+//				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
+//				.singleUse(SHOWCASE_CHORD_ID) // provide a unique ID used to ensure it is only shown once
+//				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
+//				.setShapePadding(20)
+//				.show();
 	}
 
 }

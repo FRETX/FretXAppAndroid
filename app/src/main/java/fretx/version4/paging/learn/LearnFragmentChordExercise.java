@@ -18,14 +18,14 @@ import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import rocks.fretx.audioprocessing.Chord;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
-import uk.co.deanwild.materialshowcaseview.shape.RectangleShape;
-import uk.co.deanwild.materialshowcaseview.shape.Shape;
-import uk.co.deanwild.materialshowcaseview.target.Target;
+//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+//import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+//import uk.co.deanwild.materialshowcaseview.shape.RectangleShape;
+//import uk.co.deanwild.materialshowcaseview.shape.Shape;
+//import uk.co.deanwild.materialshowcaseview.target.Target;
 
-public class LearnFragmentOne extends Fragment {
+public class LearnFragmentChordExercise extends Fragment {
 
     MainActivity mActivity;
 
@@ -33,7 +33,7 @@ public class LearnFragmentOne extends Fragment {
 	LearnChordExerciseView chordExerciseView;
 	FretboardView fretboardView;
 
-    public LearnFragmentOne(){
+    public LearnFragmentChordExercise(){
 
     }
     @Override
@@ -47,10 +47,13 @@ public class LearnFragmentOne extends Fragment {
 	    chordExerciseView.setFretBoardView(fretboardView);
 
 	    ArrayList<Chord> exerciseChords = new ArrayList<Chord>(0);
-   	    String[] majorRoots = new String[]{"D","G","C"};
-	    for (int i = 0; i < majorRoots.length; i++) {
-		    exerciseChords.add(new Chord(majorRoots[i], "maj"));
-	    }
+	    exerciseChords.add(new Chord("A","m"));
+	    exerciseChords.add(new Chord("C","maj"));
+	    exerciseChords.add(new Chord("G","maj"));
+//   	    String[] majorRoots = new String[]{"D","G","C"};
+//	    for (int i = 0; i < majorRoots.length; i++) {
+//		    exerciseChords.add(new Chord(majorRoots[i], "maj"));
+//	    }
 //	    String[] majorRoots = new String[]{"G","D"};
 //	    for (int i = 0; i < majorRoots.length; i++) {
 //		    exerciseChords.add(new Chord(majorRoots[i], "maj"));
@@ -68,22 +71,22 @@ public class LearnFragmentOne extends Fragment {
 
 	@Override
 	public void onViewCreated(View v , Bundle savedInstanceState){
-		ShowcaseConfig config = new ShowcaseConfig();
-		config.setDelay(50); // half second between each showcase view
-		config.setMaskColor(getResources().getColor(R.color.showcaseOverlay));
-		config.setShapePadding(5);
-		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(mActivity, "ChordExerciseId");
-
-		sequence.setConfig(config);
-
-		sequence.addSequenceItem((View) getActivity().findViewById(R.id.redLightsView),
-				"Put your fingers on the red lights", "OKAY");
-
-		sequence.addSequenceItem((View) getActivity().findViewById(R.id.blueLightsView),
-				"Don't put any fingers on the strings with blue lights, but play them", "OKAY");
-
-		sequence.addSequenceItem((View) getActivity().findViewById(R.id.noLightsView),
-				"If you see no lights on a string, don't play that string", "GOT IT!");
-		sequence.start();
+//		ShowcaseConfig config = new ShowcaseConfig();
+//		config.setDelay(50); // half second between each showcase view
+//		config.setMaskColor(getResources().getColor(R.color.showcaseOverlay));
+//		config.setShapePadding(5);
+//		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(mActivity, "ChordExerciseId");
+//
+//		sequence.setConfig(config);
+//
+//		sequence.addSequenceItem((View) getActivity().findViewById(R.id.redLightsView),
+//				"Put your fingers on the red lights", "OKAY");
+//
+//		sequence.addSequenceItem((View) getActivity().findViewById(R.id.blueLightsView),
+//				"Don't put any fingers on the strings with blue lights, but play them", "OKAY");
+//
+//		sequence.addSequenceItem((View) getActivity().findViewById(R.id.noLightsView),
+//				"If you see no lights on a string, don't play that string", "GOT IT!");
+//		sequence.start();
 	}
 }

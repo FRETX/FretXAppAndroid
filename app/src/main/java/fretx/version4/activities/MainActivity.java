@@ -25,6 +25,10 @@ import com.greysonparrelli.permiso.Permiso;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import co.mobiwise.materialintro.prefs.PreferencesManager;
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.BluetoothClass;
 import fretx.version4.Config;
 import fretx.version4.R;
@@ -38,9 +42,9 @@ import fretx.version4.paging.play.PlayFragment;
 import fretx.version4.paging.tuner.TunerFragment;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+//import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -60,7 +64,7 @@ public class MainActivity extends ActionBarActivity {
 	private GoogleApiClient client;  //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
 	static boolean mbSendingFlag = false;
 	byte[] btNoLightsArray = {Byte.valueOf("0")};
-	ConnectThread btTurnOffLightsThread = new ConnectThread(btNoLightsArray);
+//	ConnectThread btTurnOffLightsThread = new ConnectThread(btNoLightsArray);
 
 	//LIFECYCLE
 	@Override
@@ -84,7 +88,9 @@ public class MainActivity extends ActionBarActivity {
 				.commit();
 
 		showTutorial();
+
 	}
+
 
     @Override
     protected void onResume() {
@@ -103,9 +109,13 @@ public class MainActivity extends ActionBarActivity {
 				    // Phone permission granted!
 				    Log.d("Permissions","Phone permissions granted");
 			    }
+			    if (resultSet.isPermissionGranted(Manifest.permission.BLUETOOTH_ADMIN)) {
+				    // Bluetooth permission granted!
+				    Log.d("Permissions","Bluetooth permissions granted");
+			    }
 			    if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-				    // Phone permission granted!
-				    Log.d("Permissions","Phone permissions granted");
+				    // Location permission granted!
+				    Log.d("Permissions","Location permissions granted");
 			    }
 		    }
 		    @Override
@@ -187,7 +197,8 @@ public class MainActivity extends ActionBarActivity {
 									bottomNavigationView.getMenu().getItem(i).setChecked(false);
 								}
 								item.setChecked(true);
-								btTurnOffLightsThread.run();
+								BluetoothClass.sendToFretX(btNoLightsArray);
+//								btTurnOffLightsThread.run();
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new PlayFragment())
@@ -201,7 +212,8 @@ public class MainActivity extends ActionBarActivity {
 									bottomNavigationView.getMenu().getItem(i).setChecked(false);
 								}
 								item.setChecked(true);
-								btTurnOffLightsThread.run();
+//								btTurnOffLightsThread.run();
+								BluetoothClass.sendToFretX(btNoLightsArray);
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new LearnFragment())
@@ -215,7 +227,8 @@ public class MainActivity extends ActionBarActivity {
 									bottomNavigationView.getMenu().getItem(i).setChecked(false);
 								}
 								item.setChecked(true);
-								btTurnOffLightsThread.run();
+								BluetoothClass.sendToFretX(btNoLightsArray);
+//								btTurnOffLightsThread.run();
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new ChordFragment())
@@ -229,7 +242,8 @@ public class MainActivity extends ActionBarActivity {
 									bottomNavigationView.getMenu().getItem(i).setChecked(false);
 								}
 								item.setChecked(true);
-								btTurnOffLightsThread.run();
+								BluetoothClass.sendToFretX(btNoLightsArray);
+//								btTurnOffLightsThread.run();
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new TunerFragment())
@@ -246,7 +260,6 @@ public class MainActivity extends ActionBarActivity {
 		bluetoothButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
 				if (Config.bBlueToothActive == false) {
 					Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
 					startActivity(intent);
@@ -271,8 +284,10 @@ public class MainActivity extends ActionBarActivity {
 		bluetoothButton.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				MaterialShowcaseView.resetAll(mActivity);
-				Toast.makeText(mActivity,"All tutorials reset",Toast.LENGTH_SHORT).show( );
+				PreferencesManager tutorialPrefs = new PreferencesManager(getApplicationContext());
+				tutorialPrefs.resetAll();
+				Songlist.forceDownloadIndexFromServer();
+				Toast.makeText(mActivity,"All tutorials reset, cache refreshed",Toast.LENGTH_SHORT).show( );
 				return true;
 			}
 		});
@@ -299,31 +314,19 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void showTutorial(){
-//		new MaterialShowcaseView.Builder(this)
-//				.setTarget((ImageView) findViewById(R.id.bluetoothLogo))
-//				.setDismissText("GOT IT")
-//				.setContentText("Turn on your FretX device and tap the FretX logo to connect to it")
-//				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
-//				.singleUse(SHOWCASE_ID) // provide a unique ID used to ensure it is only shown once
-//				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
-//				.setShapePadding(20)
-//				.show();
 
-		ShowcaseConfig config = new ShowcaseConfig();
-		config.setDelay(150); // half second between each showcase view
-		config.setMaskColor(getResources().getColor(R.color.showcaseOverlay));
-		config.setShapePadding(20);
-		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
-
-		sequence.setConfig(config);
-
-
-		sequence.addSequenceItem((ImageView) findViewById(R.id.bluetoothLogo),
-				"Turn on your FretX device and tap the FretX logo to connect to it", "GOT IT");
-
-		sequence.addSequenceItem((View) findViewById(R.id.action_learn),
-				"Tap here to learn your first chords", "OKAY");
-		sequence.start();
+		new MaterialIntroView.Builder(this)
+				.enableDotAnimation(false)
+				.enableIcon(false)
+				.setFocusGravity(FocusGravity.CENTER)
+				.setFocusType(Focus.NORMAL)
+				.setDelayMillis(300)
+				.enableFadeAnimation(true)
+				.performClick(true)
+				.setInfoText("Turn on your FretX device and tap the FretX logo to connect to it")
+				.setTarget((ImageView) findViewById(R.id.bluetoothLogo))
+				.setUsageId("tutorialConnectBluetoothWithLogo") //THIS SHOULD BE UNIQUE ID
+				.show();
 	}
 
 
@@ -343,37 +346,5 @@ public class MainActivity extends ActionBarActivity {
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
     }
-
-
-	/////////////////////////////////BlueToothConnection/////////////////////////
-	static private class ConnectThread extends Thread {
-		byte[] array;
-		protected ConnectThread(byte[] tmp) {
-			array = tmp;
-		}
-
-		public void run() {
-			try {
-				// Connect the device through the socket. This will block
-				// until it succeeds or throws an exception
-				Util.startViaData(array);
-			} catch (Exception connectException) {
-				Log.i(BluetoothClass.tag, "connect failed");
-				// Unable to connect; close the socket and get out
-				try {
-					BluetoothClass.mmSocket.close();
-				} catch (IOException closeException) {
-					Log.e(BluetoothClass.tag, "mmSocket.close");
-				}
-				return;
-			}
-			// Do work to manage the connection (in a separate thread)
-			if (BluetoothClass.mHandler == null)
-				Log.v("debug", "mHandler is null @ obtain message");
-			else
-				Log.v("debug", "mHandler is not null @ obtain message");
-			mbSendingFlag = false;
-		}
-	}
 
 }

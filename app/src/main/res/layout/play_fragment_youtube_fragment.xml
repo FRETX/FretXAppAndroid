@@ -12,7 +12,8 @@
         tools:context=".activities.MainActivity"
         android:id="@+id/youtubemain_container"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:weightSum="1">
 
         <LinearLayout
             android:id="@+id/youtube_view"
@@ -24,11 +25,12 @@
             </LinearLayout>
 
         <TextView
-            android:text="Loop Controls"
+            android:text="AB Loop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/primaryText"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,14 +46,11 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:background="@color/secondaryText"
-                android:text="[[ start"
+                android:text="Set A"
                 android:textColor="@color/icons"
                 android:id="@+id/btnStartLoop"
                 android:layout_weight="0.5"
                 android:textSize="15sp"
-                android:layout_centerVertical="true"
-                android:layout_alignLeft="@+id/tvStartTime"
-                android:layout_alignStart="@+id/tvStartTime"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp" />
 
@@ -59,13 +58,10 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:background="@color/secondaryText"
-                android:text="end ]]"
+                android:text="Set B"
                 android:id="@+id/btnEndLoop"
                 android:layout_weight="0.5"
                 android:textSize="15sp"
-                android:layout_alignTop="@+id/btnStartLoop"
-                android:layout_toRightOf="@+id/textView5"
-                android:layout_toEndOf="@+id/textView5"
                 android:layout_marginRight="30dp"
                 android:layout_marginLeft="30dp"
                 android:textColor="@color/icons" />
@@ -78,17 +74,17 @@
             android:layout_gravity="center_horizontal">
 
             <TextView
-                android:text="Early Lights: "
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView10"
+                android:textColor="@color/primaryText"
                 tools:text="Early Lights: " />
 
             <TextView
-                android:text="0ms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/prerollValView"
+                android:textColor="@color/primaryText"
                 tools:text="0ms" />
 
         </LinearLayout>
@@ -96,7 +92,8 @@
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/prerollSlider" />
+            android:id="@+id/prerollSlider"
+            android:layout_weight="0.05"/>
 
     </LinearLayout>
 

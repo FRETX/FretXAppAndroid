@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
 public class LearnFragment extends Fragment {

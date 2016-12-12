@@ -96,8 +96,9 @@ public class ChordFragment extends Fragment
 		chordView = (ChordView) mActivity.findViewById(R.id.chordView);
 		chordFingerings = MusicUtils.parseChordDb();
 
-		ConnectThread connectThread = new ConnectThread(Util.str2array("{0}"));
-		connectThread.run();
+		BluetoothClass.sendToFretX(Util.str2array("{0}"));
+//		ConnectThread connectThread = new ConnectThread(Util.str2array("{0}"));
+//		connectThread.run();
 
 		String[] rootNotes = {"C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"};
 		String [] chordTypes = {"maj","m","maj7","m7","sus2","sus4","dim","dim7","aug",};
@@ -180,7 +181,7 @@ public class ChordFragment extends Fragment
 		Log.d("Chord Selector",currentChord.toString());
 //		FingerPositions fp = chordFingerings.get(currentChord.toString());
 
-		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(currentChord.toString(),chordFingerings);
+
 
 		chordView.setFingerPositions(chordFingerings.get(currentChord.toString()));
 //		int[] chordNotes = currentChord.getNotes();
@@ -192,6 +193,7 @@ public class ChordFragment extends Fragment
 //		}
 //		bluetoothArray[bluetoothArray.length-1] = Byte.valueOf("0");
 
+		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(currentChord.toString(),chordFingerings);
 		Log.d("Chord picker BT","sending :" + bluetoothArray.toString());
 
 //		ConnectThread connectThread = new ConnectThread(bluetoothArray);
@@ -293,35 +295,35 @@ public class ChordFragment extends Fragment
 
 
 	/////////////////////////////////BlueToothConnection/////////////////////////
-	static private class ConnectThread extends Thread {
-		byte[] array;
-
-		public ConnectThread(byte[] tmp) {
-			array = tmp;
-		}
-
-		public void run() {
-			try {
-				// Connect the device through the socket. This will block
-				// until it succeeds or throws an exception
-				Util.startViaData(array);
-			} catch (Exception connectException) {
-				Log.i(BluetoothClass.tag, "connect failed");
-				// Unable to connect; close the socket and get out
-				try {
-					BluetoothClass.mmSocket.close();
-				} catch (IOException closeException) {
-					Log.e(BluetoothClass.tag, "mmSocket.close");
-				}
-				return;
-			}
-			// Do work to manage the connection (in a separate thread)
-			if (BluetoothClass.mHandler == null)
-				Log.v("debug", "mHandler is null @ obtain message");
-			else
-				Log.v("debug", "mHandler is not null @ obtain message");
-		}
-	}
+//	static private class ConnectThread extends Thread {
+//		byte[] array;
+//
+//		public ConnectThread(byte[] tmp) {
+//			array = tmp;
+//		}
+//
+//		public void run() {
+//			try {
+//				// Connect the device through the socket. This will block
+//				// until it succeeds or throws an exception
+//				Util.startViaData(array);
+//			} catch (Exception connectException) {
+//				Log.i(BluetoothClass.tag, "connect failed");
+//				// Unable to connect; close the socket and get out
+//				try {
+//					BluetoothClass.mmSocket.close();
+//				} catch (IOException closeException) {
+//					Log.e(BluetoothClass.tag, "mmSocket.close");
+//				}
+//				return;
+//			}
+//			// Do work to manage the connection (in a separate thread)
+//			if (BluetoothClass.mHandler == null)
+//				Log.v("debug", "mHandler is null @ obtain message");
+//			else
+//				Log.v("debug", "mHandler is not null @ obtain message");
+//		}
+//	}
 
 }
 

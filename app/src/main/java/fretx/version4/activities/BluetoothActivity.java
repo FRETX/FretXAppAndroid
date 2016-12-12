@@ -201,7 +201,6 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
 
             } else if (status == BluetoothGatt.GATT_SUCCESS
                     && newState == BluetoothProfile.STATE_DISCONNECTED) {
-
                 //Handle a disconnect event
 
             }

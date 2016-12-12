@@ -55,6 +55,31 @@ public class Songlist {
         AppCache.saveToCache("index.json", index_bytes);
     }
 
+    public static void forceDownloadIndexFromServer() {
+        async_client.get(apiBase + "/songs/index.json", new JsonHttpResponseHandler() {
+            @Override public void onSuccess(int status, Header[] headers, JSONArray data) {
+                index = data;
+                saveIndexToCache();
+                fireReady();
+                Log.d("FRETX API", String.format("got index: %s", index ));
+                try {
+                    for(int i = 0; i < index.length(); i++) {
+
+                        JSONObject entry       = index.getJSONObject(i);
+                        String     youtube_id  = entry.getString("youtube_id");
+                        DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
+                        Boolean    is_latest   = AppCache.last_modified(youtube_id + ".txt") > uploaded_on.getValue();
+
+                        Log.d("FRETX API", "Getting Song From Server: " + entry.getString("title"));
+                        getSongFromServer( youtube_id );
+                    }
+                }
+                catch (Exception e) {
+                    Log.d("FRETX API", String.format("Failed Checking Songs In Cache\r\n%s", e.toString()));
+                }
+            }
+        });
+    }
     //////////////////////////// INDEXING ///////////////////////////////////
 
     ///////////////////////////// SONGS /////////////////////////////////////
