@@ -53,7 +53,7 @@ public class LearnFragmentButton extends Fragment {
 		    public void onClick(View v) {
 			    FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
 			    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			    fragmentTransaction.replace(R.id.learn_container, new LearnFragmentTwo());
+			    fragmentTransaction.replace(R.id.learn_container, new LearnFragmentScaleExercise());
 			    fragmentTransaction.addToBackStack(null);
 			    fragmentTransaction.commit();
 

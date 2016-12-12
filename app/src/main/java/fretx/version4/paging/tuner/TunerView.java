@@ -26,6 +26,7 @@ public class TunerView extends View {
 	private int lastColor = getResources().getColor(R.color.primaryText);
 	private final Paint paint = new Paint();
 	protected double pitchRangeInCents = 200;
+	private boolean initialDraw = true;
 
 	public TunerView(Context context) {
 		super(context);
@@ -83,6 +84,11 @@ public class TunerView extends View {
 			currentPitch = mActivity.audio.getPitch();
 		} else {
 			currentPitch = -1;
+		}
+
+		if(initialDraw){
+			currentPitch = 82.4f;
+			initialDraw = false;
 		}
 
 		double angleOfIndicator = Double.NaN;

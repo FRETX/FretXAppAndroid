@@ -22,8 +22,8 @@
             />
     </HorizontalScrollView>
 
-    <fretx.version4.paging.learn.LearnScaleExerciseView
-        android:id="@+id/scaleView"
+    <fretx.version4.FretboardView
+        android:id="@+id/fretboardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />

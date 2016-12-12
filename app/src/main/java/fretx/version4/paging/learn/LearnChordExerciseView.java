@@ -169,7 +169,8 @@ public class LearnChordExerciseView extends RelativeLayout {
 		//TODO: better architecture, this shouldn't be in the GUI thread, but eh.
 		TextView textChord = (TextView) rootView.findViewById(R.id.textChord);
 		textChord.setText(chords.get(chordsIndex).toString());
-		fretBoardView.setFingerPositions(MusicUtils.getFingering(chords.get(chordsIndex).toString(),chordDb));
+		fretBoardView.setFretboardPositions(chords.get(chordsIndex).getFingerPositions());
+				             //setFingerPositions(MusicUtils.getFingering(chords.get(chordsIndex).toString(),chordDb));
 
 //		ConnectThread connectThread = new ConnectThread(bluetoothArray);
 //		connectThread.run();

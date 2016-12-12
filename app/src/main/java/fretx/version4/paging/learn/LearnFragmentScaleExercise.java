@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
@@ -21,18 +22,17 @@ import fretx.version4.R;
 import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-public class LearnFragmentTwo extends Fragment {
+public class LearnFragmentScaleExercise extends Fragment {
 
 	MainActivity mActivity;
 
 	LinearLayout rootView = null;
-	LearnScaleExerciseView scaleView;
 	LinearLayout scalePicker;
 	String[] scaleNames = {"FMinorPentatonic","Blues"};
 	int[] notes;
 	FretboardView fretboardView;
 
-	public LearnFragmentTwo(){
+	public LearnFragmentScaleExercise(){
 
 	}
 	@Override
@@ -40,12 +40,10 @@ public class LearnFragmentTwo extends Fragment {
 		mActivity = (MainActivity)getActivity();
 		rootView = (LinearLayout) inflater.inflate(R.layout.learn_scale_exercise_layout, container, false);
 
-		scaleView = (LearnScaleExerciseView) rootView.findViewById(R.id.scaleView);
-		scaleView.setmActivity(mActivity);
+		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
 
 		scalePicker = (LinearLayout) rootView.findViewById(R.id.scalePickerView);
 		//shitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcodeshitcode
-		updateScale("FMinorPentatonic");
 
 		TextView tmpTextView;
 		for (String str :scaleNames) {
@@ -73,6 +71,10 @@ public class LearnFragmentTwo extends Fragment {
 				}
 			});
 		}
+
+//		updateScale("FMinorPentatonic");
+
+		updateScale(scalePicker.getChildAt(0).toString());
 
 //		ArrayList<Chord> exerciseChords = new ArrayList<Chord>(0);
 //		String[] majorRoots = new String[]{"G","D"};
@@ -103,16 +105,19 @@ public class LearnFragmentTwo extends Fragment {
 				break;
 		}
 
+		ArrayList<FretboardPosition> fretboardPositions = new ArrayList<FretboardPosition>();
+
 		byte[] bluetoothArray = new byte[notes.length+1];
 		for (int i = 0; i < notes.length; i++) {
 			FretboardPosition tmpFp =  MusicUtils.midiNoteToFretboardPosition(notes[i]);
+			fretboardPositions.add(tmpFp);
 			bluetoothArray[i] = Byte.valueOf(Integer.toString(tmpFp.getFret() * 10 + tmpFp.getString()));
 		}
 		bluetoothArray[notes.length] = 0;
 		BluetoothClass.sendToFretX(bluetoothArray);
 //		ConnectThread connectThread = new ConnectThread(bluetoothArray);
 //		connectThread.run();
-		scaleView.setNotes(notes);
+		fretboardView.setFretboardPositions(fretboardPositions);
 
 //		rootView.postDelayed(new Runnable() {
 //			@Override

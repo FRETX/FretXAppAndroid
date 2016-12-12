@@ -34,8 +34,8 @@ android:background="@color/background">
             android:layout_height="match_parent"
             android:orientation="horizontal" />
     </HorizontalScrollView>
-    <fretx.version4.ChordView
-        android:id="@+id/chordView"
+    <fretx.version4.FretboardView
+        android:id="@+id/fretboardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>

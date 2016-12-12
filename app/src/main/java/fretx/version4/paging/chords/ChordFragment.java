@@ -9,11 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import fretx.version4.BluetoothClass;
-import fretx.version4.ChordView;
+import fretx.version4.FretboardView;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
@@ -30,7 +29,7 @@ public class ChordFragment extends Fragment
 	Chord currentChord;
     MainActivity mActivity;
     View rootView;
-	ChordView chordView;
+	FretboardView fretboardView;
 
 	HashMap<String,FingerPositions> chordFingerings;
 
@@ -93,7 +92,7 @@ public class ChordFragment extends Fragment
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
 
-		chordView = (ChordView) mActivity.findViewById(R.id.chordView);
+		fretboardView = (FretboardView) mActivity.findViewById(R.id.fretboardView);
 		chordFingerings = MusicUtils.parseChordDb();
 
 		BluetoothClass.sendToFretX(Util.str2array("{0}"));
@@ -128,7 +127,7 @@ public class ChordFragment extends Fragment
 						}
 					}
 					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
-					updateCurrentChord(((TextView) view).getText().toString(),currentChord.type);
+					updateCurrentChord(((TextView) view).getText().toString(),currentChord.getType());
 				}
 			});
 		}
@@ -153,7 +152,7 @@ public class ChordFragment extends Fragment
 						}
 					}
 					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
-					updateCurrentChord(currentChord.root,((TextView) view).getText().toString());
+					updateCurrentChord(currentChord.getRoot(),((TextView) view).getText().toString());
 				}
 			});
 		}
@@ -181,149 +180,19 @@ public class ChordFragment extends Fragment
 		Log.d("Chord Selector",currentChord.toString());
 //		FingerPositions fp = chordFingerings.get(currentChord.toString());
 
+		fretboardView.setFretboardPositions(currentChord.getFingerPositions());
 
-
-		chordView.setFingerPositions(chordFingerings.get(currentChord.toString()));
+//		chordView.setFingerPositions(chordFingerings.get(currentChord.toString()));
 //		int[] chordNotes = currentChord.getNotes();
 //		byte[] bluetoothArray = new byte[chordNotes.length+1];
 //		//TODO: gotta take care of the exceptions here, or somewhere this will probably create wrong fingerings for some chords
-//		for (int i = 0; i < chordNotes.length; i++) {
-//			FretboardPosition fb = MusicUtils.midiNoteToFretboardPosition(  chordNotes[i]);
-//			bluetoothArray[i] = Byte.valueOf(Integer.toString(fb.getFret()*10 + fb.getString()));
-//		}
-//		bluetoothArray[bluetoothArray.length-1] = Byte.valueOf("0");
 
 		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(currentChord.toString(),chordFingerings);
 		Log.d("Chord picker BT","sending :" + bluetoothArray.toString());
 
-//		ConnectThread connectThread = new ConnectThread(bluetoothArray);
-//		connectThread.run();
 
 		BluetoothClass.sendToFretX(bluetoothArray);
 	}
-    // data convert to array
-//    public byte[] data2array(int resID){
-//        String str= readRawTextFile(mActivity.getBaseContext(), resID);
-//        String[] strArrTemp = str.split(" ");
-//        String strText = strArrTemp[1].replaceAll("\n", "");     // This is text of that strTime.
-//        return str2array(strText);
-//    }
-    // string convert to array
-    public byte[] str2array(String string){
-        String strSub = string.replaceAll("[{}]", "");
-        String[] parts = strSub.split(",");
-        byte[] array = new byte[parts.length];
-        for (int i = 0; i < parts.length; i ++)
-        {
-            array[i] = Byte.valueOf(parts[i]);
-        }
-        return array;
-    }
-    // this function read form raw data.
-//    public static String readRawTextFile(Context ctx, int resId) {
-//        InputStream inputStream = ctx.getResources().openRawResource(resId);
-//
-//        InputStreamReader inputreader = new InputStreamReader(inputStream);
-//        BufferedReader buffreader = new BufferedReader(inputreader);
-//        String line;
-//        StringBuilder text = new StringBuilder();
-//
-//        try {
-//            while ((line = buffreader.readLine()) != null) {
-//                text.append(line);
-//                text.append('\n');
-//            }
-//        } catch (IOException e) {
-//            return null;
-//        }
-//        return text.toString();
-//    }
-
-//    public void playChord(int i){
-//        vvMain.setVideoURI(videoUri[i]);
-//        vvMain.start();
-//        imgBack.setImageResource(imageBackgroundIDs[i]);
-//        startViaData(i);
-//
-//    }
-//    public class ImageAdapter extends BaseAdapter {
-//        private Context context;
-//        private int itemBackground;
-//        public ImageAdapter(Context c)
-//        {
-//            context = c;
-//            // sets a grey background; wraps around the images
-//            TypedArray a =mActivity.obtainStyledAttributes(R.styleable.MyGallery);
-//            itemBackground = a.getResourceId(R.styleable.MyGallery_android_galleryItemBackground, 0);
-//            a.recycle();
-//        }
-//        // returns the number of images
-//        public int getCount() {
-//            return imageIDs.length;
-//        }
-//        // returns the ID of an item
-//        public Object getItem(int position) {
-//            return position;
-//        }
-//        // returns the ID of an item
-//        public long getItemId(int position) {
-//            return position;
-//        }
-//        // returns an ImageView view
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            ImageView imageView = new ImageView(context);
-//            imageView.setImageResource(imageIDs[position]);
-//            imageView.setLayoutParams(new Gallery.LayoutParams(300, 450));
-//            imageView.setBackgroundResource(itemBackground);
-//            return imageView;
-//        }
-//    }
-//    // to send byte array data for playing
-//    public void startViaData(int index) {
-//        if(Config.bBlueToothActive == true) {
-//            BluetoothActivity.mHandler.obtainMessage(BluetoothActivity.FRET, musicArray.get(index)).sendToTarget();
-//        }
-//    }
-//    // to turn off light
-//    public void stopViaData() {
-//        if(Config.bBlueToothActive == true) {
-//            byte[] array = new byte[]{0};
-//            BluetoothActivity.mHandler.obtainMessage(BluetoothActivity.FRET, array).sendToTarget();
-//        }
-//    }
-
-
-
-	/////////////////////////////////BlueToothConnection/////////////////////////
-//	static private class ConnectThread extends Thread {
-//		byte[] array;
-//
-//		public ConnectThread(byte[] tmp) {
-//			array = tmp;
-//		}
-//
-//		public void run() {
-//			try {
-//				// Connect the device through the socket. This will block
-//				// until it succeeds or throws an exception
-//				Util.startViaData(array);
-//			} catch (Exception connectException) {
-//				Log.i(BluetoothClass.tag, "connect failed");
-//				// Unable to connect; close the socket and get out
-//				try {
-//					BluetoothClass.mmSocket.close();
-//				} catch (IOException closeException) {
-//					Log.e(BluetoothClass.tag, "mmSocket.close");
-//				}
-//				return;
-//			}
-//			// Do work to manage the connection (in a separate thread)
-//			if (BluetoothClass.mHandler == null)
-//				Log.v("debug", "mHandler is null @ obtain message");
-//			else
-//				Log.v("debug", "mHandler is not null @ obtain message");
-//		}
-//	}
 
 }
 

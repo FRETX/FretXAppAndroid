@@ -45,7 +45,7 @@ public class TunerFragment extends Fragment {
 				.setDelayMillis(300)
 				.enableFadeAnimation(true)
 				.performClick(true)
-				.setInfoText("Play strings one by one. Adjust until needle is green for each string. Then your guitar is tuned!")
+				.setInfoText("Play strings one by one. Adjust until needle is green for each string. It's that simple to tune your guitar!")
 				.setTarget((TunerView) mActivity.findViewById(R.id.tunerView))
 				.setUsageId("tutorialTuner") //THIS SHOULD BE UNIQUE ID
 				.show();
