@@ -6,11 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
 
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
 import fretx.version4.Util;
@@ -162,7 +167,7 @@ public class ChordFragment extends Fragment
 		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.primaryText));
 		initialType.setTextColor(mActivity.getResources().getColor(R.color.primaryText));
 		updateCurrentChord(initialRoot.getText().toString(),initialType.getText().toString());
-
+		showTutorial();
 
 	}
 
@@ -190,8 +195,24 @@ public class ChordFragment extends Fragment
 		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(currentChord.toString(),chordFingerings);
 		Log.d("Chord picker BT","sending :" + bluetoothArray.toString());
 
-
 		BluetoothClass.sendToFretX(bluetoothArray);
+	}
+
+
+	private void showTutorial(){
+
+		new MaterialIntroView.Builder(mActivity)
+				.enableDotAnimation(false)
+				.enableIcon(false)
+				.setFocusGravity(FocusGravity.CENTER)
+				.setFocusType(Focus.ALL)
+				.setDelayMillis(300)
+				.enableFadeAnimation(true)
+				.performClick(true)
+				.setInfoText("This is the Chord Library. You can review or learn any chord you choose here. \nJust pick any combination of chord and watch it show up on your guitar!")
+				.setTarget((LinearLayout) mActivity.findViewById(R.id.chordPickerContainer))
+				.setUsageId("tutorialChordLibrary") //THIS SHOULD BE UNIQUE ID
+				.show();
 	}
 
 }
