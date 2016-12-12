@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +31,15 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
 
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.BluetoothClass;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.Util;
+
+import static fretx.version4.Config.mActivity;
 
 public class PlayFragmentYoutubeFragment extends Fragment {
 
@@ -271,7 +277,10 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 
     private final class MyPlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
         @Override public void onLoading()                            { showMessage("YOUTUBE Loading!");      }
-        @Override public void onLoaded(String s)                     { showMessage("YOUTUBE loaded!"); endPos = m_player.getDurationMillis();}
+        @Override public void onLoaded(String s)                     {
+            showMessage("YOUTUBE loaded!");
+            endPos = m_player.getDurationMillis();
+        }
         @Override public void onAdStarted()                          { showMessage("YOUTUBE Ad Started");    }
         @Override public void onVideoStarted()                       { showMessage("YOUTUBE VideoStarted!"); }
         @Override public void onVideoEnded()                         { showMessage("YOUTUBE VideoEnded!");   }
@@ -279,6 +288,23 @@ public class PlayFragmentYoutubeFragment extends Fragment {
     }
 
     /////////////////////////////////// YOUTUBE CALLBACKS //////////////////////////////////////////////////////////////////
+
+    // TUTORIALS
+    private void showTutorial(){
+//        new MaterialIntroView.Builder(this)
+//                .enableDotAnimation(false)
+//                .enableIcon(false)
+//                .setFocusGravity(FocusGravity.CENTER)
+//                .setFocusType(Focus.NORMAL)
+//                .setDelayMillis(300)
+//                .enableFadeAnimation(true)
+//                .performClick(true)
+//                .setInfoText("Turn on your FretX device and tap the FretX logo to connect to it")
+//                .setTarget((ImageView) mActivity.findViewById(R.id.bluetoothLogo))
+//                .setUsageId("tutorialConnectBluetoothWithLogo") //THIS SHOULD BE UNIQUE ID
+//                .show();
+    }
+
 
     ////////////////////////////////////// TIMING LOOP /////////////////////////////////////////////////////////////////////
 

@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import co.mobiwise.materialintro.shape.Focus;
+import co.mobiwise.materialintro.shape.FocusGravity;
+import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.Config;
 import fretx.version4.Constants;
 import fretx.version4.R;
@@ -87,7 +91,28 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
                 finish();
             }
         });
+
+        showTutorial();
+
     }
+
+
+    private void showTutorial(){
+
+        new MaterialIntroView.Builder(this)
+                .enableDotAnimation(false)
+                .enableIcon(false)
+                .setFocusGravity(FocusGravity.CENTER)
+                .setFocusType(Focus.ALL)
+                .setDelayMillis(300)
+                .enableFadeAnimation(true)
+                .performClick(true)
+                .setInfoText("Tap on FretX to connect.\n(If you don't see your device, turn it off and on again.)")
+                .setTarget((ListView) findViewById(R.id.listView))
+                .setUsageId("tutorialChooseFretxFromBluetoothList") //THIS SHOULD BE UNIQUE ID
+                .show();
+    }
+
 
     @Override
     protected void onResume() {
@@ -332,14 +357,21 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
             final TextView tvpaired = (TextView) vg.findViewById(R.id.paired);
             final TextView tvrssi = (TextView) vg.findViewById(R.id.rssi);
 
-            tvrssi.setVisibility(View.VISIBLE);
-            byte rssival = (byte) devRssiValues.get(device.getAddress()).intValue();
-            if (rssival != 0) {
-                tvrssi.setText("RSSI = " + String.valueOf(rssival));
+            tvpaired.setVisibility(View.INVISIBLE);
+//            tvrssi.setVisibility(View.VISIBLE);
+//            byte rssival = (byte) devRssiValues.get(device.getAddress()).intValue();
+//            if (rssival != 0) {
+//                tvrssi.setText("RSSI = " + String.valueOf(rssival));
+//            }
+
+            String deviceName = device.getName();
+            if(deviceName == null || deviceName == ""){
+                tvname.setText("Unknown Device");
+            } else {
+                tvname.setText(deviceName);
             }
 
-            tvname.setText(device.getName());
-            tvadd.setText(device.getAddress());
+//            tvadd.setText(device.getAddress());
 
             return vg;
         }

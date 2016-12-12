@@ -29,16 +29,6 @@
     >
 
     <TextView
-        android:id="@+id/paired"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:text="(Paired)"
-        android:textSize="12dp"
-        android:textColor="@color/primaryText"/>
-
-    <TextView
         android:id="@+id/rssi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,11 +40,12 @@
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:textSize="19dp"
-        android:textColor="@color/primaryText"/>
+        android:textColor="@color/primaryText"
+        android:textAlignment="center"/>
 
     <TextView
         android:id="@+id/address"
@@ -63,5 +54,15 @@
         android:layout_below="@+id/name"
         android:textSize="11dp"
         android:textColor="@color/primaryText"/>
+
+    <TextView
+        android:id="@+id/paired"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(Paired)"
+        android:textSize="12dp"
+        android:textColor="@color/primaryText"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/rssi"/>
 
 </RelativeLayout>
