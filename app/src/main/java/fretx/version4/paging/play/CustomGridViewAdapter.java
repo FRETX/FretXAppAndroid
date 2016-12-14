@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -78,6 +80,16 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 				fragmentTransaction.commit();
 			}
 		});
+
+		ImageButton prePracticeButton = (ImageButton) row.findViewById(R.id.prePractice);
+		prePracticeButton.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v){
+				Log.d("prePractice SongTxt", item.songTxt());
+				//TODO: parse unique chords
+				//launch new LearnFragmentChordExercise() fragment with .add() and .addToBackStack()
+			}
+		});
+
 		return row;
 
 	}
