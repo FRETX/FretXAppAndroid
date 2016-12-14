@@ -24,6 +24,7 @@ import com.greysonparrelli.permiso.Permiso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import co.mobiwise.materialintro.prefs.PreferencesManager;
 import co.mobiwise.materialintro.shape.Focus;
@@ -42,6 +43,9 @@ import fretx.version4.paging.play.PlayFragment;
 import fretx.version4.paging.tuner.TunerFragment;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
+import rocks.fretx.audioprocessing.FingerPositions;
+import rocks.fretx.audioprocessing.FretboardPosition;
+import rocks.fretx.audioprocessing.MusicUtils;
 //import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 //import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 //import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
@@ -55,6 +59,7 @@ public class MainActivity extends ActionBarActivity {
 	private boolean AUDIO_PERMISSIONS_GRANTED = false;
 	private String SHOWCASE_ID = "bluetoothConnect";
 	private MainActivity mActivity = this;
+	public HashMap<String,FingerPositions> chordFingerings;
 
     //AUDIO PARAMETERS
     public int fs = 16000;
@@ -72,6 +77,8 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity_back);
 		Permiso.getInstance().setActivity(this);
+
+		chordFingerings = MusicUtils.parseChordDb();
 
 		Context ctx = getApplicationContext();
 		Network.initialize(ctx);

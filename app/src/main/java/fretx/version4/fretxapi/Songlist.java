@@ -15,10 +15,11 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 
 import cz.msebera.android.httpclient.Header;
+import fretx.version4.Config;
 
 public class Songlist {
 
-    static String          apiBase       = "http://fretx.herokuapp.com/";
+    static String          apiBase       = Config.apiBase;
     static JSONArray       index         = new JSONArray();
     static AsyncHttpClient async_client  = new AsyncHttpClient();
     static Boolean         ready         = false;
@@ -32,7 +33,7 @@ public class Songlist {
     //////////////////////////// INDEXING ///////////////////////////////////
 
     public static void getIndexFromServer() {
-        async_client.get(apiBase + "/songs/index.json", new JsonHttpResponseHandler() {
+        async_client.get(apiBase + "songs/index.json", new JsonHttpResponseHandler() {
             @Override public void onSuccess(int status, Header[] headers, JSONArray data) {
                 index = data;
                 saveIndexToCache();
@@ -68,7 +69,7 @@ public class Songlist {
                         JSONObject entry       = index.getJSONObject(i);
                         String     youtube_id  = entry.getString("youtube_id");
                         DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
-                        Boolean    is_latest   = AppCache.last_modified(youtube_id + ".txt") > uploaded_on.getValue();
+                        Boolean    is_latest   = AppCache.last_modified(youtube_id + ".json") > uploaded_on.getValue();
 
                         Log.d("FRETX API", "Getting Song From Server: " + entry.getString("title"));
                         getSongFromServer( youtube_id );
@@ -86,12 +87,12 @@ public class Songlist {
 
     public static void getSongFromServer(final String youtube_id) {
 
-        String path = apiBase + String.format( "/songs/%s.txt", youtube_id );
+        String path = apiBase + String.format( "/songs/%s.json", youtube_id );
 
         async_client.get(path, new AsyncHttpResponseHandler() {
 
            @Override public void onSuccess(int status, Header[] headers, byte[] body) {
-               AppCache.saveToCache(youtube_id + ".txt", body);
+               AppCache.saveToCache(youtube_id + ".json", body);
            }
 
            @Override public void onFailure(int status, Header[] headers, byte[] error, Throwable e) {
@@ -109,9 +110,9 @@ public class Songlist {
                 JSONObject entry       = index.getJSONObject(i);
                 String     youtube_id  = entry.getString("youtube_id");
                 DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
-                Boolean    is_latest   = AppCache.last_modified(youtube_id + ".txt") > uploaded_on.getValue();
+                Boolean    is_latest   = AppCache.last_modified(youtube_id + ".json") > uploaded_on.getValue();
 
-                if( AppCache.exists(youtube_id + ".txt") && is_latest ) { continue; }
+                if( AppCache.exists(youtube_id + ".json") && is_latest ) { continue; }
 
                 Log.d("FRETX API", "Getting Song From Server: " + entry.getString("title"));
                 getSongFromServer( youtube_id );
@@ -133,7 +134,8 @@ public class Songlist {
         try {
             JSONObject song = index.getJSONObject(i);
             //Drawable image = Util.LoadImageFromWeb("http://img.youtube.com/vi/" + song.getString("youtube_id") + "/0.jpg");
-            return new SongItem(song.getString("title"), song.getString("youtube_id"), song.getString("title"));
+
+            return new SongItem(song.getString("youtube_id"), song.getString("title"), song.getString("artist"),song.getString("song_title"),song.getString("uploaded_on"));
         }
         catch (Exception e) {
             Log.d("FRETX API", String.format("Failed Getting Song Item\r\n%s", e.toString()));

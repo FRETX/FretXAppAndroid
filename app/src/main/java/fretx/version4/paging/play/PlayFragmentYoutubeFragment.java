@@ -35,9 +35,13 @@ import co.mobiwise.materialintro.shape.Focus;
 import co.mobiwise.materialintro.shape.FocusGravity;
 import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.BluetoothClass;
+import fretx.version4.Config;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.Util;
+import fretx.version4.fretxapi.SongItem;
+import fretx.version4.fretxapi.SongPunch;
+import rocks.fretx.audioprocessing.MusicUtils;
 
 import static fretx.version4.Config.mActivity;
 
@@ -47,7 +51,9 @@ public class PlayFragmentYoutubeFragment extends Fragment {
     public String            videoUri;
     public int               resourceId;
 
-    private static final String API_KEY = "AIzaSyBVpnU2xvoUvbVVFw9u8xgSMYdkr4uGRbk";
+    private static final String API_KEY = Config.YOUTUBE_API_KEY;
+
+    private SongItem song;
 
     private MainActivity context;
     private View         rootView;
@@ -91,8 +97,10 @@ public class PlayFragmentYoutubeFragment extends Fragment {
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        VIDEO_ID = getArguments().getString("URL");
-        SONG_TXT = getArguments().getString("RAW");
+//        VIDEO_ID = getArguments().getString("URL");
+//        SONG_TXT = getArguments().getString("RAW");
+        VIDEO_ID = song.youtube_id;
+
         inflateView(inflater, container);
         initVars();
         setEventListeners();
@@ -113,6 +121,10 @@ public class PlayFragmentYoutubeFragment extends Fragment {
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
+
+    public void setSong(SongItem song){
+        this.song = song;
+    }
 
     private void initVars() {
         context       = (MainActivity) getActivity();
@@ -363,7 +375,8 @@ public class PlayFragmentYoutubeFragment extends Fragment {
                     return;
 
                 arrayCallStatus[nIndex] = true;
-                BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[nIndex])));
+//                BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[nIndex])));
+                BluetoothClass.sendToFretX(punch_list.get(arrayKeys[nIndex]));
                 Util.setDefaultValues(arrayCallStatus);
                 arrayCallStatus[nIndex] = true;
 
@@ -376,35 +389,53 @@ public class PlayFragmentYoutubeFragment extends Fragment {
                 return;
 
             arrayCallStatus[arrayKeys.length -1] = true;
-            BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[arrayKeys.length - 1])));
+//            BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[arrayKeys.length - 1])));
+            BluetoothClass.sendToFretX(punch_list.get(arrayKeys[arrayKeys.length - 1]));
             Util.setDefaultValues(arrayCallStatus);
             arrayCallStatus[arrayKeys.length -1] = true;
         }
     }
 
-    public Hashtable songtxtToHashtable(String data) {
+//    public Hashtable songtxtToHashtable(String data) {
+      public Hashtable songtxtToHashtable() {
         punch_list = new Hashtable();
-        String[] strArray = data.split( "\r\n" );
+//        String[] strArray = data.split( "\r\n" );
 
-        for( String line : strArray ) {
-            String[] split = line.split(" ");               // Split the every line of text into two parts
-            int punch_time = Integer.parseInt(split[0]);    // The time in milliseconds
-            String strText = split[1];                      // The byte command for the lights
+        for (SongPunch sp : song.punches()){
+            int punch_time = sp.timeMs;
+            byte[] bluetoothArray;
+            bluetoothArray = sp.fingering;
 
-            if( punch_list.containsKey( punch_time ) ) {               // not sure why we need to handle two chords on the same time ???
-                String strTemp = (String) punch_list.get(punch_time);
-                punch_list.put(punch_time, strTemp + ":" + strText);
-                continue;
-            }
-
-            punch_list.put(punch_time, strText);
+            //Skipping the conversion of this part for now, in favor of using byte[] arrays directly
+            //We can revert back to String if need be
+//            if( punch_list.containsKey( punch_time ) ) {               // not sure why we need to handle two chords on the same time ???
+//                byte[] bluetoothArrayTmp = (byte[]) punch_list.get(punch_time);
+//                punch_list.put(punch_time, strTemp + ":" + strText);
+//                continue;
+//            }
+            punch_list.put(punch_time,bluetoothArray);
         }
+
+//        for( String line : strArray ) {
+//            String[] split = line.split(" ");               // Split the every line of text into two parts
+//            int punch_time = Integer.parseInt(split[0]);    // The time in milliseconds
+//            String strText = split[1];                      // The byte command for the lights
+//
+//            if( punch_list.containsKey( punch_time ) ) {               // not sure why we need to handle two chords on the same time ???
+//                String strTemp = (String) punch_list.get(punch_time);
+//                punch_list.put(punch_time, strTemp + ":" + strText);
+//                continue;
+//            }
+//
+//            punch_list.put(punch_time, strText);
+//        }
         return punch_list;
     }
 
     public void initTxt(String data) {
-        String[] strArray = data.split( "\r\n" );
-        punch_list = songtxtToHashtable(data);
+//        String[] strArray = data.split( "\r\n" );
+//        punch_list = songtxtToHashtable(data);
+        punch_list = songtxtToHashtable();
 
         ///save the key array of hashtable to int array.
         arrayKeys = new int[punch_list.size()];

@@ -61,7 +61,9 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 		}
 
 		final SongItem item = data.get(position);
-		holder.txtTitle.setText(item.songName.replaceFirst("-","\n"));
+
+		holder.txtTitle.setText(item.artist + "\n" + item.song_title);
+
 		Picasso.with(context).load(item.imageURL()).placeholder(R.drawable.defaultthumb).into(holder.imageItem);
 		//holder.imageItem.setImageDrawable(item.image);
 		row.setOnClickListener(new View.OnClickListener() {
@@ -70,12 +72,13 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				PlayFragmentYoutubeFragment fragmentYoutubeFragment = new PlayFragmentYoutubeFragment();
+				fragmentYoutubeFragment.setSong(item);
 				FragmentManager fragmentManager = context.getSupportFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				Bundle args = new Bundle();
-				args.putString("URL", item.songUrl);
-				args.putString("RAW", item.songTxt());
-				fragmentYoutubeFragment.setArguments(args);
+//				Bundle args = new Bundle();
+//				args.putString("URL", item.songUrl);
+//				args.putString("RAW", item.songTxt());
+//				fragmentYoutubeFragment.setArguments(args);
 				fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
 				fragmentTransaction.commit();
 			}
@@ -84,7 +87,7 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 		ImageButton prePracticeButton = (ImageButton) row.findViewById(R.id.prePractice);
 		prePracticeButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
-				Log.d("prePractice SongTxt", item.songTxt());
+//				Log.d("prePractice SongTxt", item.songTxt());
 				//TODO: parse unique chords
 				//launch new LearnFragmentChordExercise() fragment with .add() and .addToBackStack()
 			}

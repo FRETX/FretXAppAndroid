@@ -109,7 +109,7 @@ public class PlayFragmentSearchList extends Fragment {
 
         ArrayList<SongItem> filterList = new ArrayList<>();
         for ( int i = 0; i < mainData.size(); i++ ) {
-            String title = mainData.get(i).songName.toLowerCase();
+            String title = mainData.get(i).title.toLowerCase();
             if( title.contains(query.toLowerCase()) ) { filterList.add(mainData.get(i)); }
         }
         setListData(filterList);

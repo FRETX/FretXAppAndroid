@@ -58,7 +58,7 @@ public class SongListViewAdapter extends BaseAdapter {
 
         final SongItem newsItem = marrList.get(position);
 
-        holder.tvName.setText(newsItem.songName);
+        holder.tvName.setText(newsItem.title);
 
         convertView.setOnClickListener(new View.OnClickListener() {
 
@@ -68,10 +68,11 @@ public class SongListViewAdapter extends BaseAdapter {
                 PlayFragmentYoutubeFragment fragmentYoutubeFragment = new PlayFragmentYoutubeFragment();
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Bundle args = new Bundle();
-                args.putString("URL", newsItem.songUrl);
-                args.putString("RAW", newsItem.songTxt);
-                fragmentYoutubeFragment.setArguments(args);
+                fragmentYoutubeFragment.setSong(newsItem);
+//                Bundle args = new Bundle();
+//                args.putString("URL", newsItem.songUrl);
+//                args.putString("RAW", newsItem.songTxt);
+//                fragmentYoutubeFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
