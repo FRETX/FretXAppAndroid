@@ -5,12 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -32,6 +34,7 @@ public class LearnFragmentChordExercise extends Fragment {
     FrameLayout rootView = null;
 	LearnChordExerciseView chordExerciseView;
 	FretboardView fretboardView;
+	ArrayList<Chord> exerciseChords;
 
     public LearnFragmentChordExercise(){
 
@@ -46,10 +49,13 @@ public class LearnFragmentChordExercise extends Fragment {
 	    fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
 	    chordExerciseView.setFretBoardView(fretboardView);
 
-	    ArrayList<Chord> exerciseChords = new ArrayList<Chord>(0);
-	    exerciseChords.add(new Chord("A","m"));
-	    exerciseChords.add(new Chord("C","maj"));
-	    exerciseChords.add(new Chord("G","maj"));
+	    if(exerciseChords == null){
+		    exerciseChords = new ArrayList<Chord>(0);
+		    exerciseChords.add(new Chord("A","m"));
+		    exerciseChords.add(new Chord("C","maj"));
+		    exerciseChords.add(new Chord("G","maj"));
+	    }
+
 //   	    String[] majorRoots = new String[]{"D","G","C"};
 //	    for (int i = 0; i < majorRoots.length; i++) {
 //		    exerciseChords.add(new Chord(majorRoots[i], "maj"));
@@ -64,13 +70,26 @@ public class LearnFragmentChordExercise extends Fragment {
 //	    }
 //	    exerciseChords.add(new Chord("C","maj"));
 
-	    chordExerciseView.setChords(exerciseChords);
-
         return rootView;
     }
 
+	public void setChords(ArrayList<Chord> chords){
+		this.exerciseChords = chords;
+		if(chordExerciseView == null) return;
+		chordExerciseView.setChords(this.exerciseChords);
+	}
+
 	@Override
 	public void onViewCreated(View v , Bundle savedInstanceState){
+		chordExerciseView.setChords(exerciseChords);
+		TextView exerciseChordsText = (TextView) v.findViewById(R.id.exerciseChordsTextView);
+		if(exerciseChordsText==null) return;
+		String songChordsString = "";
+		for (int i = 0; i < exerciseChords.size(); i++) {
+			songChordsString += exerciseChords.get(i).toString() + " ";
+			Log.d("songChordString",songChordsString);
+		}
+		exerciseChordsText.setText(songChordsString);
 //		ShowcaseConfig config = new ShowcaseConfig();
 //		config.setDelay(50); // half second between each showcase view
 //		config.setMaskColor(getResources().getColor(R.color.showcaseOverlay));

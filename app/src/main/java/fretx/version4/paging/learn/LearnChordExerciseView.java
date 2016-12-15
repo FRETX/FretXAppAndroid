@@ -3,6 +3,7 @@ package fretx.version4.paging.learn;
 		import android.content.Context;
 		import android.graphics.Canvas;
 		import android.graphics.Paint;
+		import android.os.Bundle;
 		import android.os.CountDownTimer;
 		import android.util.AttributeSet;
 		import android.util.Log;
@@ -116,6 +117,14 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 	public void setChords(ArrayList<Chord> c) {
 		this.chords = c;
+
+		TextView exerciseChordsText = (TextView) findViewById(R.id.exerciseChordsTextView);
+		if(exerciseChordsText==null) return;
+		String songChordsString = "";
+		for (int i = 0; i < chords.size(); i++) {
+			songChordsString = chords.get(i).toString() + " ";
+		}
+		exerciseChordsText.setText(songChordsString);
 		chordsIndex = -1;
 		advanceChord();
 	}

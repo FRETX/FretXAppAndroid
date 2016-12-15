@@ -7,8 +7,8 @@ android {
         applicationId 'fretx.version4'
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 13
-        versionName "13.0"
+        versionCode 14
+        versionName "14.0"
         multiDexEnabled true
         sourceSets.main.jni.srcDirs = []
 
@@ -46,28 +46,5 @@ dependencies {
     compile 'com.android.support:design:25.0.1'
     compile 'com.github.iammert:MaterialIntroView:1.5.2'
     compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
+
 }
