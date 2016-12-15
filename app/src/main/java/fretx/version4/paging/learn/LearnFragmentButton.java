@@ -41,7 +41,9 @@ public class LearnFragmentButton extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.learn_container, new LearnFragmentChordExercise());
+//                fragmentTransaction.replace(R.id.learn_container, new LearnFragmentChordExercise());
+	            fragmentTransaction.replace(R.id.learn_container, new LearnFragmentCustomChordExercise());
+	            //TODO: back stack isn't working here
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
@@ -54,6 +56,7 @@ public class LearnFragmentButton extends Fragment {
 			    FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
 			    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 			    fragmentTransaction.replace(R.id.learn_container, new LearnFragmentScaleExercise());
+			    //TODO: back stack isn't working here
 			    fragmentTransaction.addToBackStack(null);
 			    fragmentTransaction.commit();
 

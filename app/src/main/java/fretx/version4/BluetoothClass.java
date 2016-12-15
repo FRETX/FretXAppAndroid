@@ -123,6 +123,10 @@ public class BluetoothClass {
         connectThread.run();
     }
 
+    public static void lightsOff(){
+        sendToFretX(Util.str2array("{0}"));
+    }
+
     /////////////////////////////////BlueToothConnection/////////////////////////
     static private class ConnectThread extends Thread {
         byte[] array;

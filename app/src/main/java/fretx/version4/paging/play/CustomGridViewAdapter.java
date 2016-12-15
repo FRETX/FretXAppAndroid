@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -94,7 +96,17 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 		prePracticeButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
 				//Chord Preview Mode
-				//TODO: ARRRRRGH this needs to be written so much better
+//				v.setVisibility(View.INVISIBLE);
+//				ViewGroup row = (ViewGroup) v.getParent();
+//				for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
+//					View view = row.getChildAt(itemPos);
+//					if (view instanceof ProgressBar) {
+//						ProgressBar progressBar = (ProgressBar) view; //Found it!
+//						progressBar.setVisibility(View.VISIBLE);
+//						break;
+//					}
+//				}
+				//TODO: ARRRRRGH this needs to be written so much betterq
 				ArrayList<SongPunch> punches = item.punches();
 				SongPunch tmpSp;
 				String tmpKey;
