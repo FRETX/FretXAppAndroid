@@ -74,7 +74,7 @@ public class LearnFragmentChordExercise extends Fragment {
     }
 
 	public void setChords(ArrayList<Chord> chords){
-		this.exerciseChords = chords;
+		this.exerciseChords = (ArrayList<Chord>) chords.clone();
 		if(chordExerciseView == null) return;
 		chordExerciseView.setChords(this.exerciseChords);
 	}

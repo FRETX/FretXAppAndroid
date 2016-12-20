@@ -138,6 +138,10 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 					chords.add(new Chord(root,type));
 				}
 
+				if(chords.size()<1){
+					Toast.makeText(context,"No chord data found for this song",Toast.LENGTH_SHORT).show();
+					return;
+				}
 				LearnFragmentChordExercise fragmentChordExercise = new LearnFragmentChordExercise();
 				FragmentManager fragmentManager = context.getSupportFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -146,6 +150,7 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 				fragmentTransaction.addToBackStack("listViewToChordPreview");
 				fragmentTransaction.commit();
 				fragmentManager.executePendingTransactions();
+
 			}
 		});
 

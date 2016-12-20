@@ -45,6 +45,11 @@ public class LearnFragmentButton extends Fragment {
 	            fragmentTransaction.replace(R.id.learn_container, new LearnFragmentCustomChordExercise());
 	            //TODO: back stack isn't working here
                 fragmentTransaction.addToBackStack(null);
+
+	            mActivity.audio.disablePitchDetector();
+	            mActivity.audio.disableNoteDetector();
+	            mActivity.audio.enableChordDetector();
+
                 fragmentTransaction.commit();
 
             }
@@ -58,6 +63,11 @@ public class LearnFragmentButton extends Fragment {
 			    fragmentTransaction.replace(R.id.learn_container, new LearnFragmentScaleExercise());
 			    //TODO: back stack isn't working here
 			    fragmentTransaction.addToBackStack(null);
+
+			    mActivity.audio.enablePitchDetector();
+			    mActivity.audio.enableNoteDetector();
+			    mActivity.audio.disableChordDetector();
+
 			    fragmentTransaction.commit();
 
 		    }

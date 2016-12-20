@@ -29,6 +29,7 @@ public class TunerView extends View {
 	private final Paint paint = new Paint();
 	protected double pitchRangeInCents = 200;
 	private boolean initialDraw = true;
+	private static double TUNING_THRESHOLD_CENTS = 5;
 
 	//Animation vars
 	private long currentTime, prevTime, deltaTime;
@@ -153,7 +154,7 @@ public class TunerView extends View {
 			difference = centerPitchInCents - currentPitchInCents;
 
 			//Draw the needle base circle
-			if (Math.abs(difference) < 10) {
+			if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
 				lastColor = getResources().getColor(R.color.tunerCorrect);
 			} else {
 				lastColor = getResources().getColor(R.color.primaryText);

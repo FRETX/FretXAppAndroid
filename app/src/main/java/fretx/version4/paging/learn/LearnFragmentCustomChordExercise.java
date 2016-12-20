@@ -187,6 +187,7 @@ public class LearnFragmentCustomChordExercise extends Fragment {
 
 	private void startExercise(){
 		//TODO: launch fragment
+		if(chordSequence.size()<1) return;
 		LearnFragmentChordExercise fragmentChordExercise = new LearnFragmentChordExercise();
 		FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

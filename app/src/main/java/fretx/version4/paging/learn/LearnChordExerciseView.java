@@ -14,6 +14,7 @@ package fretx.version4.paging.learn;
 
 		import java.io.IOException;
 		import java.util.ArrayList;
+		import java.util.Arrays;
 		import java.util.HashMap;
 
 		import fretx.version4.BluetoothClass;
@@ -37,27 +38,29 @@ public class LearnChordExerciseView extends RelativeLayout {
 	private FrameLayout rootView;
 	private FretboardView fretBoardView;
 
-	private final double VOLUME_THRESHOLD = -10.5   ;
+	private final double VOLUME_THRESHOLD = -9;
 	private int width, height;
 
 	private ArrayList<Chord> chords = new ArrayList<Chord>(0);
 	private HashMap<String,FingerPositions> chordDb;
 
 	boolean listening = false;
+//	private boolean oneMistakeTolerance = true;
 	CountDownTimer chordTimer;
 
 	private int chordsIndex = 0;
 
 	private final long TIMER_TICK = 20;
-	private final long ONSET_IGNORE_DURATION = 50; //in miliseconds
-	private final long CHORD_LISTEN_DURATION = 700; //in miliseconds
+	private final long ONSET_IGNORE_DURATION = 0; //in miliseconds
+	private final long CHORD_LISTEN_DURATION = 500; //in miliseconds
 	private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
-	private final long CORRECTLY_PLAYED_DURATION = 120; //in milliseconds
+	private final long CORRECTLY_PLAYED_DURATION = 160; //in milliseconds
 	private long correctlyPlayedAccumulator = 0;
 
 	private void startListening() {
 		Log.d("startListening","starting");
 		listening = true;
+//		oneMistakeTolerance = true;
 		chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
 			public void onTick(long millisUntilFinished) {
 				if(mActivity == null)return;
@@ -79,12 +82,18 @@ public class LearnChordExerciseView extends RelativeLayout {
 					if(!mActivity.audio.isProcessing()) return;
 					Chord targetChord = chords.get(chordsIndex);
 					Chord playedChord = mActivity.audio.getChord();
+					Log.d("playedChord",playedChord.toString());
 					if(playedChord != null){
 						if (targetChord.toString().equals(playedChord.toString())) {
 							correctlyPlayedAccumulator += TIMER_TICK;
 							Log.d("correctlyPlayedAcc", Long.toString(correctlyPlayedAccumulator));
 						} else{
-							correctlyPlayedAccumulator = 0;
+//							if(oneMistakeTolerance){
+//								oneMistakeTolerance = false;
+//							} else {
+								correctlyPlayedAccumulator = 0;
+//							}
+
 						}
 
 					}
@@ -117,6 +126,8 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 	public void setChords(ArrayList<Chord> c) {
 		this.chords = c;
+//		Log.d("chords", chords.toString());
+		mActivity.audio.setTargetChords(chords);
 
 		TextView exerciseChordsText = (TextView) findViewById(R.id.exerciseChordsTextView);
 		if(exerciseChordsText==null) return;

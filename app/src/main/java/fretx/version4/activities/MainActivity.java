@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
 
     //AUDIO PARAMETERS
     public int fs = 16000;
-    public double bufferSizeInSeconds = 0.05;
+    public double bufferSizeInSeconds = 0.1;
     public AudioProcessing audio;
 
 	private GoogleApiClient client;  //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -225,9 +225,9 @@ public class MainActivity extends ActionBarActivity {
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new LearnFragment())
 										.commit();
-								mActivity.audio.enablePitchDetector();
-								mActivity.audio.enableNoteDetector();
-								mActivity.audio.enableChordDetector();
+								mActivity.audio.disablePitchDetector();
+								mActivity.audio.disableNoteDetector();
+								mActivity.audio.disableChordDetector();
 								break;
 							case R.id.action_chords:
 								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
