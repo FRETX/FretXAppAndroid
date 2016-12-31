@@ -93,7 +93,7 @@ public class LearnFragmentCustomChordExercise extends Fragment {
 
 	private void populateChordPicker(){
 		String[] rootNotes = {"C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"};
-		String [] chordTypes = {"maj","m","maj7","m7","sus2","sus4","dim","dim7","aug",};
+		String [] chordTypes = {"maj","m","5","maj7","m7","sus2","sus4","dim","dim7","aug",};
 
 		LinearLayout rootNoteView = (LinearLayout) mActivity.findViewById(R.id.chordPickerRootNoteView);
 		LinearLayout chordTypeView = (LinearLayout) mActivity.findViewById(R.id.chordPickerTypeView);

@@ -26,6 +26,7 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -398,14 +399,10 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 
 //    public Hashtable songtxtToHashtable(String data) {
       public Hashtable songtxtToHashtable() {
-        punch_list = new Hashtable();
-//        String[] strArray = data.split( "\r\n" );
+          punch_list = new Hashtable();
+          ArrayList<SongPunch> punches = song.punches();
 
-        for (SongPunch sp : song.punches()){
-            int punch_time = sp.timeMs;
-            byte[] bluetoothArray;
-            bluetoothArray = sp.fingering;
-
+        for (SongPunch sp : punches){
             //Skipping the conversion of this part for now, in favor of using byte[] arrays directly
             //We can revert back to String if need be
 //            if( punch_list.containsKey( punch_time ) ) {               // not sure why we need to handle two chords on the same time ???
@@ -413,31 +410,15 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 //                punch_list.put(punch_time, strTemp + ":" + strText);
 //                continue;
 //            }
-            punch_list.put(punch_time,bluetoothArray);
+            punch_list.put(sp.timeMs,sp.fingering);
         }
-
-//        for( String line : strArray ) {
-//            String[] split = line.split(" ");               // Split the every line of text into two parts
-//            int punch_time = Integer.parseInt(split[0]);    // The time in milliseconds
-//            String strText = split[1];                      // The byte command for the lights
-//
-//            if( punch_list.containsKey( punch_time ) ) {               // not sure why we need to handle two chords on the same time ???
-//                String strTemp = (String) punch_list.get(punch_time);
-//                punch_list.put(punch_time, strTemp + ":" + strText);
-//                continue;
-//            }
-//
-//            punch_list.put(punch_time, strText);
-//        }
         return punch_list;
     }
 
     public void initTxt(String data) {
-//        String[] strArray = data.split( "\r\n" );
-//        punch_list = songtxtToHashtable(data);
+        long timeStart = System.currentTimeMillis();
         punch_list = songtxtToHashtable();
-
-        ///save the key array of hashtable to int array.
+        //save the key array of hashtable to int array.
         arrayKeys = new int[punch_list.size()];
         arrayCallStatus = new Boolean[punch_list.size()];
 
@@ -448,6 +429,7 @@ public class PlayFragmentYoutubeFragment extends Fragment {
             i++;
         }
         Arrays.sort(arrayKeys);
+        Log.d( "initTxt" , Long.toString((System.currentTimeMillis()-timeStart)));
     }
 
     ///////////////////////////////// TEXT FILE PROCESSING /////////////////////////////////////////////////////////////////

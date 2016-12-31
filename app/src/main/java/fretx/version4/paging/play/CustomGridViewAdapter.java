@@ -1,6 +1,7 @@
 package fretx.version4.paging.play;
 
 import android.app.Activity;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +91,7 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 //				fragmentYoutubeFragment.setArguments(args);
 				fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
 				fragmentTransaction.commit();
+
 			}
 		});
 
@@ -106,7 +109,13 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 //						break;
 //					}
 //				}
-				//TODO: ARRRRRGH this needs to be written so much betterq
+
+//				RelativeLayout parentView = (RelativeLayout) v.getParent();
+//				MainActivity mActivity = (MainActivity) v.getContext();
+//				ProgressBar progressBar = (ProgressBar) parentView.findViewById(R.id.chordPreviewProgressBar);
+//				v.setVisibility(View.INVISIBLE);
+//				progressBar.setVisibility(View.VISIBLE);
+
 				ArrayList<SongPunch> punches = item.punches();
 				SongPunch tmpSp;
 				String tmpKey;

@@ -2,9 +2,14 @@ package fretx.version4.fretxapi;
 
 import android.content.Context;
 import android.util.Log;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 public class AppCache {
 
@@ -13,15 +18,20 @@ public class AppCache {
     public static void initialize(Context context) { cacheDir = context.getCacheDir(); }
 
     public static String getFromCache(String path) {
-
         try {
-            int i; String buff = "";
             File file = getFile( path );
-            FileInputStream fis = new FileInputStream(file);
-            while ( ( i = fis.read() ) != -1 ) { buff += (char) i; }
-            fis.close();
+
+            StringBuffer contents = new StringBuffer();
+            BufferedReader reader = null;
+            reader = new BufferedReader(new FileReader(file));
+            String text = null;
+            while ((text = reader.readLine()) != null) {
+                contents.append(text).append(System.getProperty("line.separator"));
+            }
+            reader.close();
+
             Log.d( "APP CACHE", String.format( "Got From Cache %s", path ) );
-            return buff;
+            return contents.toString();
         }
 
         catch (Exception e) {
@@ -51,5 +61,6 @@ public class AppCache {
     public static File    getFile       ( String path ) { return new File( cacheDir, path);      }
     public static Boolean exists        ( String path ) { return getFile( path ).exists();       }
     public static long    last_modified ( String path ) { return getFile( path ).lastModified(); }
+
 
 }
