@@ -22,6 +22,7 @@ public class LearnFragmentButton extends Fragment {
 
     Button btExerciseOne;
     Button btExerciseTwo;
+	Button btGuidedChordExercise;
     Button btExerciseThree;
     Button btExerciseFour;
 
@@ -72,6 +73,29 @@ public class LearnFragmentButton extends Fragment {
 
 		    }
 	    });
+
+	    btGuidedChordExercise = (Button)rootView.findViewById(R.id.btGuidedChordExercises);
+	    btGuidedChordExercise.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+			    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			    fragmentTransaction.replace(R.id.learn_container, new LearnFragmentGuidedChordExercise());
+			    //TODO: back stack isn't working here
+			    fragmentTransaction.addToBackStack("guidedChordExercise");
+
+			    mActivity.audio.disablePitchDetector();
+			    mActivity.audio.disableNoteDetector();
+			    mActivity.audio.enableChordDetector();
+
+			    fragmentTransaction.commit();
+
+		    }
+	    });
+
+
+
+
 //        btExerciseTwo.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
