@@ -49,12 +49,12 @@ public class LearnFragmentChordExercise extends Fragment {
 	    fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
 	    chordExerciseView.setFretBoardView(fretboardView);
 
-	    if(exerciseChords == null){
-		    exerciseChords = new ArrayList<Chord>(0);
-		    exerciseChords.add(new Chord("A","m"));
-		    exerciseChords.add(new Chord("C","maj"));
-		    exerciseChords.add(new Chord("G","maj"));
-	    }
+//	    if(exerciseChords == null){
+//		    exerciseChords = new ArrayList<Chord>(0);
+//		    exerciseChords.add(new Chord("A","m"));
+//		    exerciseChords.add(new Chord("C","maj"));
+//		    exerciseChords.add(new Chord("G","maj"));
+//	    }
 
 //   	    String[] majorRoots = new String[]{"D","G","C"};
 //	    for (int i = 0; i < majorRoots.length; i++) {
@@ -90,22 +90,5 @@ public class LearnFragmentChordExercise extends Fragment {
 			Log.d("songChordString",songChordsString);
 		}
 		exerciseChordsText.setText(songChordsString);
-//		ShowcaseConfig config = new ShowcaseConfig();
-//		config.setDelay(50); // half second between each showcase view
-//		config.setMaskColor(getResources().getColor(R.color.showcaseOverlay));
-//		config.setShapePadding(5);
-//		MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(mActivity, "ChordExerciseId");
-//
-//		sequence.setConfig(config);
-//
-//		sequence.addSequenceItem((View) getActivity().findViewById(R.id.redLightsView),
-//				"Put your fingers on the red lights", "OKAY");
-//
-//		sequence.addSequenceItem((View) getActivity().findViewById(R.id.blueLightsView),
-//				"Don't put any fingers on the strings with blue lights, but play them", "OKAY");
-//
-//		sequence.addSequenceItem((View) getActivity().findViewById(R.id.noLightsView),
-//				"If you see no lights on a string, don't play that string", "GOT IT!");
-//		sequence.start();
 	}
 }

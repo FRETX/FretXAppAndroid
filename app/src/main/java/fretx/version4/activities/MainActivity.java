@@ -171,10 +171,10 @@ public class MainActivity extends ActionBarActivity {
         client.disconnect();
     }
 
-    @Override
-    public void onBackPressed() {
-		//Intentionally do nothing so that back button is disabled
-    }
+//    @Override
+//    public void onBackPressed() {
+//		//Intentionally do nothing so that back button is disabled
+//    }
 
 	@Override
 	public void onStart() {

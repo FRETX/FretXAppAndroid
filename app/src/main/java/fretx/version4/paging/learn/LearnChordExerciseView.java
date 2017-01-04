@@ -34,21 +34,23 @@ package fretx.version4.paging.learn;
 
 public class LearnChordExerciseView extends RelativeLayout {
 
-	private fretx.version4.activities.MainActivity mActivity;
-	private FrameLayout rootView;
-	private FretboardView fretBoardView;
+	protected fretx.version4.activities.MainActivity mActivity;
+	protected FrameLayout rootView;
+	protected FretboardView fretBoardView;
+
+	protected boolean enableDrawing = true;
 
 	private final double VOLUME_THRESHOLD = -9;
 	private int width, height;
 
-	private ArrayList<Chord> chords = new ArrayList<Chord>(0);
-	private HashMap<String,FingerPositions> chordDb;
+	protected ArrayList<Chord> chords = new ArrayList<Chord>(0);
+	protected HashMap<String,FingerPositions> chordDb;
 
 	boolean listening = false;
 //	private boolean oneMistakeTolerance = true;
 	CountDownTimer chordTimer;
 
-	private int chordsIndex = 0;
+	protected int chordsIndex = 0;
 
 	private final long TIMER_TICK = 20;
 	private final long ONSET_IGNORE_DURATION = 0; //in miliseconds
@@ -115,19 +117,23 @@ public class LearnChordExerciseView extends RelativeLayout {
 		chordTimer.start();
 	}
 
-	private void advanceChord() {
+	protected void advanceChord() {
 		chordsIndex++;
 		if (chordsIndex == chords.size()) chordsIndex = 0;
-//		Chord currentChord = chords.get(chordsIndex);
-//		Log.d("NoteView-current note", currentChord.toString());
+
+		TextView textChord = (TextView) rootView.findViewById(R.id.textChord);
+		textChord.setText(chords.get(chordsIndex).toString());
+		fretBoardView.setFretboardPositions(chords.get(chordsIndex).getFingerPositions());
+
 		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chords.get(chordsIndex).toString(),chordDb);
 		BluetoothClass.sendToFretX(bluetoothArray);
 	}
 
 	public void setChords(ArrayList<Chord> c) {
 		this.chords = c;
-//		Log.d("chords", chords.toString());
 		mActivity.audio.setTargetChords(chords);
+		chordsIndex = -1;
+		advanceChord();
 
 		TextView exerciseChordsText = (TextView) findViewById(R.id.exerciseChordsTextView);
 		if(exerciseChordsText==null) return;
@@ -136,8 +142,7 @@ public class LearnChordExerciseView extends RelativeLayout {
 			songChordsString = chords.get(i).toString() + " ";
 		}
 		exerciseChordsText.setText(songChordsString);
-		chordsIndex = -1;
-		advanceChord();
+
 	}
 
 	public void resetChords(){
@@ -186,28 +191,19 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		//TODO: better architecture, this shouldn't be in the GUI thread, but eh.
-		TextView textChord = (TextView) rootView.findViewById(R.id.textChord);
-		textChord.setText(chords.get(chordsIndex).toString());
-		fretBoardView.setFretboardPositions(chords.get(chordsIndex).getFingerPositions());
-				             //setFingerPositions(MusicUtils.getFingering(chords.get(chordsIndex).toString(),chordDb));
-
-//		ConnectThread connectThread = new ConnectThread(bluetoothArray);
-//		connectThread.run();
-
-		//I know this is shitty Ben but bear with me, Imma tidy up all this
-		if(mActivity == null) return;
-		if(mActivity.audio == null) return;
-		if(!mActivity.audio.isProcessing()) return;
-		if(!listening){
-			startListening();
+		if(enableDrawing){
+			if (mActivity == null) return;
+			if (mActivity.audio == null) return;
+			if (!mActivity.audio.isProcessing()) return;
+			if (!listening) {
+				startListening();
+			}
+			invalidate();
 		}
-
-		invalidate();
-
-		}
-
 
 	}
+
+
+}
 
 

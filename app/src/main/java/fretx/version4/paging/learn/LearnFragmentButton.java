@@ -80,7 +80,7 @@ public class LearnFragmentButton extends Fragment {
 		    public void onClick(View v) {
 			    FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
 			    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			    fragmentTransaction.replace(R.id.learn_container, new LearnFragmentGuidedChordExercise());
+			    fragmentTransaction.replace(R.id.learn_container, new LearnFragmentGuidedChordExerciseList());
 			    //TODO: back stack isn't working here
 			    fragmentTransaction.addToBackStack("guidedChordExercise");
 

@@ -1,6 +1,6 @@
-{[
+[
 	{
-	    "name" : "D,G,C"
+	    "name" : "D,G,C",
 		"id": "guidedExercise1",
 		"chords" : [
 				{
@@ -16,10 +16,10 @@
 					"type" : "maj"
 				}
 		],
-		"nRepetitions" : 3,
+		"nRepetitions" : 1
 	},
-{
-	    "name" : "F,E,A"
+	{
+	    "name" : "F,E,A",
 		"id": "guidedExercise1",
 		"chords" : [
 				{
@@ -35,6 +35,6 @@
 					"type" : "maj"
 				}
 		],
-		"nRepetitions" : 3,
-	},
-]}
+		"nRepetitions" : 1
+	}
+]

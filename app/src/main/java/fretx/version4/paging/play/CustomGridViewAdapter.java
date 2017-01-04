@@ -89,6 +89,7 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 //				args.putString("URL", item.songUrl);
 //				args.putString("RAW", item.songTxt());
 //				fragmentYoutubeFragment.setArguments(args);
+				fragmentTransaction.addToBackStack("playYoutubeList");
 				fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
 				fragmentTransaction.commit();
 
