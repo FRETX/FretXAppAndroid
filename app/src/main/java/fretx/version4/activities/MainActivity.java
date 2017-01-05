@@ -154,6 +154,9 @@ public class MainActivity extends ActionBarActivity {
             }
 
             if (!audio.isInitialized()) audio.initialize(fs, bufferSizeInSeconds);
+		    audio.disablePitchDetector();
+		    audio.disableNoteDetector();
+		    audio.disableChordDetector();
             if (!audio.isProcessing()) audio.start();
             Log.d("onResume", "starting audio processing");
 	    }

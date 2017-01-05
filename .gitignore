@@ -45,3 +45,6 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+#large files
+*.mp4

@@ -40,7 +40,7 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 	protected boolean enableDrawing = true;
 
-	private final double VOLUME_THRESHOLD = -9;
+	private final double VOLUME_THRESHOLD = -8.5;
 	private int width, height;
 
 	protected ArrayList<Chord> chords = new ArrayList<Chord>(0);
@@ -84,7 +84,7 @@ public class LearnChordExerciseView extends RelativeLayout {
 					if(!mActivity.audio.isProcessing()) return;
 					Chord targetChord = chords.get(chordsIndex);
 					Chord playedChord = mActivity.audio.getChord();
-					Log.d("playedChord",playedChord.toString());
+//					Log.d("playedChord",playedChord.toString());
 					if(playedChord != null){
 						if (targetChord.toString().equals(playedChord.toString())) {
 							correctlyPlayedAccumulator += TIMER_TICK;
