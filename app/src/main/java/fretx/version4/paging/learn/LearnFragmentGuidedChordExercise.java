@@ -91,18 +91,20 @@ public class LearnFragmentGuidedChordExercise extends Fragment{
 		dialog.setCancelable(false);
 		dialog.setContentView(R.layout.guided_exercise_finished_layout);
 
+
+
 		int seconds = (int) (elapsedTime / 1000);
 		int minutes = seconds / 60;
 		seconds = seconds % 60;
-		TextView finishedElapsedTimeText = (TextView) mActivity.findViewById(R.id.finishedElapsedTimeText);
-		finishedElapsedTimeText.setText("You finished this exercise in: "+ String.format("%d:%02d", minutes, seconds));
+		TextView finishedElapsedTimeText = (TextView) dialog.findViewById(R.id.finishedElapsedTimeText);
+		finishedElapsedTimeText.setText("You finished this exercise in: " + String.format("%d:%02d", minutes, seconds));
 
 		//Set onclicklisteners
-		Button backToListButton = (Button) mActivity.findViewById(R.id.finishedBackButton);
-		Button nextExerciseButton = (Button) mActivity.findViewById(R.id.finishedNextExerciseButton);
+		Button backToListButton = (Button) dialog.findViewById(R.id.finishedBackButton);
+		Button nextExerciseButton = (Button) dialog.findViewById(R.id.finishedNextExerciseButton);
 
 		final boolean lastExerciseInList;
-		if(listPosition == listData.size()-1){
+		if (listPosition == listData.size() - 1) {
 			nextExerciseButton.setText("FINISH");
 			lastExerciseInList = true;
 		} else lastExerciseInList = false;
@@ -115,18 +117,20 @@ public class LearnFragmentGuidedChordExercise extends Fragment{
 				fragmentTransaction.replace(R.id.learn_container, new LearnFragmentGuidedChordExerciseList());
 //				fragmentTransaction.addToBackStack("guidedChordExercise");
 				fragmentTransaction.commit();
+				dialog.dismiss();
 			}
 		});
 
 		nextExerciseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(lastExerciseInList){
+				if (lastExerciseInList) {
 					FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
 					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 					fragmentTransaction.replace(R.id.learn_container, new LearnFragmentGuidedChordExerciseList());
 //				fragmentTransaction.addToBackStack("guidedChordExercise");
 					fragmentTransaction.commit();
+					dialog.dismiss();
 				} else {
 					LearnFragmentGuidedChordExercise guidedChordExerciseFragment = new LearnFragmentGuidedChordExercise();
 					guidedChordExerciseFragment.setExercise(listData.get(listPosition + 1));
@@ -135,6 +139,7 @@ public class LearnFragmentGuidedChordExercise extends Fragment{
 					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 					fragmentTransaction.replace(R.id.learn_container, guidedChordExerciseFragment, "PlayFragmentYoutubeFragment");
 					fragmentTransaction.commit();
+					dialog.dismiss();
 				}
 			}
 		});
@@ -142,6 +147,8 @@ public class LearnFragmentGuidedChordExercise extends Fragment{
 		dialog.show();
 		Window window = dialog.getWindow();
 		window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+
 	}
 
 }

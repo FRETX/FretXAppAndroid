@@ -1,5 +1,7 @@
 package fretx.version4.paging.learn;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +34,7 @@ public class GuidedChordExercise {
 			this.chords = new ArrayList<>();
 			for (int j = 0; j < tmpChordsArray.length(); j++) {
 				chordJson = tmpChordsArray.getJSONObject(j);
+				Log.d("adding chord", chordJson.getString("root") + chordJson.getString("type"));
 				this.chords.add(new Chord(chordJson.getString("root"), chordJson.getString("type")));
 			}
 		} catch (JSONException e) {
