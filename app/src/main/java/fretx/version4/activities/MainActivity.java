@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,6 +73,8 @@ public class MainActivity extends ActionBarActivity {
 	private GoogleApiClient client;  //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
 	static boolean mbSendingFlag = false;
 	byte[] btNoLightsArray = {Byte.valueOf("0")};
+	ImageView previewButton;
+	public boolean previewEnabled = false;
 //	ConnectThread btTurnOffLightsThread = new ConnectThread(btNoLightsArray);
 
 	//LIFECYCLE
@@ -88,6 +93,8 @@ public class MainActivity extends ActionBarActivity {
 
 		getGuiReferences();
 		setGuiEventListeners();
+
+		setLocked(previewButton);
 
 		client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();   //ATTENTION: This was auto-generated to implement the App Indexing API. See https://g.co/AppIndexing/AndroidStudio for more information.
 		getSupportFragmentManager()
@@ -192,6 +199,7 @@ public class MainActivity extends ActionBarActivity {
 	public void getGuiReferences() {
 		bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
 		bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
+		previewButton = (ImageView) findViewById(R.id.previewButton);
 	}
 
 	public void setGuiEventListeners() {
@@ -220,6 +228,7 @@ public class MainActivity extends ActionBarActivity {
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disablePitchDetector();
 								mActivity.audio.disableChordDetector();
+								previewButton.setVisibility(View.VISIBLE);
 								break;
 							case R.id.action_learn:
 								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
@@ -235,6 +244,7 @@ public class MainActivity extends ActionBarActivity {
 								mActivity.audio.disablePitchDetector();
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disableChordDetector();
+								previewButton.setVisibility(View.INVISIBLE);
 								break;
 							case R.id.action_chords:
 								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
@@ -250,6 +260,7 @@ public class MainActivity extends ActionBarActivity {
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disablePitchDetector();
 								mActivity.audio.disableChordDetector();
+								previewButton.setVisibility(View.INVISIBLE);
 								break;
 							case R.id.action_tuner:
 								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
@@ -265,6 +276,7 @@ public class MainActivity extends ActionBarActivity {
 								mActivity.audio.enablePitchDetector();
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disableChordDetector();
+								previewButton.setVisibility(View.INVISIBLE);
 								break;
 						}
 						return false;
@@ -303,6 +315,20 @@ public class MainActivity extends ActionBarActivity {
 				Songlist.forceDownloadIndexFromServer();
 				Toast.makeText(mActivity,"All tutorials reset, cache refreshed",Toast.LENGTH_SHORT).show( );
 				return true;
+			}
+		});
+
+		previewButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if(previewEnabled){
+					setLocked((ImageView) view);
+					previewEnabled = false;
+				} else
+				{
+					setUnlocked( (ImageView) view );
+					previewEnabled = true;
+				}
 			}
 		});
 
@@ -360,5 +386,20 @@ public class MainActivity extends ActionBarActivity {
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
     }
+
+
+	public static void setLocked(ImageView v) {
+		ColorMatrix matrix = new ColorMatrix();
+		matrix.setSaturation(0);  //0 means grayscale
+		ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
+		v.setColorFilter(cf);
+		v.setAlpha(128);   // 128 = 0.5
+	}
+
+	public static void setUnlocked(ImageView v) {
+		v.setColorFilter(null);
+		v.setAlpha(255);
+	}
+
 
 }

@@ -80,89 +80,113 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				PlayFragmentYoutubeFragment fragmentYoutubeFragment = new PlayFragmentYoutubeFragment();
-				fragmentYoutubeFragment.setSong(item);
-				FragmentManager fragmentManager = context.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//				Bundle args = new Bundle();
-//				args.putString("URL", item.songUrl);
-//				args.putString("RAW", item.songTxt());
-//				fragmentYoutubeFragment.setArguments(args);
-				fragmentTransaction.addToBackStack("playYoutubeList");
-				fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
-				fragmentTransaction.commit();
+				if(context.previewEnabled){
+					//Launch exercise with sequence of chords
+					ArrayList<SongPunch> punches = item.punches();
+					SongPunch tmpSp;
+					String tmpKey;
+					ArrayList<Chord> chords = new ArrayList<Chord>();
+					String root, type;
+						for (int i = 0; i < punches.size(); i++) {
+							tmpSp = punches.get(i);
+							root = tmpSp.root;
+							type = tmpSp.type.toLowerCase();
+							if( (root + type).equals("No Chord") ) continue;
+							if (root.equals("") || type.equals("")) continue;
+							if (type.equals("min")) {
+								type = "m";
+								Log.d("ViewAdapter", "new type " + type);
+							}
+							if (root == null || type == null) return;
+							chords.add(new Chord(root, type));
+						}
 
-			}
-		});
-
-		ImageButton prePracticeButton = (ImageButton) row.findViewById(R.id.prePractice);
-		prePracticeButton.setOnClickListener(new View.OnClickListener(){
-			public void onClick(View v){
-				//Chord Preview Mode
-//				v.setVisibility(View.INVISIBLE);
-//				ViewGroup row = (ViewGroup) v.getParent();
-//				for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
-//					View view = row.getChildAt(itemPos);
-//					if (view instanceof ProgressBar) {
-//						ProgressBar progressBar = (ProgressBar) view; //Found it!
-//						progressBar.setVisibility(View.VISIBLE);
-//						break;
-//					}
-//				}
-
-//				RelativeLayout parentView = (RelativeLayout) v.getParent();
-//				MainActivity mActivity = (MainActivity) v.getContext();
-//				ProgressBar progressBar = (ProgressBar) parentView.findViewById(R.id.chordPreviewProgressBar);
-//				v.setVisibility(View.INVISIBLE);
-//				progressBar.setVisibility(View.VISIBLE);
-
-				ArrayList<SongPunch> punches = item.punches();
-				SongPunch tmpSp;
-				String tmpKey;
-				HashMap<String,SongPunch> uniqueChords = new HashMap<String, SongPunch>();
-				for (int i = 0; i < punches.size(); i++) {
-					tmpSp = punches.get(i);
-					tmpKey = tmpSp.root + tmpSp.type;
-					if(tmpKey.equals("No Chord")){ continue; }
-					if(uniqueChords.containsKey(tmpKey)){ continue; }
-					uniqueChords.put(tmpKey,tmpSp);
-				}
-
-				Set<String> keys = uniqueChords.keySet();
-				Iterator it = keys.iterator();
-				ArrayList<Chord> chords = new ArrayList<Chord>();
-				String root,type;
-				while(it.hasNext()){
-					tmpSp = uniqueChords.get(it.next());
-					root = tmpSp.root;
-					type = tmpSp.type.toLowerCase();
-					if(root.equals("") || type.equals("")) continue;
-					Log.d("ViewAdapter","root " + root);
-					Log.d("ViewAdapter","type " + type);
-					if(type.equals("min")){
-						type = "m";
-						Log.d("ViewAdapter","new type " + type);
+					if (chords.size() < 1) {
+						Toast.makeText(context, "No chord data found for this song", Toast.LENGTH_SHORT).show();
+						return;
 					}
-					if(root == null || type == null) return;
-					chords.add(new Chord(root,type));
+
+					//Find Unique chords
+//					ArrayList<SongPunch> punches = item.punches();
+//					SongPunch tmpSp;
+//					String tmpKey;
+//					HashMap<String, SongPunch> uniqueChords = new HashMap<String, SongPunch>();
+//					for (int i = 0; i < punches.size(); i++) {
+//						tmpSp = punches.get(i);
+//						tmpKey = tmpSp.root + tmpSp.type;
+//						if (tmpKey.equals("No Chord")) {
+//							continue;
+//						}
+//						if (uniqueChords.containsKey(tmpKey)) {
+//							continue;
+//						}
+//						uniqueChords.put(tmpKey, tmpSp);
+//					}
+//
+//					Set<String> keys = uniqueChords.keySet();
+//					Iterator it = keys.iterator();
+//					ArrayList<Chord> chords = new ArrayList<Chord>();
+//					String root, type;
+//					while (it.hasNext()) {
+//						tmpSp = uniqueChords.get(it.next());
+//						root = tmpSp.root;
+//						type = tmpSp.type.toLowerCase();
+//						if (root.equals("") || type.equals("")) continue;
+//						Log.d("ViewAdapter", "root " + root);
+//						Log.d("ViewAdapter", "type " + type);
+//						if (type.equals("min")) {
+//							type = "m";
+//							Log.d("ViewAdapter", "new type " + type);
+//						}
+//						if (root == null || type == null) return;
+//						chords.add(new Chord(root, type));
+//					}
+
+					PlayFragmentChordPreview fragmentChordExercise = new PlayFragmentChordPreview();
+					FragmentManager fragmentManager = context.getSupportFragmentManager();
+					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+					fragmentTransaction.add(R.id.play_container, fragmentChordExercise, "fragmentChordExercisePreviewMode");
+					fragmentChordExercise.setChords(chords);
+					fragmentChordExercise.setSongData(item);
+					fragmentTransaction.addToBackStack("listViewToChordPreview");
+					fragmentTransaction.commit();
+					fragmentManager.executePendingTransactions();
+				} else {
+					PlayFragmentYoutubeFragment fragmentYoutubeFragment = new PlayFragmentYoutubeFragment();
+					fragmentYoutubeFragment.setSong(item);
+					FragmentManager fragmentManager = context.getSupportFragmentManager();
+					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+					fragmentTransaction.addToBackStack("playYoutubeList");
+					fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
+					fragmentTransaction.commit();
 				}
 
-				if(chords.size()<1){
-					Toast.makeText(context,"No chord data found for this song",Toast.LENGTH_SHORT).show();
-					return;
-				}
-				LearnFragmentChordExercise fragmentChordExercise = new LearnFragmentChordExercise();
-				FragmentManager fragmentManager = context.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.add(R.id.play_container, fragmentChordExercise, "fragmentChordExercisePreviewMode");
-				fragmentChordExercise.setChords(chords);
-				fragmentTransaction.addToBackStack("listViewToChordPreview");
-				fragmentTransaction.commit();
-				fragmentManager.executePendingTransactions();
 
 			}
 		});
+
+//		ImageButton prePracticeButton = (ImageButton) row.findViewById(R.id.prePractice);
+//		prePracticeButton.setOnClickListener(new View.OnClickListener(){
+//			public void onClick(View v){
+//				//Chord Preview Mode
+////				v.setVisibility(View.INVISIBLE);
+////				ViewGroup row = (ViewGroup) v.getParent();
+////				for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
+////					View view = row.getChildAt(itemPos);
+////					if (view instanceof ProgressBar) {
+////						ProgressBar progressBar = (ProgressBar) view; //Found it!
+////						progressBar.setVisibility(View.VISIBLE);
+////						break;
+////					}
+////				}
+//
+////				RelativeLayout parentView = (RelativeLayout) v.getParent();
+////				MainActivity mActivity = (MainActivity) v.getContext();
+////				ProgressBar progressBar = (ProgressBar) parentView.findViewById(R.id.chordPreviewProgressBar);
+////				v.setVisibility(View.INVISIBLE);
+////				progressBar.setVisibility(View.VISIBLE);
+//			}
+//		});
 
 		return row;
 

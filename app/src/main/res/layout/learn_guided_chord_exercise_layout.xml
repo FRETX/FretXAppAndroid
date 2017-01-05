@@ -46,38 +46,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
-        <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/redLightsView"
-            android:clickable="false"
-            android:visibility="invisible"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
-
-        <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/blueLightsView"
-            android:clickable="false"
-            android:visibility="invisible"
-            android:layout_below="@+id/textChord"
-            android:layout_alignParentEnd="true"/>
-
-        <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/noLightsView"
-            android:clickable="false"
-            android:visibility="invisible"
-            android:layout_marginTop="29dp"
-            android:layout_below="@+id/textChord"
-            android:layout_alignParentStart="true"/>
-
-
 
     </fretx.version4.paging.learn.LearnGuidedChordExerciseView>
 
