@@ -21,6 +21,7 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.greysonparrelli.permiso.Permiso;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
 public class MainActivity extends ActionBarActivity {
 	//VIEWS
 	private ImageView bluetoothButton;
-	private BottomNavigationView bottomNavigationView;
+	private BottomNavigationViewEx bottomNavigationView;
 	//FLAGS
 	private boolean AUDIO_PERMISSIONS_GRANTED = false;
 	private String SHOWCASE_ID = "bluetoothConnect";
@@ -190,10 +191,16 @@ public class MainActivity extends ActionBarActivity {
 	//INITIALIZATION
 	public void getGuiReferences() {
 		bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
-		bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+		bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
 	}
 
 	public void setGuiEventListeners() {
+		bottomNavigationView.enableAnimation(true);
+		bottomNavigationView.enableShiftingMode(false);
+		bottomNavigationView.enableItemShiftingMode(false);
+		bottomNavigationView.setTextVisibility(true);
+		bottomNavigationView.setIconVisibility(true);
+		bottomNavigationView.setCurrentItem(0);
 		bottomNavigationView.setOnNavigationItemSelectedListener(
 				new BottomNavigationView.OnNavigationItemSelectedListener() {
 					@Override
