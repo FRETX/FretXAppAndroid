@@ -13,5 +13,5 @@ public final class Config {
     public static final String YOUTUBE_API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
     public static boolean bBlueToothActive = false;
     public static MainActivity mActivity = null;
-    public static final String apiBase = "http://staging.fretx.rocks/";
+    public static final String apiBase = "http://player.fretx.rocks/";
 }

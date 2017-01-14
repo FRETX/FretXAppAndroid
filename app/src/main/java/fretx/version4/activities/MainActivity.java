@@ -50,9 +50,7 @@ import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.MusicUtils;
-//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-//import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+
 
 
 public class MainActivity extends ActionBarActivity {
