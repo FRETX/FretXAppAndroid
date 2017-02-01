@@ -6,31 +6,45 @@
               android:layout_height="match_parent"
               android:background="@color/background">
 
-    <SearchView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/primary"
+        >
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:id="@+id/svSongs"
+            android:layout_gravity="center_horizontal"
+            android:iconifiedByDefault="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:queryHint="@string/searchhidenText"
+            android:clickable="true"
+            android:background="@color/deepBackground"
+            />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/svSongs"
-        android:iconifiedByDefault="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:queryHint="@string/searchhidenText"
-        android:background="@drawable/search_view_border"
-        android:clickable="true"
-        />
+        android:background="@color/deepBackground"
+        >
+
+        <GridView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/lvSongList"
+            android:visibility="visible"
+            android:numColumns="1"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:verticalSpacing="10dp"
+            />
+
+        </LinearLayout>
 
 
-    <GridView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/lvSongList"
-        android:visibility="visible"
-        android:layout_below="@+id/svSongs"
-        android:numColumns="1"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:verticalSpacing="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" />
 
 </LinearLayout>
 

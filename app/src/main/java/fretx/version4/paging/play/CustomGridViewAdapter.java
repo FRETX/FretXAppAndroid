@@ -61,7 +61,8 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 
 			holder = new RecordHolder();
 
-			holder.txtTitle = (TextView) row.findViewById(R.id.item_text);
+			holder.txtPrimary = (TextView) row.findViewById(R.id.item_text);
+			holder.txtSecondary = (TextView) row.findViewById(R.id.item_text_secondary);
 			holder.imageItem = (ImageView) row.findViewById(R.id.item_image);
 
 			row.setTag(holder);
@@ -72,7 +73,9 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 
 		final SongItem item = data.get(position);
 
-		holder.txtTitle.setText(item.artist + "\n" + item.song_title);
+//		holder.txtTitle.setText(item.artist + "\n" + item.song_title);
+		holder.txtSecondary.setText(item.artist);
+		holder.txtPrimary.setText(item.song_title);
 
 		Picasso.with(context).load(item.imageURL()).placeholder(R.drawable.defaultthumb).into(holder.imageItem);
 		//holder.imageItem.setImageDrawable(item.image);
@@ -193,8 +196,10 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 	}
 
 	static class RecordHolder {
-		TextView txtTitle;
+		TextView txtPrimary;
+		TextView txtSecondary;
 		ImageView imageItem;
+
 
 	}
 }

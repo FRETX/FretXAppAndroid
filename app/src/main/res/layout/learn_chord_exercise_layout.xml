@@ -32,7 +32,9 @@
             android:id="@+id/fretboardView"
             android:layout_below="@+id/textChord"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/fretboardHeight"
+            android:layout_margin="@dimen/fretboardMargin"
+            />
 
         <TextView
             android:layout_width="match_parent"

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,9 @@ public class LearnFragmentButton extends Fragment {
     MainActivity mActivity;
     View rootView = null;
 
-    Button btExerciseOne;
-    Button btExerciseTwo;
-	Button btGuidedChordExercise;
+    CardView btExerciseOne;
+	CardView btExerciseTwo;
+	CardView btGuidedChordExercise;
     Button btExerciseThree;
     Button btExerciseFour;
 
@@ -36,7 +37,7 @@ public class LearnFragmentButton extends Fragment {
         mActivity = (MainActivity)getActivity();
 
         rootView = inflater.inflate(R.layout.learn_fragment_buttons, container, false);
-        btExerciseOne = (Button)rootView.findViewById(R.id.btExerciseOne);
+        btExerciseOne = (CardView)rootView.findViewById(R.id.btExerciseOne);
         btExerciseOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +56,7 @@ public class LearnFragmentButton extends Fragment {
 
             }
         });
-        btExerciseTwo = (Button)rootView.findViewById(R.id.btExerciseTwo);
+        btExerciseTwo = (CardView)rootView.findViewById(R.id.btExerciseTwo);
 	    btExerciseTwo.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
@@ -74,7 +75,7 @@ public class LearnFragmentButton extends Fragment {
 		    }
 	    });
 
-	    btGuidedChordExercise = (Button)rootView.findViewById(R.id.btGuidedChordExercises);
+	    btGuidedChordExercise = (CardView)rootView.findViewById(R.id.btGuidedChordExercises);
 	    btGuidedChordExercise.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {

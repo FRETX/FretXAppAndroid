@@ -3,14 +3,16 @@
     <color name="primary">#F44336</color>
     <color name="primaryDark">#D32F2F</color>
     <color name="primaryLight">#FFCDD2</color>
-    <color name="accent">#536DFE</color>
+    <color name="accent">#D32F2F</color>
     <color name="primaryText">#212121</color>
     <color name="secondaryText">#757575</color>
+    <color name="tertiaryText">#FFFFFF</color>
     <color name="inactiveButton">#757575</color>
     <color name="activeButton">#D32F2F</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="background">#FFFFFF</color>
+    <color name="deepBackground">#f5f5f5</color>
     <color name="tunerCorrect">#64dd17</color>
     <color name="blueLed">#002fff</color>
     <color name="showcaseOverlay">#EED32F2F</color>

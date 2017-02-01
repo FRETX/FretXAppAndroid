@@ -24,6 +24,8 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -115,7 +117,10 @@ public class PlayFragmentYoutubeFragment extends Fragment {
         super.onStop();
         Log.d("PlayFragmentYT","onStop");
         if(m_player != null){
-            m_player.pause();
+            if(m_player.isPlaying()){
+                m_player.pause();
+            }
+
         }
     }
 
@@ -133,6 +138,10 @@ public class PlayFragmentYoutubeFragment extends Fragment {
         prerollValue  = (TextView) rootView.findViewById(R.id.prerollValView);
         loopStartBtn   = (Button)   rootView.findViewById(R.id.btnStartLoop);
         loopEndBtn     = (Button)   rootView.findViewById(R.id.btnEndLoop);
+        prerollValue.setText("0 ms");
+        TextView tv10 = (TextView) rootView.findViewById(R.id.textView10);
+        tv10.setText("Early Lights");
+
     }
 
     private void setEventListeners() {
@@ -194,7 +203,7 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 		} else {
 			startPos = 0;
 			//TODO: do these with proper strings.xml values
-			loopStartBtn.setText("[[START");
+			loopStartBtn.setText(getString(R.string.loopA));
 			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.secondaryText));
 			startButtonPressed = false;
 		}
@@ -213,7 +222,7 @@ public class PlayFragmentYoutubeFragment extends Fragment {
 			endButtonPressed = true;
 		} else {
 			endPos = m_player.getDurationMillis();
-			loopEndBtn.setText("END]]");
+			loopEndBtn.setText(getString(R.string.loopB));
 			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.secondaryText));
 			endButtonPressed = false;
 		}

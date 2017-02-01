@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -31,7 +32,7 @@ public class LearnFragmentGuidedChordExerciseList extends Fragment {
 
 	MainActivity mActivity;
 	LinearLayout rootView;
-	ListView listView;
+	GridView listView;
 	ArrayList<GuidedChordExercise> listData = new ArrayList<>();
 
 	public LearnFragmentGuidedChordExerciseList(){
@@ -54,7 +55,7 @@ public class LearnFragmentGuidedChordExerciseList extends Fragment {
 	@Override
 	public void onViewCreated(View v, Bundle b){
 		showTutorial();
-		listView = (ListView) mActivity.findViewById(R.id.guidedChordExerciseList);
+		listView = (GridView) mActivity.findViewById(R.id.guidedChordExerciseList);
 		initData();
 		listView.setAdapter(new GuidedChordExerciseListAdapter(mActivity, R.layout.guided_chord_exercise_list_item, listData));
 	}

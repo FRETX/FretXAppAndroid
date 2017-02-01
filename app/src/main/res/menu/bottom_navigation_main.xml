@@ -6,24 +6,24 @@
         android:enabled="true"
         android:checked="true"
         android:icon="@drawable/ic_play"
-        android:title="Play"
+        android:title="PLAY"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_learn"
         android:enabled="true"
         android:icon="@drawable/ic_learn"
-        android:title="Learn"
+        android:title="LEARN"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_chords"
         android:enabled="true"
-        android:icon="@drawable/ic_library"
-        android:title="Chords"
+        android:icon="@drawable/ic_chords"
+        android:title="CHORDS"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_tuner"
         android:enabled="true"
-        android:icon="@drawable/ic_microphone"
-        android:title="Tuner"
+        android:icon="@drawable/ic_tuner"
+        android:title="TUNER"
         app:showAsAction="ifRoom" />
 </menu>

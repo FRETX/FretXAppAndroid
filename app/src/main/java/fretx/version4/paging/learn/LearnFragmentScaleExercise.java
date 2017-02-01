@@ -56,12 +56,14 @@ public class LearnFragmentScaleExercise extends Fragment {
 		for (String str : Scale.ALL_ROOT_NOTES) {
 			tmpTextView = new TextView(mActivity);
 			tmpTextView.setText(str);
-			tmpTextView.setTextSize(30);
+			tmpTextView.setTextSize(26);
 			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 			scaleRootPicker.addView(tmpTextView);
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tmpTextView.getLayoutParams();
 			params.setMargins(30, 0, 30, 0);
 			tmpTextView.setLayoutParams(params);
+			tmpTextView.setBackgroundColor(getResources().getColor(R.color.primary));
+			tmpTextView.setTextColor(getResources().getColor(R.color.tertiaryText));
 			tmpTextView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -69,10 +71,13 @@ public class LearnFragmentScaleExercise extends Fragment {
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+//							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+							((TextView) v).setBackgroundResource(0);
+							v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+//					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+					((TextView) view).setBackgroundResource(R.drawable.picker_text_background);
 					updateScale(((TextView) view).getText().toString(), currentScale.getType());
 					scaleRootPicker.getChildAt(0).setSelected(true);
 				}
@@ -82,12 +87,14 @@ public class LearnFragmentScaleExercise extends Fragment {
 		for (String str :Scale.ALL_SCALE_TYPES) {
 			tmpTextView = new TextView(mActivity);
 			tmpTextView.setText(str);
-			tmpTextView.setTextSize(30);
+			tmpTextView.setTextSize(26);
 			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 			scaleTypePicker.addView(tmpTextView);
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tmpTextView.getLayoutParams();
 			params.setMargins(30, 0, 30, 0);
 			tmpTextView.setLayoutParams(params);
+			tmpTextView.setBackgroundColor(getResources().getColor(R.color.primary));
+			tmpTextView.setTextColor(getResources().getColor(R.color.tertiaryText));
 			tmpTextView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -95,15 +102,27 @@ public class LearnFragmentScaleExercise extends Fragment {
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+//							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+							((TextView) v).setBackgroundResource(0);
+							v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+//					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+					((TextView) view).setBackgroundResource(R.drawable.picker_text_background);
 					updateScale(currentScale.getRoot() , ((TextView) view).getText().toString());
 					scaleTypePicker.getChildAt(0).setSelected(true);
+
+
 				}
 			});
 		}
+
+		TextView initialRoot = (TextView) scaleRootPicker.getChildAt(0);
+		TextView initialType = (TextView) scaleTypePicker.getChildAt(0);
+		initialRoot.setBackgroundResource(R.drawable.picker_text_background);
+		initialType.setBackgroundResource(R.drawable.picker_text_background);
+		updateScale(initialRoot.getText().toString(), initialType.getText().toString());
+
 		return rootView;
 	}
 

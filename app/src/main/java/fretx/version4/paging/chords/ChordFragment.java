@@ -115,12 +115,14 @@ public class ChordFragment extends Fragment
 		for (String str :rootNotes) {
 			tmpTextView = new TextView(mActivity);
 			tmpTextView.setText(str);
-			tmpTextView.setTextSize(50);
+			tmpTextView.setTextSize(26);
 			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 			rootNoteView.addView(tmpTextView);
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tmpTextView.getLayoutParams();
 			params.setMargins(30, 0, 30, 0);
 			tmpTextView.setLayoutParams(params);
+			tmpTextView.setBackgroundColor(getResources().getColor(R.color.primary));
+			tmpTextView.setTextColor(getResources().getColor(R.color.tertiaryText));
 			tmpTextView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -128,10 +130,13 @@ public class ChordFragment extends Fragment
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+//							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+							((TextView) v).setBackgroundResource(0);
+							v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+//					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
+					((TextView) view).setBackgroundResource(R.drawable.picker_text_background);
 					updateCurrentChord(((TextView) view).getText().toString(),currentChord.getType());
 				}
 			});
@@ -140,12 +145,14 @@ public class ChordFragment extends Fragment
 		for (String str : chordTypes) {
 			tmpTextView = new TextView(mActivity);
 			tmpTextView.setText(str);
-			tmpTextView.setTextSize(50);
+			tmpTextView.setTextSize(26);
 			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 			chordTypeView.addView(tmpTextView);
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tmpTextView.getLayoutParams();
 			params.setMargins(30, 0, 30, 0);
 			tmpTextView.setLayoutParams(params);
+			tmpTextView.setBackgroundColor(getResources().getColor(R.color.primary));
+			tmpTextView.setTextColor(getResources().getColor(R.color.tertiaryText));
 			tmpTextView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -153,10 +160,14 @@ public class ChordFragment extends Fragment
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+//							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.deepBackground));
+							((TextView) v).setBackgroundResource(0);
+							v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
+
 						}
 					}
-					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+//					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
+					((TextView) view).setBackgroundResource(R.drawable.picker_text_background);
 					updateCurrentChord(currentChord.getRoot(),((TextView) view).getText().toString());
 				}
 			});
@@ -164,8 +175,10 @@ public class ChordFragment extends Fragment
 
 		TextView initialRoot = (TextView) rootNoteView.getChildAt(0);
 		TextView initialType = (TextView) chordTypeView.getChildAt(0);
-		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.primaryText));
-		initialType.setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+//		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
+//		initialType.setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
+		initialRoot.setBackgroundResource(R.drawable.picker_text_background);
+		initialType.setBackgroundResource(R.drawable.picker_text_background);
 		updateCurrentChord(initialRoot.getText().toString(),initialType.getText().toString());
 		showTutorial();
 
@@ -186,6 +199,8 @@ public class ChordFragment extends Fragment
 //		FingerPositions fp = chordFingerings.get(currentChord.toString());
 
 		fretboardView.setFretboardPositions(currentChord.getFingerPositions());
+		TextView textChord = (TextView) rootView.findViewById(R.id.textChord);
+		textChord.setText(root + " " + type);
 
 //		chordView.setFingerPositions(chordFingerings.get(currentChord.toString()));
 //		int[] chordNotes = currentChord.getNotes();

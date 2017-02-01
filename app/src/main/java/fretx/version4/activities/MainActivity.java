@@ -55,7 +55,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 public class MainActivity extends ActionBarActivity {
 	//VIEWS
-	private ImageView bluetoothButton;
+	private ImageView bluetoothButton, connectButton;
 	private BottomNavigationViewEx bottomNavigationView;
 	//FLAGS
 	private boolean AUDIO_PERMISSIONS_GRANTED = false;
@@ -196,12 +196,13 @@ public class MainActivity extends ActionBarActivity {
 	//INITIALIZATION
 	public void getGuiReferences() {
 		bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
+		connectButton = (ImageView) findViewById(R.id.connectButton);
 		bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
 		previewButton = (ImageView) findViewById(R.id.previewButton);
 	}
 
 	public void setGuiEventListeners() {
-		bottomNavigationView.enableAnimation(true);
+		bottomNavigationView.enableAnimation(false);
 		bottomNavigationView.enableShiftingMode(false);
 		bottomNavigationView.enableItemShiftingMode(false);
 		bottomNavigationView.setTextVisibility(true);
@@ -281,7 +282,7 @@ public class MainActivity extends ActionBarActivity {
 					}
 				});
 
-		bluetoothButton.setOnClickListener(new View.OnClickListener() {
+		connectButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (Config.bBlueToothActive == false) {
@@ -345,9 +346,9 @@ public class MainActivity extends ActionBarActivity {
 	//UTILITY
 	public void showConnectionState() {
 		if (Config.bBlueToothActive == true) {
-			bluetoothButton.setImageResource(R.drawable.fretx_logo);
+			bluetoothButton.setImageResource(R.drawable.ic_fretx);
 		} else {
-			bluetoothButton.setImageResource(R.drawable.fretx_logo_grayscale);
+			bluetoothButton.setImageResource(R.drawable.ic_fretx);
 		}
 	}
 
@@ -361,8 +362,8 @@ public class MainActivity extends ActionBarActivity {
 				.setDelayMillis(300)
 				.enableFadeAnimation(true)
 				.performClick(true)
-				.setInfoText("Turn on your FretX device and tap the FretX logo to connect to it")
-				.setTarget((ImageView) findViewById(R.id.bluetoothLogo))
+				.setInfoText("Turn on your FretX device and tap this button to connect to it")
+				.setTarget((ImageView) findViewById(R.id.connectButton))
 				.setUsageId("tutorialConnectBluetoothWithLogo") //THIS SHOULD BE UNIQUE ID
 				.show();
 	}

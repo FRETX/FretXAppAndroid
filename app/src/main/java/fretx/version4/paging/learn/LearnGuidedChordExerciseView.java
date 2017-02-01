@@ -60,10 +60,7 @@ public class LearnGuidedChordExerciseView extends LearnChordExerciseView {
 	protected void advanceChord() {
 		chordsIndex++;
 		completedChords++;
-		if (chordsIndex == chords.size()) {
-			finishExercise();
-			return;
-		}
+
 
 		TextView textChord = (TextView) rootView.findViewById(R.id.textChord);
 		textChord.setText(chords.get(chordsIndex).toString());
@@ -71,6 +68,11 @@ public class LearnGuidedChordExerciseView extends LearnChordExerciseView {
 
 		TextView completedText = (TextView) rootView.findViewById(R.id.guidedChordExerciseCompletedText);
 		completedText.setText(Integer.toString(completedChords) + "/" + Integer.toString(chords.size()));
+
+		if (chordsIndex == chords.size()) {
+			finishExercise();
+			return;
+		}
 
 		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chords.get(chordsIndex).toString(), chordDb);
 		BluetoothClass.sendToFretX(bluetoothArray);

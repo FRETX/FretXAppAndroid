@@ -25,4 +25,7 @@
     <dimen name="txt_20sp">20sp</dimen>
     <dimen name="txt_25sp">25sp</dimen>
     <dimen name="divider">0.75dp</dimen>
+
+    <dimen name="fretboardHeight">230dp</dimen>
+    <dimen name="fretboardMargin">8dp</dimen>
 </resources>

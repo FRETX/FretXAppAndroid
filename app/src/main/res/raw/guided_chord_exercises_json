@@ -12,7 +12,7 @@
 					"type" : "sus2"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 		{
 	    "name" : "Exercise 2",
@@ -27,7 +27,7 @@
 					"type" : "sus2"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 		{
 	    "name" : "Exercise 3",
@@ -42,7 +42,7 @@
 					"type" : "maj7"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 		{
 	    "name" : "Exercise 4",
@@ -57,7 +57,7 @@
 					"type" : "m7"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 5",
@@ -72,7 +72,7 @@
 					"type" : "maj"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 6",
@@ -87,7 +87,7 @@
 					"type" : "maj"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 7",
@@ -102,7 +102,7 @@
 					"type" : "maj"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 8",
@@ -117,7 +117,7 @@
 					"type" : "maj"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 9",
@@ -132,7 +132,7 @@
 					"type" : "maj"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 10",
@@ -147,7 +147,7 @@
 					"type" : "m"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 11",
@@ -162,7 +162,7 @@
 					"type" : "m"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 12",
@@ -177,7 +177,7 @@
 					"type" : "sus2"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 13",
@@ -192,7 +192,7 @@
 					"type" : "maj"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 14",
@@ -207,7 +207,7 @@
 					"type" : "m"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 15",
@@ -222,7 +222,7 @@
 					"type" : "m7"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	},
 	{
 	    "name" : "Exercise 16",
@@ -237,6 +237,6 @@
 					"type" : "maj7"
 				}
 		],
-		"nRepetitions" : 3
+		"nRepetitions" : 10
 	}
 ]
