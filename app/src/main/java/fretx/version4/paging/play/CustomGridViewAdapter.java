@@ -105,7 +105,13 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 								Log.d("ViewAdapter", "new type " + type);
 							}
 							if (root == null || type == null) return;
-							chords.add(new Chord(root, type));
+
+							try {
+								chords.add(new Chord(root, type));
+							} catch(Exception e){
+								Log.e(root + type,e.toString());
+							}
+
 						}
 
 					if (chords.size() < 1) {

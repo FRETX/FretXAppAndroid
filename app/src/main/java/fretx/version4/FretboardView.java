@@ -24,7 +24,7 @@ public class FretboardView extends View {
 	private ArrayList<FretboardPosition> fretboardPositions;
 
 	private float width, height, nStrings, nFrets, xPadding, yPadding, stringStep, fretStep, rx, ry;
-	private float xString, yFret, left, top, right, bottom;
+	private float xString, yFret, yString, xFret, left, top, right, bottom;
 
 	private Rect imageBounds = new Rect();
 	private int string,fret,baseFret;
@@ -70,26 +70,26 @@ public class FretboardView extends View {
 				if(fret == -1) continue; //-1 means "don't play this string"
 				string = fp.getString();
 				if(baseFret > 0) { fret -= baseFret; }
-				xString = (xPadding + (( (int) nStrings - string)*stringStep)) * width;
-				yFret = (yPadding + ((fret-0.5f)*fretStep)) * height;
+//				xString = (xPadding + (( (int) nStrings - string)*stringStep)) * width;
+//				yFret = (yPadding + ((fret-0.5f)*fretStep)) * height;
 
-				float yString = (yPadding + (((int) nStrings - string) * stringStep)) * height;
-				float xFret = (xPadding + ((fret - 0.5f) * fretStep)) * width;
+				yString = (1f - (yPadding + (((int) nStrings - string) * stringStep)))  * height;
+				xFret = (xPadding + ((fret - 0.5f) * fretStep)) * width;
 
-				paint.setStyle(Paint.Style.FILL);
-				paint.setColor(color);
+//				paint.setStyle(Paint.Style.FILL);
+//				paint.setColor(color);
 				currentLed = redLed;
 				if(fret == 0){
 					yFret = (yPadding + ((fret-0.25f)*fretStep)) * height;
 
-					xFret = (xPadding + ((fret - 0.15f) * fretStep)) * width;
+					xFret = (xPadding + ((fret - 0.1f) * fretStep)) * width;
 
-					paint.setColor(getResources().getColor(R.color.blueLed));
+//					paint.setColor(getResources().getColor(R.color.blueLed));
 					currentLed = blueLed;
 				}
 //				canvas.drawCircle(xString, yFret, width * 0.04f, paint);
 //				canvas.drawCircle(xFret, yString, width * 0.04f, paint);
-				currentLed.setBounds((int)(xFret-width*0.04),(int)(yString-width*0.05),(int)((width*0.08)+xFret),(int)((width*0.08)+yString));
+				currentLed.setBounds((int)(xFret-width*0.04),(int)(yString-width*0.04),(int)((width*0.08)+xFret),(int)((width*0.08)+yString));
 				currentLed.draw(canvas);
 
 
@@ -108,7 +108,7 @@ public class FretboardView extends View {
 				canvas.drawLine(left, top, left, bottom, paint);
 			}
 		}
-		invalidate();
+//		invalidate();
 	}
 
 	private void drawFretboard(Canvas canvas){
@@ -121,9 +121,9 @@ public class FretboardView extends View {
 
 		stringStep = (1 - (2 * yPadding)) / (nStrings - 1);
 		fretStep = (1 - (2 * xPadding)) / (nFrets - 1);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(10);
-		paint.setColor(getResources().getColor(R.color.primaryText));
+//		paint.setStyle(Paint.Style.STROKE);
+//		paint.setStrokeWidth(10);
+//		paint.setColor(getResources().getColor(R.color.primaryText));
 		left = xPadding * width;
 		top = yPadding * height;
 		right = (1 - xPadding) * width;
