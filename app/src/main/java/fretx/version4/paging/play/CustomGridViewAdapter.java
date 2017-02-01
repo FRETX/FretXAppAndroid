@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.SongItem;
@@ -83,6 +84,9 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 
 			@Override
 			public void onClick(View v) {
+				context.audio.enableChordDetector();
+				context.audio.disableNoteDetector();
+				context.audio.disablePitchDetector();
 				if(context.previewEnabled){
 					//Launch exercise with sequence of chords
 					ArrayList<SongPunch> punches = item.punches();
@@ -155,13 +159,32 @@ public class CustomGridViewAdapter extends ArrayAdapter<SongItem> {
 					fragmentTransaction.commit();
 					fragmentManager.executePendingTransactions();
 				} else {
-					PlayFragmentYoutubeFragment fragmentYoutubeFragment = new PlayFragmentYoutubeFragment();
-					fragmentYoutubeFragment.setSong(item);
-					FragmentManager fragmentManager = context.getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-					fragmentTransaction.addToBackStack("playYoutubeList");
-					fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
-					fragmentTransaction.commit();
+
+					boolean loadOfflinePlayer = false;
+					if (Config.useOfflinePlayer) {
+						String fileName = "fretx" + item.youtube_id.toLowerCase().replace("-", "_");
+						int resourceIdentifier = getContext().getResources().getIdentifier(fileName, "raw", getContext().getPackageName());
+						if(resourceIdentifier != 0){
+							loadOfflinePlayer = true;
+						}
+					}
+					if (loadOfflinePlayer) {
+						PlayFragmentOfflinePlayer fragmentYoutubeFragment = new PlayFragmentOfflinePlayer();
+						fragmentYoutubeFragment.setSong(item);
+						FragmentManager fragmentManager = context.getSupportFragmentManager();
+						FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+						fragmentTransaction.addToBackStack("playYoutubeList");
+						fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
+						fragmentTransaction.commit();
+					} else {
+						PlayFragmentYoutubeFragment fragmentYoutubeFragment = new PlayFragmentYoutubeFragment();
+						fragmentYoutubeFragment.setSong(item);
+						FragmentManager fragmentManager = context.getSupportFragmentManager();
+						FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+						fragmentTransaction.addToBackStack("playYoutubeList");
+						fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
+						fragmentTransaction.commit();
+					}
 				}
 
 

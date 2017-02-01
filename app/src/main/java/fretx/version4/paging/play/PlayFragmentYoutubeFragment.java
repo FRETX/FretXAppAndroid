@@ -117,10 +117,13 @@ public class PlayFragmentYoutubeFragment extends Fragment {
         super.onStop();
         Log.d("PlayFragmentYT","onStop");
         if(m_player != null){
-            if(m_player.isPlaying()){
-                m_player.pause();
+            try {
+                if (m_player.isPlaying()) {
+                    m_player.pause();
+                }
+            } catch (Exception e){
+                Log.e("YoutubeFragment",e.toString());
             }
-
         }
     }
 

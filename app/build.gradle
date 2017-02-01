@@ -47,4 +47,5 @@ dependencies {
     compile 'com.github.iammert:MaterialIntroView:1.5.2'
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.0'
     compile project(':fretx-audio')
+    compile 'com.afollestad:easyvideoplayer:0.3.0'
 }

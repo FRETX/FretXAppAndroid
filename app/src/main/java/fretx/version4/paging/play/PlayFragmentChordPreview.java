@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import fretx.version4.Config;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
@@ -65,13 +66,31 @@ public class PlayFragmentChordPreview extends Fragment
 		playButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				PlayFragmentYoutubeFragment fragmentYoutubeFragment = new PlayFragmentYoutubeFragment();
-				fragmentYoutubeFragment.setSong(songItem);
-				FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.addToBackStack("playYoutubeList");
-				fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
-				fragmentTransaction.commit();
+				boolean loadOfflinePlayer = false;
+				if (Config.useOfflinePlayer) {
+					String fileName = "fretx" + songItem.youtube_id.toLowerCase().replace("-", "_");
+					int resourceIdentifier = getContext().getResources().getIdentifier(fileName, "raw", getContext().getPackageName());
+					if (resourceIdentifier != 0) {
+						loadOfflinePlayer = true;
+					}
+				}
+				if (loadOfflinePlayer) {
+					PlayFragmentOfflinePlayer fragmentYoutubeFragment = new PlayFragmentOfflinePlayer();
+					fragmentYoutubeFragment.setSong(songItem);
+					FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+					fragmentTransaction.addToBackStack("playYoutubeList");
+					fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
+					fragmentTransaction.commit();
+				} else {
+					PlayFragmentYoutubeFragment fragmentYoutubeFragment = new PlayFragmentYoutubeFragment();
+					fragmentYoutubeFragment.setSong(songItem);
+					FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
+					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+					fragmentTransaction.addToBackStack("playYoutubeList");
+					fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayFragmentYoutubeFragment");
+					fragmentTransaction.commit();
+				}
 			}
 		});
 	}
