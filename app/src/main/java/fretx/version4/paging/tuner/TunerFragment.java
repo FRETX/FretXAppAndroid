@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import co.mobiwise.materialintro.shape.Focus;
@@ -17,7 +16,6 @@ import co.mobiwise.materialintro.shape.FocusGravity;
 import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-//import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
 public class TunerFragment extends Fragment {
@@ -30,9 +28,6 @@ public class TunerFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		mActivity = (MainActivity) getActivity();
 		if(mActivity == null || mActivity.audio == null) return;
-//		mActivity.audio.enablePitchDetector();
-//		mActivity.audio.disableNoteDetector();
-//		mActivity.audio.disableChordDetector();
 		initSystemServices();
 	}
 
@@ -49,29 +44,15 @@ public class TunerFragment extends Fragment {
 				.setTarget((TunerView) mActivity.findViewById(R.id.tunerView))
 				.setUsageId("tutorialTuner") //THIS SHOULD BE UNIQUE ID
 				.show();
-//		new MaterialShowcaseView.Builder(mActivity)
-//				.setTarget(tunerView)
-//				.setDismissText("GOT IT")
-//				.setContentText("Play and adjust each string one by one until the needle is green for all of them. Then you're ready to play!")
-//				.setDelay(200) // optional but starting animations immediately in onCreate can make them choppy
-//				.singleUse("tunerShowcase") // provide a unique ID used to ensure it is only shown once
-//				.setMaskColour(getResources().getColor(R.color.showcaseOverlay))
-//				.setShapePadding(0)
-//				.show();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-//		if(mActivity == null || mActivity.audio == null) return;
-//		mActivity.audio.disablePitchDetector();
-//		mActivity.audio.disableNoteDetector();
-//		mActivity.audio.disableChordDetector();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
 		Log.d("Tuner Fragment", "created");
 		rootView = (RelativeLayout) inflater.inflate(R.layout.tuner_fragment, container, false);
 		tunerView = (TunerView) rootView.findViewById(R.id.tunerView);

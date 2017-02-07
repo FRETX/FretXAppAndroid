@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 
-/**
- * Created by Kickdrum on 04-Jan-17.
- */
-
 public class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExercise> {
 
 	MainActivity context;

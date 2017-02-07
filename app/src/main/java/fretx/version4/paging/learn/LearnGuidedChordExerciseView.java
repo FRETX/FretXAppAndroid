@@ -9,9 +9,6 @@ import fretx.version4.BluetoothClass;
 import fretx.version4.R;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-/**
- * Created by Kickdrum on 04-Jan-17.
- */
 
 public class LearnGuidedChordExerciseView extends LearnChordExerciseView {
 

@@ -170,10 +170,6 @@ public class TunerView extends View {
 			lastColor = getResources().getColor(R.color.primaryText);
 		} else {
 			targetAngle =  (difference / pitchRangeInCents) * -90;
-//			targetAngle = (Math.exp((90 - Math.abs(targetAngle)) / -30) - 0.0498) * 90 / 85.52 * 90 * Math.signum(targetAngle);
-//			targetAngle = Math.toRadians(targetAngle);
-//			targetAngle *= -1;
-//			Log.d("pitched targetAngle",Double.toString(targetAngle));
 		}
 
 		deltaAngle = targetAngle - currentAngle;
@@ -188,28 +184,12 @@ public class TunerView extends View {
 			currentAngle = 90;
 			velocity = 0;
 		}
-//
-//		if( Math.abs(targetAngle - currentAngle) < needleStopThreshold  ) {
-//			velocity = 0;
-//			currentAngle = targetAngle;
-//		}
-//
-//		Log.d("deltaAngle", Double.toString(deltaAngle));
-//		Log.d("velocity", Double.toString(velocity));
-//		Log.d("currentAngle", Double.toString(currentAngle));
 
-//		gotum += 1;
-
-//		currentAngle = targetAngle;
-
-//		currentAngle = Math.toRadians(gotum);
 		//Normalize the angle to [-pi,pi]
 		currentAngle = Math.toRadians(currentAngle);
 		currentAngle = Math.atan2(Math.sin(currentAngle), Math.cos(currentAngle));
 		currentAngle = Math.toDegrees(currentAngle);
 
-//		Log.d("gotum: ",Double.toString(gotum));
-//		Log.d("currentAngle",Double.toString(currentAngle));
 
 
 		//draw current angle
@@ -222,63 +202,5 @@ public class TunerView extends View {
 				paint);
 		invalidate();
 
-
-
-
-//	    canvas.drawLine(halfWidth, 0, halfWidth, height, paint);
-
-
-
-
-//		if(initialDraw){
-//			currentPitch = 82.4f;
-//			initialDraw = false;
-//		}
-//
-//		double angleOfIndicator = Double.NaN;
-//		angleOfIndicator = lastAngle;
-
-//		if (currentPitch > -1) {
-
-
-
-
-			//10 cents is the "just noticeable difference" for a lot of humans
-
-
-			//Draw the line between an interval of one semitone lower and one semitone higher than center pitch
-//			if (currentPitchInCents > centerPitchInCents + pitchRangeInCents) {
-//				//Draw a straight line to the right
-//				angleOfIndicator = 90;
-//			} else if (currentPitchInCents < centerPitchInCents - pitchRangeInCents) {
-//				//Draw a straight line to the left
-//				angleOfIndicator = -90;
-//			} else {
-//				angleOfIndicator = (difference / pitchRangeInCents) * 90;
-//			}
-
-//			//arbitrary mapping for better display
-//			angleOfIndicator = (Math.exp((90 - Math.abs(angleOfIndicator)) / -30) - 0.0498) * 90 / 85.52 * 90 * Math.signum(angleOfIndicator);
-//			//convert to radians from degrees
-//			angleOfIndicator = Math.toRadians(angleOfIndicator);
-//			//reverse direction to match the left-to-right increasing frequency
-//			angleOfIndicator *= -1;
-
-//			angleOfIndicator = Math.toDegrees(angleOfIndicator);
-//			double maxAngle = 20;
-//			if (angleOfIndicator < -maxAngle) angleOfIndicator = -maxAngle;
-//			if (angleOfIndicator > maxAngle) angleOfIndicator = maxAngle;
-//			angleOfIndicator = Math.toRadians(angleOfIndicator);
-
-//			lastAngle = angleOfIndicator;
-//		}
-//
-//		paint.setStyle(Paint.Style.STROKE);
-//		paint.setStrokeWidth(8.0f);
-//		paint.setColor(lastColor);
-//		canvas.drawLine(needleCenterX, needleCenterY,
-//				halfWidth + (float) Math.sin(angleOfIndicator) * height * 0.9f,
-//				height - (float) Math.cos(Math.abs(angleOfIndicator)) * height * 0.9f, paint);
-//		invalidate();
 	}
 }

@@ -2,7 +2,6 @@ package fretx.version4.paging.learn;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,18 +10,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Line;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
-import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import rocks.fretx.audioprocessing.FretboardPosition;
-import rocks.fretx.audioprocessing.MusicUtils;
 import rocks.fretx.audioprocessing.Scale;
 
 public class LearnScaleExerciseFragment extends Fragment {

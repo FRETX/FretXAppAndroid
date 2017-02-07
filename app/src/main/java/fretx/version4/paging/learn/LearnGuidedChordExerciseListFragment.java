@@ -23,10 +23,6 @@ import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 
-/**
- * Created by onurb_000 on 31/12/16.
- */
-
 public class LearnGuidedChordExerciseListFragment extends Fragment {
 
 	MainActivity mActivity;
