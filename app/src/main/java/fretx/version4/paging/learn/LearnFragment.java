@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
@@ -33,7 +31,7 @@ public class LearnFragment extends Fragment {
 
         FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.learn_container, new LearnFragmentButton());
+        fragmentTransaction.replace(R.id.learn_container, new LearnButtonsFragment());
         fragmentTransaction.commit();
 
 

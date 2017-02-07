@@ -49,7 +49,7 @@ public class PlayFragment extends Fragment {
         super.onStop();
         Log.d("PlayFragment","onStop");
         FragmentManager fm = getFragmentManager();
-        Fragment fragment = fm.findFragmentByTag("PlayFragmentYoutubeFragment");
+        Fragment fragment = fm.findFragmentByTag("PlayYoutubeFragment");
         if(fragment==null){
             Log.d("tagged fragment","isnull");
             return;

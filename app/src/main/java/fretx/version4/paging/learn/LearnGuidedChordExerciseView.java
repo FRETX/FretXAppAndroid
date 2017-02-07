@@ -15,7 +15,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 public class LearnGuidedChordExerciseView extends LearnChordExerciseView {
 
-	LearnFragmentGuidedChordExercise fragment;
+	LearnGuidedChordExerciseFragment fragment;
 	int completedChords = -1;
 	Handler timerHandler = new Handler();
 	Runnable timerRunnable;
@@ -35,7 +35,7 @@ public class LearnGuidedChordExerciseView extends LearnChordExerciseView {
 		super(context, attrs, defStyle);
 	}
 
-	public void setFragment(LearnFragmentGuidedChordExercise fragment){
+	public void setFragment(LearnGuidedChordExerciseFragment fragment){
 		this.fragment = fragment;
 	}
 	public void startTimer(){

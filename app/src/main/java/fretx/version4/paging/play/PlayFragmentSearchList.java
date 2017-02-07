@@ -3,24 +3,19 @@ package fretx.version4.paging.play;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import fretx.version4.Config;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.Util;
-import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.Songlist;
 
@@ -116,7 +111,7 @@ public class PlayFragmentSearchList extends Fragment {
     }
 
     public void setListData( ArrayList<SongItem> data ) {
-        listView.setAdapter( new CustomGridViewAdapter( context, R.layout.play_fragment_search_list_row_item, data) );
+        listView.setAdapter( new PlaySongGridViewAdapter( context, R.layout.play_fragment_search_list_row_item, data) );
     }
 
     /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////////////////////////////
