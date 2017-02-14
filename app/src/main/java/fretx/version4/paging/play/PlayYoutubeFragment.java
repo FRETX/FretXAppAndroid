@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,29 +23,23 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
 
-import co.mobiwise.materialintro.shape.Focus;
-import co.mobiwise.materialintro.shape.FocusGravity;
-import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.BluetoothClass;
 import fretx.version4.Config;
+import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.SongPunch;
-import rocks.fretx.audioprocessing.MusicUtils;
-
-import static fretx.version4.Config.mActivity;
+import rocks.fretx.audioprocessing.Chord;
+import rocks.fretx.audioprocessing.FretboardPosition;
 
 public class PlayYoutubeFragment extends Fragment {
 
@@ -57,17 +50,17 @@ public class PlayYoutubeFragment extends Fragment {
     private static final String API_KEY = Config.YOUTUBE_API_KEY;
 
     private SongItem song;
+	private ArrayList<SongPunch> punches;
 
-    private MainActivity context;
+    private MainActivity mActivity;
     private View         rootView;
-    private SeekBar      prerollSlider;
-    private TextView     prerollValue;
-//    private TextView     loopStartTime;
-//    private TextView     loopEndTime;
-    private Button       loopStartBtn;
-    private Button       loopEndBtn;
-//    private ImageView    loopTglOn;
-//    private ImageView    loopTglOff;
+    private SeekBar      timeSeekBar;
+    private Button loopStartButton, loopEndButton, loopButton;
+    private Button       preRollButton0, preRollButton025, preRollButton05, preRollButton1;
+	private ArrayList<Button> preRollButtons;
+	private Button playPauseButton;
+	private FretboardView fretboardCurrent, fretboardNext;
+	private TextView timeTotalText, timeElapsedText;
 
     private int          preroll  = 0;
     private String       VIDEO_ID = "";
@@ -81,9 +74,6 @@ public class PlayYoutubeFragment extends Fragment {
 
     private YouTubePlayer               m_player = null;
 
-//    static boolean bStartCheckFlag = false;    // Flag that current time is passed start time.
-//    static boolean bEndCheckFlag = false;      // Flag that current time is passed end time.
-
     static long    lastSysClockTime = 0;
     static long    lastYoutubeElapsedTime = 0;
     static long    m_currentTime = 0;          // Now playing time.
@@ -91,10 +81,11 @@ public class PlayYoutubeFragment extends Fragment {
     private long    startPos = 0;               // start point of loop
     private long    endPos = 0;                 // end point of loop
 
-//    static boolean mbLoopable = false;         // flag of checking loop
     static boolean mbPlaying = true;           // Flag of now playing.
-    static boolean mbSendingFlag = false;
-
+    private boolean youtubePlayerLoaded = false;
+	private boolean looping = false;
+	private boolean seeking = false;
+	private int seekToTarget = -1;
     static private Handler mCurTimeShowHandler = new Handler();
 
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
@@ -136,22 +127,61 @@ public class PlayYoutubeFragment extends Fragment {
     }
 
     private void initVars() {
-        context       = (MainActivity) getActivity();
-        prerollSlider = (SeekBar)  rootView.findViewById(R.id.prerollSlider);
-        prerollValue  = (TextView) rootView.findViewById(R.id.prerollValView);
-//        loopStartBtn   = (Button)   rootView.findViewById(R.id.btnStartLoop);
-//        loopEndBtn     = (Button)   rootView.findViewById(R.id.btnEndLoop);
-        loopStartBtn = (Button) rootView.findViewById(R.id.buttonA);
-        loopEndBtn = (Button) rootView.findViewById(R.id.buttonB);
-        prerollValue.setText("0 ms");
-        TextView tv10 = (TextView) rootView.findViewById(R.id.textView10);
-        tv10.setText("Early Lights");
-
+        mActivity = (MainActivity) getActivity();
+	    fretboardCurrent = (FretboardView) rootView.findViewById(R.id.fretboardCurrent);
+	    fretboardNext = (FretboardView) rootView.findViewById(R.id.fretboardNext);
+        loopStartButton = (Button) rootView.findViewById(R.id.buttonA);
+        loopEndButton = (Button) rootView.findViewById(R.id.buttonB);
+	    loopButton = (Button) rootView.findViewById(R.id.buttonLoop);
+	    preRollButton0 = (Button) rootView.findViewById(R.id.buttonEarly0);
+	    preRollButton025 = (Button) rootView.findViewById(R.id.buttonEarly025);
+	    preRollButton05 = (Button) rootView.findViewById(R.id.buttonEarly05);
+	    preRollButton1 = (Button) rootView.findViewById(R.id.buttonEarly1);
+	    preRollButtons = new ArrayList<>();
+		preRollButtons.add(preRollButton0);
+	    preRollButtons.add(preRollButton025);
+	    preRollButtons.add(preRollButton05);
+	    preRollButtons.add(preRollButton1);
+	    playPauseButton = (Button) rootView.findViewById(R.id.playPauseButton);
+	    timeSeekBar = (SeekBar) rootView.findViewById(R.id.timeSeekbar);
+	    timeElapsedText = (TextView) rootView.findViewById(R.id.elapsedTimeText);
+	    timeTotalText = (TextView) rootView.findViewById(R.id.totalTimeText);
     }
 
     private void setEventListeners() {
 
-        loopStartBtn.setOnClickListener(new View.OnClickListener() {
+	    playPauseButton.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    if(!youtubePlayerLoaded) return;
+			    Button b = (Button) view;
+				if(mbPlaying){
+					b.setBackground(getResources().getDrawable(R.drawable.ic_playbutton));
+					m_player.pause();
+					mbPlaying = false;
+				} else {
+					b.setBackground(getResources().getDrawable(R.drawable.ic_pausebutton));
+					m_player.play();
+					mbPlaying = true;
+				}
+		    }
+	    });
+
+	    loopButton.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+				Button b = (Button) view;
+			    if(looping){
+				    b.setBackground(getResources().getDrawable(R.drawable.ic_loop_inactive));
+				    looping = false;
+			    } else {
+				    b.setBackground(getResources().getDrawable(R.drawable.ic_loop_active));
+				    looping = true;
+			    }
+		    }
+	    });
+
+        loopStartButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
 	            toggleStartButton(v);
 	            if(startButtonPressed == false && endButtonPressed == true) {
@@ -164,7 +194,7 @@ public class PlayYoutubeFragment extends Fragment {
             }
         });
 
-        loopEndBtn.setOnClickListener(new View.OnClickListener() {
+        loopEndButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
 	            toggleEndButton(v);
 	            if(endButtonPressed == false && startButtonPressed == true){
@@ -177,6 +207,68 @@ public class PlayYoutubeFragment extends Fragment {
             }
         });
 
+
+	    timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		    @Override
+		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			    if(fromUser){
+				    long youtubeDuration = m_player.getDurationMillis();
+				    float progressPercentage = (float) progress / 100f;
+				    seekToTarget = Math.round((float) youtubeDuration * progressPercentage);
+				    timeElapsedText.setText(String.format("%02d : %02d",
+						    TimeUnit.MILLISECONDS.toMinutes(seekToTarget),
+						    TimeUnit.MILLISECONDS.toSeconds(seekToTarget) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(seekToTarget))
+				    ));
+			    }
+		    }
+		    @Override
+		    public void onStartTrackingTouch(SeekBar seekBar) {
+				seeking = true;
+		    }
+		    @Override
+		    public void onStopTrackingTouch(SeekBar seekBar) {
+				seeking = false;
+			    if(seekToTarget > 0){
+				    m_player.seekToMillis(seekToTarget);
+				    seekToTarget = -1;
+			    }
+		    }
+	    });
+
+
+	    preRollButton0.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+				resetPrerollButtons();
+			    activateButton((Button) view);
+			    preroll = 0;
+		    }
+	    });
+	    preRollButton025.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    resetPrerollButtons();
+			    activateButton((Button) view);
+			    preroll = 250;
+		    }
+	    });
+	    preRollButton05.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    resetPrerollButtons();
+			    activateButton((Button) view);
+			    preroll = 500;
+		    }
+	    });
+	    preRollButton1.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    resetPrerollButtons();
+			    activateButton((Button) view);
+			    preroll = 1000;
+		    }
+	    });
+
 //        loopTglOn.setOnClickListener(new View.OnClickListener() {
 //            @Override public void onClick(View view) { loopOn(view); }
 //        });
@@ -185,34 +277,34 @@ public class PlayYoutubeFragment extends Fragment {
 //            @Override public void onClick(View view) { loopOff(view); }
 //        });
 
-        prerollSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                preroll = progress * 10;
-                prerollValue.setText(String.format("%d ms",preroll));
-            }
-            @Override public void onStartTrackingTouch(SeekBar seekBar) { }
-            @Override public void onStopTrackingTouch(SeekBar seekBar)  { }
-        });
+//        prerollSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                preroll = progress * 10;
+//                prerollValue.setText(String.format("%d ms",preroll));
+//            }
+//            @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+//            @Override public void onStopTrackingTouch(SeekBar seekBar)  { }
+//        });
     }
 
 	private void toggleStartButton(View v){
 		if(startButtonPressed == false){
 			if(m_currentTime >= endPos) return;
 			startPos = m_currentTime;
-			loopStartBtn.setText(String.format("%02d : %02d",
-					TimeUnit.MILLISECONDS.toMinutes(m_currentTime),
-					TimeUnit.MILLISECONDS.toSeconds(m_currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(m_currentTime))
-			));
+//			loopStartButton.setText(String.format("%02d : %02d",
+//					TimeUnit.MILLISECONDS.toMinutes(m_currentTime),
+//					TimeUnit.MILLISECONDS.toSeconds(m_currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(m_currentTime))
+//			));
 
-//            loopStartBtn.setBackgroundColor(getResources().getColor(R.color.primaryDark));
-            loopStartBtn.setBackground(getContext().getDrawable(R.drawable.buttona));
+            loopStartButton.setBackgroundColor(getResources().getColor(R.color.activeButton));
+//            loopStartButton.setBackground(getContext().getDrawable(R.drawable.buttona));
 
 			startButtonPressed = true;
 		} else {
 			startPos = 0;
 			//TODO: do these with proper strings.xml values
-			loopStartBtn.setText(getString(R.string.loopA));
-			loopStartBtn.setBackgroundColor(getResources().getColor(R.color.secondaryText));
+//			loopStartButton.setText(getString(R.string.loopA));
+			loopStartButton.setBackgroundColor(getResources().getColor(R.color.inactiveButton));
 			startButtonPressed = false;
 		}
 	}
@@ -222,17 +314,17 @@ public class PlayYoutubeFragment extends Fragment {
 			if(m_currentTime <= startPos) return;
 			endPos = m_currentTime;
 			//showMessage("Button Start");
-			loopEndBtn.setText(String.format("%02d : %02d",
-					TimeUnit.MILLISECONDS.toMinutes(m_currentTime),
-					TimeUnit.MILLISECONDS.toSeconds(m_currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(m_currentTime))
-			));
-//			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.primaryDark));
-            loopEndBtn.setBackground(getContext().getDrawable(R.drawable.buttonb));
+//			loopEndButton.setText(String.format("%02d : %02d",
+//					TimeUnit.MILLISECONDS.toMinutes(m_currentTime),
+//					TimeUnit.MILLISECONDS.toSeconds(m_currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(m_currentTime))
+//			));
+			loopEndButton.setBackgroundColor(getResources().getColor(R.color.activeButton));
+//            loopEndButton.setBackground(getContext().getDrawable(R.drawable.buttonb));
 			endButtonPressed = true;
 		} else {
 			endPos = m_player.getDurationMillis();
-			loopEndBtn.setText(getString(R.string.loopB));
-			loopEndBtn.setBackgroundColor(getResources().getColor(R.color.secondaryText));
+//			loopEndButton.setText(getString(R.string.loopB));
+			loopEndButton.setBackgroundColor(getResources().getColor(R.color.inactiveButton));
 			endButtonPressed = false;
 		}
 	}
@@ -272,7 +364,7 @@ public class PlayYoutubeFragment extends Fragment {
         m_player.setFullscreen(false);
         m_player.setShowFullscreenButton(false);
         m_player.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
-        m_player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+        m_player.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
     }
 
     private void setYoutubePlayerListeners() {
@@ -311,6 +403,12 @@ public class PlayYoutubeFragment extends Fragment {
         @Override public void onLoaded(String s)                     {
             showMessage("YOUTUBE loaded!");
             endPos = m_player.getDurationMillis();
+	        timeTotalText.setText(String.format("%02d : %02d",
+			        TimeUnit.MILLISECONDS.toMinutes(endPos),
+			        TimeUnit.MILLISECONDS.toSeconds(endPos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endPos))
+	        ));
+	        youtubePlayerLoaded = true;
+
         }
         @Override public void onAdStarted()                          { showMessage("YOUTUBE Ad Started");    }
         @Override public void onVideoStarted()                       { showMessage("YOUTUBE VideoStarted!"); }
@@ -345,6 +443,13 @@ public class PlayYoutubeFragment extends Fragment {
         long youtubeDuration    = m_player.getDurationMillis();
         long youtubeElapsedTime = m_player.getCurrentTimeMillis();
 
+	    if(!seeking){
+		    timeElapsedText.setText(String.format("%02d : %02d",
+				    TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime),
+				    TimeUnit.MILLISECONDS.toSeconds(youtubeElapsedTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime))
+		    ));
+	    }
+
         if( preroll > 0 ) {
             youtubeElapsedTime += preroll;
             youtubeElapsedTime = youtubeElapsedTime > youtubeDuration ? youtubeDuration : youtubeElapsedTime;
@@ -369,7 +474,7 @@ public class PlayYoutubeFragment extends Fragment {
                 setCurrentTime();
                 changeText( (int) m_currentTime );  ///Set the current title of current time.
 //                if(mbLoopable){ checkLoop(); }
-	            if( (startButtonPressed && endButtonPressed) && (m_currentTime < startPos || m_currentTime > endPos)){
+	            if( (startButtonPressed && endButtonPressed) && (m_currentTime < startPos || m_currentTime > endPos) && looping){
 		            m_player.seekToMillis((int) startPos);
 	            }
                 mCurTimeShowHandler.postDelayed(this, 100);
@@ -399,6 +504,12 @@ public class PlayYoutubeFragment extends Fragment {
                 Util.setDefaultValues(arrayCallStatus);
                 arrayCallStatus[nIndex] = true;
 
+	            SongPunch sp = punches.get(nIndex);
+	            Chord c = new Chord(sp.root,sp.type);
+	            fretboardCurrent.setFretboardPositions(c.getFingerPositions());
+	            sp = punches.get(nIndex+1);
+	            c = new Chord(sp.root, sp.type);
+	            fretboardNext.setFretboardPositions(c.getFingerPositions());
             }
         }
 
@@ -412,13 +523,18 @@ public class PlayYoutubeFragment extends Fragment {
             BluetoothClass.sendToFretX(punch_list.get(arrayKeys[arrayKeys.length - 1]));
             Util.setDefaultValues(arrayCallStatus);
             arrayCallStatus[arrayKeys.length -1] = true;
+	        SongPunch sp = punches.get(arrayKeys.length - 1);
+	        Chord c = new Chord(sp.root, sp.type);
+	        fretboardCurrent.setFretboardPositions(c.getFingerPositions());
+	        c = new Chord("A","X");
+	        fretboardNext.setFretboardPositions(c.getFingerPositions());
         }
     }
 
 //    public Hashtable songtxtToHashtable(String data) {
       public Hashtable songtxtToHashtable() {
           punch_list = new Hashtable();
-          ArrayList<SongPunch> punches = song.punches();
+	      punches = song.punches();
 
         for (SongPunch sp : punches){
             //Skipping the conversion of this part for now, in favor of using byte[] arrays directly
@@ -451,6 +567,26 @@ public class PlayYoutubeFragment extends Fragment {
     }
 
     ///////////////////////////////// TEXT FILE PROCESSING /////////////////////////////////////////////////////////////////
+
+
+	//UTILITY
+
+	private void resetPrerollButtons(){
+		if(preRollButtons.size() > 0){
+			for (Button b:preRollButtons
+			     ) {
+				deactivateButton(b);
+			}
+		}
+	}
+
+	private void deactivateButton(Button b){
+		b.setBackgroundColor(getResources().getColor(R.color.inactiveButton));
+	}
+
+	private void activateButton(Button b) {
+		b.setBackgroundColor(getResources().getColor(R.color.activeButton));
+	}
 
 
     //////////////////////////////////////// LOOPING ///////////////////////////////////////////////////////////////////////
@@ -541,7 +677,7 @@ public class PlayYoutubeFragment extends Fragment {
 ////                loopStartTime.setTextColor(Color.parseColor("#000000"));
 ////                loopEndTime.setTextColor(Color.parseColor("#000000"));
 //                mbLoopable = false;
-//                Toast.makeText(context, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(mActivity, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
 //                //tgSwitch.setChecked(false);
 ////                setLoopFb(false);
 //            }
@@ -590,7 +726,7 @@ public class PlayYoutubeFragment extends Fragment {
 //                loopStartTime.setTextColor(Color.parseColor("#000000"));
 //                loopEndTime.setTextColor(Color.parseColor("#000000"));
 //                mbLoopable = false;
-//                Toast.makeText(context, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(mActivity, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
 //                //tgSwitch.setChecked(false);
 //                setLoopFb(false);
 //            } else {
@@ -670,19 +806,19 @@ public class PlayYoutubeFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            dialog = ProgressDialog.show(context,
-                    context.getString(R.string.refreshing),
-                    context.getString(R.string.please_wait));
+            dialog = ProgressDialog.show(mActivity,
+                    mActivity.getString(R.string.refreshing),
+                    mActivity.getString(R.string.please_wait));
         }
 
         @Override
         protected Void doInBackground(String... inputs) {
-            String accessFolder = Util.checkS3Access(context);
+            String accessFolder = Util.checkS3Access(mActivity);
 
             // Queries files in the bucket from S3.
-            File chordFile = new File(context.getFilesDir().toString()+ "/" + inputs[0]);
+            File chordFile = new File(mActivity.getFilesDir().toString()+ "/" + inputs[0]);
             if(!chordFile.isFile()) {
-                TransferObserver observer = Util.downloadFile(context, accessFolder, inputs[0]);
+                TransferObserver observer = Util.downloadFile(mActivity, accessFolder, inputs[0]);
                 observer.setTransferListener(new DownloadListener());
                 while (true) {
                     if (TransferState.COMPLETED.equals(observer.getState())

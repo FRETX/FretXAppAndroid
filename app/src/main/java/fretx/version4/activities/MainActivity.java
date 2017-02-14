@@ -364,7 +364,7 @@ public class MainActivity extends ActionBarActivity {
 				.setDelayMillis(300)
 				.enableFadeAnimation(true)
 				.performClick(true)
-				.setInfoText("Turn on your FretX device and tap this bu to connect to it")
+				.setInfoText("Turn on your FretX device and tap this button to connect to it")
 				.setTarget((ImageView) findViewById(R.id.connectButton))
 				.setUsageId("tutorialConnectBluetoothWithLogo") //THIS SHOULD BE UNIQUE ID
 				.show();

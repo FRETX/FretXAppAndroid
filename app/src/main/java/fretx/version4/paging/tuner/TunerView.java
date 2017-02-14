@@ -98,8 +98,6 @@ public class TunerView extends View {
 
 		deltaTime = currentTime - prevTime;
 		prevTime = currentTime;
-//		Log.d("deltaTime",Double.toString(deltaTime));
-
 
 		if(mActivity.audio.isInitialized() && mActivity.audio.isProcessing()){
 			currentPitch = mActivity.audio.getPitch();

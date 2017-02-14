@@ -14,5 +14,5 @@ public final class Config {
     public static boolean bBlueToothActive = false;
     public static MainActivity mActivity = null;
     public static final String apiBase = "http://player.fretx.rocks/";
-    public static final boolean useOfflinePlayer = true;
+    public static final boolean useOfflinePlayer = false;
 }
