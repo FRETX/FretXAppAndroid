@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import fretx.version4.BluetoothClass;
@@ -212,10 +213,8 @@ public class PlayYoutubeFragment extends Fragment {
 		    @Override
 		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 			    if(fromUser){
-				    long youtubeDuration = m_player.getDurationMillis();
-				    float progressPercentage = (float) progress / 100f;
-				    seekToTarget = Math.round((float) youtubeDuration * progressPercentage);
-				    timeElapsedText.setText(String.format("%02d : %02d",
+				    seekToTarget = Math.round((float) progress / 100f * (float) m_player.getDurationMillis());
+				    timeElapsedText.setText(String.format(Locale.ENGLISH,"%02d : %02d",
 						    TimeUnit.MILLISECONDS.toMinutes(seekToTarget),
 						    TimeUnit.MILLISECONDS.toSeconds(seekToTarget) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(seekToTarget))
 				    ));
@@ -444,11 +443,12 @@ public class PlayYoutubeFragment extends Fragment {
         long youtubeElapsedTime = m_player.getCurrentTimeMillis();
 
 	    if(!seeking){
-		    timeElapsedText.setText(String.format("%02d : %02d",
+		    timeElapsedText.setText(String.format(Locale.ENGLISH,"%02d : %02d",
 				    TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime),
-				    TimeUnit.MILLISECONDS.toSeconds(youtubeElapsedTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime))
-		    ));
+				    TimeUnit.MILLISECONDS.toSeconds(youtubeElapsedTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime))));
 
+		    int progressPercentage = Math.round((float) youtubeElapsedTime / (float) youtubeDuration * 100);
+		    timeSeekBar.setProgress(progressPercentage);
 	    }
 
         if( preroll > 0 ) {
@@ -588,214 +588,6 @@ public class PlayYoutubeFragment extends Fragment {
 	private void activateButton(Button b) {
 		b.setBackgroundColor(getResources().getColor(R.color.activeButton));
 	}
-
-
-    //////////////////////////////////////// LOOPING ///////////////////////////////////////////////////////////////////////
-
-
-    ///Set startPos and endPos from TextView of tvStartTime and tvEndTime
-    ///Convert String data of TextView to Integer data.
-//    void getStartEndTime() {
-//        if(loopStartTime.getText().toString().length() != 0)
-//            startPos = Integer.parseInt(loopStartTime.getText().toString());
-//        else
-//            startPos = 0;
-//        if(loopEndTime.getText().toString().length() != 0)
-//            endPos = Integer.parseInt(loopEndTime.getText().toString());
-//        else
-//            endPos = 0;
-//    }
-
-//    public void initLoop(){
-//        loopStartTime.setText("0");
-//        loopEndTime.setText("0");
-//        setLoopFb(false);
-//    }
-
-//    private void setLoopFb(Boolean state) {
-//        loopTglOff.setVisibility ( state ? View.INVISIBLE : View.VISIBLE );
-//        loopTglOn.setVisibility  ( state ? View.VISIBLE : View.INVISIBLE );
-//    }
-
-//    private void checkLoopFlags(int currentTime) {
-//        if (!mbLoopable) return;
-//        if (currentTime < startPos) { bStartCheckFlag = false; return; }
-//        if (currentTime > endPos)   { bEndCheckFlag   = false; return; }
-//        bStartCheckFlag = true;   // current time is in the duration of loop.
-//        bEndCheckFlag = false;
-//    }
-//
-//    private void clearLoopFlags() {
-//        bStartCheckFlag = false;        //Flag that current time is passed start time.
-//        bEndCheckFlag   = false;        //Flag that current time is passed end time.
-//    }
-
-//    private void checkLoop() {
-//        if(startPos >= endPos) { mbLoopable = false; setLoopFb(false); return; }
-//
-//        if((m_currentTime + 500 < startPos) && (!bStartCheckFlag)){     //if currentTime is smaller than startPos then set bStartCheckFlag true
-//            m_player.seekToMillis( (int) startPos );                    //and set endChekFlag to false. Set current pos to startPos. and loop video
-//            bStartCheckFlag = true;
-//            bEndCheckFlag = false;
-//        }
-//
-//        if((m_currentTime > endPos) && (!bEndCheckFlag)){           //if currentTime is bigger than startPos then set bEndCheckFlag true
-//            bEndCheckFlag = false;                                  //and set startChekFlag to false. Set current pos to startPos. and loop video.
-//            bStartCheckFlag = true;
-//            showMessage("Big Case why : begin");
-//            m_player.seekToMillis( (int) startPos );
-//            showMessage("Start Pos = " + startPos);
-//            showMessage("Current Time = " + m_currentTime);
-//            showMessage("Big Case why : end");
-//        }
-//    }
-
-//    private void loopOff(View view) {
-//        setLoopFb(true);
-//
-//        if (mbLoopable) {
-////            loopStartTime.setTextColor(Color.parseColor("#000000"));
-////            loopEndTime.setTextColor(Color.parseColor("#000000"));
-//            mbLoopable = false;
-//        }
-//
-//        else {
-//            ///check current time is in duration of startPosition and endPosition.
-////            String strStartPos = loopStartTime.getText().toString();
-////            String strEndPos = loopEndTime.getText().toString();
-//            int nTmpStartPos, nTmpEndPos;
-//
-////            if (strStartPos.length() != 0) { nTmpStartPos = Integer.parseInt(strStartPos); }
-////            else                           { nTmpStartPos = 0; loopStartTime.setText("0");   }
-////
-////            if (strEndPos.length() != 0)   { nTmpEndPos = Integer.parseInt(strEndPos);     }
-////            else                           { nTmpEndPos = 0; loopEndTime.setText("0");       }
-//
-//            ///if start position is bigger than end position then can not loop.
-//
-////            if (nTmpStartPos >= nTmpEndPos) {
-//	        if (startPos >= endPos) {
-////                loopStartTime.setTextColor(Color.parseColor("#000000"));
-////                loopEndTime.setTextColor(Color.parseColor("#000000"));
-//                mbLoopable = false;
-//                Toast.makeText(mActivity, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
-//                //tgSwitch.setChecked(false);
-////                setLoopFb(false);
-//            }
-//
-//            else {
-////                loopStartTime.setTextColor(Color.parseColor("#FF0000"));
-////                loopEndTime.setTextColor(Color.parseColor("#0000FF"));
-//                getStartEndTime();
-//                if ((m_currentTime < startPos) || (m_currentTime > endPos)) {
-//                    m_currentTime = startPos;
-//                    m_player.seekToMillis((int)startPos);
-//                }
-//                bStartCheckFlag = false;
-//                bEndCheckFlag = false;
-//                mbLoopable = true;
-//            }
-//        }
-//    }
-
-//    private void loopOn(View view) {
-//        setLoopFb(false);
-//
-//        if (mbLoopable) {
-////            loopStartTime.setTextColor(Color.parseColor("#000000"));
-////            loopEndTime.setTextColor(Color.parseColor("#000000"));
-//            mbLoopable = false;
-//        } else {
-//            ///check current time is in duration of startPosition and endPosition.
-//            String strStartPos = loopStartTime.getText().toString();
-//            String strEndPos = loopEndTime.getText().toString();
-//            int nTmpStartPos, nTmpEndPos;
-//            if (strStartPos.length() != 0)
-//                nTmpStartPos = Integer.parseInt(strStartPos);
-//            else {
-//                nTmpStartPos = 0;
-//                loopStartTime.setText("0");
-//            }
-//            if (strEndPos.length() != 0)
-//                nTmpEndPos = Integer.parseInt(strEndPos);
-//            else {
-//                nTmpEndPos = 0;
-//                loopEndTime.setText("0");
-//            }
-//            ///if start position is bigger than end position then can not loop.
-//            if (nTmpStartPos >= nTmpEndPos) {
-//                loopStartTime.setTextColor(Color.parseColor("#000000"));
-//                loopEndTime.setTextColor(Color.parseColor("#000000"));
-//                mbLoopable = false;
-//                Toast.makeText(mActivity, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
-//                //tgSwitch.setChecked(false);
-//                setLoopFb(false);
-//            } else {
-//                loopStartTime.setTextColor(Color.parseColor("#FF0000"));
-//                loopEndTime.setTextColor(Color.parseColor("#0000FF"));
-//                getStartEndTime();
-//                if ((m_currentTime < startPos) || (m_currentTime > endPos)) {
-//                    m_currentTime = startPos;
-//                    m_player.seekToMillis((int)startPos);
-//                }
-//                bStartCheckFlag = false;
-//                bEndCheckFlag = false;
-//                mbLoopable = true;
-//            }
-//        }
-//    }
-
-            /*tgSwitch = (ToggleButton)rootView.findViewById(R.id.tgSwitch);   ///ToggleButton that sets loop.
-        tgSwitch.setChecked(false);
-        tgSwitch.setOnClickListener(new View.OnClickListener() {   /////Set loopable flag.
-            @Override
-            public void onClick(View v) {
-                if (mbLoopable) {
-                    tvStartTime.setTextColor(Color.parseColor("#000000"));
-                    tvEndTime.setTextColor(Color.parseColor("#000000"));
-                    mbLoopable = false;
-                } else {
-                    ///check current time is in duration of startPosition and endPosition.
-                    String strStartPos = tvStartTime.getText().toString();
-                    String strEndPos = tvEndTime.getText().toString();
-                    int nTmpStartPos, nTmpEndPos;
-                    if (strStartPos.length() != 0)
-                        nTmpStartPos = Integer.parseInt(strStartPos);
-                    else {
-                        nTmpStartPos = 0;
-                        tvStartTime.setText("0");
-                    }
-                    if (strEndPos.length() != 0)
-                        nTmpEndPos = Integer.parseInt(strEndPos);
-                    else {
-                        nTmpEndPos = 0;
-                        tvEndTime.setText("0");
-                    }
-                    ///if start position is bigger than end position then can not loop.
-                    if (nTmpStartPos >= nTmpEndPos) {
-                        tvStartTime.setTextColor(Color.parseColor("#000000"));
-                        tvEndTime.setTextColor(Color.parseColor("#000000"));
-                        mbLoopable = false;
-                        Toast.makeText(mActivity, "Start time is bigger than End time.", Toast.LENGTH_LONG).show();
-                        tgSwitch.setChecked(false);
-                    } else {
-                        tvStartTime.setTextColor(Color.parseColor("#FF0000"));
-                        tvEndTime.setTextColor(Color.parseColor("#0000FF"));
-                        getStartEndTime();
-                        if ((m_currentTime < startPos) || (m_currentTime > endPos)) {
-                            m_currentTime = startPos;
-                            m_player.seekToMillis(startPos);
-                        }
-                        bStartCheckFlag = false;
-                        bEndCheckFlag = false;
-                        mbLoopable = true;
-                    }
-                }
-            }
-        });*/
-
-    //////////////////////////////////////// LOOPING ///////////////////////////////////////////////////////////////////////
-
 
     private static void showMessage(String message) {
         Log.d("+++", message);
