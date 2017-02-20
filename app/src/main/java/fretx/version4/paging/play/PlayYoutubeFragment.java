@@ -448,6 +448,7 @@ public class PlayYoutubeFragment extends Fragment {
 				    TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime),
 				    TimeUnit.MILLISECONDS.toSeconds(youtubeElapsedTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime))
 		    ));
+
 	    }
 
         if( preroll > 0 ) {
@@ -798,66 +799,5 @@ public class PlayYoutubeFragment extends Fragment {
 
     private static void showMessage(String message) {
         Log.d("+++", message);
-    }
-
-    private class GetSongChordTxtFile extends AsyncTask<String, Void, Void> {
-        // A dialog to let the user know we are retrieving the files
-        private ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            dialog = ProgressDialog.show(mActivity,
-                    mActivity.getString(R.string.refreshing),
-                    mActivity.getString(R.string.please_wait));
-        }
-
-        @Override
-        protected Void doInBackground(String... inputs) {
-            String accessFolder = Util.checkS3Access(mActivity);
-
-            // Queries files in the bucket from S3.
-            File chordFile = new File(mActivity.getFilesDir().toString()+ "/" + inputs[0]);
-            if(!chordFile.isFile()) {
-                TransferObserver observer = Util.downloadFile(mActivity, accessFolder, inputs[0]);
-                observer.setTransferListener(new DownloadListener());
-                while (true) {
-                    if (TransferState.COMPLETED.equals(observer.getState())
-                            || TransferState.FAILED.equals(observer.getState())) {
-                        break;
-                    }
-                }
-                initTxt(SONG_TXT);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-        }
-    }
-
-    /*
-     * A TransferListener class that can listen to a download task and be
-     * notified when the status changes.
-     */
-    public class DownloadListener implements TransferListener {
-        // Simply updates the list when notified.
-        @Override
-        public void onError(int id, Exception e) {
-            Log.e("MainActivity", "onError: " + id, e);
-        }
-
-        @Override
-        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-            Log.d("MainActivity", String.format("onProgressChanged: %d, total: %d, current: %d",
-                    id, bytesTotal, bytesCurrent));
-        }
-
-        @Override
-        public void onStateChanged(int id, TransferState state) {
-            Log.d("MainActivity", "onStateChanged: " + id + ", " + state);
-
-        }
     }
 }
