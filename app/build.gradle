@@ -7,8 +7,8 @@ android {
         applicationId 'fretx.app'
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 23
-        versionName "0.8.2"
+        versionCode 25
+        versionName "0.8.4"
         multiDexEnabled true
         sourceSets.main.jni.srcDirs = []
 
@@ -48,7 +48,5 @@ dependencies {
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.0'
     compile project(':fretx-audio')
     compile 'com.afollestad:easyvideoplayer:0.3.0'
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
     compile project(':fretx-audio')
 }

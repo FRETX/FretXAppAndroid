@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import fretx.version4.Util;
-import rocks.fretx.audioprocessing.Chord;
 
 public class SongItem {
     public String youtube_id;
@@ -17,9 +16,6 @@ public class SongItem {
     public String artist;
     public String song_title;
     public String uploaded_on;
-
-//    public JSONArray punches;
-
 
     public SongItem(String youtube_id, String title, String artist, String song_title, String uploaded_on) {
         this.youtube_id = youtube_id;

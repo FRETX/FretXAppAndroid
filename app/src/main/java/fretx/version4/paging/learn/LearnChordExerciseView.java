@@ -1,36 +1,25 @@
 package fretx.version4.paging.learn;
 
-		import android.content.Context;
-		import android.graphics.Canvas;
-		import android.graphics.Paint;
-		import android.os.Bundle;
-		import android.os.CountDownTimer;
-		import android.util.AttributeSet;
-		import android.util.Log;
-		import android.view.View;
-		import android.widget.FrameLayout;
-		import android.widget.RelativeLayout;
-		import android.widget.TextView;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.os.CountDownTimer;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-		import java.io.IOException;
-		import java.util.ArrayList;
-		import java.util.Arrays;
-		import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-		import fretx.version4.BluetoothClass;
-		import fretx.version4.FretboardView;
-		import fretx.version4.R;
-		import fretx.version4.Util;
-		import fretx.version4.activities.MainActivity;
-		import fretx.version4.paging.chords.ChordFragment;
-		import rocks.fretx.audioprocessing.AudioAnalyzer;
-		import rocks.fretx.audioprocessing.Chord;
-		import rocks.fretx.audioprocessing.FingerPositions;
-		import rocks.fretx.audioprocessing.MusicUtils;
+import fretx.version4.BluetoothClass;
+import fretx.version4.FretboardView;
+import fretx.version4.R;
+import fretx.version4.activities.MainActivity;
+import rocks.fretx.audioprocessing.Chord;
+import rocks.fretx.audioprocessing.FingerPositions;
+import rocks.fretx.audioprocessing.MusicUtils;
 
-/**
- * Created by Kickdrum on 29-Oct-16.
- */
 
 public class LearnChordExerciseView extends RelativeLayout {
 
@@ -58,6 +47,28 @@ public class LearnChordExerciseView extends RelativeLayout {
 	private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
 	private final long CORRECTLY_PLAYED_DURATION = 160; //in milliseconds
 	private long correctlyPlayedAccumulator = 0;
+
+	public LearnChordExerciseView(Context context) {
+		super(context);
+		setWillNotDraw(false);
+		chordDb = MusicUtils.parseChordDb();
+		invalidate();
+
+	}
+
+	public LearnChordExerciseView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		setWillNotDraw(false);
+		chordDb = MusicUtils.parseChordDb();
+		invalidate();
+	}
+
+	public LearnChordExerciseView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		setWillNotDraw(false);
+		chordDb = MusicUtils.parseChordDb();
+		invalidate();
+	}
 
 	private void startListening() {
 		Log.d("startListening","starting");
@@ -142,34 +153,10 @@ public class LearnChordExerciseView extends RelativeLayout {
 			songChordsString = chords.get(i).toString() + " ";
 		}
 		exerciseChordsText.setText(songChordsString);
-
 	}
 
 	public void resetChords(){
 		chordsIndex = 0;
-	}
-
-
-	public LearnChordExerciseView(Context context) {
-		super(context);
-		setWillNotDraw(false);
-		chordDb = MusicUtils.parseChordDb();
-		invalidate();
-
-	}
-
-	public LearnChordExerciseView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		setWillNotDraw(false);
-		chordDb = MusicUtils.parseChordDb();
-		invalidate();
-	}
-
-	public LearnChordExerciseView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		setWillNotDraw(false);
-		chordDb = MusicUtils.parseChordDb();
-		invalidate();
 	}
 
 	public void setmActivity(MainActivity mActivity) {
