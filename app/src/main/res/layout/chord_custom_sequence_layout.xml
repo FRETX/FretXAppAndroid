@@ -55,46 +55,28 @@
         </LinearLayout>
 
         <Button
-            android:layout_width="130dp"
-            android:layout_height="36dp"
-            android:id="@+id/removeChordButton"
-            android:text="- Remove"
-
-            android:background="@color/primary"
-            android:textColor="@color/background"
-            android:textSize="20dp"
-            android:textAllCaps="false"
-            android:textAlignment="center"
-
-            android:layout_below="@id/chordPickerContainer"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
-            />
-
-        <Button
-            android:layout_width="130dp"
             android:layout_height="36dp"
             android:id="@+id/addChordButton"
-            android:text="+ Add"
+            android:text="added Chord"
             android:background="@color/primary"
             android:textColor="@color/background"
             android:textSize="20dp"
             android:textAllCaps="false"
             android:textAlignment="center"
 
-            android:layout_below="@id/chordPickerContainer"
+            android:layout_below="@+id/customChordExerciseView"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            />
+            android:layout_width="150dp" />
 
 
         <fretx.version4.paging.learn.LearnCustomChordExerciseView
             android:id="@+id/customChordExerciseView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/fretboardHeight"
-            android:layout_below="@id/addChordButton"
             android:layout_margin="@dimen/fretboardMargin"
             android:orientation="vertical"
+            android:layout_below="@+id/chordPickerContainer"
             >
 
             <TextView
@@ -120,26 +102,32 @@
         </fretx.version4.paging.learn.LearnCustomChordExerciseView>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="36dp"
+            android:id="@+id/addedChordButton"
+            android:text="added Chords"
+
+            android:background="@color/primary"
+            android:textColor="@color/background"
+            android:textSize="20dp"
+            android:textAllCaps="false"
+            android:textAlignment="center"
+
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/customChordExerciseView"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="130dp"
+            android:layout_height="36dp"
             android:id="@+id/startExerciseButton"
             android:text="Play"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:background="@color/primary"
             android:textSize="20sp"
-            android:textColor="@color/background"/>
-
-        <ListView
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:id="@+id/chordSequenceListView"
-            android:layout_below="@id/customChordExerciseView"
-            android:scrollbars="horizontal"
-
-            ></ListView>
-
-
+            android:textColor="@color/background"
+            android:layout_below="@+id/addChordButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="31dp" />
 
 
     </RelativeLayout>
