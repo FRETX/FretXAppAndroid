@@ -1,5 +1,8 @@
 package fretx.version4.paging.learn;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,10 +42,9 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 	FrameLayout rootView;
 	LearnCustomChordExerciseView chordExerciseView;
 	HashMap<String,FingerPositions> chordFingerings;
-	Button addButton, removeButton, startButton;
+	Button addButton, addedButton, startButton;
 	ArrayList<Chord> chordSequence = new ArrayList<>();
-	ListView chordSequenceListView;
-	ArrayAdapter<Chord> chordSequenceListAdapter;
+    ChordArrayAdapter mobileArrayAdapter = null;
 
 	public LearnCustomChordExerciseFragment(){}
 
@@ -50,7 +54,8 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 		rootView = (FrameLayout) inflater.inflate(R.layout.chord_custom_sequence_layout, container, false);
 		return  rootView;
 	}
-	@Override
+
+    @Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
 		chordFingerings = MusicUtils.parseChordDb();
@@ -66,12 +71,12 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if(mActivity == null || mActivity.audio == null) return;
+		//if(mActivity == null || mActivity.audio == null) return;
 	}
 
 	private void updateCurrentChord(String root , String type){
 		currentChord = new Chord(root,type);
-		if(currentChord==null) return;
+		//if(currentChord==null) return;
 		chordExerciseView.setChord(currentChord);
 	}
 
@@ -81,13 +86,10 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 		chordExerciseView.setFretBoardView((FretboardView) rootView.findViewById(R.id.fretboardView));
 		chordExerciseView.setChordDb(chordFingerings);
 		addButton = (Button) rootView.findViewById(R.id.addChordButton);
-		removeButton = (Button) rootView.findViewById(R.id.removeChordButton);
+		addedButton = (Button) rootView.findViewById(R.id.addedChordButton);
 		startButton = (Button) rootView.findViewById(R.id.startExerciseButton);
-		chordSequenceListView = (ListView) rootView.findViewById(R.id.chordSequenceListView);
 		populateChordPicker();
 		setOnClickListeners();
-		chordSequenceListAdapter = new ArrayAdapter<Chord>(mActivity,R.layout.chord_sequence_item,chordSequence);
-		chordSequenceListView.setAdapter(chordSequenceListAdapter);
 	}
 
 	private void populateChordPicker(){
@@ -173,17 +175,21 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 			public void onClick(View view) {
 				if(currentChord == null) return;
 				chordSequence.add(currentChord);
-				chordSequenceListAdapter.notifyDataSetChanged();
+				Toast.makeText(getContext(), "Chord added", Toast.LENGTH_SHORT).show();
 			}
 		});
 
-		removeButton.setOnClickListener(new View.OnClickListener() {
+		addedButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if(chordSequence.size()>0){
-					chordSequence.remove(chordSequence.size()-1);
-					chordSequenceListAdapter.notifyDataSetChanged();
-				}
+                    createAddedChordsDialog(chordSequence).show();
+				} else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Your chord sequence is empty...");
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
 			}
 		});
 
@@ -207,19 +213,75 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 		fragmentTransaction.commit();
 		fragmentManager.executePendingTransactions();
 	}
-	private void showTutorial(){
 
-//		new MaterialIntroView.Builder(mActivity)
-//				.enableDotAnimation(false)
-//				.enableIcon(false)
-//				.setFocusGravity(FocusGravity.CENTER)
-//				.setFocusType(Focus.ALL)
-//				.setDelayMillis(300)
-//				.enableFadeAnimation(true)
-//				.performClick(true)
-//				.setInfoText("This is the Chord Library. You can review or learn any chord you choose here. \nJust pick any combination of chord and watch it show up on your guitar!")
-//				.setTarget((LinearLayout) mActivity.findViewById(R.id.chordPickerContainer))
-//				.setUsageId("tutorialChordLibrary") //THIS SHOULD BE UNIQUE ID
-//				.show();
+	private void showTutorial(){
+        /*
+        new MaterialIntroView.Builder(mActivity)
+        .enableDotAnimation(false)
+        .enableIcon(false)
+        .setFocusGravity(FocusGravity.CENTER)
+        .setFocusType(Focus.ALL)
+        .setDelayMillis(300)
+        .enableFadeAnimation(true)
+        .performClick(true)
+        .setInfoText("This is the Chord Library. You can review or learn any chord you choose here. \nJust pick any combination of chord and watch it show up on your guitar!")
+        .setTarget((LinearLayout) mActivity.findViewById(R.id.chordPickerContainer))
+        .setUsageId("tutorialChordLibrary") //THIS SHOULD BE UNIQUE ID
+        .show();
+         */
 	}
+
+    private Dialog createAddedChordsDialog(ArrayList<Chord> chordSequence) {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.chord_custom_sequence_dialog);
+        dialog.setTitle("Your sequence:");
+
+        ListView listview = (ListView) dialog.findViewById(R.id.chordSequenceListview);
+        mobileArrayAdapter = new ChordArrayAdapter(getActivity(), chordSequence);
+        listview.setAdapter(mobileArrayAdapter);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.saveButton);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Not implemented yet", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        return dialog;
+    }
+
+    public class ChordArrayAdapter extends ArrayAdapter<Chord> {
+        private final Context context;
+        private final ArrayList<Chord> values;
+
+        public ChordArrayAdapter(Context context, ArrayList<Chord> values) {
+            super(context, R.layout.chord_custom_sequence_dialog_item, values);
+            this.context = context;
+            this.values = values;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View rowView = inflater.inflate(R.layout.chord_custom_sequence_dialog_item, parent, false);
+            TextView textViewName = (TextView) rowView.findViewById(R.id.chordNameTextview);
+            textViewName.setText(values.get(position).toString());
+            ImageView image = (ImageView) rowView.findViewById(R.id.deleteImageView);
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Click on item " + position, Toast.LENGTH_SHORT).show();
+                    chordSequence.remove(position);
+                    mobileArrayAdapter.notifyDataSetChanged();
+                    mobileArrayAdapter.notifyDataSetInvalidated();
+                }
+            });
+            return rowView;
+        }
+    }
 }
+
