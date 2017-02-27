@@ -8,16 +8,24 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import co.mobiwise.materialintro.shape.Focus;
@@ -172,7 +180,9 @@ public class BluetoothActivity extends AppCompatActivity{
                             Toast.makeText(getApplicationContext(), device.getName(),
                                     Toast.LENGTH_SHORT).show();
                             btAdapter.stopLeScan(mLeScanCallback);
-                            mBluetoothGatt = device.connectGatt(getApplicationContext(), false, mGattCallback);
+                            if (device.getName().equals("FretX")) {
+                                mBluetoothGatt = device.connectGatt(getApplicationContext(), false, mGattCallback);
+                            }
                         }
                     });
                 }
