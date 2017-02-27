@@ -8,22 +8,18 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-
-import rocks.fretx.audioprocessing.*;
 
 /**
  * Created by AsmodeusStudio on 29/12/2015.
  */
 public class BluetoothClass {
-
-    public static String tag = "debug";
-    public static BluetoothSocket mmSocket;
-    static final int SUCCESS_CONNECT = 0;
-    static final int MESSAGE_READ = 1;
-    static final int ARDUINO = 2;
-    static ConnectedThread connectedThread = null;
-    static Handler.Callback callback = new Handler.Callback() {
+    private static String tag = "debug";
+    private static BluetoothSocket mmSocket;
+    private static final int SUCCESS_CONNECT = 0;
+    private static final int MESSAGE_READ = 1;
+    private static final int ARDUINO = 2;
+    private static ConnectedThread connectedThread = null;
+    private static Handler.Callback callback = new Handler.Callback() {
         public boolean handleMessage(Message msg) {
             Log.i("debug", "in handler");
             switch (msg.what) {
@@ -31,7 +27,7 @@ public class BluetoothClass {
                     BluetoothClass.connectedThread = new BluetoothClass.ConnectedThread((BluetoothSocket) msg.obj);
                     break;
                 case BluetoothClass.ARDUINO:
-                    if (Config.bBlueToothActive == true){
+                    if (Config.bBlueToothActive){
                         BluetoothClass.connectedThread.write((byte[])msg.obj);
                     }
                     Log.d("BT",msg.toString());
@@ -40,14 +36,15 @@ public class BluetoothClass {
             return false;
         }
     };
-    public static Handler mHandler = new Handler(callback);
 
-    static public class ConnectedThread extends Thread {
+    private static Handler mHandler = new Handler(callback);
+
+    static private class ConnectedThread extends Thread {
         //private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
-        public ConnectedThread(BluetoothSocket socket) {
+        private ConnectedThread(BluetoothSocket socket) {
             //mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -82,7 +79,7 @@ public class BluetoothClass {
         }
 
         /* Call this from the main activity to send data to the remote device */
-        public void write(byte[] bytes) {
+        private void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
             } catch (IOException e) {
@@ -123,15 +120,10 @@ public class BluetoothClass {
         connectThread.run();
     }
 
-    public static void lightsOff(){
-        sendToFretX(Util.str2array("{0}"));
-    }
-
-    /////////////////////////////////BlueToothConnection/////////////////////////
     static private class ConnectThread extends Thread {
         byte[] array;
 
-        public ConnectThread(byte[] tmp) {
+        private ConnectThread(byte[] tmp) {
             array = tmp;
         }
 
