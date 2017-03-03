@@ -182,6 +182,14 @@ public class BluetoothActivity extends AppCompatActivity{
                             btAdapter.stopLeScan(mLeScanCallback);
                             if (device.getName().equals("FretX")) {
                                 mBluetoothGatt = device.connectGatt(getApplicationContext(), false, mGattCallback);
+
+                                SharedPreferences sp = getSharedPreferences("default", Context.MODE_PRIVATE);
+                                Set<String> macs = sp.getStringSet("MACS", null);
+                                if (macs == null)
+                                    macs = new HashSet<>();
+                                SharedPreferences.Editor editor = sp.edit();
+                                macs.add(device.getAddress());
+                                editor.putStringSet("MACS", macs);
                             }
                         }
                     });
