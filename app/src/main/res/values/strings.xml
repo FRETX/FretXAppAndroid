@@ -55,6 +55,7 @@
     <string name="refreshing">Refreshing</string>
     <string name="please_wait">Please wait</string>
 
+    <string name="microphone_used_background">Cannot access microphone, please close any background apps that might be recording audio.</string>
 
     <string name="loopA">A</string>
     <string name="loopB">B</string>
