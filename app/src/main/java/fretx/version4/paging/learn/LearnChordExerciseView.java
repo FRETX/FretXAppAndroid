@@ -11,6 +11,7 @@ package fretx.version4.paging.learn;
 		import android.widget.FrameLayout;
 		import android.widget.RelativeLayout;
 		import android.widget.TextView;
+		import android.widget.Toast;
 
 		import java.io.IOException;
 		import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class LearnChordExerciseView extends RelativeLayout {
 
 	protected int chordsIndex = 0;
 
+	private boolean backgroundMicWarningShown = false;
+
 	private final long TIMER_TICK = 20;
 	private final long ONSET_IGNORE_DURATION = 0; //in miliseconds
 	private final long CHORD_LISTEN_DURATION = 500; //in miliseconds
@@ -68,6 +71,14 @@ public class LearnChordExerciseView extends RelativeLayout {
 				if(mActivity == null)return;
 				if(mActivity.audio == null) return;
 				if(!mActivity.audio.isProcessing() || !mActivity.audio.isInitialized()) return;
+				if(!mActivity.audio.isBufferAvailable()){
+					Log.d("isBufferAvailable","false");
+					if(!backgroundMicWarningShown){
+						Toast.makeText(getContext(), getResources().getString(R.string.microphone_used_background), Toast.LENGTH_LONG).show();
+						backgroundMicWarningShown = true;
+					}
+					return;
+				}
 				if(mActivity.audio.getVolume() < VOLUME_THRESHOLD) {
 					this.cancel();
 					listening = false;

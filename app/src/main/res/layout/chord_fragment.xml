@@ -61,7 +61,9 @@ android:background="@color/background">
     <fretx.version4.FretboardView
         android:id="@+id/fretboardView"
         android:layout_width="match_parent"
-        android:layout_height="240dp" />
+        android:layout_height="240dp"
+        android:layout_margin="8dp"
+        />
 </LinearLayout>
 
 
