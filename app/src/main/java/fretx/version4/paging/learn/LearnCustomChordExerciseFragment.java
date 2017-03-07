@@ -162,8 +162,8 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 
 		TextView initialRoot = (TextView) rootNoteView.getChildAt(0);
 		TextView initialType = (TextView) chordTypeView.getChildAt(0);
-		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.primaryText));
-		initialType.setTextColor(mActivity.getResources().getColor(R.color.primaryText));
+		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
+		initialType.setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
 		updateCurrentChord(initialRoot.getText().toString(),initialType.getText().toString());
 	}
 
