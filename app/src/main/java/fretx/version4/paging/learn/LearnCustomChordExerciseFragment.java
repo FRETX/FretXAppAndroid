@@ -30,7 +30,6 @@ import rocks.fretx.audioprocessing.MusicUtils;
  */
 
 public class LearnCustomChordExerciseFragment extends Fragment {
-
 	Chord currentChord;
 	MainActivity mActivity;
 	FrameLayout rootView;

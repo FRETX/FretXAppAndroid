@@ -2,15 +2,18 @@ package fretx.version4.paging.learn;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,29 +32,26 @@ import rocks.fretx.audioprocessing.Chord;
 
 public class LearnCustomChordExerciseDialog extends DialogFragment
 {
-    private Dialog dialog;
-    ArrayList<Sequence> sequences;
-    SpinnerSequenceArrayAdapter spinnerAdapter;
-    ListViewSequenceArrayAdapter listViewAdapter;
-    int unsavedSequencePosition = -1;
-    private final String DEFAULT_NAME = "New Exercise";
-    private final String SEQUENCE_FILENAME = "sequences";
+    public static final String DEFAULT_SEQUENCE_NAME = "New Exercise";
+    private SpinnerSequenceArrayAdapter spinnerAdapter;
+    private ListViewSequenceArrayAdapter listViewAdapter;
+    private int unsavedCurrentSequencePosition = -1;
 
     public static LearnCustomChordExerciseDialog newInstance(ArrayList<Chord> chords) {
         LearnCustomChordExerciseDialog dialog = new LearnCustomChordExerciseDialog();
         Bundle args = new Bundle();
-        //args.putInt("title", title); MODIFY CHORDS TO BE PARCELABLE
         dialog.setArguments(args);
         return dialog;
     }
 
-
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        dialog = new Dialog(getContext());
+        Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.chord_custom_sequence_dialog);
 
-        sequences = new ArrayList<>();
+        //retrieved data from internal memory
+        ArrayList<Sequence> sequences = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ArrayList<Chord> chords = new ArrayList<>();
             chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
@@ -59,13 +59,18 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
             chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
             chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            sequences.add(new Sequence("sequence" + i, chords));
+            sequences.add(new Sequence("sequence " + i, chords));
         }
 
-        //if (chordSequence.size() > 0) {
-        //    sequences.add(0, new Sequence(DEFAULT_NAME, chordSequence));
-        //    unsavedSequencePosition = 0;
-        //}
+        //current sequence
+        ArrayList<Chord> chords = new ArrayList<>();
+        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
+        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
+        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
+        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
+        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
+        sequences.add(0, new Sequence(DEFAULT_SEQUENCE_NAME, chords));
+        unsavedCurrentSequencePosition = 0;
 
         final Spinner spinner = (Spinner) dialog.findViewById(R.id.sequence_selection);
         spinnerAdapter = new SpinnerSequenceArrayAdapter(getActivity(), sequences);
@@ -80,9 +85,8 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Sequence selected = (Sequence)spinner.getSelectedItem();
-                listViewAdapter.setSpinnerPosition(spinner.getSelectedItemPosition());
                 listViewAdapter.clear();
-                listViewAdapter.addAll(selected.getChords());
+                listViewAdapter.addAll(new ArrayList<>(selected.getChords()));
                 listViewAdapter.notifyDataSetChanged();
             }
             @Override
@@ -98,10 +102,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             public void onClick(View v) {
                 Sequence toDelete = (Sequence)spinner.getSelectedItem();
                 if (toDelete != null) {
-                    String name = toDelete.getName();
-                    Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
-                    spinnerAdapter.remove(toDelete);
-                    spinnerAdapter.notifyDataSetChanged();
+                    deleteConfirmationAlertDialogBuilder(spinner).show();
                 }
             }
         });
@@ -111,6 +112,14 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Save", Toast.LENGTH_SHORT).show();
+                Sequence toSave = (Sequence)spinner.getSelectedItem();
+                if (toSave != null) {
+                    if (spinner.getSelectedItemPosition() == unsavedCurrentSequencePosition) {
+                        NameSelectionAlertDialogBuilder(spinner).show();
+                    } else {
+                        toSave.setChords(listViewAdapter.getModifiedChords());
+                    }
+                }
             }
         });
 
@@ -125,13 +134,57 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         return dialog;
     }
 
-    public class SpinnerSequenceArrayAdapter extends ArrayAdapter<Sequence> {
-        private final Context context;
+    private AlertDialog deleteConfirmationAlertDialogBuilder(final Spinner spinner) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Are you sure you want to delete " + ((Sequence)spinner.getSelectedItem()).getName())
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        if (spinner.getSelectedItemPosition() == unsavedCurrentSequencePosition) {
+                            unsavedCurrentSequencePosition = -1;
+                        }
+                        String name = ((Sequence)spinner.getSelectedItem()).getName();
+                        Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
+                        spinnerAdapter.remove((Sequence)spinner.getSelectedItem());
+                        spinnerAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        return builder.create();
+    }
+
+    private Dialog NameSelectionAlertDialogBuilder(final Spinner spinner) {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.chord_custom_sequence_name_dialog);
+
+        final EditText nameEditText = (EditText) dialog.findViewById(R.id.name);
+        final Button save = (Button) dialog.findViewById(R.id.save);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = nameEditText.getText().toString();
+                if (name.equals("")) {
+                    nameEditText.setError("Specify a name");
+                } else {
+                    Sequence toSave = (Sequence)spinner.getSelectedItem();
+                    toSave.setName(nameEditText.getText().toString());
+                    unsavedCurrentSequencePosition = -1;
+                    dialog.dismiss();
+                }
+            }
+        });
+        return dialog;
+    }
+
+    private class SpinnerSequenceArrayAdapter extends ArrayAdapter<Sequence> {
         private final ArrayList<Sequence> values;
 
         SpinnerSequenceArrayAdapter(Context context, ArrayList<Sequence> values) {
             super(context, android.R.layout.simple_spinner_item, values);
-            this.context = context;
             this.values = values;
         }
 
@@ -152,19 +205,14 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         }
     }
 
-    public class ListViewSequenceArrayAdapter extends ArrayAdapter<Chord> {
+    private class ListViewSequenceArrayAdapter extends ArrayAdapter<Chord> {
         private final Context context;
-        private final ArrayList<Chord> values;
-        private int spinnerPosition;
+        private final ArrayList<Chord> chords;
 
-        ListViewSequenceArrayAdapter(Context context, ArrayList<Chord> values) {
-            super(context, R.layout.chord_custom_sequence_dialog_item, values);
+        ListViewSequenceArrayAdapter(Context context, ArrayList<Chord> chords) {
+            super(context, R.layout.chord_custom_sequence_dialog_item, chords);
             this.context = context;
-            this.values = values;
-        }
-
-        void setSpinnerPosition(int position) {
-            spinnerPosition = position;
+            this.chords = chords;
         }
 
         @Override
@@ -174,19 +222,21 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.chord_custom_sequence_dialog_item, parent, false);
             TextView textViewName = (TextView) rowView.findViewById(R.id.chordNameTextview);
-            textViewName.setText(values.get(position).toString());
+            textViewName.setText(chords.get(position).toString());
             ImageView image = (ImageView) rowView.findViewById(R.id.deleteImageView);
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, "Click on item " + position, Toast.LENGTH_SHORT).show();
-                    sequences.get(spinnerPosition).removeChord(position);
-                    listViewAdapter.clear();
-                    listViewAdapter.addAll(sequences.get(spinnerPosition).getChords());
-                    listViewAdapter.notifyDataSetChanged();
+                    chords.remove(position);
+                    notifyDataSetChanged();
                 }
             });
             return rowView;
+        }
+
+        ArrayList<Chord> getModifiedChords() {
+            return chords;
         }
     }
 
@@ -207,8 +257,13 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             return chords;
         }
 
-        void removeChord(int position) {
-            chords.remove(position);
+        public void setChords (ArrayList<Chord> chords) {
+            this.chords = new ArrayList<>(chords);
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
+
 }
