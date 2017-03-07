@@ -25,10 +25,6 @@ import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-/**
- * Created by Misho on 2/4/2016.
- */
-
 public class ChordFragment extends Fragment
 {
 	Chord currentChord;
@@ -47,50 +43,6 @@ public class ChordFragment extends Fragment
         mActivity = (MainActivity) getActivity();
 
         rootView = inflater.inflate(R.layout.chord_fragment, container, false);
-
-//        vvMain = (ObservableVideoView)rootView.findViewById(R.id.vvMain);
-
-//        imgBack = (ImageView)rootView.findViewById(R.id.imgBackground);
-
-//	    imgBack.setImageResource(imageBackgroundIDs[0]);
-
-        // input data file
-//        videoUri[0] = Uri.parse("android.resource://" + mActivity.getPackageName() + "/" + R.raw.cmajor);
-//        videoUri[1] = Uri.parse("android.resource://" + mActivity.getPackageName() + "/" + R.raw.dmajor);
-//        videoUri[2] = Uri.parse("android.resource://" + mActivity.getPackageName() + "/" + R.raw.emajor);
-//        videoUri[3] = Uri.parse("android.resource://" + mActivity.getPackageName() + "/" + R.raw.fmajor);
-//        videoUri[4] = Uri.parse("android.resource://" + mActivity.getPackageName() + "/" + R.raw.gmajor);
-//        videoUri[5] = Uri.parse("android.resource://" + mActivity.getPackageName() + "/" + R.raw.amajor);
-//        videoUri[6] = Uri.parse("android.resource://" + mActivity.getPackageName() + "/" + R.raw.bmajor);
-
-
-        // input text file
-
-//        byte[] array1 = data2array(R.raw.cmajortxt);
-//        byte[] array2 = data2array(R.raw.dmajortxt);
-//        byte[] array3 = data2array(R.raw.emajortxt);
-//        byte[] array4 = data2array(R.raw.fmajortxt);
-//        byte[] array5 = data2array(R.raw.gmajortxt);
-//        byte[] array6 = data2array(R.raw.amajortxt);
-//        byte[] array7 = data2array(R.raw.bmajortxt);
-
-//        musicArray.add(array1);
-//        musicArray.add(array2);
-//        musicArray.add(array3);
-//        musicArray.add(array4);
-//        musicArray.add(array5);
-//        musicArray.add(array6);
-//        musicArray.add(array7);
-
-        // init gallery
-//        Gallery gallery = (Gallery) rootView.findViewById(R.id.gallery1);
-//        gallery.setAdapter(new ImageAdapter(mActivity));
-//        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//                Toast.makeText(mActivity.getBaseContext(), "pic" + (position + 1) + " selected", Toast.LENGTH_SHORT).show();
-//                playChord(position);
-//            }
-//        });
         return  rootView;
     }
 	@Override
@@ -101,8 +53,6 @@ public class ChordFragment extends Fragment
 		chordFingerings = MusicUtils.parseChordDb();
 
 		BluetoothClass.sendToFretX(Util.str2array("{0}"));
-//		ConnectThread connectThread = new ConnectThread(Util.str2array("{0}"));
-//		connectThread.run();
 
 		String[] rootNotes = {"C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"};
 		String [] chordTypes = {"maj","m","maj7","m7","sus2","sus4","dim","dim7","aug",};
@@ -188,9 +138,6 @@ public class ChordFragment extends Fragment
 	public void onDestroy() {
 		super.onDestroy();
 		if(mActivity == null || mActivity.audio == null) return;
-//		mActivity.audio.disablePitchDetector();
-//		mActivity.audio.disableNoteDetector();
-//		mActivity.audio.disableChordDetector();
 	}
 
 	private void updateCurrentChord(String root , String type){

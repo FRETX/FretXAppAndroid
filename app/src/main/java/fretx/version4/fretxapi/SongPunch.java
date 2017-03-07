@@ -1,11 +1,5 @@
 package fretx.version4.fretxapi;
 
-import rocks.fretx.audioprocessing.Chord;
-
-/**
- * Created by onurb_000 on 14/12/16.
- */
-
 public class SongPunch {
 	public int timeMs;
 	public String root;
