@@ -4,18 +4,22 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +48,11 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 	HashMap<String,FingerPositions> chordFingerings;
 	Button addButton, addedButton, startButton;
 	ArrayList<Chord> chordSequence = new ArrayList<>();
-    ChordArrayAdapter mobileArrayAdapter = null;
+    ArrayList<Sequence> sequences;
+    SpinnerSequenceArrayAdapter spinnerAdapter;
+    ListViewSequenceArrayAdapter listViewAdapter;
+
+    private final String SEQUENCE_FILENAME = "sequences";
 
 	public LearnCustomChordExerciseFragment(){}
 
@@ -52,6 +60,18 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
 		rootView = (FrameLayout) inflater.inflate(R.layout.chord_custom_sequence_layout, container, false);
+
+        sequences = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            ArrayList<Chord> chords = new ArrayList<>();
+            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
+            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
+            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
+            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
+            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
+            sequences.add(new Sequence("sequence" + i, chords));
+        }
+
 		return  rootView;
 	}
 
@@ -68,15 +88,8 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 		showTutorial();
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		//if(mActivity == null || mActivity.audio == null) return;
-	}
-
 	private void updateCurrentChord(String root , String type){
 		currentChord = new Chord(root,type);
-		//if(currentChord==null) return;
 		chordExerciseView.setChord(currentChord);
 	}
 
@@ -234,39 +247,174 @@ public class LearnCustomChordExerciseFragment extends Fragment {
     private Dialog createAddedChordsDialog(ArrayList<Chord> chordSequence) {
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.chord_custom_sequence_dialog);
-        dialog.setTitle("Your sequence:");
 
-        ListView listview = (ListView) dialog.findViewById(R.id.chordSequenceListview);
-        mobileArrayAdapter = new ChordArrayAdapter(getActivity(), chordSequence);
-        listview.setAdapter(mobileArrayAdapter);
+		final Spinner spinner = (Spinner) dialog.findViewById(R.id.sequence_selection);
+		spinnerAdapter = new SpinnerSequenceArrayAdapter(getActivity(), sequences);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(spinnerAdapter);
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.saveButton);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
+        final ListView listview = (ListView) dialog.findViewById(R.id.chords_listview);
+        listViewAdapter = new ListViewSequenceArrayAdapter(getActivity(), chordSequence);
+        listview.setAdapter(listViewAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Sequence selected = (Sequence)spinner.getSelectedItem();
+                listViewAdapter.setSpinnerPosition(spinner.getSelectedItemPosition());
+                listViewAdapter.clear();
+                listViewAdapter.addAll(selected.getChords());
+                listViewAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                listViewAdapter.clear();
+                listViewAdapter.notifyDataSetChanged();
+            }
+        });
+
+        ImageButton deleteSequence = (ImageButton) dialog.findViewById(R.id.delete_button);
+        deleteSequence.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Not implemented yet", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                Sequence toDelete = (Sequence)spinner.getSelectedItem();
+                if (toDelete != null) {
+                    String name = toDelete.getName();
+                    Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
+                    spinnerAdapter.remove(toDelete);
+                    spinnerAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+        Button save = (Button) dialog.findViewById(R.id.save_button);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Save", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button play = (Button) dialog.findViewById(R.id.play_button);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
             }
         });
 
         return dialog;
     }
 
-    public class ChordArrayAdapter extends ArrayAdapter<Chord> {
-        private final Context context;
-        private final ArrayList<Chord> values;
+    /*
+    private HashMap<String, Sequence> getSequencesFromJson(String filename) {
+        File file = new File(getContext().getFilesDir(), filename);
+        if(file.exists()) {
+            StringBuilder sb;
+            //retrieve file as string
+            try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+                sb = new StringBuilder();
+                String line;
+                try {
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line).append("\n");
+                    }
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return new HashMap<>();
+            }
+            String jsonString = sb.toString();
 
-        public ChordArrayAdapter(Context context, ArrayList<Chord> values) {
-            super(context, R.layout.chord_custom_sequence_dialog_item, values);
+            //retrieve a list of sequence
+            try {
+                JSONObject jsonObj = new JSONObject(jsonString);
+                JSONArray jsonSequences = jsonObj.getJSONArray("sequences");
+                HashMap<String, Sequence> sequences = new HashMap<>();
+                for (int i = 0; i < jsonSequences.length(); i++) {
+                    try {
+                        JSONObject jsonSequence = jsonSequences.getJSONObject(i);
+                        String name = jsonSequence.getString("name");
+                        Sequence sequence = new Sequence(name, new ArrayList<Chord>());
+                        JSONArray jsonChords = jsonSequence.getJSONArray("chords");
+                        for (int j = 0; j < jsonChords.length(); j++) {
+                            JSONObject jsonChord = jsonChords.getJSONObject(j);
+                            String root = jsonChord.getString("root");
+                            String type = jsonChord.getString("type");
+                            Chord chord = new Chord(root, type);
+                            sequence.addChord(chord);
+                        }
+                        sequences.put(sequence.getName(), sequence);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return sequences;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return new HashMap<>();
+            }
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    private void setJsonFromSequences(ArrayList<Sequence> sequences) {
+    }
+    */
+
+    public class SpinnerSequenceArrayAdapter extends ArrayAdapter<Sequence> {
+        private final Context context;
+        private final ArrayList<Sequence> values;
+
+        SpinnerSequenceArrayAdapter(Context context, ArrayList<Sequence> values) {
+            super(context, android.R.layout.simple_spinner_item, values);
             this.context = context;
             this.values = values;
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        @NonNull
+        public TextView getView(int position, View convertView, @NonNull ViewGroup parent) {
+            TextView v = (TextView) super.getView(position, convertView, parent);
+            v.setText(values.get(position).getName());
+            return v;
+        }
+
+        @Override
+        @NonNull
+        public TextView getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+            TextView v = (TextView) super.getView(position, convertView, parent);
+            v.setText(values.get(position).getName());
+            return v;
+        }
+    }
+
+    public class ListViewSequenceArrayAdapter extends ArrayAdapter<Chord> {
+        private final Context context;
+        private final ArrayList<Chord> values;
+        private int spinnerPosition;
+
+        ListViewSequenceArrayAdapter(Context context, ArrayList<Chord> values) {
+            super(context, R.layout.chord_custom_sequence_dialog_item, values);
+            this.context = context;
+            this.values = values;
+        }
+
+        void setSpinnerPosition(int position) {
+            spinnerPosition = position;
+        }
+
+        @Override
+        @NonNull
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
             View rowView = inflater.inflate(R.layout.chord_custom_sequence_dialog_item, parent, false);
             TextView textViewName = (TextView) rowView.findViewById(R.id.chordNameTextview);
             textViewName.setText(values.get(position).toString());
@@ -275,13 +423,35 @@ public class LearnCustomChordExerciseFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, "Click on item " + position, Toast.LENGTH_SHORT).show();
-                    chordSequence.remove(position);
-                    mobileArrayAdapter.notifyDataSetChanged();
-                    mobileArrayAdapter.notifyDataSetInvalidated();
+                    sequences.get(spinnerPosition).removeChord(position);
+                    listViewAdapter.clear();
+                    listViewAdapter.addAll(sequences.get(spinnerPosition).getChords());
+                    listViewAdapter.notifyDataSetChanged();
                 }
             });
             return rowView;
         }
     }
-}
 
+    private class Sequence {
+        private String name;
+        private ArrayList<Chord> chords;
+
+        Sequence(String name, ArrayList<Chord> chords) {
+            this.name = name;
+            this.chords = chords;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ArrayList<Chord> getChords() {
+            return chords;
+        }
+
+        void removeChord(int position) {
+            chords.remove(position);
+        }
+    }
+}

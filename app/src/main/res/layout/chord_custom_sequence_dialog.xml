@@ -1,23 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_layout">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_delete"
+            android:id="@+id/delete_button"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sequence_selection"
+            android:layout_toLeftOf="@+id/delete_button"
+            android:gravity="center_vertical|start"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/button_layout">
+
+        <Button
+            android:text="Save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_button"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="Play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/play_button"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/saveButton"
-        android:id="@+id/chordSequenceListview" />
-
-    <Button
-        android:text="Save"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/saveButton"
-        android:background="@color/primary"
-        android:textColor="@color/background"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="15dp" />
+        android:id="@+id/chords_listview"
+        android:layout_above="@+id/button_layout"
+        android:layout_below="@+id/spinner_layout" />
+
 </RelativeLayout>

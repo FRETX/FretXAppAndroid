@@ -57,7 +57,7 @@
         <Button
             android:layout_height="36dp"
             android:id="@+id/addChordButton"
-            android:text="added Chord"
+            android:text="add Chord"
             android:background="@color/primary"
             android:textColor="@color/background"
             android:textSize="20dp"
