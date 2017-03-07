@@ -51,4 +51,5 @@ dependencies {
     compile project(':fretx-audio')
     compile project(':fretx-audio')
     compile project(':fretx-audio')
+    compile project(':fretx-audio')
 }
