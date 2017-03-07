@@ -51,7 +51,8 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         dialog.setContentView(R.layout.chord_custom_sequence_dialog);
 
         //retrieved data from internal memory
-        ArrayList<Sequence> sequences = new ArrayList<>();
+        //ArrayList<Sequence> sequences = LearnCustomChordExerciseJson.load(getContext());
+        final ArrayList<Sequence> sequences = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ArrayList<Chord> chords = new ArrayList<>();
             chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
@@ -61,7 +62,6 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
             sequences.add(new Sequence("sequence " + i, chords));
         }
-
         //current sequence
         ArrayList<Chord> chords = new ArrayList<>();
         chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
@@ -119,6 +119,10 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                     } else {
                         toSave.setChords(listViewAdapter.getModifiedChords());
                     }
+                    //ArrayList<Sequence> sequencesToSave = new ArrayList<>(sequences);
+                    //if (unsavedCurrentSequencePosition != -1)
+                    //    sequencesToSave.remove(unsavedCurrentSequencePosition);
+                    //LearnCustomChordExerciseJson.save(getContext(), sequencesToSave);
                 }
             }
         });
@@ -239,31 +243,4 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             return chords;
         }
     }
-
-    private class Sequence {
-        private String name;
-        private ArrayList<Chord> chords;
-
-        Sequence(String name, ArrayList<Chord> chords) {
-            this.name = name;
-            this.chords = chords;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public ArrayList<Chord> getChords() {
-            return chords;
-        }
-
-        public void setChords (ArrayList<Chord> chords) {
-            this.chords = new ArrayList<>(chords);
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
 }
