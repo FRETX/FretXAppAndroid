@@ -13,6 +13,6 @@ public final class Config {
     public static final String YOUTUBE_API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
     public static boolean bBlueToothActive = false;
     public static MainActivity mActivity = null;
-    public static final String apiBase = "http://player.fretx.rocks/api/v1";
+    public static final String apiBase = "http://fretx.herokuapp.com";
     public static final boolean useOfflinePlayer = false;
 }

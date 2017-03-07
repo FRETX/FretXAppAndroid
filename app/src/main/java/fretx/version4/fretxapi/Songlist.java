@@ -33,7 +33,7 @@ public class Songlist {
     //////////////////////////// INDEXING ///////////////////////////////////
 
     public static void getIndexFromServer() {
-        async_client.get(apiBase + "songs/index.json", new JsonHttpResponseHandler() {
+        async_client.get(apiBase + "/songs/index.json", new JsonHttpResponseHandler() {
             @Override public void onSuccess(int status, Header[] headers, JSONArray data) {
                 index = data;
                 saveIndexToCache();
