@@ -1,25 +1,15 @@
 package fretx.version4.paging.learn;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,11 +38,6 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 	HashMap<String,FingerPositions> chordFingerings;
 	Button addButton, addedButton, startButton;
 	ArrayList<Chord> chordSequence = new ArrayList<>();
-    ArrayList<Sequence> sequences;
-    SpinnerSequenceArrayAdapter spinnerAdapter;
-    ListViewSequenceArrayAdapter listViewAdapter;
-
-    private final String SEQUENCE_FILENAME = "sequences";
 
 	public LearnCustomChordExerciseFragment(){}
 
@@ -60,18 +45,6 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
 		rootView = (FrameLayout) inflater.inflate(R.layout.chord_custom_sequence_layout, container, false);
-
-        sequences = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            ArrayList<Chord> chords = new ArrayList<>();
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            sequences.add(new Sequence("sequence" + i, chords));
-        }
-
 		return  rootView;
 	}
 
@@ -195,14 +168,8 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 		addedButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(chordSequence.size()>0){
-                    createAddedChordsDialog(chordSequence).show();
-				} else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage("Your chord sequence is empty...");
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
+                LearnCustomChordExerciseDialog dialog = LearnCustomChordExerciseDialog.newInstance(chordSequence);
+                dialog.show(getFragmentManager(), "dialog");
 			}
 		});
 
@@ -243,68 +210,6 @@ public class LearnCustomChordExerciseFragment extends Fragment {
         .show();
          */
 	}
-
-    private Dialog createAddedChordsDialog(ArrayList<Chord> chordSequence) {
-        final Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.chord_custom_sequence_dialog);
-
-		final Spinner spinner = (Spinner) dialog.findViewById(R.id.sequence_selection);
-		spinnerAdapter = new SpinnerSequenceArrayAdapter(getActivity(), sequences);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(spinnerAdapter);
-
-        final ListView listview = (ListView) dialog.findViewById(R.id.chords_listview);
-        listViewAdapter = new ListViewSequenceArrayAdapter(getActivity(), chordSequence);
-        listview.setAdapter(listViewAdapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Sequence selected = (Sequence)spinner.getSelectedItem();
-                listViewAdapter.setSpinnerPosition(spinner.getSelectedItemPosition());
-                listViewAdapter.clear();
-                listViewAdapter.addAll(selected.getChords());
-                listViewAdapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                listViewAdapter.clear();
-                listViewAdapter.notifyDataSetChanged();
-            }
-        });
-
-        ImageButton deleteSequence = (ImageButton) dialog.findViewById(R.id.delete_button);
-        deleteSequence.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Sequence toDelete = (Sequence)spinner.getSelectedItem();
-                if (toDelete != null) {
-                    String name = toDelete.getName();
-                    Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
-                    spinnerAdapter.remove(toDelete);
-                    spinnerAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-
-        Button save = (Button) dialog.findViewById(R.id.save_button);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Save", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Button play = (Button) dialog.findViewById(R.id.play_button);
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        return dialog;
-    }
 
     /*
     private HashMap<String, Sequence> getSequencesFromJson(String filename) {
@@ -367,91 +272,4 @@ public class LearnCustomChordExerciseFragment extends Fragment {
     private void setJsonFromSequences(ArrayList<Sequence> sequences) {
     }
     */
-
-    public class SpinnerSequenceArrayAdapter extends ArrayAdapter<Sequence> {
-        private final Context context;
-        private final ArrayList<Sequence> values;
-
-        SpinnerSequenceArrayAdapter(Context context, ArrayList<Sequence> values) {
-            super(context, android.R.layout.simple_spinner_item, values);
-            this.context = context;
-            this.values = values;
-        }
-
-        @Override
-        @NonNull
-        public TextView getView(int position, View convertView, @NonNull ViewGroup parent) {
-            TextView v = (TextView) super.getView(position, convertView, parent);
-            v.setText(values.get(position).getName());
-            return v;
-        }
-
-        @Override
-        @NonNull
-        public TextView getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-            TextView v = (TextView) super.getView(position, convertView, parent);
-            v.setText(values.get(position).getName());
-            return v;
-        }
-    }
-
-    public class ListViewSequenceArrayAdapter extends ArrayAdapter<Chord> {
-        private final Context context;
-        private final ArrayList<Chord> values;
-        private int spinnerPosition;
-
-        ListViewSequenceArrayAdapter(Context context, ArrayList<Chord> values) {
-            super(context, R.layout.chord_custom_sequence_dialog_item, values);
-            this.context = context;
-            this.values = values;
-        }
-
-        void setSpinnerPosition(int position) {
-            spinnerPosition = position;
-        }
-
-        @Override
-        @NonNull
-        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.chord_custom_sequence_dialog_item, parent, false);
-            TextView textViewName = (TextView) rowView.findViewById(R.id.chordNameTextview);
-            textViewName.setText(values.get(position).toString());
-            ImageView image = (ImageView) rowView.findViewById(R.id.deleteImageView);
-            image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, "Click on item " + position, Toast.LENGTH_SHORT).show();
-                    sequences.get(spinnerPosition).removeChord(position);
-                    listViewAdapter.clear();
-                    listViewAdapter.addAll(sequences.get(spinnerPosition).getChords());
-                    listViewAdapter.notifyDataSetChanged();
-                }
-            });
-            return rowView;
-        }
-    }
-
-    private class Sequence {
-        private String name;
-        private ArrayList<Chord> chords;
-
-        Sequence(String name, ArrayList<Chord> chords) {
-            this.name = name;
-            this.chords = chords;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public ArrayList<Chord> getChords() {
-            return chords;
-        }
-
-        void removeChord(int position) {
-            chords.remove(position);
-        }
-    }
 }
