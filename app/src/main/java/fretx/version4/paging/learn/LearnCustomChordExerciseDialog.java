@@ -40,6 +40,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
     public static LearnCustomChordExerciseDialog newInstance(ArrayList<Chord> chords) {
         LearnCustomChordExerciseDialog dialog = new LearnCustomChordExerciseDialog();
         Bundle args = new Bundle();
+        args.putSerializable("chords", chords);
         dialog.setArguments(args);
         return dialog;
     }
@@ -51,17 +52,8 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         dialog.setContentView(R.layout.chord_custom_sequence_dialog);
 
         //retrieved data from internal memory
-        //ArrayList<Sequence> sequences = LearnCustomChordExerciseJson.load(getContext());
-        final ArrayList<Sequence> sequences = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            ArrayList<Chord> chords = new ArrayList<>();
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            chords.add(new Chord(Chord.ALL_ROOT_NOTES[i], "maj"));
-            sequences.add(new Sequence("sequence " + i, chords));
-        }
+        final ArrayList<Sequence> sequences = LearnCustomChordExerciseJson.load(getContext());
+
         //current sequence
         ArrayList<Chord> chords = new ArrayList<>();
         chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
@@ -71,6 +63,10 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
         sequences.add(0, new Sequence(DEFAULT_SEQUENCE_NAME, chords));
         unsavedCurrentSequencePosition = 0;
+        /*
+         ArrayList<Chord> chords = savedInstanceState.getSerializable("chords");
+         sequences.add(0, new Sequence(DEFAULT_SEQUENCE_NAME, chords));
+         */
 
         final Spinner spinner = (Spinner) dialog.findViewById(R.id.sequence_selection);
         spinnerAdapter = new SpinnerSequenceArrayAdapter(getActivity(), sequences);
@@ -119,10 +115,12 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                     } else {
                         toSave.setChords(listViewAdapter.getModifiedChords());
                     }
-                    //ArrayList<Sequence> sequencesToSave = new ArrayList<>(sequences);
-                    //if (unsavedCurrentSequencePosition != -1)
-                    //    sequencesToSave.remove(unsavedCurrentSequencePosition);
-                    //LearnCustomChordExerciseJson.save(getContext(), sequencesToSave);
+
+                    ArrayList<Sequence> sequencesToSave = new ArrayList<>(sequences);
+                    if (unsavedCurrentSequencePosition != -1) {
+                        sequencesToSave.remove(unsavedCurrentSequencePosition);
+                    }
+                    LearnCustomChordExerciseJson.save(getContext(), sequencesToSave);
                 }
             }
         });
