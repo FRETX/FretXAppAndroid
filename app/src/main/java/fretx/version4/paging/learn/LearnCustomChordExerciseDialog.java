@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;
 
@@ -36,11 +39,15 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
     private SpinnerSequenceArrayAdapter spinnerAdapter;
     private ListViewSequenceArrayAdapter listViewAdapter;
     private int unsavedCurrentSequencePosition = -1;
+    private ArrayList<Sequence> sequences;
 
     public static LearnCustomChordExerciseDialog newInstance(ArrayList<Chord> chords) {
         LearnCustomChordExerciseDialog dialog = new LearnCustomChordExerciseDialog();
         Bundle args = new Bundle();
+        //todo make Chord class serializable
+        Log.v("SERIAL", chords.size() + "chord(s) to be serialized");
         args.putSerializable("chords", chords);
+        args.putString("random", "blabla");
         dialog.setArguments(args);
         return dialog;
     }
@@ -51,22 +58,15 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.chord_custom_sequence_dialog);
 
-        //retrieved data from internal memory
-        final ArrayList<Sequence> sequences = LearnCustomChordExerciseJson.load(getContext());
+        sequences = LearnCustomChordExerciseJson.load(getContext());
 
-        //current sequence
-        ArrayList<Chord> chords = new ArrayList<>();
-        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
-        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
-        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
-        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
-        chords.add(new Chord(Chord.ALL_ROOT_NOTES[7], "maj"));
-        sequences.add(0, new Sequence(DEFAULT_SEQUENCE_NAME, chords));
-        unsavedCurrentSequencePosition = 0;
-        /*
-         ArrayList<Chord> chords = savedInstanceState.getSerializable("chords");
-         sequences.add(0, new Sequence(DEFAULT_SEQUENCE_NAME, chords));
-         */
+        String random = getArguments().getString("random");
+        Log.v("SERIAL", "retrieved string: " + random);
+        ArrayList<Chord> chords = (ArrayList<Chord>) getArguments().getSerializable("chords");
+        if (chords.size() != 0) {
+            sequences.add(0, new Sequence(DEFAULT_SEQUENCE_NAME, chords));
+            unsavedCurrentSequencePosition = 0;
+        }
 
         final Spinner spinner = (Spinner) dialog.findViewById(R.id.sequence_selection);
         spinnerAdapter = new SpinnerSequenceArrayAdapter(getActivity(), sequences);
@@ -108,19 +108,13 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Save", Toast.LENGTH_SHORT).show();
-                Sequence toSave = (Sequence)spinner.getSelectedItem();
-                if (toSave != null) {
+                if (spinner.getSelectedItem() != null) {
+                    //saving the new exercise
                     if (spinner.getSelectedItemPosition() == unsavedCurrentSequencePosition) {
                         NameSelectionAlertDialogBuilder(spinner).show();
                     } else {
-                        toSave.setChords(listViewAdapter.getModifiedChords());
+                        saveSequences();
                     }
-
-                    ArrayList<Sequence> sequencesToSave = new ArrayList<>(sequences);
-                    if (unsavedCurrentSequencePosition != -1) {
-                        sequencesToSave.remove(unsavedCurrentSequencePosition);
-                    }
-                    LearnCustomChordExerciseJson.save(getContext(), sequencesToSave);
                 }
             }
         });
@@ -136,6 +130,15 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         return dialog;
     }
 
+    private void saveSequences() {
+        Log.v("ECHEC", "In save sequences");
+        ArrayList<Sequence> sequencesToSave = new ArrayList<>(sequences);
+        if (unsavedCurrentSequencePosition != -1) {
+            sequencesToSave.remove(unsavedCurrentSequencePosition);
+        }
+        LearnCustomChordExerciseJson.save(getContext(), sequencesToSave);
+    }
+
     private AlertDialog deleteConfirmationAlertDialogBuilder(final Spinner spinner) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Are you sure you want to delete " + ((Sequence)spinner.getSelectedItem()).getName())
@@ -149,6 +152,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                         Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
                         spinnerAdapter.remove((Sequence)spinner.getSelectedItem());
                         spinnerAdapter.notifyDataSetChanged();
+                        saveSequences();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -172,9 +176,11 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                 if (name.equals("")) {
                     nameEditText.setError("Specify a name");
                 } else {
-                    Sequence toSave = (Sequence)spinner.getSelectedItem();
-                    toSave.setName(nameEditText.getText().toString());
+                    sequences.get(spinner.getSelectedItemPosition())
+                            .setName(nameEditText.getText().toString());
                     unsavedCurrentSequencePosition = -1;
+                    spinnerAdapter.notifyDataSetChanged();
+                    saveSequences();
                     dialog.dismiss();
                 }
             }
