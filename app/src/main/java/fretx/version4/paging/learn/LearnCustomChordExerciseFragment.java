@@ -1,9 +1,11 @@
 package fretx.version4.paging.learn;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,16 +31,27 @@ import rocks.fretx.audioprocessing.MusicUtils;
  * Created by onurb_000 on 15/12/16.
  */
 
-public class LearnCustomChordExerciseFragment extends Fragment {
+public class LearnCustomChordExerciseFragment extends Fragment
+implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	Chord currentChord;
 	MainActivity mActivity;
 	FrameLayout rootView;
 	LearnCustomChordExerciseView chordExerciseView;
 	HashMap<String,FingerPositions> chordFingerings;
 	Button addButton, addedButton, startButton;
-	ArrayList<Chord> chordSequence = new ArrayList<>();
+	ArrayList<Sequence> sequences;
+	int currentSequenceIndex;
 
 	public LearnCustomChordExerciseFragment(){}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		sequences = LearnCustomChordExerciseJson.load(getContext());
+		Log.v("LCCE", "Loaded " + sequences.size() + " sequence(s)");
+		sequences.add(0, new Sequence(null, new ArrayList<Chord>()));
+		currentSequenceIndex = 0;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -155,11 +168,14 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 	}
 
 	private void setOnClickListeners(){
+		final LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener listener = this;
+
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(currentChord == null) return;
-				chordSequence.add(currentChord);
+				if(currentChord == null)
+					return;
+				sequences.get(currentSequenceIndex).addChord(currentChord);
 				Toast.makeText(getContext(), "Chord added", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -167,7 +183,9 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 		addedButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-                LearnCustomChordExerciseDialog dialog = LearnCustomChordExerciseDialog.newInstance(chordSequence);
+                LearnCustomChordExerciseDialog dialog =
+						LearnCustomChordExerciseDialog.newInstance(listener, sequences,
+								currentSequenceIndex);
                 dialog.show(getFragmentManager(), "dialog");
 			}
 		});
@@ -182,12 +200,13 @@ public class LearnCustomChordExerciseFragment extends Fragment {
 
 	private void startExercise(){
 		//TODO: launch fragment
-		if(chordSequence.size()<1) return;
+		ArrayList<Chord> chords = sequences.get(currentSequenceIndex).getChords();
+		if(chords.size()<1) return;
 		LearnChordExerciseFragment fragmentChordExercise = new LearnChordExerciseFragment();
 		FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		fragmentTransaction.add(R.id.learn_container, fragmentChordExercise, "fragmentCustomChordExercise");
-		fragmentChordExercise.setChords(chordSequence);
+		fragmentChordExercise.setChords(chords);
 		fragmentTransaction.addToBackStack("customChordMakerToCustomChordExercise");
 		fragmentTransaction.commit();
 		fragmentManager.executePendingTransactions();
@@ -210,65 +229,14 @@ public class LearnCustomChordExerciseFragment extends Fragment {
          */
 	}
 
-    /*
-    private HashMap<String, Sequence> getSequencesFromJson(String filename) {
-        File file = new File(getContext().getFilesDir(), filename);
-        if(file.exists()) {
-            StringBuilder sb;
-            //retrieve file as string
-            try {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
-                sb = new StringBuilder();
-                String line;
-                try {
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line).append("\n");
-                    }
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return new HashMap<>();
-            }
-            String jsonString = sb.toString();
-
-            //retrieve a list of sequence
-            try {
-                JSONObject jsonObj = new JSONObject(jsonString);
-                JSONArray jsonSequences = jsonObj.getJSONArray("sequences");
-                HashMap<String, Sequence> sequences = new HashMap<>();
-                for (int i = 0; i < jsonSequences.length(); i++) {
-                    try {
-                        JSONObject jsonSequence = jsonSequences.getJSONObject(i);
-                        String name = jsonSequence.getString("name");
-                        Sequence sequence = new Sequence(name, new ArrayList<Chord>());
-                        JSONArray jsonChords = jsonSequence.getJSONArray("chords");
-                        for (int j = 0; j < jsonChords.length(); j++) {
-                            JSONObject jsonChord = jsonChords.getJSONObject(j);
-                            String root = jsonChord.getString("root");
-                            String type = jsonChord.getString("type");
-                            Chord chord = new Chord(root, type);
-                            sequence.addChord(chord);
-                        }
-                        sequences.put(sequence.getName(), sequence);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return sequences;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return new HashMap<>();
-            }
+    public void onUpdate(ArrayList<Sequence> sequences, int currentSequenceIndex){
+        this.sequences = sequences;
+        if (this.sequences.size() == 0)
+        {
+            sequences.add(new Sequence(null, new ArrayList<Chord>()));
+            this.currentSequenceIndex = 0;
         } else {
-            return new HashMap<>();
+            this.currentSequenceIndex = currentSequenceIndex;
         }
-    }
-
-    private void setJsonFromSequences(ArrayList<Sequence> sequences) {
-    }
-    */
+	}
 }

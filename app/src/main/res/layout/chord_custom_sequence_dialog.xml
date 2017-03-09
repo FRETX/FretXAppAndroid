@@ -28,12 +28,19 @@
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
+    <Button
+        android:text="Play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/play_button"
+        android:layout_alignParentBottom="true" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/button_layout">
+        android:id="@+id/button_layout"
+        android:layout_above="@+id/play_button">
 
         <Button
             android:text="Save"
@@ -43,11 +50,12 @@
             android:layout_weight="1" />
 
         <Button
-            android:text="Play"
+            android:text="Save As"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/play_button"
+            android:id="@+id/saveas_button"
             android:layout_weight="1" />
+
     </LinearLayout>
 
     <ListView

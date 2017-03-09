@@ -1,5 +1,7 @@
 package fretx.version4.paging.learn;
 
+import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 
 import rocks.fretx.audioprocessing.Chord;
@@ -13,7 +15,7 @@ class Sequence {
     private String name;
     private ArrayList<Chord> chords;
 
-    Sequence(String name, ArrayList<Chord> chords) {
+    Sequence(@Nullable String name, ArrayList<Chord> chords) {
         this.name = name;
         this.chords = chords;
     }
@@ -27,10 +29,14 @@ class Sequence {
     }
 
     public void setChords (ArrayList<Chord> chords) {
-        this.chords = new ArrayList<>(chords);
+        this.chords = chords;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void addChord(Chord chord) {
+        chords.add(chord);
     }
 }
