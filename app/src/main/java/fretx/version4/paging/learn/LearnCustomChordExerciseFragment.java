@@ -1,11 +1,11 @@
 package fretx.version4.paging.learn;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +48,6 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sequences = LearnCustomChordExerciseJson.load(getContext());
-		Log.v("LCCE", "Loaded " + sequences.size() + " sequence(s)");
 		sequences.add(0, new Sequence(null, new ArrayList<Chord>()));
 		currentSequenceIndex = 0;
 	}
@@ -90,80 +89,63 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 		setOnClickListeners();
 	}
 
+	private TextView populateChordPickerLine(String[] contents, @IdRes int idRes,
+										 View.OnClickListener onClickListener) {
+		LinearLayout linearLayout = (LinearLayout) mActivity.findViewById(idRes);
+		TextView tmpTextView;
+		for (String str : contents) {
+			tmpTextView = new TextView(mActivity);
+			tmpTextView.setText(str);
+			tmpTextView.setTextSize(26);
+			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+			linearLayout.addView(tmpTextView);
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tmpTextView.getLayoutParams();
+			params.setMargins(30, 0, 30, 0);
+			tmpTextView.setLayoutParams(params);
+			tmpTextView.setBackgroundColor(getResources().getColor(R.color.primary));
+			tmpTextView.setTextColor(getResources().getColor(R.color.tertiaryText));
+			tmpTextView.setOnClickListener(onClickListener);
+		}
+		TextView initial = (TextView) linearLayout.getChildAt(0);
+		initial.setBackgroundResource(R.drawable.picker_text_background);
+		initial.setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
+		return initial;
+	}
+
 	private void populateChordPicker(){
 		String[] rootNotes = {"C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"};
 		String [] chordTypes = {"maj","m","5","maj7","m7","sus2","sus4","dim","dim7","aug",};
 
-		LinearLayout rootNoteView = (LinearLayout) mActivity.findViewById(R.id.chordPickerRootNoteView);
-		LinearLayout chordTypeView = (LinearLayout) mActivity.findViewById(R.id.chordPickerTypeView);
-
-		//TODO: do proper, unrepeated code dammit
-		TextView tmpTextView;
-		for (String str :rootNotes) {
-			tmpTextView = new TextView(mActivity);
-			tmpTextView.setText(str);
-			tmpTextView.setTextSize(26);
-			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-			rootNoteView.addView(tmpTextView);
-			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tmpTextView.getLayoutParams();
-			params.setMargins(30, 0, 30, 0);
-			tmpTextView.setLayoutParams(params);
-			tmpTextView.setBackgroundColor(getResources().getColor(R.color.primary));
-			tmpTextView.setTextColor(getResources().getColor(R.color.tertiaryText));
-			tmpTextView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.chordPickerRootNoteView);
-					for (int i = 0; i < layout.getChildCount(); i++) {
-						View v = layout.getChildAt(i);
-						if (v instanceof TextView) {
-//							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+		TextView initialRoot = populateChordPickerLine(rootNotes, R.id.chordPickerRootNoteView,
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.chordPickerRootNoteView);
+						for (int i = 0; i < layout.getChildCount(); i++) {
+							View v = layout.getChildAt(i);
+							v.setBackgroundResource(0);
+							v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
 						}
-						((TextView) v).setBackgroundResource(0);
-						v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
+						view.setBackgroundResource(R.drawable.picker_text_background);
+						updateCurrentChord(((TextView) view).getText().toString(),currentChord.getType());
 					}
-//					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
-					((TextView) view).setBackgroundResource(R.drawable.picker_text_background);
-					updateCurrentChord(((TextView) view).getText().toString(),currentChord.getType());
-				}
-			});
-		}
-		tmpTextView = new TextView(chordTypeView.getContext());
-		for (String str : chordTypes) {
-			tmpTextView = new TextView(mActivity);
-			tmpTextView.setText(str);
-			tmpTextView.setTextSize(26);
-			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-			chordTypeView.addView(tmpTextView);
-			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)tmpTextView.getLayoutParams();
-			params.setMargins(30, 0, 30, 0);
-			tmpTextView.setLayoutParams(params);
-			tmpTextView.setBackgroundColor(getResources().getColor(R.color.primary));
-			tmpTextView.setTextColor(getResources().getColor(R.color.tertiaryText));
-			tmpTextView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.chordPickerTypeView);
-					for (int i = 0; i < layout.getChildCount(); i++) {
-						View v = layout.getChildAt(i);
-						if (v instanceof TextView) {
-//							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
+				});
+
+		TextView initialType = populateChordPickerLine(chordTypes, R.id.chordPickerTypeView,
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.chordPickerTypeView);
+						for (int i = 0; i < layout.getChildCount(); i++) {
+							View v = layout.getChildAt(i);
+							v.setBackgroundResource(0);
+							v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
 						}
-						((TextView) v).setBackgroundResource(0);
-						v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
+						view.setBackgroundResource(R.drawable.picker_text_background);
+						updateCurrentChord(currentChord.getRoot(), ((TextView) view).getText().toString());
 					}
-//					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
-					((TextView) view).setBackgroundResource(R.drawable.picker_text_background);
-					updateCurrentChord(currentChord.getRoot(),((TextView) view).getText().toString());
+				});
 
-				}
-			});
-		}
-
-		TextView initialRoot = (TextView) rootNoteView.getChildAt(0);
-		TextView initialType = (TextView) chordTypeView.getChildAt(0);
-		initialRoot.setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
-		initialType.setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
 		updateCurrentChord(initialRoot.getText().toString(),initialType.getText().toString());
 	}
 
