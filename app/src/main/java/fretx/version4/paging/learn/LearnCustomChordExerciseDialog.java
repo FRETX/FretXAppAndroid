@@ -137,7 +137,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                 if (spinner.getSelectedItem() != null) {
                     Toast.makeText(getActivity(), "Save", Toast.LENGTH_SHORT).show();
                     if (sequences.get(currentSequenceIndex).getName() == null) {
-                        NameSelectionAlertDialogBuilder(false).show();
+                        NameSelectionAlertDialogBuilder().show();
                     } else {
                         ArrayList<Sequence> save = LearnCustomChordExerciseJson.load(getContext());
                         Sequence sequence = sequences.get(currentSequenceIndex);
@@ -160,7 +160,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Save As", Toast.LENGTH_SHORT).show();
-                NameSelectionAlertDialogBuilder(true).show();
+                NameSelectionAlertDialogBuilder().show();
             }
         });
 
@@ -174,6 +174,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         });
     }
 
+    @Override
     public void onCancel(DialogInterface dialogInterface){
         Fragment parentFragment = getTargetFragment();
         ((LearnCustomChordExerciseListener) parentFragment).onUpdate(sequences, currentSequenceIndex);
@@ -233,7 +234,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         return builder.create();
     }
 
-    private Dialog NameSelectionAlertDialogBuilder(final boolean saveAs) {
+    private Dialog NameSelectionAlertDialogBuilder() {
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.chord_custom_sequence_name_dialog);
 
@@ -290,6 +291,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         }
     }
 
+    //Todo: recycle views
     private class ListViewSequenceArrayAdapter extends ArrayAdapter<Chord> {
         private final Context context;
 
