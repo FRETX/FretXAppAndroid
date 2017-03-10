@@ -118,8 +118,8 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         });
 
         //delete the selected sequence
-        ImageButton deleteSequence = (ImageButton) dialog.findViewById(R.id.delete_button);
-        deleteSequence.setOnClickListener(new View.OnClickListener() {
+        ImageButton ib = (ImageButton) dialog.findViewById(R.id.delete_button);
+        ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (spinner.getSelectedItem() != null) {
@@ -129,9 +129,24 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             }
         });
 
+        //add a new empty sequence
+        ib = (ImageButton) dialog.findViewById(R.id.new_button);
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Add", Toast.LENGTH_SHORT).show();
+                Sequence sequence = new Sequence(null, new ArrayList<Chord>());
+                spinnerAdapter.add(sequence);
+                listViewAdapter.clear();
+                listViewAdapter.addAll(sequence.getChords());
+                listViewAdapter.notifyDataSetChanged();
+                currentSequenceIndex = sequences.size() - 1;
+            }
+        });
+
         //save modifications made on the selected sequence
-        Button save = (Button) dialog.findViewById(R.id.save_button);
-        save.setOnClickListener(new View.OnClickListener() {
+        Button b = (Button) dialog.findViewById(R.id.save_button);
+        b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (spinner.getSelectedItem() != null) {
@@ -155,8 +170,8 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         });
 
         //save modifications made on the selected sequence under a new name
-        Button saveAs = (Button) dialog.findViewById(R.id.saveas_button);
-        saveAs.setOnClickListener(new View.OnClickListener() {
+        b = (Button) dialog.findViewById(R.id.saveas_button);
+        b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Save As", Toast.LENGTH_SHORT).show();
@@ -165,8 +180,8 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         });
 
         //magic stuff goes here
-        Button play = (Button) dialog.findViewById(R.id.play_button);
-        play.setOnClickListener(new View.OnClickListener() {
+        b = (Button) dialog.findViewById(R.id.play_button);
+        b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
@@ -196,16 +211,12 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         final Sequence sequence = sequences.get(currentSequenceIndex);
         final String name = sequence.getName();
 
-        Log.v("DELETE_BUG", "delete item pos: " + currentSequenceIndex);
-        Log.v("DELETE_BUG", "delete item named: " + name);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Are you sure you want to delete "
                 + (name == null ? DEFAULT_SEQUENCE_NAME : name))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        /*
                         if (name != null) {
                             ArrayList<Sequence> save =
                                     LearnCustomChordExerciseJson.load(getContext());
@@ -217,11 +228,12 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                                 }
                             }
                         }
-                        */
                         spinnerAdapter.remove(sequence);
                         Sequence selected = (Sequence)spinner.getSelectedItem();
                         listViewAdapter.clear();
-                        listViewAdapter.addAll(selected.getChords());
+                        if (selected != null) {
+                            listViewAdapter.addAll(selected.getChords());
+                        }
                         listViewAdapter.notifyDataSetChanged();
                         currentSequenceIndex = spinner.getSelectedItemPosition();
                     }
