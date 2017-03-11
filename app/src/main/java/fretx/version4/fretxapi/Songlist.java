@@ -5,7 +5,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 import com.loopj.android.http.AsyncHttpClient;
@@ -16,6 +21,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import cz.msebera.android.httpclient.Header;
 import fretx.version4.Config;
+import fretx.version4.R;
 
 public class Songlist {
 
@@ -24,17 +30,34 @@ public class Songlist {
     static AsyncHttpClient async_client  = new AsyncHttpClient();
     static Boolean         ready         = false;
 
-    public static void initialize() {
+    public static void initialize(final Context ctx) {
         fireBusy();
+
+        if(!getIndexFromCache()){
+            if (Network.isConnected()) {
+                getIndexFromServer();
+            } else{
+                AlertDialog dialog = createConnectionRetryDialog(ctx);
+                dialog.show();
+            }
+        }
+
         if( Network.isConnected() ) { getIndexFromServer(); }
-        else                        { getIndexFromCache();  }
+        else {
+            boolean success = getIndexFromCache();
+            if(!success){
+                fireReady();
+            }
+        }
     }
 
     //////////////////////////// INDEXING ///////////////////////////////////
 
     public static void getIndexFromServer() {
+        async_client.setTimeout(5);
         async_client.get(apiBase + "/songs/index.json", new JsonHttpResponseHandler() {
-            @Override public void onSuccess(int status, Header[] headers, JSONArray data) {
+            @Override
+            public void onSuccess(int status, Header[] headers, JSONArray data) {
                 index = data;
                 saveIndexToCache();
                 fireReady();
@@ -160,6 +183,27 @@ public class Songlist {
     public interface Callback {
         void onBusy();
         void onReady();
+    }
+
+    public static AlertDialog createConnectionRetryDialog(final Context ctx){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setMessage(ctx.getString(R.string.no_internet_retry))
+                .setTitle(ctx.getString(R.string.no_internet));
+        builder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                initialize(ctx);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        return dialog;
     }
 
     private static void fireBusy()  { ready = false; for(int i=0; i < callbacks.size(); i++) { callbacks.get(i).onBusy();  } }

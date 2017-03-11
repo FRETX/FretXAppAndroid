@@ -87,7 +87,7 @@ public class MainActivity extends ActionBarActivity {
 		Context ctx = getApplicationContext();
 		Network.initialize(ctx);
 		AppCache.initialize(ctx);
-		Songlist.initialize();
+		Songlist.initialize(this);
 
 		getGuiReferences();
 		setGuiEventListeners();
