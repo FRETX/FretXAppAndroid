@@ -68,11 +68,12 @@ public class Songlist {
 
                         JSONObject entry       = index.getJSONObject(i);
                         String     youtube_id  = entry.getString("youtube_id");
+                        String     fretx_id = entry.getString("fretx_id");
                         DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
                         Boolean    is_latest   = AppCache.last_modified(youtube_id + ".json") > uploaded_on.getValue();
 
                         Log.d("FRETX API", "Getting Song From Server: " + entry.getString("title"));
-                        getSongFromServer( youtube_id );
+                        getSongFromServer( fretx_id );
                     }
                 }
                 catch (Exception e) {
@@ -85,14 +86,14 @@ public class Songlist {
 
     ///////////////////////////// SONGS /////////////////////////////////////
 
-    public static void getSongFromServer(final String youtube_id) {
+    public static void getSongFromServer(final String fretx_id) {
 
-        String path = apiBase + String.format( "/songs/%s.json", youtube_id );
+        String path = apiBase + String.format( "/songs/%s.json", fretx_id );
 
         async_client.get(path, new AsyncHttpResponseHandler() {
 
            @Override public void onSuccess(int status, Header[] headers, byte[] body) {
-               AppCache.saveToCache(youtube_id + ".json", body);
+               AppCache.saveToCache(fretx_id + ".json", body);
            }
 
            @Override public void onFailure(int status, Header[] headers, byte[] error, Throwable e) {
@@ -109,13 +110,14 @@ public class Songlist {
 
                 JSONObject entry       = index.getJSONObject(i);
                 String     youtube_id  = entry.getString("youtube_id");
+	            String     fretx_id    = entry.getString("fretx_id");
                 DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
-                Boolean    is_latest   = AppCache.last_modified(youtube_id + ".json") > uploaded_on.getValue();
+                Boolean    is_latest   = AppCache.last_modified(fretx_id + ".json") > uploaded_on.getValue();
 
-                if( AppCache.exists(youtube_id + ".json") && is_latest ) { continue; }
+                if( AppCache.exists(fretx_id + ".json") && is_latest ) { continue; }
 
                 Log.d("FRETX API", "Getting Song From Server: " + entry.getString("title"));
-                getSongFromServer( youtube_id );
+                getSongFromServer( fretx_id );
             }
         }
 
@@ -135,7 +137,7 @@ public class Songlist {
             JSONObject song = index.getJSONObject(i);
             //Drawable image = Util.LoadImageFromWeb("http://img.youtube.com/vi/" + song.getString("youtube_id") + "/0.jpg");
 
-            return new SongItem(song.getString("youtube_id"), song.getString("title"), song.getString("artist"),song.getString("song_title"),song.getString("uploaded_on"));
+            return new SongItem(song.getString("fretx_id"), song.getString("youtube_id"), song.getString("title"), song.getString("artist"),song.getString("song_title"),song.getString("uploaded_on"));
         }
         catch (Exception e) {
             Log.d("FRETX API", String.format("Failed Getting Song Item\r\n%s", e.toString()));

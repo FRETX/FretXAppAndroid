@@ -329,7 +329,7 @@ public final class Util {
         }
     }
     public static byte[] str2array(String string){
-        String strSub = string.replaceAll("[{}]", "");
+        String strSub = string.replaceAll("[\\[\\]{}]", "");
         String[] parts = strSub.split(",");
         byte[] array = new byte[parts.length];
         for (int i = 0; i < parts.length; i ++)
