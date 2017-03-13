@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 
@@ -29,6 +31,11 @@ public class LearnButtonsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mActivity = (MainActivity)getActivity();
+
+
+	    Bundle bundle = new Bundle();
+	    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Learn Tab activated");
+	    mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         rootView = inflater.inflate(R.layout.learn_fragment_buttons, container, false);
         btExerciseOne = (CardView)rootView.findViewById(R.id.btExerciseOne);

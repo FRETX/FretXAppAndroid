@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.appindexing.Action;
 import com.google.firebase.appindexing.FirebaseAppIndex;
 import com.google.firebase.appindexing.FirebaseUserActions;
@@ -58,6 +59,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 
 public class MainActivity extends AppCompatActivity {
+	public FirebaseAnalytics mFirebaseAnalytics;
 	//VIEWS
 	private ImageView bluetoothButton, connectButton;
 	private BottomNavigationViewEx bottomNavigationView;
@@ -85,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity_back);
 		Permiso.getInstance().setActivity(this);
+
+		// Obtain the FirebaseAnalytics instance.
+		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 		chordFingerings = MusicUtils.parseChordDb();
 

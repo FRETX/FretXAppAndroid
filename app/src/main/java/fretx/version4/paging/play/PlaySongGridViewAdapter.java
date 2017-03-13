@@ -1,6 +1,7 @@
 package fretx.version4.paging.play;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.SongPunch;
 import rocks.fretx.audioprocessing.Chord;
+
+//import static fretx.version4.Config.mActivity;
 
 
 /**
@@ -79,6 +83,10 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 				context.audio.disableNoteDetector();
 				context.audio.disablePitchDetector();
 				if(context.previewEnabled){
+					Bundle bundle = new Bundle();
+					bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Preview: " + item.fretx_id);
+					bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
+					context.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 					//Launch exercise with sequence of chords
 					ArrayList<SongPunch> punches = item.punches();
 					SongPunch tmpSp;
@@ -156,6 +164,10 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 					fragmentTransaction.commit();
 					fragmentManager.executePendingTransactions();
 				} else {
+					Bundle bundle = new Bundle();
+					bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Song: " + item.fretx_id);
+					bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
+					context.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 					boolean loadOfflinePlayer = false;
 					if (Config.useOfflinePlayer) {
