@@ -39,4 +39,6 @@ class Sequence {
     public void addChord(Chord chord) {
         chords.add(chord);
     }
+
+    public int size(){ return chords.size(); }
 }

@@ -134,13 +134,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Add", Toast.LENGTH_SHORT).show();
-                Sequence sequence = new Sequence(null, new ArrayList<Chord>());
-                spinnerAdapter.add(sequence);
-                listViewAdapter.clear();
-                listViewAdapter.addAll(sequence.getChords());
-                listViewAdapter.notifyDataSetChanged();
-                currentSequenceIndex = sequences.size() - 1;
+                addNewExercise();
             }
         });
 
@@ -228,7 +222,16 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                                 }
                             }
                         }
+                        int position = spinnerAdapter.getPosition(sequence);
                         spinnerAdapter.remove(sequence);
+                        spinnerAdapter.notifyDataSetChanged();
+                        if(position>0) spinner.setSelection(position-1);
+
+                        if(spinnerAdapter.getCount() == 0){
+                            addNewExercise();
+                            spinner.setSelection(0);
+                        }
+
                         Sequence selected = (Sequence)spinner.getSelectedItem();
                         listViewAdapter.clear();
                         if (selected != null) {
@@ -301,6 +304,16 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             v.setText(name == null ? DEFAULT_SEQUENCE_NAME : name);
             return v;
         }
+    }
+
+    private void addNewExercise(){
+        Toast.makeText(getActivity(), "Add", Toast.LENGTH_SHORT).show();
+        Sequence sequence = new Sequence(null, new ArrayList<Chord>());
+        spinnerAdapter.add(sequence);
+        listViewAdapter.clear();
+        listViewAdapter.addAll(sequence.getChords());
+        listViewAdapter.notifyDataSetChanged();
+        currentSequenceIndex = sequences.size() - 1;
     }
 
     //Todo: recycle views
