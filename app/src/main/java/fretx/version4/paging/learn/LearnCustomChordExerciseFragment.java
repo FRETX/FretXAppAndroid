@@ -163,7 +163,7 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 				if(currentChord == null)
 					return;
 				sequences.get(currentSequenceIndex).addChord(currentChord);
-				Toast.makeText(getContext(), "Chord added", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(), "Chord added to list", Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -186,7 +186,6 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	}
 
 	private void startExercise(){
-		//TODO: launch fragment
 		ArrayList<Chord> chords = sequences.get(currentSequenceIndex).getChords();
 		if(chords.size()<1) return;
 		LearnChordExerciseFragment fragmentChordExercise = new LearnChordExerciseFragment();

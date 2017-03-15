@@ -6,19 +6,26 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp">
         <EditText android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:hint="Exercise Name" />
+            android:hint="Exercise Name"
+            android:layout_margin="10dp"
+            />
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:text="save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/save" />
+        android:layout_width="150dp"
+        android:layout_height="36dp"
+        android:id="@+id/save"
+        android:layout_margin="10dp"
+        android:background="@color/primary"
+        android:textColor="@color/tertiaryText"
+        android:textAllCaps="false"
+        android:layout_gravity="center_horizontal"
+        android:text="Save"/>
 
 </LinearLayout>

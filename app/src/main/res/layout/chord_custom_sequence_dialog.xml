@@ -36,41 +36,58 @@
             android:layout_toStartOf="@+id/new_button" />
     </RelativeLayout>
 
-    <Button
-        android:text="Play"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/play_button"
-        android:layout_alignParentBottom="true" />
+        android:layout_height="300dp"
+        android:id="@+id/chords_listview"
+        android:layout_below="@+id/spinner_layout" />
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/button_layout"
-        android:layout_above="@+id/play_button">
-
-        <Button
-            android:text="Save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/save_button"
-            android:layout_weight="1" />
+        android:layout_below="@id/chords_listview"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        >
 
         <Button
             android:text="Save As"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:id="@+id/saveas_button"
-            android:layout_weight="1" />
+            android:textColor="@color/tertiaryText"
+            android:textAllCaps="false"
+            android:background="@color/primary"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="36dp"
+            android:layout_width="100dp"/>
 
-    </LinearLayout>
+        <Button
+            android:text="Save"
+            android:layout_height="36dp"
+            android:id="@+id/save_button"
+            android:textColor="@color/tertiaryText"
+            android:background="@color/primary"
+            android:textAllCaps="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="36dp"
+            android:layout_width="100dp"/>
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/chords_listview"
-        android:layout_above="@+id/button_layout"
-        android:layout_below="@+id/spinner_layout" />
+    </RelativeLayout>
+
+    <!--<Button-->
+        <!--android:text="Play"-->
+        <!--android:layout_height="36dp"-->
+        <!--android:layout_marginBottom="15dp"-->
+        <!--android:id="@+id/play_button"-->
+        <!--android:textColor="@color/tertiaryText"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:background="@color/primary"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_width="100dp"/>-->
 
 </RelativeLayout>

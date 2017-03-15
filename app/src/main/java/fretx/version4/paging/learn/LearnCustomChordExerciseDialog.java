@@ -123,7 +123,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             @Override
             public void onClick(View v) {
                 if (spinner.getSelectedItem() != null) {
-                    Toast.makeText(getActivity(), "Delete", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Delete", Toast.LENGTH_SHORT).show();
                     deleteConfirmationAlertDialogBuilder().show();
                 }
             }
@@ -144,7 +144,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
             @Override
             public void onClick(View v) {
                 if (spinner.getSelectedItem() != null) {
-                    Toast.makeText(getActivity(), "Save", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Exercise Saved", Toast.LENGTH_SHORT).show();
                     if (sequences.get(currentSequenceIndex).getName() == null) {
                         NameSelectionAlertDialogBuilder().show();
                     } else {
@@ -168,26 +168,26 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Save As", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Save As", Toast.LENGTH_SHORT).show();
                 NameSelectionAlertDialogBuilder().show();
             }
         });
 
         //magic stuff goes here
-        b = (Button) dialog.findViewById(R.id.play_button);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        b = (Button) dialog.findViewById(R.id.play_button);
+//        b.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override
     public void onCancel(DialogInterface dialogInterface){
         Fragment parentFragment = getTargetFragment();
         ((LearnCustomChordExerciseListener) parentFragment).onUpdate(sequences, currentSequenceIndex);
-        Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
     }
 
     @Nullable
@@ -307,13 +307,14 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
     }
 
     private void addNewExercise(){
-        Toast.makeText(getActivity(), "Add", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "Add", Toast.LENGTH_SHORT).show();
         Sequence sequence = new Sequence(null, new ArrayList<Chord>());
         spinnerAdapter.add(sequence);
         listViewAdapter.clear();
         listViewAdapter.addAll(sequence.getChords());
         listViewAdapter.notifyDataSetChanged();
         currentSequenceIndex = sequences.size() - 1;
+        spinner.setSelection(currentSequenceIndex);
     }
 
     //Todo: recycle views
