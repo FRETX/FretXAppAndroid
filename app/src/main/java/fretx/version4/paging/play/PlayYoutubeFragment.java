@@ -492,6 +492,7 @@ public class PlayYoutubeFragment extends Fragment {
     // current time. Then sets the text that was finded in hashtable keys.
 
     public  void changeText(int currentTime) {
+	    if(arrayKeys.length < 1) return;
         for ( int nIndex = 0; nIndex < arrayKeys.length -1; nIndex++ )
         {
             if ( arrayKeys[nIndex] <= currentTime && arrayKeys[nIndex + 1] > currentTime )
