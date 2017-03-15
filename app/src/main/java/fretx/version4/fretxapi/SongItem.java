@@ -11,13 +11,15 @@ import java.util.ArrayList;
 import fretx.version4.Util;
 
 public class SongItem {
+    public String fretx_id;
     public String youtube_id;
     public String title;
     public String artist;
     public String song_title;
     public String uploaded_on;
 
-    public SongItem(String youtube_id, String title, String artist, String song_title, String uploaded_on) {
+    public SongItem(String fretx_id, String youtube_id, String title, String artist, String song_title, String uploaded_on) {
+        this.fretx_id = fretx_id;
         this.youtube_id = youtube_id;
         this.title = title;
         this.artist = artist;
@@ -28,7 +30,7 @@ public class SongItem {
     public String imageURL() {
         return "http://img.youtube.com/vi/" + youtube_id + "/0.jpg";
     }
-    public String songFile() { return youtube_id + ".json"; }
+    public String songFile() { return fretx_id + ".json"; }
     public ArrayList<SongPunch> punches(){
         String songJsonString = AppCache.getFromCache(songFile());
         JSONObject songJson = new JSONObject();

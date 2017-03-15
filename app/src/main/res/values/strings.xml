@@ -56,7 +56,9 @@
     <string name="please_wait">Please wait</string>
 
     <string name="microphone_used_background">Cannot access microphone, please close any background apps that might be recording audio.</string>
-
+    <string name="could_not_retrieve_index">Could not retrieve songs. Make sure you are connected to the Internet and try again</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="no_internet_retry">Network unavailable, could not retrieve songs from FretX server. Please ensure you have Internet connectivity and try again.</string>
     <string name="loopA">A</string>
     <string name="loopB">B</string>
     <string-array name="arr_left_nav_list">

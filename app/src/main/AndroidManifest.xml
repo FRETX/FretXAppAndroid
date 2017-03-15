@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
@@ -63,21 +64,48 @@
         </activity>
 
 
-        <activity android:name="fretx.version4.CommentMainActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="fretx.version4.CommentThxActivity"
-            android:screenOrientation="portrait">
-        </activity>
+        <!--<activity android:name="fretx.version4.CommentMainActivity"-->
+            <!--android:screenOrientation="portrait" >-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name="fretx.version4.CommentThxActivity"-->
+            <!--android:screenOrientation="portrait">-->
+        <!--</activity>-->
 
-        <service
-            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
-            android:enabled="true" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <!--<service-->
+            <!--android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"-->
+            <!--android:enabled="true" />&lt;!&ndash; ATTENTION: This was auto-generated to add Google Play services to your project for-->
+     <!--App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. &ndash;&gt;-->
+        <!--<meta-data-->
+            <!--android:name="com.google.android.gms.version"-->
+            <!--android:value="@integer/google_play_services_version" />-->
+
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more. -->
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_fretx"/>
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/primary"/>
+        <service
+            android:name="fretx.version4.Firebase.FretXAndroidFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name="fretx.version4.Firebase.FretXAndroidFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
 
     </application>
+
+
+
 </manifest>

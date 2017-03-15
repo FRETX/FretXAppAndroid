@@ -47,3 +47,6 @@ ehthumbs.db
 Thumbs.db
 #large files
 *.mp4
+
+#apk
+app/app-release.apk

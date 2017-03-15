@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -55,6 +57,9 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
+		Bundle bundle = new Bundle();
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Custom Chord Exercise activated");
+		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 		rootView = (FrameLayout) inflater.inflate(R.layout.chord_custom_sequence_layout, container, false);
 		return  rootView;
 	}

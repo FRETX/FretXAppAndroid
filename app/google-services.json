@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "918041591082",
+    "firebase_url": "https://fretxappandroid.firebaseio.com",
+    "project_id": "fretxappandroid",
+    "storage_bucket": "fretxappandroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918041591082:android:a29030c55431e290",
+        "android_client_info": {
+          "package_name": "fretx.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "918041591082-ksuq03ocrlr6r85p7t6reve40rn0cc5c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fretx.app",
+            "certificate_hash": "dcf80b6d2baec4c9795df41725103e09f2998f8f"
+          }
+        },
+        {
+          "client_id": "918041591082-k4es6un1a0kigoo1d2v11bmnt62n04kc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuHGa-aJDDNODsr0acBLkotUovPW0rZak"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "918041591082-k4es6un1a0kigoo1d2v11bmnt62n04kc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

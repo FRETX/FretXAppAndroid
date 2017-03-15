@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 
 import fretx.version4.BluetoothClass;
@@ -37,6 +39,10 @@ public class LearnScaleExerciseFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity)getActivity();
 		rootView = (LinearLayout) inflater.inflate(R.layout.learn_scale_exercise_layout, container, false);
+
+		Bundle bundle = new Bundle();
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Scale Exercise activated");
+		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
 

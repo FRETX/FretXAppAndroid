@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.HashMap;
 
 import co.mobiwise.materialintro.shape.Focus;
@@ -48,6 +50,10 @@ public class ChordFragment extends Fragment
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
+
+		Bundle bundle = new Bundle();
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Chords Tab activated");
+		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		fretboardView = (FretboardView) mActivity.findViewById(R.id.fretboardView);
 		chordFingerings = MusicUtils.parseChordDb();

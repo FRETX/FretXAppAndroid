@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,11 @@ public class PlayFragment extends Fragment {
         mActivity = (MainActivity) getActivity();
 
         rootView = inflater.inflate(R.layout.play_fragment, container, false);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Play Tab activated");
+        mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
