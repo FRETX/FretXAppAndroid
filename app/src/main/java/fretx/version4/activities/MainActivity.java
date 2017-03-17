@@ -14,7 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -87,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_activity_back);
 		Permiso.getInstance().setActivity(this);
+
+		Display display = getWindowManager().getDefaultDisplay();
+		DisplayMetrics outMetrics = new DisplayMetrics();
+		display.getMetrics(outMetrics);
+		float density = getResources().getDisplayMetrics().density;
+		float dpHeight = outMetrics.heightPixels / density;
+		float dpWidth = outMetrics.widthPixels / density;
+		Log.d("Density",Float.toString(density));
+		Log.d("Height in dp", Float.toString(dpHeight));
+		Log.d("Weight in dp", Float.toString(dpWidth));
 
 		// Obtain the FirebaseAnalytics instance.
 		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);

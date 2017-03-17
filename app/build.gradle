@@ -7,8 +7,8 @@ android {
         applicationId 'fretx.app'
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 28
-        versionName "0.8.7"
+        versionCode 29
+        versionName "0.8.8"
         multiDexEnabled true
         sourceSets.main.jni.srcDirs = []
 
@@ -48,6 +48,7 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:10.2.0'
     compile 'com.google.firebase:firebase-appindexing:10.2.0'
     compile 'com.google.firebase:firebase-core:10.2.0'
+    compile 'com.android.support:percent:25.1.1'
     testCompile 'junit:junit:4.12'
 }
 
