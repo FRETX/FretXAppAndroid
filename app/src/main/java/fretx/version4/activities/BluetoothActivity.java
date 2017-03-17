@@ -87,7 +87,10 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
         m_btnGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btAdapter.stopLeScan(mLeScanCallback);
+                if(btAdapter != null){
+                    btAdapter.stopLeScan(mLeScanCallback);
+                }
+
                 finish();
             }
         });
@@ -381,6 +384,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if(btAdapter == null) return;
             BluetoothDevice device = deviceList.get(position);
             btAdapter.stopLeScan(mLeScanCallback);
 
