@@ -15,23 +15,27 @@
         android:layout_alignParentStart="true"
         android:weightSum="1">
 
-        <RelativeLayout
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            >
+            android:layout_height="0dp"
+            android:layout_weight="0.02"
+        />
 
-            <Space
-                android:layout_width="196dp"
-                android:layout_height="20dp"
-                />
-        </RelativeLayout>
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--&gt;-->
+
+
+        <!--</RelativeLayout>-->
 
         
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.23"
             android:orientation="horizontal"
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
@@ -40,8 +44,8 @@
             <LinearLayout
                 android:id="@+id/youtube_view"
                 android:orientation="vertical"
-                android:layout_width="196dp"
-                android:layout_height="110dp">
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
             </LinearLayout>
 
             <LinearLayout
@@ -52,42 +56,49 @@
                 >
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="14dp"
+                    android:layout_height="wrap_content"
                     android:text="Next Chord"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     android:textColor="@color/primaryText"
                     android:textAlignment="center"
                     />
                 <fretx.version4.FretboardView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/fretboardNext"
                     android:layout_gravity="center_horizontal"
-
                     />
             </LinearLayout>
 
         </LinearLayout>
 
-
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.01"
+            />
         <fretx.version4.FretboardView
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.45"
             android:id="@+id/fretboardCurrent"
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
             />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.01"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.09"
             android:orientation="horizontal"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="10dp"
             >
 
             <Button
@@ -117,7 +128,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/timeSeekbar"
-                android:layout_weight="0.05"/>
+                android:layout_weight="0.8"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -132,123 +144,143 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.01"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
+            android:orientation="horizontal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="center_horizontal"
+            >
+
+            <Button
+                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:textSize="12dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/inactiveButton"
+                android:textColor="@color/tertiaryText"
+                android:text="A"
+                android:id="@+id/buttonA"
+                />
+
+            <Button
+                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:background="@drawable/ic_loop_inactive"
+                android:textColor="@color/tertiaryText"
+                android:id="@+id/buttonLoop"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                />
+
+            <Button
+                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:textSize="12dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/inactiveButton"
+                android:textColor="@color/tertiaryText"
+                android:text="B"
+                android:id="@+id/buttonB"
+                />
+
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.01"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             >
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="40dp"
                 android:layout_height="36dp"
-                android:orientation="horizontal"
-                android:layout_alignParentLeft="true"
-                >
+                android:src="@drawable/ic_clock"
+                />
 
-                <Button
-                    android:layout_height="match_parent"
-                    android:layout_width="36dp"
-                    android:textSize="12dp"
-                    android:background="@color/inactiveButton"
-                    android:textColor="@color/tertiaryText"
-                    android:text="A"
-                    android:id="@+id/buttonA"
-                    />
-
-                <Button
-                    android:layout_height="match_parent"
-                    android:layout_width="36dp"
-                    android:background="@drawable/ic_loop_inactive"
-                    android:textColor="@color/tertiaryText"
-                    android:id="@+id/buttonLoop"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    />
-
-                <Button
-                    android:layout_height="match_parent"
-                    android:layout_width="36dp"
-                    android:textSize="12dp"
-                    android:background="@color/inactiveButton"
-                    android:textColor="@color/tertiaryText"
-                    android:text="B"
-                    android:id="@+id/buttonB"
-                    />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
+            <Button
+                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:background="@color/inactiveButton"
+                android:textColor="@color/tertiaryText"
                 android:layout_alignParentRight="true"
-                >
+                android:text="-1s"
+                android:id="@+id/buttonEarly1"
+                android:textSize="12dp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:layout_marginLeft="2dp"
+                />
 
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/ic_clock"
-                    />
-                <Button
-                    android:layout_height="36dp"
-                    android:layout_width="40dp"
-                    android:background="@color/inactiveButton"
-                    android:textColor="@color/tertiaryText"
-                    android:layout_alignParentRight="true"
-                    android:text="-1s"
-                    android:id="@+id/buttonEarly1"
-                    android:textSize="12dp"
-                    android:textStyle="normal"
-                    android:textAllCaps="false"
-                    android:layout_marginLeft="2dp"
-                    />
+            <Button
+                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:background="@color/inactiveButton"
+                android:textColor="@color/tertiaryText"
+                android:layout_alignParentRight="true"
+                android:text="-0.5s"
+                android:id="@+id/buttonEarly05"
+                android:textSize="12dp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:layout_marginLeft="2dp"
+                />
 
-                <Button
-                    android:layout_height="36dp"
-                    android:layout_width="40dp"
-                    android:background="@color/inactiveButton"
-                    android:textColor="@color/tertiaryText"
-                    android:layout_alignParentRight="true"
-                    android:text="-0.5s"
-                    android:id="@+id/buttonEarly05"
-                    android:textSize="12dp"
-                    android:textStyle="normal"
-                    android:textAllCaps="false"
-                    android:layout_marginLeft="2dp"
-                    />
+            <Button
+                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:background="@color/inactiveButton"
+                android:textColor="@color/tertiaryText"
+                android:layout_alignParentRight="true"
+                android:text="-0.25s"
+                android:id="@+id/buttonEarly025"
+                android:textSize="12dp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:layout_marginLeft="2dp"
+                />
 
-                <Button
-                    android:layout_height="36dp"
-                    android:layout_width="40dp"
-                    android:background="@color/inactiveButton"
-                    android:textColor="@color/tertiaryText"
-                    android:layout_alignParentRight="true"
-                    android:text="-0.25s"
-                    android:id="@+id/buttonEarly025"
-                    android:textSize="12dp"
-                    android:textStyle="normal"
-                    android:textAllCaps="false"
-                    android:layout_marginLeft="2dp"
-                    />
+            <Button
+                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:background="@color/primary"
+                android:textColor="@color/tertiaryText"
+                android:layout_alignParentRight="true"
+                android:text="0s"
+                android:id="@+id/buttonEarly0"
+                android:textSize="12dp"
+                android:textStyle="normal"
+                android:textAllCaps="false"
+                android:layout_marginLeft="2dp"
+                />
+        </LinearLayout>
 
-                <Button
-                    android:layout_height="36dp"
-                    android:layout_width="40dp"
-                    android:background="@color/primary"
-                    android:textColor="@color/tertiaryText"
-                    android:layout_alignParentRight="true"
-                    android:text="0s"
-                    android:id="@+id/buttonEarly0"
-                    android:textSize="12dp"
-                    android:textStyle="normal"
-                    android:textAllCaps="false"
-                    android:layout_marginLeft="2dp"
-                    />
-            </LinearLayout>
 
-        </RelativeLayout>
+
+
+
+
+        </LinearLayout>
 
 
 
@@ -278,7 +310,5 @@
             <!--android:layout_height="wrap_content"-->
             <!--android:id="@+id/prerollSlider"-->
             <!--android:layout_weight="0.05"/>-->
-
-    </LinearLayout>
 
 </RelativeLayout>

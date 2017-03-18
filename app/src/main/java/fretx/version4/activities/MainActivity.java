@@ -90,15 +90,15 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.main_activity_back);
 		Permiso.getInstance().setActivity(this);
 
-		Display display = getWindowManager().getDefaultDisplay();
-		DisplayMetrics outMetrics = new DisplayMetrics();
-		display.getMetrics(outMetrics);
-		float density = getResources().getDisplayMetrics().density;
-		float dpHeight = outMetrics.heightPixels / density;
-		float dpWidth = outMetrics.widthPixels / density;
-		Log.d("Density",Float.toString(density));
-		Log.d("Height in dp", Float.toString(dpHeight));
-		Log.d("Weight in dp", Float.toString(dpWidth));
+//		Display display = getWindowManager().getDefaultDisplay();
+//		DisplayMetrics outMetrics = new DisplayMetrics();
+//		display.getMetrics(outMetrics);
+//		float density = getResources().getDisplayMetrics().density;
+//		float dpHeight = outMetrics.heightPixels / density;
+//		float dpWidth = outMetrics.widthPixels / density;
+//		Log.d("Density",Float.toString(density));
+//		Log.d("Height in dp", Float.toString(dpHeight));
+//		Log.d("Weight in dp", Float.toString(dpWidth));
 
 		// Obtain the FirebaseAnalytics instance.
 		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
