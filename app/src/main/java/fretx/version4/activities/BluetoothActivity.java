@@ -102,18 +102,18 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
 
     private void showTutorial(){
 
-        new MaterialIntroView.Builder(this)
-                .enableDotAnimation(false)
-                .enableIcon(false)
-                .setFocusGravity(FocusGravity.CENTER)
-                .setFocusType(Focus.ALL)
-                .setDelayMillis(300)
-                .enableFadeAnimation(true)
-                .performClick(true)
-                .setInfoText("Tap on FretX to connect.\n(If you don't see your device, turn it off and on again.)")
-                .setTarget((ListView) findViewById(R.id.listView))
-                .setUsageId("tutorialChooseFretxFromBluetoothList") //THIS SHOULD BE UNIQUE ID
-                .show();
+//        new MaterialIntroView.Builder(this)
+//                .enableDotAnimation(false)
+//                .enableIcon(false)
+//                .setFocusGravity(FocusGravity.CENTER)
+//                .setFocusType(Focus.ALL)
+//                .setDelayMillis(300)
+//                .enableFadeAnimation(true)
+//                .performClick(true)
+//                .setInfoText("Tap on FretX to connect.\n(If you don't see your device, turn it off and on again.)")
+//                .setTarget((ListView) findViewById(R.id.listView))
+//                .setUsageId("tutorialChooseFretxFromBluetoothList") //THIS SHOULD BE UNIQUE ID
+//                .show();
     }
 
 

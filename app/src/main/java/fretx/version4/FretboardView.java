@@ -23,7 +23,7 @@ public class FretboardView extends View {
 
 	private ArrayList<FretboardPosition> fretboardPositions;
 
-	private float width, height, nStrings, nFrets, xPadding, yPadding, stringStep, fretStep, rx, ry;
+	private float width, height, nStrings, nFrets, xPadding, yPadding, yPaddingTop, yPaddingBottom, stringStep, fretStep, rx, ry;
 	private float xString, yFret, yString, xFret, left, top, right, bottom;
 
 	private Rect imageBounds = new Rect();
@@ -50,7 +50,10 @@ public class FretboardView extends View {
 		nFrets = 4;
 		nFrets++; //increment to include the nut, and the bottom-most line and keep the "fret" semantics understandable
 		xPadding = 0.045f;
-		yPadding = 0.145f;
+		yPadding = 0.15f;
+		yPaddingTop = 0.137f;
+		yPaddingBottom = 0.1159f;
+
 		rx = 0.054f;
 		ry = 0.05f;
 		fretboardImage = getContext().getResources().getDrawable(R.drawable.fretboard);
@@ -73,14 +76,16 @@ public class FretboardView extends View {
 //				xString = (xPadding + (( (int) nStrings - string)*stringStep)) * width;
 //				yFret = (yPadding + ((fret-0.5f)*fretStep)) * height;
 
-				yString = (1f - (yPadding + (((int) nStrings - string) * stringStep)))  * height;
+//				yString = (1f - (yPadding + (((int) nStrings - string) * stringStep)))  * height;
+				yString = (1f - (yPaddingTop + (((int) nStrings - string) * stringStep))) * height;
 				xFret = (xPadding + ((fret - 0.5f) * fretStep)) * width;
 
 //				paint.setStyle(Paint.Style.FILL);
 //				paint.setColor(color);
 				currentLed = redLed;
 				if(fret == 0){
-					yFret = (yPadding + ((fret-0.25f)*fretStep)) * height;
+//					yFret = (yPadding + ((fret-0.25f)*fretStep)) * height;
+					yFret = (yPaddingTop + ((fret - 0.25f) * fretStep)) * height;
 
 					xFret = (xPadding + ((fret - 0.1f) * fretStep)) * width;
 
@@ -119,13 +124,17 @@ public class FretboardView extends View {
 		width = imageBounds.width();
 		height = imageBounds.height();
 
-		stringStep = (1 - (2 * yPadding)) / (nStrings - 1);
+//		stringStep = (1 - (2 * yPadding)) / (nStrings - 1);
+		stringStep = (1 - ((yPaddingTop + yPaddingBottom))) / (nStrings - 1);
+
+
 		fretStep = (1 - (2 * xPadding)) / (nFrets - 1);
 //		paint.setStyle(Paint.Style.STROKE);
 //		paint.setStrokeWidth(10);
 //		paint.setColor(getResources().getColor(R.color.primaryText));
 		left = xPadding * width;
-		top = yPadding * height;
+//		top = yPadding * height;
+		top = yPaddingTop * height;
 		right = (1 - xPadding) * width;
 		bottom = (1 - yPadding) * height;
 //		//draw the outline

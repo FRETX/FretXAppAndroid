@@ -169,18 +169,18 @@ public class ChordFragment extends Fragment
 
 	private void showTutorial(){
 
-		new MaterialIntroView.Builder(mActivity)
-				.enableDotAnimation(false)
-				.enableIcon(false)
-				.setFocusGravity(FocusGravity.CENTER)
-				.setFocusType(Focus.ALL)
-				.setDelayMillis(300)
-				.enableFadeAnimation(true)
-				.performClick(true)
-				.setInfoText("This is the Chord Library. You can review or learn any chord you choose here. \nJust pick any combination of chord and watch it show up on your guitar!")
-				.setTarget((LinearLayout) mActivity.findViewById(R.id.chordPickerContainer))
-				.setUsageId("tutorialChordLibrary") //THIS SHOULD BE UNIQUE ID
-				.show();
+//		new MaterialIntroView.Builder(mActivity)
+//				.enableDotAnimation(false)
+//				.enableIcon(false)
+//				.setFocusGravity(FocusGravity.CENTER)
+//				.setFocusType(Focus.ALL)
+//				.setDelayMillis(300)
+//				.enableFadeAnimation(true)
+//				.performClick(true)
+//				.setInfoText("This is the Chord Library. You can review or learn any chord you choose here. \nJust pick any combination of chord and watch it show up on your guitar!")
+//				.setTarget((LinearLayout) mActivity.findViewById(R.id.chordPickerContainer))
+//				.setUsageId("tutorialChordLibrary") //THIS SHOULD BE UNIQUE ID
+//				.show();
 	}
 
 }

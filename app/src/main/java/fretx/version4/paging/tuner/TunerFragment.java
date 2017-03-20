@@ -38,18 +38,18 @@ public class TunerFragment extends Fragment {
 	}
 
 	private void showTutorial(){
-		new MaterialIntroView.Builder(mActivity)
-				.enableDotAnimation(false)
-				.enableIcon(false)
-				.setFocusGravity(FocusGravity.CENTER)
-				.setFocusType(Focus.NORMAL)
-				.setDelayMillis(300)
-				.enableFadeAnimation(true)
-				.performClick(true)
-				.setInfoText("Play strings one by one. Adjust until needle is green for each string. It's that simple to tune your guitar!")
-				.setTarget((TunerView) mActivity.findViewById(R.id.tunerView))
-				.setUsageId("tutorialTuner") //THIS SHOULD BE UNIQUE ID
-				.show();
+//		new MaterialIntroView.Builder(mActivity)
+//				.enableDotAnimation(false)
+//				.enableIcon(false)
+//				.setFocusGravity(FocusGravity.CENTER)
+//				.setFocusType(Focus.NORMAL)
+//				.setDelayMillis(300)
+//				.enableFadeAnimation(true)
+//				.performClick(true)
+//				.setInfoText("Play strings one by one. Adjust until needle is green for each string. It's that simple to tune your guitar!")
+//				.setTarget((TunerView) mActivity.findViewById(R.id.tunerView))
+//				.setUsageId("tutorialTuner") //THIS SHOULD BE UNIQUE ID
+//				.show();
 	}
 
 	@Override

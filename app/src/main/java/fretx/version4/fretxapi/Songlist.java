@@ -84,24 +84,9 @@ public class Songlist {
             @Override public void onSuccess(int status, Header[] headers, JSONArray data) {
                 index = data;
                 saveIndexToCache();
-                fireReady();
                 Log.d("FRETX API", String.format("got index: %s", index ));
-                try {
-                    for(int i = 0; i < index.length(); i++) {
-
-                        JSONObject entry       = index.getJSONObject(i);
-                        String     youtube_id  = entry.getString("youtube_id");
-                        String     fretx_id = entry.getString("fretx_id");
-                        DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
-                        Boolean    is_latest   = AppCache.last_modified(youtube_id + ".json") > uploaded_on.getValue();
-
-                        Log.d("FRETX API", "Getting Song From Server: " + entry.getString("title"));
-                        getSongFromServer( fretx_id );
-                    }
-                }
-                catch (Exception e) {
-                    Log.d("FRETX API", String.format("Failed Checking Songs In Cache\r\n%s", e.toString()));
-                }
+                checkSongsInCache();
+                fireReady();
             }
         });
     }
@@ -128,25 +113,33 @@ public class Songlist {
     }
 
     private static void checkSongsInCache() {
+
+    for(int i = 0; i < index.length(); i++) {
         try {
-            for(int i = 0; i < index.length(); i++) {
+            JSONObject entry       = index.getJSONObject(i);
+            String     youtube_id  = entry.getString("youtube_id");
+            String     fretx_id    = entry.getString("fretx_id");
 
-                JSONObject entry       = index.getJSONObject(i);
-                String     youtube_id  = entry.getString("youtube_id");
-	            String     fretx_id    = entry.getString("fretx_id");
-                DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
-                Boolean    is_latest   = AppCache.last_modified(fretx_id + ".json") > uploaded_on.getValue();
-
-                if( AppCache.exists(fretx_id + ".json") && is_latest ) { continue; }
-
-                Log.d("FRETX API", "Getting Song From Server: " + entry.getString("title"));
-                getSongFromServer( fretx_id );
+            if(entry.getString("uploaded_on") == null){
+                Log.e("FRETX API","Uploaded date null for" + fretx_id);
+                getSongFromServer(fretx_id);
+                continue;
             }
-        }
+            Log.d("uploaded on", entry.getString("uploaded_on"));
+            DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
+            Boolean    is_latest   = AppCache.last_modified(fretx_id + ".json") > uploaded_on.getValue();
+            Log.d("FRETX API","Parsed JSON for " + fretx_id);
+            if( AppCache.exists(fretx_id + ".json") && is_latest ) { continue; }
 
-        catch (Exception e) {
-            Log.d("FRETX API", String.format("Failed Checking Songs In Cache\r\n%s", e.toString()));
-        }
+            Log.d("FRETX API", "Getting Song From Server: " + entry.getString("title"));
+            getSongFromServer( fretx_id );
+            } catch (Exception e) {
+                Log.d("FRETX API", String.format("Failed Checking Song In Cache\r\n%s", e.toString()));
+            }
+
+}
+
+
     }
 
     ///////////////////////////// SONGS /////////////////////////////////////
