@@ -12,6 +12,8 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Map;
+
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 
@@ -28,18 +30,31 @@ public class FretXAndroidFirebaseMessagingService extends FirebaseMessagingServi
 		//It is optional
 		Log.d(TAG, "From: " + remoteMessage.getFrom());
 		Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+		Log.d(TAG, "Message type: " + remoteMessage.getMessageType());
+		Map<String,String> messageData = remoteMessage.getData();
+		String action = messageData.get("action");
 
 		//Calling method to generate notification
-		sendNotification(remoteMessage.getNotification().getBody());
+		sendNotification(remoteMessage.getNotification().getBody(),action);
 	}
 
 	//This method is only generating push notification
 	//It is same as we did in earlier posts
-	private void sendNotification(String messageBody) {
+	private void sendNotification(String messageBody, String action) {
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
 				PendingIntent.FLAG_ONE_SHOT);
+		if(action != null){
+			if(action.toLowerCase().equals("update")){
+				Log.d(TAG,"This is an update notif!");
+				String appPackageName = getPackageName();
+				intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+			}
+		}
+
 
 		Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)

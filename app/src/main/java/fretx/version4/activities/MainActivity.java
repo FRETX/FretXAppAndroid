@@ -23,6 +23,7 @@ import com.google.firebase.appindexing.Action;
 import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.builders.Actions;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.greysonparrelli.permiso.Permiso;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
@@ -225,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
    adding content to the index */
 //		FirebaseAppIndex.getInstance().update(getIndexable());
 		FirebaseUserActions.getInstance().start(getAction());
+		Log.d("Firebase Token", FirebaseInstanceId.getInstance().getToken());
 
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
