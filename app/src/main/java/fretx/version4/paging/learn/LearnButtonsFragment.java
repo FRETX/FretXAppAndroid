@@ -54,7 +54,6 @@ public class LearnButtonsFragment extends Fragment {
 	            mActivity.audio.enableChordDetector();
 
                 fragmentTransaction.commit();
-	            MainActivity.displayBackStack(fragmentManager);
 
             }
         });
@@ -73,7 +72,6 @@ public class LearnButtonsFragment extends Fragment {
 			    mActivity.audio.disableChordDetector();
 
 			    fragmentTransaction.commit();
-			    MainActivity.displayBackStack(fragmentManager);
 
 		    }
 	    });
@@ -92,7 +90,6 @@ public class LearnButtonsFragment extends Fragment {
 			    mActivity.audio.enableChordDetector();
 
 			    fragmentTransaction.commit();
-			    MainActivity.displayBackStack(fragmentManager);
 
 		    }
 	    });

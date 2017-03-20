@@ -229,6 +229,5 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		MainActivity.displayBackStack(mActivity.getSupportFragmentManager());
 	}
 }

@@ -274,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
 										.replace(R.id.main_relative_layout, new LearnFragment())
 										.addToBackStack(BACK_STACK_ROOT_TAG)
 										.commit();
-								displayBackStack(getSupportFragmentManager());
 								mActivity.audio.disablePitchDetector();
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disableChordDetector();
@@ -292,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
 										.replace(R.id.main_relative_layout, new ChordFragment())
 										.addToBackStack(BACK_STACK_ROOT_TAG)
 										.commit();
-								displayBackStack(getSupportFragmentManager());
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disablePitchDetector();
 								mActivity.audio.disableChordDetector();
@@ -310,7 +308,6 @@ public class MainActivity extends AppCompatActivity {
 										.replace(R.id.main_relative_layout, new TunerFragment())
 										.addToBackStack(BACK_STACK_ROOT_TAG)
 										.commit();
-								displayBackStack(getSupportFragmentManager());
 								mActivity.audio.enablePitchDetector();
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disableChordDetector();
@@ -456,16 +453,5 @@ public class MainActivity extends AppCompatActivity {
 		v.setColorFilter(null);
 		v.setAlpha(255);
 	}
-
-	public static void displayBackStack(FragmentManager fm) {
-		int count = fm.getBackStackEntryCount();
-		Log.d("Backstack log", "There are " + count + " entries");
-		for (int i = 0; i < count; i++) {
-			// Display Backstack-entry data like
-			String name = fm.getBackStackEntryAt(i).getName();
-			Log.d("Backstack log", "entry " + i + ": " + name);
-		}
-	}
-
 
 }

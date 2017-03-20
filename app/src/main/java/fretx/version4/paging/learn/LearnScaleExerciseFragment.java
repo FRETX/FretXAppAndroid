@@ -158,7 +158,6 @@ public class LearnScaleExerciseFragment extends Fragment {
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		MainActivity.displayBackStack(mActivity.getSupportFragmentManager());
 	}
 
 
