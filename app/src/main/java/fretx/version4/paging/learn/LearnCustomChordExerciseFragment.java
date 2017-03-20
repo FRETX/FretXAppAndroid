@@ -225,4 +225,10 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
             this.currentSequenceIndex = currentSequenceIndex;
         }
 	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		MainActivity.displayBackStack(mActivity.getSupportFragmentManager());
+	}
 }

@@ -47,13 +47,14 @@ public class LearnButtonsFragment extends Fragment {
 //                fragmentTransaction.replace(R.id.learn_container, new LearnChordExerciseFragment());
 	            fragmentTransaction.replace(R.id.learn_container, new LearnCustomChordExerciseFragment());
 	            //TODO: back stack isn't working here
-                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.addToBackStack("customChordExercise");
 
 	            mActivity.audio.disablePitchDetector();
 	            mActivity.audio.disableNoteDetector();
 	            mActivity.audio.enableChordDetector();
 
                 fragmentTransaction.commit();
+	            MainActivity.displayBackStack(fragmentManager);
 
             }
         });
@@ -65,13 +66,14 @@ public class LearnButtonsFragment extends Fragment {
 			    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 			    fragmentTransaction.replace(R.id.learn_container, new LearnScaleExerciseFragment());
 			    //TODO: back stack isn't working here
-			    fragmentTransaction.addToBackStack(null);
+			    fragmentTransaction.addToBackStack("scaleExercise");
 
 			    mActivity.audio.enablePitchDetector();
 			    mActivity.audio.enableNoteDetector();
 			    mActivity.audio.disableChordDetector();
 
 			    fragmentTransaction.commit();
+			    MainActivity.displayBackStack(fragmentManager);
 
 		    }
 	    });
@@ -90,6 +92,7 @@ public class LearnButtonsFragment extends Fragment {
 			    mActivity.audio.enableChordDetector();
 
 			    fragmentTransaction.commit();
+			    MainActivity.displayBackStack(fragmentManager);
 
 		    }
 	    });

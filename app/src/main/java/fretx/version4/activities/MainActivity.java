@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 	byte[] btNoLightsArray = {Byte.valueOf("0")};
 	ImageView previewButton;
 	public boolean previewEnabled = false;
+	public static String BACK_STACK_ROOT_TAG = "backStackRoot";
+
 //	ConnectThread btTurnOffLightsThread = new ConnectThread(btNoLightsArray);
 
 	//LIFECYCLE
@@ -239,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
 				new BottomNavigationView.OnNavigationItemSelectedListener() {
 					@Override
 					public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+						FragmentManager fragmentManager = getSupportFragmentManager();
+						fragmentManager.popBackStack(BACK_STACK_ROOT_TAG,FragmentManager.POP_BACK_STACK_INCLUSIVE);
 						switch (item.getItemId()) {
 							case R.id.action_play:
 								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
@@ -250,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new PlayFragment())
+										.addToBackStack(BACK_STACK_ROOT_TAG)
 										.commit();
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disablePitchDetector();
@@ -266,7 +272,9 @@ public class MainActivity extends AppCompatActivity {
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new LearnFragment())
+										.addToBackStack(BACK_STACK_ROOT_TAG)
 										.commit();
+								displayBackStack(getSupportFragmentManager());
 								mActivity.audio.disablePitchDetector();
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disableChordDetector();
@@ -282,7 +290,9 @@ public class MainActivity extends AppCompatActivity {
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new ChordFragment())
+										.addToBackStack(BACK_STACK_ROOT_TAG)
 										.commit();
+								displayBackStack(getSupportFragmentManager());
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disablePitchDetector();
 								mActivity.audio.disableChordDetector();
@@ -298,7 +308,9 @@ public class MainActivity extends AppCompatActivity {
 								getSupportFragmentManager()
 										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
 										.replace(R.id.main_relative_layout, new TunerFragment())
+										.addToBackStack(BACK_STACK_ROOT_TAG)
 										.commit();
+								displayBackStack(getSupportFragmentManager());
 								mActivity.audio.enablePitchDetector();
 								mActivity.audio.disableNoteDetector();
 								mActivity.audio.disableChordDetector();
@@ -360,6 +372,19 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
+	@Override
+	public void onBackPressed(){
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		int count = fragmentManager.getBackStackEntryCount();
+		if(count == 1){
+			String name = fragmentManager.getBackStackEntryAt(0).getName();
+			if(name.equals(BACK_STACK_ROOT_TAG)){
+				return;
+			}
+		} else {
+			fragmentManager.popBackStackImmediate();
+		}
+	}
 
 	//PERMISSIONS
     //This method will be called when the user will tap on allow or deny
@@ -430,6 +455,16 @@ public class MainActivity extends AppCompatActivity {
 	public static void setUnlocked(ImageView v) {
 		v.setColorFilter(null);
 		v.setAlpha(255);
+	}
+
+	public static void displayBackStack(FragmentManager fm) {
+		int count = fm.getBackStackEntryCount();
+		Log.d("Backstack log", "There are " + count + " entries");
+		for (int i = 0; i < count; i++) {
+			// Display Backstack-entry data like
+			String name = fm.getBackStackEntryAt(i).getName();
+			Log.d("Backstack log", "entry " + i + ": " + name);
+		}
 	}
 
 

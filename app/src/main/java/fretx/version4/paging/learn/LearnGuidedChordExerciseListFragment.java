@@ -58,6 +58,7 @@ public class LearnGuidedChordExerciseListFragment extends Fragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		MainActivity.displayBackStack(mActivity.getSupportFragmentManager());
 		if(mActivity == null || mActivity.audio == null) return;
 	}
 
