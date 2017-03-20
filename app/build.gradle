@@ -43,7 +43,10 @@ dependencies {
     compile 'com.greysonparrelli.permiso:permiso:0.3.0'
     compile 'com.android.support:design:25.1.1'
     compile 'com.github.iammert:MaterialIntroView:1.5.2'
-    compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.0'
+
+    compile 'com.ncapdevi:frag-nav:1.4.0'
+    compile 'com.roughike:bottom-bar:2.1.1'
+
     compile 'com.afollestad:easyvideoplayer:0.3.0'
     compile 'com.google.firebase:firebase-messaging:10.2.0'
     compile 'com.google.firebase:firebase-appindexing:10.2.0'

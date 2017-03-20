@@ -6,42 +6,30 @@ import android.content.Intent;
 
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
 import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.Indexable;
 import com.google.firebase.appindexing.builders.Actions;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.greysonparrelli.permiso.Permiso;
-import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import co.mobiwise.materialintro.prefs.PreferencesManager;
-import co.mobiwise.materialintro.shape.Focus;
-import co.mobiwise.materialintro.shape.FocusGravity;
-import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.BluetoothClass;
 import fretx.version4.Config;
 import fretx.version4.R;
@@ -56,7 +44,6 @@ import fretx.version4.paging.tuner.TunerFragment;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
-import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.MusicUtils;
 
 
@@ -65,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
 	public FirebaseAnalytics mFirebaseAnalytics;
 	//VIEWS
 	private ImageView bluetoothButton, connectButton;
-	private BottomNavigationViewEx bottomNavigationView;
+//	private BottomNavigationViewEx bottomNavigationView;
+	private BottomBar bottomBar;
 	//FLAGS
 	private boolean AUDIO_PERMISSIONS_GRANTED = false;
 	private String SHOWCASE_ID = "bluetoothConnect";
@@ -227,96 +215,54 @@ public class MainActivity extends AppCompatActivity {
 	public void getGuiReferences() {
 		bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
 		connectButton = (ImageView) findViewById(R.id.connectButton);
-		bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
+//		bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
+		bottomBar = (BottomBar) findViewById(R.id.bottomBar);
 		previewButton = (ImageView) findViewById(R.id.previewButton);
 	}
 
 	public void setGuiEventListeners() {
-		bottomNavigationView.enableAnimation(false);
-		bottomNavigationView.enableShiftingMode(false);
-		bottomNavigationView.enableItemShiftingMode(false);
-		bottomNavigationView.setTextVisibility(true);
-		bottomNavigationView.setIconVisibility(true);
-		bottomNavigationView.setCurrentItem(0);
-		bottomNavigationView.setOnNavigationItemSelectedListener(
-				new BottomNavigationView.OnNavigationItemSelectedListener() {
-					@Override
-					public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-						FragmentManager fragmentManager = getSupportFragmentManager();
-						fragmentManager.popBackStack(BACK_STACK_ROOT_TAG,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-						switch (item.getItemId()) {
-							case R.id.action_play:
-								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-									bottomNavigationView.getMenu().getItem(i).setChecked(false);
-								}
-								item.setChecked(true);
-								BluetoothClass.sendToFretX(btNoLightsArray);
-//								btTurnOffLightsThread.run();
-								getSupportFragmentManager()
-										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-										.replace(R.id.main_relative_layout, new PlayFragment())
-										.addToBackStack(BACK_STACK_ROOT_TAG)
-										.commit();
-								mActivity.audio.disableNoteDetector();
-								mActivity.audio.disablePitchDetector();
-								mActivity.audio.disableChordDetector();
-								previewButton.setVisibility(View.VISIBLE);
-								break;
-							case R.id.action_learn:
-								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-									bottomNavigationView.getMenu().getItem(i).setChecked(false);
-								}
-								item.setChecked(true);
-//								btTurnOffLightsThread.run();
-								BluetoothClass.sendToFretX(btNoLightsArray);
-								getSupportFragmentManager()
-										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-										.replace(R.id.main_relative_layout, new LearnFragment())
-										.addToBackStack(BACK_STACK_ROOT_TAG)
-										.commit();
-								mActivity.audio.disablePitchDetector();
-								mActivity.audio.disableNoteDetector();
-								mActivity.audio.disableChordDetector();
-								previewButton.setVisibility(View.INVISIBLE);
-								break;
-							case R.id.action_chords:
-								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-									bottomNavigationView.getMenu().getItem(i).setChecked(false);
-								}
-								item.setChecked(true);
-								BluetoothClass.sendToFretX(btNoLightsArray);
-//								btTurnOffLightsThread.run();
-								getSupportFragmentManager()
-										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-										.replace(R.id.main_relative_layout, new ChordFragment())
-										.addToBackStack(BACK_STACK_ROOT_TAG)
-										.commit();
-								mActivity.audio.disableNoteDetector();
-								mActivity.audio.disablePitchDetector();
-								mActivity.audio.disableChordDetector();
-								previewButton.setVisibility(View.INVISIBLE);
-								break;
-							case R.id.action_tuner:
-								for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
-									bottomNavigationView.getMenu().getItem(i).setChecked(false);
-								}
-								item.setChecked(true);
-								BluetoothClass.sendToFretX(btNoLightsArray);
-//								btTurnOffLightsThread.run();
-								getSupportFragmentManager()
-										.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-										.replace(R.id.main_relative_layout, new TunerFragment())
-										.addToBackStack(BACK_STACK_ROOT_TAG)
-										.commit();
-								mActivity.audio.enablePitchDetector();
-								mActivity.audio.disableNoteDetector();
-								mActivity.audio.disableChordDetector();
-								previewButton.setVisibility(View.INVISIBLE);
-								break;
-						}
-						return false;
-					}
-				});
+		bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+			@Override
+			public void onTabSelected(@IdRes int tabId) {
+				BluetoothClass.sendToFretX(btNoLightsArray);
+				previewButton.setVisibility(View.INVISIBLE);
+				if(mActivity.audio != null){
+					mActivity.audio.disableNoteDetector();
+					mActivity.audio.disablePitchDetector();
+					mActivity.audio.disableChordDetector();
+				}
+				switch(tabId){
+					case R.id.bottomtab_play:
+						getSupportFragmentManager()
+								.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+								.replace(R.id.main_relative_layout, new PlayFragment())
+								.commit();
+						previewButton.setVisibility(View.VISIBLE);
+						break;
+					case R.id.bottomtab_learn:
+						getSupportFragmentManager()
+								.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+								.replace(R.id.main_relative_layout, new LearnFragment())
+								.commit();
+						break;
+					case R.id.bottomtab_chords:
+						getSupportFragmentManager()
+								.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+								.replace(R.id.main_relative_layout, new ChordFragment())
+								.commit();
+
+						break;
+					case R.id.bottomtab_tuner:
+						getSupportFragmentManager()
+								.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
+								.replace(R.id.main_relative_layout, new TunerFragment())
+								.addToBackStack(BACK_STACK_ROOT_TAG)
+								.commit();
+						mActivity.audio.enablePitchDetector();
+						break;
+				}
+			}
+		});
 
 		connectButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -373,13 +319,16 @@ public class MainActivity extends AppCompatActivity {
 	public void onBackPressed(){
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		int count = fragmentManager.getBackStackEntryCount();
-		if(count == 1){
-			String name = fragmentManager.getBackStackEntryAt(0).getName();
+		if(count >= 1){
+			for (int i = 0; i < count; i++) {
+				Log.d("backStack " + Integer.toString(i),fragmentManager.getBackStackEntryAt(i).getName());
+			}
+			String name = fragmentManager.getBackStackEntryAt(count-1).getName();
 			if(name.equals(BACK_STACK_ROOT_TAG)){
 				return;
+			} else {
+				fragmentManager.popBackStackImmediate();
 			}
-		} else {
-			fragmentManager.popBackStackImmediate();
 		}
 	}
 

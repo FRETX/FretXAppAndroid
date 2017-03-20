@@ -70,22 +70,19 @@
         android:id="@+id/main_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.81"
+        android:layout_weight="0.8"
         android:background="@android:color/white"
-
         />
 
-    <!--<android.support.design.widget.BottomNavigationView-->
-    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-        android:id="@+id/bottom_navigation"
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.09"
-        app:itemBackground="@color/primary"
-        app:itemIconTint="@color/bottom_navigation_selector"
-        app:itemTextColor="@color/bottom_navigation_selector"
-        app:menu="@menu/bottom_navigation_main"
-        android:animateLayoutChanges="true"
-        style="@style/Widget.Design.BottomNavigationView"
+        android:layout_weight="0.1"
+        app:bb_tabXmlResource="@xml/bottombar_tabs"
+        app:bb_inActiveTabColor="@color/primaryText"
+        app:bb_activeTabColor="@color/tertiaryText"
+        app:bb_titleTextAppearance="@style/bottomBarText"
         />
+
     </LinearLayout>

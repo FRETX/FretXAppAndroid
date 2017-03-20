@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/bottomtab_play"
+        icon="@drawable/ic_play"
+        title="PLAY"
+        barColorWhenSelected="@color/primary"
+        />
+    <tab
+        id="@+id/bottomtab_learn"
+        icon="@drawable/ic_learn"
+        title="LEARN"
+        barColorWhenSelected="@color/primary"
+        />
+    <tab
+        id="@+id/bottomtab_chords"
+        icon="@drawable/ic_chords"
+        title="CHORDS"
+        barColorWhenSelected="@color/primary"
+        />
+    <tab
+        id="@+id/bottomtab_tuner"
+        icon="@drawable/ic_tuner"
+        title="TUNER"
+        barColorWhenSelected="@color/primary"
+        />
+</tabs>
