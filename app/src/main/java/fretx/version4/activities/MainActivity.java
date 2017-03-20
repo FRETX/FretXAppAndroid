@@ -373,7 +373,8 @@ public class MainActivity extends AppCompatActivity {
 		if (!fragNavController.isRootFragment()) {
 			fragNavController.popFragment();
 		} else {
-			super.onBackPressed();
+			//Prevent app from closing when back button is pressed at root fragment
+			//super.onBackPressed();
 		}
 	}
 
