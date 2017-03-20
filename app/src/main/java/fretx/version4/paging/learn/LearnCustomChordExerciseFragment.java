@@ -189,13 +189,8 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 		ArrayList<Chord> chords = sequences.get(currentSequenceIndex).getChords();
 		if(chords.size()<1) return;
 		LearnChordExerciseFragment fragmentChordExercise = new LearnChordExerciseFragment();
-		FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-		fragmentTransaction.add(R.id.learn_container, fragmentChordExercise, "fragmentCustomChordExercise");
-		fragmentChordExercise.setChords(chords);
-		fragmentTransaction.addToBackStack("customChordMakerToCustomChordExercise");
-		fragmentTransaction.commit();
-		fragmentManager.executePendingTransactions();
+
+		mActivity.fragNavController.pushFragment(fragmentChordExercise);
 	}
 
 	private void showTutorial(){

@@ -70,7 +70,7 @@
         android:id="@+id/main_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8"
+        android:layout_weight="0.81"
         android:background="@android:color/white"
         />
 

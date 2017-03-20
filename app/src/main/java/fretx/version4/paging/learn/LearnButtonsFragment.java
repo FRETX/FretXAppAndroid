@@ -42,18 +42,10 @@ public class LearnButtonsFragment extends Fragment {
         btExerciseOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.learn_container, new LearnChordExerciseFragment());
-	            fragmentTransaction.replace(R.id.learn_container, new LearnCustomChordExerciseFragment());
-	            //TODO: back stack isn't working here
-                fragmentTransaction.addToBackStack("customChordExercise");
-
+	            mActivity.fragNavController.pushFragment(new LearnCustomChordExerciseFragment());
 	            mActivity.audio.disablePitchDetector();
 	            mActivity.audio.disableNoteDetector();
 	            mActivity.audio.enableChordDetector();
-
-                fragmentTransaction.commit();
 
             }
         });
@@ -61,18 +53,10 @@ public class LearnButtonsFragment extends Fragment {
 	    btExerciseTwo.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-			    FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-			    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			    fragmentTransaction.replace(R.id.learn_container, new LearnScaleExerciseFragment());
-			    //TODO: back stack isn't working here
-			    fragmentTransaction.addToBackStack("scaleExercise");
-
+			    mActivity.fragNavController.pushFragment(new LearnScaleExerciseFragment());
 			    mActivity.audio.enablePitchDetector();
 			    mActivity.audio.enableNoteDetector();
 			    mActivity.audio.disableChordDetector();
-
-			    fragmentTransaction.commit();
-
 		    }
 	    });
 
@@ -80,17 +64,10 @@ public class LearnButtonsFragment extends Fragment {
 	    btGuidedChordExercise.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-			    FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-			    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-			    fragmentTransaction.replace(R.id.learn_container, new LearnGuidedChordExerciseListFragment());
-			    fragmentTransaction.addToBackStack("guidedChordExercise");
-
+			    mActivity.fragNavController.pushFragment(new LearnGuidedChordExerciseListFragment());
 			    mActivity.audio.disablePitchDetector();
 			    mActivity.audio.disableNoteDetector();
 			    mActivity.audio.enableChordDetector();
-
-			    fragmentTransaction.commit();
-
 		    }
 	    });
 

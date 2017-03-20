@@ -118,11 +118,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 		backToListButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.learn_container, new LearnGuidedChordExerciseListFragment());
-//				fragmentTransaction.addToBackStack("guidedChordExercise");
-				fragmentTransaction.commit();
+				mActivity.fragNavController.popFragment();
 				dialog.dismiss();
 			}
 		});
@@ -131,20 +127,14 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 			@Override
 			public void onClick(View view) {
 				if (lastExerciseInList) {
-					FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-					fragmentTransaction.replace(R.id.learn_container, new LearnGuidedChordExerciseListFragment());
-//				fragmentTransaction.addToBackStack("guidedChordExercise");
-					fragmentTransaction.commit();
+					mActivity.fragNavController.popFragment();
+
 					dialog.dismiss();
 				} else {
 					LearnGuidedChordExerciseFragment guidedChordExerciseFragment = new LearnGuidedChordExerciseFragment();
 					guidedChordExerciseFragment.setExercise(listData.get(listPosition + 1));
 					guidedChordExerciseFragment.setListData(listData, listPosition + 1);
-					FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-					fragmentTransaction.replace(R.id.learn_container, guidedChordExerciseFragment, "PlayYoutubeFragment");
-					fragmentTransaction.commit();
+					mActivity.fragNavController.replaceFragment(guidedChordExerciseFragment);
 					dialog.dismiss();
 				}
 			}

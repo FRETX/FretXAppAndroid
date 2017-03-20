@@ -16,14 +16,14 @@ import fretx.version4.activities.MainActivity;
 
 public class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExercise> {
 
-	MainActivity context;
+	MainActivity mActivity;
 	int layoutResourceId;
 	ArrayList<GuidedChordExercise> data = new ArrayList<GuidedChordExercise>();
 
 	LearnGuidedChordExerciseListAdapter(MainActivity context , int layoutResourceId, ArrayList<GuidedChordExercise> data){
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
-		this.context = context;
+		this.mActivity = context;
 		this.data = data;
 	}
 
@@ -34,7 +34,7 @@ public class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChor
 		RecordHolder holder = null;
 
 		if (row == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			LayoutInflater inflater = ((Activity) mActivity).getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
 
 			holder = new RecordHolder();
@@ -65,12 +65,7 @@ public class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChor
 				LearnGuidedChordExerciseFragment guidedChordExerciseFragment = new LearnGuidedChordExerciseFragment();
 				guidedChordExerciseFragment.setExercise(item);
 				guidedChordExerciseFragment.setListData(data,position);
-				FragmentManager fragmentManager = context.getSupportFragmentManager();
-				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.learn_container, guidedChordExerciseFragment, "PlayYoutubeFragment");
-				fragmentTransaction.addToBackStack("guidedChordExercise");
-				fragmentTransaction.commit();
-
+				mActivity.fragNavController.pushFragment(guidedChordExerciseFragment);
 			}
 		});
 

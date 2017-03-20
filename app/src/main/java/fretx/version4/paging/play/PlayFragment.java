@@ -37,17 +37,6 @@ public class PlayFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Play Tab activated");
         mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
-
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.play_container, new PlayFragmentSearchList());
-                fragmentTransaction.commit();
-            }
-        });
         return rootView;
     }
 

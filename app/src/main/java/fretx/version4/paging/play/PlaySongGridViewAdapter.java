@@ -34,7 +34,7 @@ import rocks.fretx.audioprocessing.Chord;
  *
  */
 public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
-	MainActivity context;
+	MainActivity mActivity;
 	int layoutResourceId;
 	ArrayList<SongItem> data = new ArrayList<SongItem>();
 
@@ -42,7 +42,7 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 	                               ArrayList<SongItem> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
-		this.context = context;
+		this.mActivity = context;
 		this.data = data;
 	}
 
@@ -52,7 +52,7 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 		RecordHolder holder = null;
 
 		if (row == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			LayoutInflater inflater = ((Activity) mActivity).getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
 
 			holder = new RecordHolder();
@@ -73,20 +73,20 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 		holder.txtSecondary.setText(item.artist);
 		holder.txtPrimary.setText(item.song_title);
 
-		Picasso.with(context).load(item.imageURL()).placeholder(R.drawable.defaultthumb).into(holder.imageItem);
+		Picasso.with(mActivity).load(item.imageURL()).placeholder(R.drawable.defaultthumb).into(holder.imageItem);
 		//holder.imageItem.setImageDrawable(item.image);
 		row.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				context.audio.enableChordDetector();
-				context.audio.disableNoteDetector();
-				context.audio.disablePitchDetector();
-				if(context.previewEnabled){
+				mActivity.audio.enableChordDetector();
+				mActivity.audio.disableNoteDetector();
+				mActivity.audio.disablePitchDetector();
+				if(mActivity.previewEnabled){
 					Bundle bundle = new Bundle();
 					bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Preview: " + item.fretx_id);
 					bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
-					context.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+					mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 					//Launch exercise with sequence of chords
 					ArrayList<SongPunch> punches = item.punches();
 					SongPunch tmpSp;
@@ -114,7 +114,7 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 						}
 
 					if (chords.size() < 1) {
-						Toast.makeText(context, "No chord data found for this song", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mActivity, "No chord data found for this song", Toast.LENGTH_SHORT).show();
 						return;
 					}
 
@@ -155,19 +155,15 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 //					}
 
 					PlayChordPreviewFragment fragmentChordExercise = new PlayChordPreviewFragment();
-					FragmentManager fragmentManager = context.getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-					fragmentTransaction.add(R.id.play_container, fragmentChordExercise, "fragmentChordExercisePreviewMode");
 					fragmentChordExercise.setChords(chords);
 					fragmentChordExercise.setSongData(item);
-					fragmentTransaction.addToBackStack("listViewToChordPreview");
-					fragmentTransaction.commit();
-					fragmentManager.executePendingTransactions();
+					mActivity.fragNavController.pushFragment(fragmentChordExercise);
+
 				} else {
 					Bundle bundle = new Bundle();
 					bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Song: " + item.fretx_id);
 					bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
-					context.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+					mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 					boolean loadOfflinePlayer = false;
 					if (Config.useOfflinePlayer) {
@@ -178,51 +174,19 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 						}
 					}
 					if (loadOfflinePlayer) {
-						PlayOfflinePlayerFragment fragmentYoutubeFragment = new PlayOfflinePlayerFragment();
-						fragmentYoutubeFragment.setSong(item);
-						FragmentManager fragmentManager = context.getSupportFragmentManager();
-						FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-						fragmentTransaction.addToBackStack("playYoutubeList");
-						fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayYoutubeFragment");
-						fragmentTransaction.commit();
+						PlayOfflinePlayerFragment offlinePlayerFragment = new PlayOfflinePlayerFragment();
+						offlinePlayerFragment.setSong(item);
+						mActivity.fragNavController.pushFragment(offlinePlayerFragment);
 					} else {
-						PlayYoutubeFragment fragmentYoutubeFragment = new PlayYoutubeFragment();
-						fragmentYoutubeFragment.setSong(item);
-						FragmentManager fragmentManager = context.getSupportFragmentManager();
-						FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-						fragmentTransaction.addToBackStack("playYoutubeList");
-						fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayYoutubeFragment");
-						fragmentTransaction.commit();
+						PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
+						youtubeFragment.setSong(item);
+						mActivity.fragNavController.pushFragment(youtubeFragment);
 					}
 				}
 
 
 			}
 		});
-
-//		ImageButton prePracticeButton = (ImageButton) row.findViewById(R.id.prePractice);
-//		prePracticeButton.setOnClickListener(new View.OnClickListener(){
-//			public void onClick(View v){
-//				//Chord Preview Mode
-////				v.setVisibility(View.INVISIBLE);
-////				ViewGroup row = (ViewGroup) v.getParent();
-////				for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
-////					View view = row.getChildAt(itemPos);
-////					if (view instanceof ProgressBar) {
-////						ProgressBar progressBar = (ProgressBar) view; //Found it!
-////						progressBar.setVisibility(View.VISIBLE);
-////						break;
-////					}
-////				}
-//
-////				RelativeLayout parentView = (RelativeLayout) v.getParent();
-////				MainActivity mActivity = (MainActivity) v.getContext();
-////				ProgressBar progressBar = (ProgressBar) parentView.findViewById(R.id.chordPreviewProgressBar);
-////				v.setVisibility(View.INVISIBLE);
-////				progressBar.setVisibility(View.VISIBLE);
-//			}
-//		});
-
 		return row;
 
 	}

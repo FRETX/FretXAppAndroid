@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,11 +24,14 @@ import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.builders.Actions;
 
 import com.greysonparrelli.permiso.Permiso;
+import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import co.mobiwise.materialintro.prefs.PreferencesManager;
 import fretx.version4.BluetoothClass;
@@ -38,8 +42,10 @@ import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.Songlist;
 import fretx.version4.paging.chords.ChordFragment;
+import fretx.version4.paging.learn.LearnButtonsFragment;
 import fretx.version4.paging.learn.LearnFragment;
 import fretx.version4.paging.play.PlayFragment;
+import fretx.version4.paging.play.PlayFragmentSearchList;
 import fretx.version4.paging.tuner.TunerFragment;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
@@ -70,7 +76,15 @@ public class MainActivity extends AppCompatActivity {
 	byte[] btNoLightsArray = {Byte.valueOf("0")};
 	ImageView previewButton;
 	public boolean previewEnabled = false;
-	public static String BACK_STACK_ROOT_TAG = "backStackRoot";
+
+	private List<Fragment> fragments = new ArrayList<>(4);
+	public FragNavController fragNavController;
+
+	private static int INDEX_PLAY = FragNavController.TAB1;
+	private static int INDEX_LEARN = FragNavController.TAB2;
+	private static int INDEX_CHORDS = FragNavController.TAB3;
+	private static int INDEX_TUNER = FragNavController.TAB4;
+
 
 //	ConnectThread btTurnOffLightsThread = new ConnectThread(btNoLightsArray);
 
@@ -101,16 +115,24 @@ public class MainActivity extends AppCompatActivity {
 		AppCache.initialize(ctx);
 		Songlist.initialize(this);
 
+		fragments.add(new PlayFragmentSearchList());
+		fragments.add(new LearnButtonsFragment());
+		fragments.add(new ChordFragment());
+		fragments.add(new TunerFragment());
+		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
+
 		getGuiReferences();
 		setGuiEventListeners();
 
 		setLocked(previewButton);
 
+		bottomBar.selectTabAtPosition(INDEX_PLAY);
 
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.main_relative_layout, new PlayFragment())
-				.commit();
+//
+//		getSupportFragmentManager()
+//				.beginTransaction()
+//				.replace(R.id.main_relative_layout, new PlayFragment())
+//				.commit();
 
 		showTutorial();
 
@@ -233,34 +255,27 @@ public class MainActivity extends AppCompatActivity {
 				}
 				switch(tabId){
 					case R.id.bottomtab_play:
-						getSupportFragmentManager()
-								.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-								.replace(R.id.main_relative_layout, new PlayFragment())
-								.commit();
+						fragNavController.switchTab(INDEX_PLAY);
 						previewButton.setVisibility(View.VISIBLE);
 						break;
 					case R.id.bottomtab_learn:
-						getSupportFragmentManager()
-								.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-								.replace(R.id.main_relative_layout, new LearnFragment())
-								.commit();
+						fragNavController.switchTab(INDEX_LEARN);
 						break;
 					case R.id.bottomtab_chords:
-						getSupportFragmentManager()
-								.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-								.replace(R.id.main_relative_layout, new ChordFragment())
-								.commit();
-
+						fragNavController.switchTab(INDEX_CHORDS);
 						break;
 					case R.id.bottomtab_tuner:
-						getSupportFragmentManager()
-								.beginTransaction().setCustomAnimations(R.anim.fadein, R.anim.fadeout)
-								.replace(R.id.main_relative_layout, new TunerFragment())
-								.addToBackStack(BACK_STACK_ROOT_TAG)
-								.commit();
+						fragNavController.switchTab(INDEX_TUNER);
 						mActivity.audio.enablePitchDetector();
 						break;
 				}
+			}
+		});
+
+		bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+			@Override
+			public void onTabReSelected(@IdRes int tabId) {
+				fragNavController.clearStack();
 			}
 		});
 
@@ -315,23 +330,6 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
-	@Override
-	public void onBackPressed(){
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		int count = fragmentManager.getBackStackEntryCount();
-		if(count >= 1){
-			for (int i = 0; i < count; i++) {
-				Log.d("backStack " + Integer.toString(i),fragmentManager.getBackStackEntryAt(i).getName());
-			}
-			String name = fragmentManager.getBackStackEntryAt(count-1).getName();
-			if(name.equals(BACK_STACK_ROOT_TAG)){
-				return;
-			} else {
-				fragmentManager.popBackStackImmediate();
-			}
-		}
-	}
-
 	//PERMISSIONS
     //This method will be called when the user will tap on allow or deny
     @Override
@@ -366,6 +364,24 @@ public class MainActivity extends AppCompatActivity {
 //				.setTarget((ImageView) findViewById(R.id.connectButton))
 //				.setUsageId("tutorialConnectBluetoothWithLogo") //THIS SHOULD BE UNIQUE ID
 //				.show();
+	}
+
+	@Override
+	public void onBackPressed(){
+		if (!fragNavController.isRootFragment()) {
+			fragNavController.popFragment();
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (fragNavController != null) {
+			fragNavController.onSaveInstanceState(outState);
+		}
 	}
 
 	public Action getAction() {

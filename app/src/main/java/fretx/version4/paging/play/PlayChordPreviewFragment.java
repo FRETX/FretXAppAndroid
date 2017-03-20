@@ -84,20 +84,14 @@ public class PlayChordPreviewFragment extends Fragment
 				if (loadOfflinePlayer) {
 					PlayOfflinePlayerFragment fragmentYoutubeFragment = new PlayOfflinePlayerFragment();
 					fragmentYoutubeFragment.setSong(songItem);
-					FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-					fragmentTransaction.addToBackStack("playYoutubeList");
-					fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayYoutubeFragment");
-					fragmentTransaction.commit();
+					mActivity.fragNavController.pushFragment(fragmentYoutubeFragment);
 				} else {
 					PlayYoutubeFragment fragmentYoutubeFragment = new PlayYoutubeFragment();
 					fragmentYoutubeFragment.setSong(songItem);
-					FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
-					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-					fragmentTransaction.addToBackStack("playYoutubeList");
-					fragmentTransaction.replace(R.id.play_container, fragmentYoutubeFragment, "PlayYoutubeFragment");
-					fragmentTransaction.commit();
+					mActivity.fragNavController.pushFragment(fragmentYoutubeFragment);
+
 				}
+
 			}
 		});
 	}
