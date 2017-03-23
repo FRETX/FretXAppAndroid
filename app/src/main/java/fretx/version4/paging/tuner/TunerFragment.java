@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -24,6 +25,7 @@ public class TunerFragment extends Fragment {
 	private MainActivity mActivity;
 	RelativeLayout rootView = null;
 	TunerView tunerView = null;
+	private boolean backgroundMicWarningShown;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,16 @@ public class TunerFragment extends Fragment {
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		if(mActivity == null || mActivity.audio == null) return;
+
+		if (!mActivity.audio.isBufferAvailable()) {
+			Log.d("isBufferAvailable", "false");
+			if (!backgroundMicWarningShown) {
+				Toast.makeText(getContext(), getResources().getString(R.string.microphone_used_background), Toast.LENGTH_LONG).show();
+				backgroundMicWarningShown = true;
+			}
+			return;
+		}
+
 		initSystemServices();
 	}
 

@@ -189,7 +189,7 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 		ArrayList<Chord> chords = sequences.get(currentSequenceIndex).getChords();
 		if(chords.size()<1) return;
 		LearnChordExerciseFragment fragmentChordExercise = new LearnChordExerciseFragment();
-
+		fragmentChordExercise.setChords(chords);
 		mActivity.fragNavController.pushFragment(fragmentChordExercise);
 	}
 
