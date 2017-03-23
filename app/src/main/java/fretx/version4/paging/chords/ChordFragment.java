@@ -1,11 +1,13 @@
 package fretx.version4.paging.chords;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +15,12 @@ import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import org.billthefarmer.mididriver.GeneralMidiConstants;
+import org.billthefarmer.mididriver.MidiConstants;
+import org.billthefarmer.mididriver.MidiDriver;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import co.mobiwise.materialintro.shape.Focus;
@@ -25,25 +33,42 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
+import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-public class ChordFragment extends Fragment
+public class ChordFragment extends Fragment implements MidiDriver.OnMidiStartListener
 {
 	Chord currentChord;
     MainActivity mActivity;
     View rootView;
 	FretboardView fretboardView;
 
+	Button playChordButton;
+
+	MidiDriver midiDriver;
+	private byte[] event;
+	private int[] config;
+	private int notesIndex;
+	Handler handler = new Handler();
+
 	HashMap<String,FingerPositions> chordFingerings;
 
-	public ChordFragment(){
+	@Override
+	public void onMidiStart() {
+		Log.d(this.getClass().getName(), "onMidiStart()");
+		event = new byte[2];
+		event[0] = (byte) 0xC0; //"Program Change" event for channel 1
+		event[1] = GeneralMidiConstants.ACOUSTIC_GUITAR_NYLON; //set instrument
+		midiDriver.write(event);
+	}
+
+	public ChordFragment (){
 
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mActivity = (MainActivity) getActivity();
-
         rootView = inflater.inflate(R.layout.chord_fragment, container, false);
         return  rootView;
     }
@@ -56,7 +81,16 @@ public class ChordFragment extends Fragment
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		fretboardView = (FretboardView) mActivity.findViewById(R.id.fretboardView);
+		
+		playChordButton = (Button) mActivity.findViewById(R.id.playChordButton);
+		
 		chordFingerings = MusicUtils.parseChordDb();
+
+		// Instantiate the driver.
+		midiDriver = new MidiDriver();
+		// Set the listener.
+		midiDriver.setOnMidiStartListener(this);
+
 
 		BluetoothClass.sendToFretX(Util.str2array("{0}"));
 
@@ -136,8 +170,85 @@ public class ChordFragment extends Fragment
 		initialRoot.setBackgroundResource(R.drawable.picker_text_background);
 		initialType.setBackgroundResource(R.drawable.picker_text_background);
 		updateCurrentChord(initialRoot.getText().toString(),initialType.getText().toString());
+
+		playChordButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				final int[] notes = currentChord.getMidiNotes();
+				notesIndex = 0;
+				final int noteDelay = 30;
+				final int sustainDelay = 500;
+
+				Log.d("notes", Arrays.toString(notes));
+
+				final Runnable turnOffAllNotes = new Runnable() {
+					@Override
+					public void run() {
+						for (int i = 0; i < notes.length; i++) {
+							stopNote(notes[i]);
+						}		
+					}
+				};
+
+				Runnable playNoteSequence = new Runnable() {
+					@Override
+					public void run() {
+						if(notesIndex < notes.length){
+							playNote(notes[notesIndex]);
+							notesIndex++;
+							handler.postDelayed(this,noteDelay);
+						} else {
+							handler.postDelayed(turnOffAllNotes,sustainDelay);
+						}
+
+					}
+				};
+
+				handler.post(playNoteSequence);
+
+
+				
+			}
+		});
+
 		showTutorial();
 
+	}
+
+	private void playNote(int note){
+		event = new byte[3];
+		event[0] = (byte) (0x90 | 0x00);  // 0x90 = note On, 0x00 = channel 1
+		event[1] =  Byte.parseByte(Integer.toString(note));
+		event[2] = (byte) 0x7F;  // 0x7F = the maximum velocity (127)
+		midiDriver.write(event);
+
+		Log.d("playing note",Integer.toString(note));
+	}
+
+	private void stopNote(int note) {
+		event = new byte[3];
+		event[0] = (byte) (0x80 | 0x00);  // 0x80 = note Off, 0x00 = channel 1
+		event[1] = Byte.parseByte(Integer.toString(note));
+		event[2] = (byte) 0x00;  // 0x00 = the minimum velocity (0)
+		midiDriver.write(event);
+		Log.d("stopping note", Integer.toString(note));
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		midiDriver.start();
+		config = midiDriver.config();
+		Log.d(this.getClass().getName(), "maxVoices: " + config[0]);
+		Log.d(this.getClass().getName(), "numChannels: " + config[1]);
+		Log.d(this.getClass().getName(), "sampleRate: " + config[2]);
+		Log.d(this.getClass().getName(), "mixBufferSize: " + config[3]);
+	}
+
+	@Override
+	public void onPause(){
+		super.onPause();
+		midiDriver.stop();
 	}
 
 	@Override
