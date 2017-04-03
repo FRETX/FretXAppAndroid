@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
    adding content to the index */
 //		FirebaseAppIndex.getInstance().update(getIndexable());
 		FirebaseUserActions.getInstance().start(getAction());
-		Log.d("Firebase Token", FirebaseInstanceId.getInstance().getToken());
+//		Log.d("Firebase Token", FirebaseInstanceId.getInstance().getToken());
 
 		// ATTENTION: This was auto-generated to implement the App Indexing API.
 		// See https://g.co/AppIndexing/AndroidStudio for more information.
