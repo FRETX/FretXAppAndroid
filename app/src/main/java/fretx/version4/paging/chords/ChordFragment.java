@@ -52,7 +52,8 @@ public class ChordFragment extends Fragment
 		super.onActivityCreated(savedInstanceState);
 
 		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Chords Tab activated");
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Chords");
+		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TAB");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		fretboardView = (FretboardView) mActivity.findViewById(R.id.fretboardView);

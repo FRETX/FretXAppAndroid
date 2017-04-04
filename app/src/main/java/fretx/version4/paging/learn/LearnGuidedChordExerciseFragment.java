@@ -45,7 +45,8 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
 		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Guided Chord Exercise activated");
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Guided Chord");
+		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		rootView = (FrameLayout) inflater.inflate(R.layout.learn_guided_chord_exercise_layout, container, false);

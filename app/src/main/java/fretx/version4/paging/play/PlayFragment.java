@@ -35,7 +35,8 @@ public class PlayFragment extends Fragment {
         rootView = inflater.inflate(R.layout.play_fragment, container, false);
 
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Play Tab activated");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Play");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TAB");
         mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         return rootView;
     }
