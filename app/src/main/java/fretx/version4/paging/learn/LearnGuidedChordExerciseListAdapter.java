@@ -57,14 +57,11 @@ public class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChor
 		}
 		holder.chords.setText(chordsString);
 
-		//TODO: onClickListener
-
 		row.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				LearnGuidedChordExerciseFragment guidedChordExerciseFragment = new LearnGuidedChordExerciseFragment();
 				guidedChordExerciseFragment.setExercise(item);
-				guidedChordExerciseFragment.setListData(data,position);
 				mActivity.fragNavController.pushFragment(guidedChordExerciseFragment);
 			}
 		});

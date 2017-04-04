@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,12 +37,19 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 public class LearnCustomChordExerciseFragment extends Fragment
 implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
-	Chord currentChord;
 	MainActivity mActivity;
+
+	//view
 	FrameLayout rootView;
-	LearnCustomChordExerciseView chordExerciseView;
-	HashMap<String,FingerPositions> chordFingerings;
-	Button addButton, addedButton, startButton;
+	FretboardView fretboardView;
+	TextView chordText;
+	Button addButton;
+	Button addedButton;
+	Button startButton;
+
+	//chords
+	Chord currentChord;
+	HashMap<String,FingerPositions> chordDb;
 	ArrayList<Sequence> sequences;
 	int currentSequenceIndex;
 
@@ -49,7 +58,11 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		//retrieve saved sequences
 		sequences = LearnCustomChordExerciseJson.load(getContext());
+
+		//add a new empty sequence
 		sequences.add(0, new Sequence(null, new ArrayList<Chord>()));
 		currentSequenceIndex = 0;
 	}
@@ -57,41 +70,45 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
+
+		//retrieve chords database
+		chordDb = MusicUtils.parseChordDb();
+
+		//firebase log
 		Bundle bundle = new Bundle();
 		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Custom Chord Exercise activated");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+		//setup view
 		rootView = (FrameLayout) inflater.inflate(R.layout.chord_custom_sequence_layout, container, false);
+		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
+		chordText = (TextView) rootView.findViewById(R.id.textChord);
+		addButton = (Button) rootView.findViewById(R.id.addChordButton);
+		addedButton = (Button) rootView.findViewById(R.id.addedChordButton);
+		startButton = (Button) rootView.findViewById(R.id.startExerciseButton);
+
 		return  rootView;
 	}
 
     @Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-		chordFingerings = MusicUtils.parseChordDb();
+
+		//clear fretx matrix
 		BluetoothClass.sendToFretX(Util.str2array("{0}"));
 	}
 
 	@Override
 	public void onViewCreated(View v, Bundle b){
-		initGui();
+		populateChordPicker();
+		setOnClickListeners();
 		showTutorial();
 	}
 
 	private void updateCurrentChord(String root , String type){
 		currentChord = new Chord(root,type);
-		chordExerciseView.setChord(currentChord);
-	}
-
-	private void initGui(){
-		chordExerciseView = (LearnCustomChordExerciseView) rootView.findViewById(R.id.customChordExerciseView);
-		chordExerciseView.setRootView(rootView);
-		chordExerciseView.setFretBoardView((FretboardView) rootView.findViewById(R.id.fretboardView));
-		chordExerciseView.setChordDb(chordFingerings);
-		addButton = (Button) rootView.findViewById(R.id.addChordButton);
-		addedButton = (Button) rootView.findViewById(R.id.addedChordButton);
-		startButton = (Button) rootView.findViewById(R.id.startExerciseButton);
-		populateChordPicker();
-		setOnClickListeners();
+		fretboardView.setFretboardPositions(currentChord.getFingerPositions());
+		chordText.setText(currentChord.toString());
 	}
 
 	private TextView populateChordPickerLine(String[] contents, @IdRes int idRes,

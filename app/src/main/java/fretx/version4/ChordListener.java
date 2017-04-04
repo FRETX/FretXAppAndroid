@@ -1,13 +1,9 @@
 package fretx.version4;
 
 import android.os.CountDownTimer;
-import android.os.Looper;
 
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-
-import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
@@ -17,67 +13,84 @@ import rocks.fretx.audioprocessing.Chord;
  */
 
 public class ChordListener {
-	CountDownTimer chordTimer;
+    private final String TAG = "AUDIO";
 
-	private long correctlyPlayedAccumulator = 0;
-	boolean listening = false;
-	protected ArrayList<Chord> chords = new ArrayList<Chord>(0);
-	private final double VOLUME_THRESHOLD = -9;
-	private long timerTick, onsetIgnoreDuration, chordListenDuration, timerDuration, correctlyPlayedDuration;
-	private int handlerInterval;
+    private AudioProcessing audio;
+    private Chord targetChord;
+    private double correctlyPlayedAccumulator;
 
-	private Handler mHandler = new Handler(Looper.getMainLooper());
-	private AudioProcessing audio;
-	private Runnable listener;
+    private long timerTick;
+    private long onsetIgnoreDuration;
+    private long chordListenDuration;
+    private long timerDuration;
+    private long correctlyPlayedDuration;
 
-	private Observable detectedChord;
+    private final long TIMER_TICK = 20;
+    private final long ONSET_IGNORE_DURATION = 0; //in miliseconds
+    private final long CHORD_LISTEN_DURATION = 500; //in miliseconds
+    private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
+    private final long CORRECTLY_PLAYED_DURATION = 160; //in milliseconds
 
-	private final int HANDLER_INTERVAL = 25; //in miliseconds
-	private final long TIMER_TICK = 20;
-	private final long ONSET_IGNORE_DURATION = 0; //in miliseconds
-	private final long CHORD_LISTEN_DURATION = 500; //in miliseconds
-	private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
-	private final long CORRECTLY_PLAYED_DURATION = 160; //in milliseconds
+    private final double VOLUME_THRESHOLD = -9;
 
+    CountDownTimer chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
+        public void onTick(long millisUntilFinished) {
+            if (!audio.isProcessing() || !audio.isInitialized())
+                return;
 
-	public ChordListener(AudioProcessing audio){
+            if (!audio.isBufferAvailable()) {
+                Log.d(TAG, "isBufferAvailable = false");
+                return;
+            }
 
-		this.audio = audio;
+            if (audio.getVolume() < VOLUME_THRESHOLD) {
+                this.cancel();
+                correctlyPlayedAccumulator = 0;
+                Log.d(TAG, "prematurely canceled due to low volume");
+            }
 
-		timerTick = TIMER_TICK;
-		onsetIgnoreDuration = ONSET_IGNORE_DURATION;
-		chordListenDuration = CHORD_LISTEN_DURATION;
-		timerDuration = TIMER_DURATION;
-		correctlyPlayedDuration = CORRECTLY_PLAYED_DURATION;
-		handlerInterval = HANDLER_INTERVAL;
+            if (millisUntilFinished <= CHORD_LISTEN_DURATION) {
+                if (audio.isProcessing())
+                    return;
 
-		listener = new Runnable() {
-			@Override
-			public void run() {
-				try{
-					//TODO: listen to chord changes
-				} finally {
-					mHandler.postDelayed(listener,handlerInterval);
-				}
-			}
-		};
-	}
+                Chord playedChord = audio.getChord();
+                Log.d(TAG, "played:" + playedChord.toString());
 
-	public void startListening() {
-		listener.run();
-	}
+                if (targetChord.toString().equals(playedChord.toString())) {
+                    correctlyPlayedAccumulator += TIMER_TICK;
+                } else {
+                    correctlyPlayedAccumulator = 0;
+                }
+                Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
+            }
 
-	public void stopListening(){
-		mHandler.removeCallbacks(listener);
-	}
+            if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION) {
+                this.cancel();
+                Log.d(TAG, "stopping timer");
+            }
+        }
 
-	public void addObserver(Observer o){
-		detectedChord.addObserver(o);
-	}
+        public void onFinish() {
+            Log.d(TAG, "finished without hearing enough of correct chords");
+        }
+    };
 
+    public ChordListener(@NonNull AudioProcessing audio) {
+        this.audio = audio;
 
+        timerTick = TIMER_TICK;
+        onsetIgnoreDuration = ONSET_IGNORE_DURATION;
+        chordListenDuration = CHORD_LISTEN_DURATION;
+        timerDuration = TIMER_DURATION;
+        correctlyPlayedDuration = CORRECTLY_PLAYED_DURATION;
+    }
 
+    void setTargetChord(Chord chord) {
+        targetChord = chord;
+    }
+
+    void listen() {
+        correctlyPlayedAccumulator = 0;
+        chordTimer.start();
+    }
 }
-
-
-

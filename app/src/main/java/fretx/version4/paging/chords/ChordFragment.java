@@ -72,6 +72,7 @@ public class ChordFragment extends Fragment implements MidiDriver.OnMidiStartLis
         rootView = inflater.inflate(R.layout.chord_fragment, container, false);
         return  rootView;
     }
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);

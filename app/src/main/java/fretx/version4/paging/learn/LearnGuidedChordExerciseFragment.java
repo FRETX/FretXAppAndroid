@@ -1,75 +1,77 @@
 package fretx.version4.paging.learn;
 
-
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import rocks.fretx.audioprocessing.Chord;
+import rocks.fretx.audioprocessing.FingerPositions;
+import rocks.fretx.audioprocessing.MusicUtils;
 
 public class LearnGuidedChordExerciseFragment extends Fragment{
+	private MainActivity mActivity;
+
+	//view
+	private FretboardView fretboardView;
+    private TextView chordsText;
+    private TextView chordText;
+
+	//chords
 	int nRepetitions;
-	LearnGuidedChordExerciseView chordExerciseView;
-
-	MainActivity mActivity;
-
-	FrameLayout rootView = null;
-	FretboardView fretboardView;
+    int chordIndex;
 	ArrayList<Chord> exerciseChords;
+    private HashMap<String,FingerPositions> chordDb;
 
-	ArrayList<GuidedChordExercise> listData;
-	int listPosition;
-
-	public void setListData(ArrayList<GuidedChordExercise> listData, int listPosition) {
-		this.listData = listData;
-		this.listPosition = listPosition;
-	}
-
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //firebase log
 		mActivity = (MainActivity) getActivity();
 		Bundle bundle = new Bundle();
 		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Guided Chord Exercise activated");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-		rootView = (FrameLayout) inflater.inflate(R.layout.learn_guided_chord_exercise_layout, container, false);
-		chordExerciseView = (LearnGuidedChordExerciseView) rootView.findViewById(R.id.guidedChordExerciseView);
-		chordExerciseView.setmActivity(mActivity);
-		chordExerciseView.setRootView(rootView);
+        //retrieve chords database
+        chordDb = MusicUtils.parseChordDb();
+
+		//setup view
+        FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.learn_guided_chord_exercise_layout, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
-		chordExerciseView.setFretBoardView(fretboardView);
+        chordsText = (TextView) rootView.findViewById(R.id.exerciseChordsTextView);
+        chordText = (TextView) rootView.findViewById(R.id.textChord);
 
 		return rootView;
 	}
 
+    @Override
 	public void onViewCreated(View v, Bundle savedInstanceState) {
-		chordExerciseView.setFragment(this);
-		chordExerciseView.setChords(exerciseChords);
-		TextView exerciseChordsText = (TextView) v.findViewById(R.id.exerciseChordsTextView);
-		if (exerciseChordsText == null) return;
+		//display all chords at bottom
 		String songChordsString = "";
 		for (int i = 0; i < exerciseChords.size(); i++) {
 			songChordsString += exerciseChords.get(i).toString() + " ";
 			Log.d("songChordString", songChordsString);
 		}
-		exerciseChordsText.setText(songChordsString);
-		chordExerciseView.startTimer();
+		chordsText.setText(songChordsString);
+
+        //setup the first chord
+        chordIndex = 0;
+        if (exerciseChords.size() > 0)
+            setChord();
+
+		//chordExerciseView.startTimer();
 	}
 
 	public void setExercise(GuidedChordExercise exercise){
@@ -82,69 +84,20 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 		Log.d("nRepetitions",Integer.toString(nRepetitions));
 	}
 
+    @SuppressWarnings("unchecked")
 	public void setChords(ArrayList<Chord> chords) {
 		this.exerciseChords = (ArrayList<Chord>) chords.clone();
-		if (chordExerciseView == null) return;
-		chordExerciseView.setChords(this.exerciseChords);
 	}
 
+    private void setChord() {
+        Chord actualChord = exerciseChords.get(chordIndex);
 
-	public void finishExercise(long elapsedTime){
-
-
-		final Dialog dialog = new Dialog(mActivity);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setCancelable(false);
-		dialog.setContentView(R.layout.guided_exercise_finished_layout);
-
-
-
-		int seconds = (int) (elapsedTime / 1000);
-		int minutes = seconds / 60;
-		seconds = seconds % 60;
-		TextView finishedElapsedTimeText = (TextView) dialog.findViewById(R.id.finishedElapsedTimeText);
-		finishedElapsedTimeText.setText("You finished this exercise in: " + String.format("%d:%02d", minutes, seconds));
-
-		//Set onclicklisteners
-		Button backToListButton = (Button) dialog.findViewById(R.id.finishedBackButton);
-		Button nextExerciseButton = (Button) dialog.findViewById(R.id.finishedNextExerciseButton);
-
-		final boolean lastExerciseInList;
-		if (listPosition == listData.size() - 1) {
-			nextExerciseButton.setText("FINISH");
-			lastExerciseInList = true;
-		} else lastExerciseInList = false;
-
-		backToListButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mActivity.fragNavController.popFragment();
-				dialog.dismiss();
-			}
-		});
-
-		nextExerciseButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (lastExerciseInList) {
-					mActivity.fragNavController.popFragment();
-
-					dialog.dismiss();
-				} else {
-					LearnGuidedChordExerciseFragment guidedChordExerciseFragment = new LearnGuidedChordExerciseFragment();
-					guidedChordExerciseFragment.setExercise(listData.get(listPosition + 1));
-					guidedChordExerciseFragment.setListData(listData, listPosition + 1);
-					mActivity.fragNavController.replaceFragment(guidedChordExerciseFragment);
-					dialog.dismiss();
-				}
-			}
-		});
-
-		dialog.show();
-		Window window = dialog.getWindow();
-		window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-
-	}
-
+        //update chord title
+        chordText.setText(actualChord.toString());
+        //update finger position
+        fretboardView.setFretboardPositions(actualChord.getFingerPositions());
+        //update led
+        byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(actualChord.toString(), chordDb);
+        BluetoothClass.sendToFretX(bluetoothArray);
+    }
 }
