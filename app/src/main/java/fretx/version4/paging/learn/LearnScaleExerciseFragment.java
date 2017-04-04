@@ -41,7 +41,8 @@ public class LearnScaleExerciseFragment extends Fragment {
 		rootView = (LinearLayout) inflater.inflate(R.layout.learn_scale_exercise_layout, container, false);
 
 		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Scale Exercise activated");
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Scale");
+		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);

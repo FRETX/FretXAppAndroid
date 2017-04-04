@@ -34,7 +34,8 @@ public class LearnButtonsFragment extends Fragment {
 
 
 	    Bundle bundle = new Bundle();
-	    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Learn Tab activated");
+	    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Learn");
+		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TAB");
 	    mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         rootView = inflater.inflate(R.layout.learn_fragment_buttons, container, false);

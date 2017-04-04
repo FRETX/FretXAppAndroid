@@ -58,7 +58,8 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
 		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Custom Chord Exercise activated");
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Custom Chord");
+		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 		rootView = (FrameLayout) inflater.inflate(R.layout.chord_custom_sequence_layout, container, false);
 		return  rootView;
