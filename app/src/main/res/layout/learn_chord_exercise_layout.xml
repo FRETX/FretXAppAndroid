@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_height="20sp" />
 
-    <fretx.version4.paging.learn.LearnChordExerciseView
+        <fretx.version4.paging.learn.LearnChordExerciseView
         android:id="@+id/chordExerciseView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:orientation="vertical"
         >
 
-        <fretx.version4.FretboardView
+            <fretx.version4.FretboardView
             android:id="@+id/fretboardView"
             android:layout_below="@+id/textChord"
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
             android:layout_margin="@dimen/fretboardMargin"
             />
 
-        <TextView
+            <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
@@ -48,38 +48,48 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
-        <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/redLightsView"
-            android:clickable="false"
-            android:visibility="invisible"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/redLightsView"
+                android:clickable="false"
+                android:visibility="invisible"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
 
-        <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/blueLightsView"
-            android:clickable="false"
-            android:visibility="invisible"
-            android:layout_below="@+id/textChord"
-            android:layout_alignParentEnd="true"/>
+            <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/blueLightsView"
+                android:clickable="false"
+                android:visibility="invisible"
+                android:layout_below="@+id/textChord"
+                android:layout_alignParentEnd="true" />
 
-        <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/noLightsView"
-            android:clickable="false"
-            android:visibility="invisible"
-            android:layout_marginTop="29dp"
-            android:layout_below="@+id/textChord"
-            android:layout_alignParentStart="true"/>
+            <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/noLightsView"
+                android:clickable="false"
+                android:visibility="invisible"
+                android:layout_marginTop="29dp"
+                android:layout_below="@+id/textChord"
+                android:layout_alignParentStart="true" />
 
-    </fretx.version4.paging.learn.LearnChordExerciseView>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play Chord"
+                android:background="@color/primary"
+                android:textColor="@color/tertiaryText"
+                android:id="@+id/playChordButton"
+                android:layout_below="@+id/fretboardView"
+                android:layout_centerHorizontal="true" />
+
+        </fretx.version4.paging.learn.LearnChordExerciseView>
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,6 +99,7 @@
             android:textSize="20dp"
             android:id="@+id/exerciseChordsTextView"
             />
-</RelativeLayout>
+
+    </RelativeLayout>
 
 </FrameLayout>

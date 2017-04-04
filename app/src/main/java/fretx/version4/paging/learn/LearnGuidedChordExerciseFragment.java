@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.MidiPlayer;
 import rocks.fretx.audioprocessing.Chord;
 
 public class LearnGuidedChordExerciseFragment extends Fragment{
 	int nRepetitions;
-	LearnGuidedChordExerciseView chordExerciseView;
+	private LearnGuidedChordExerciseView chordExerciseView;
+	private MidiPlayer midiPlayer;
 
 	MainActivity mActivity;
 
@@ -42,6 +44,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 		this.listPosition = listPosition;
 	}
 
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
 		Bundle bundle = new Bundle();
@@ -58,6 +61,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 		return rootView;
 	}
 
+	@Override
 	public void onViewCreated(View v, Bundle savedInstanceState) {
 		chordExerciseView.setFragment(this);
 		chordExerciseView.setChords(exerciseChords);
@@ -70,6 +74,33 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 		}
 		exerciseChordsText.setText(songChordsString);
 		chordExerciseView.startTimer();
+
+		midiPlayer = new MidiPlayer();
+
+		Button button = (Button) chordExerciseView.findViewById(R.id.playChordButton);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				midiPlayer.playChord(chordExerciseView.getChord());
+			}
+		});
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		midiPlayer.start();
+		int[] config = midiPlayer.config();
+		Log.d(this.getClass().getName(), "maxVoices: " + config[0]);
+		Log.d(this.getClass().getName(), "numChannels: " + config[1]);
+		Log.d(this.getClass().getName(), "sampleRate: " + config[2]);
+		Log.d(this.getClass().getName(), "mixBufferSize: " + config[3]);
+	}
+
+	@Override
+	public void onPause(){
+		super.onPause();
+		midiPlayer.stop();
 	}
 
 	public void setExercise(GuidedChordExercise exercise){

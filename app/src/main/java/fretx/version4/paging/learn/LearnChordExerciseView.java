@@ -211,10 +211,11 @@ public class LearnChordExerciseView extends RelativeLayout {
 			}
 			invalidate();
 		}
-
 	}
 
-
+	public Chord getChord() {
+		return chords.get(chordsIndex);
+	}
 }
 
 

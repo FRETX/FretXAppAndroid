@@ -7,6 +7,7 @@ import android.widget.TextView;
 import fretx.version4.BluetoothClass;
 import fretx.version4.R;
 import fretx.version4.paging.learn.LearnChordExerciseView;
+import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.MusicUtils;
 
 /**

@@ -6,28 +6,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import fretx.version4.utils.MidiPlayer;
 import rocks.fretx.audioprocessing.Chord;
 
 public class LearnChordExerciseFragment extends Fragment {
 
     MainActivity mActivity;
-
     FrameLayout rootView = null;
 	LearnChordExerciseView chordExerciseView;
 	FretboardView fretboardView;
 	ArrayList<Chord> exerciseChords;
+	MidiPlayer midiPlayer;
 
-    public LearnChordExerciseFragment(){
+    public LearnChordExerciseFragment(){}
 
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mActivity = (MainActivity)getActivity();
@@ -40,14 +42,11 @@ public class LearnChordExerciseFragment extends Fragment {
         return rootView;
     }
 
-	public void setChords(ArrayList<Chord> chords){
-		this.exerciseChords = (ArrayList<Chord>) chords.clone();
-		if(chordExerciseView == null) return;
-		chordExerciseView.setChords(this.exerciseChords);
-	}
-
 	@Override
 	public void onViewCreated(View v , Bundle savedInstanceState){
+		// Instantiate the driver.
+		midiPlayer = new MidiPlayer();
+
 		chordExerciseView.setChords(exerciseChords);
 		TextView exerciseChordsText = (TextView) v.findViewById(R.id.exerciseChordsTextView);
 		if(exerciseChordsText==null) return;
@@ -57,5 +56,36 @@ public class LearnChordExerciseFragment extends Fragment {
 			Log.d("songChordString",songChordsString);
 		}
 		exerciseChordsText.setText(songChordsString);
+
+        Button playChord = (Button) chordExerciseView.findViewById(R.id.playChordButton);
+        playChord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                midiPlayer.playChord(chordExerciseView.getChord());
+            }
+        });
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		midiPlayer.start();
+		int[] config = midiPlayer.config();
+		Log.d(this.getClass().getName(), "maxVoices: " + config[0]);
+		Log.d(this.getClass().getName(), "numChannels: " + config[1]);
+		Log.d(this.getClass().getName(), "sampleRate: " + config[2]);
+		Log.d(this.getClass().getName(), "mixBufferSize: " + config[3]);
+	}
+
+	@Override
+	public void onPause(){
+		super.onPause();
+		midiPlayer.stop();
+	}
+
+	public void setChords(ArrayList<Chord> chords){
+		this.exerciseChords = (ArrayList<Chord>) chords.clone();
+		if(chordExerciseView == null) return;
+		chordExerciseView.setChords(this.exerciseChords);
 	}
 }

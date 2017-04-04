@@ -51,33 +51,42 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"/>
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/fretboardView">
 
+                <Button
+                    android:text="Next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:id="@+id/previewNextChordButton"
+                    android:background="@color/primary"
+                    android:textColor="@color/tertiaryText"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp" />
 
-            <Button
-                android:layout_width="100dp"
-                android:layout_height="36dp"
-                android:id="@+id/previewNextChordButton"
-                android:background="@color/primary"
-                android:textColor="@color/tertiaryText"
-                android:text="Next"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_below="@+id/fretboardView"
-                android:layout_centerHorizontal="true"
-                />
+                <Button
+                    android:text="Play Chord"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:id="@+id/previewPlayChordButton"
+                    android:background="@color/primary"
+                    android:textColor="@color/background"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp" />
 
-            <Button
-                android:text="Play"
-                android:layout_width="100dp"
-                android:layout_height="36dp"
-                android:id="@+id/previewStartSongButton"
-                android:background="@color/primary"
-                android:textColor="@color/background"
-                android:layout_marginBottom="20dp"
-                android:layout_below="@id/previewNextChordButton"
-                android:layout_marginTop="40dp"
-                android:layout_centerHorizontal="true"/>
+                <Button
+                    android:text="Play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:id="@+id/previewPlayButton"
+                    android:background="@color/primary"
+                    android:textColor="@color/tertiaryText"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="5dp" />
+            </LinearLayout>
 
         </fretx.version4.paging.play.PlayChordPreviewView>
 
@@ -100,9 +109,6 @@
             android:textColor="@color/primaryText"
             android:layout_marginLeft="20dp"
             />
-
-
-
 
     </RelativeLayout>
 
