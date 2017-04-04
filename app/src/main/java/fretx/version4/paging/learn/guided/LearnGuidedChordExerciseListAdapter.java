@@ -1,8 +1,6 @@
-package fretx.version4.paging.learn;
+package fretx.version4.paging.learn.guided;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,7 @@ import java.util.ArrayList;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 
-public class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExercise> {
+class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExercise> {
 
 	MainActivity mActivity;
 	int layoutResourceId;

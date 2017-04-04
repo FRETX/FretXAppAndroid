@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn;
+package fretx.version4.paging.learn.scale;
 
 
 import android.os.Bundle;

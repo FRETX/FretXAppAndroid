@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn;
+package fretx.version4.paging.learn.custom;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class LearnChordExerciseFragment extends Fragment {
         chordDb = MusicUtils.parseChordDb();
 
         //setup view
-        FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.learn_chord_exercise_layout, container, false);
+        LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.learn_chord_exercise_layout, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
 		chordsText = (TextView) rootView.findViewById(R.id.exerciseChordsTextView);
         chordText = (TextView) rootView.findViewById(R.id.textChord);

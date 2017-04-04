@@ -110,7 +110,6 @@ public class PlayChordPreviewFragment extends Fragment
     @SuppressWarnings("unchecked")
 	public void setChords(ArrayList<Chord> chords) {
 		this.exerciseChords = (ArrayList<Chord>) chords.clone();
-
 	}
 
 	private void setChord() {

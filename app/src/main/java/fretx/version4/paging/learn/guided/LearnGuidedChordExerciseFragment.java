@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn;
+package fretx.version4.paging.learn.guided;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +18,7 @@ import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.paging.learn.guided.GuidedChordExercise;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;

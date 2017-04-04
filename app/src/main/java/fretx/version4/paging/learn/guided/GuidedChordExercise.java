@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn;
+package fretx.version4.paging.learn.guided;
 
 import android.util.Log;
 
@@ -10,20 +10,20 @@ import java.util.ArrayList;
 
 import rocks.fretx.audioprocessing.Chord;
 
-public class GuidedChordExercise {
+class GuidedChordExercise {
 	String name;
 	String id;
 	ArrayList<Chord> chords;
 	int nRepetitions;
 
-	public GuidedChordExercise(){
+	GuidedChordExercise(){
 		name = "";
 		id = "";
 		chords = new ArrayList<>();
 		nRepetitions = 0;
 	}
 
-	public GuidedChordExercise(JSONObject chordExercise){
+	GuidedChordExercise(JSONObject chordExercise){
 		JSONObject chordJson;
 		JSONArray tmpChordsArray;
 		try {

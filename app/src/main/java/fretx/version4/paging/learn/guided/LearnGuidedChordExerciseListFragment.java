@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn;
+package fretx.version4.paging.learn.guided;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
