@@ -60,7 +60,7 @@
                     android:textColor="@color/primaryText"
                     android:textStyle="normal|bold"
                     android:textAlignment="center"
-                    android:id="@+id/guidedChordExerciseCompletedText" />
+                    android:id="@+id/position" />
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +83,7 @@
                     android:textColor="@color/primaryText"
                     android:textStyle="normal|bold"
                     android:textAlignment="center"
-                    android:id="@+id/guidedChordExerciseTimeElapsedText" />
+                    android:id="@+id/time" />
             </LinearLayout>
         </LinearLayout>
 

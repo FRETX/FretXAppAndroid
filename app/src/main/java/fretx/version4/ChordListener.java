@@ -25,15 +25,15 @@ public class ChordListener {
     private long timerDuration;
     private long correctlyPlayedDuration;
 
-    private final long TIMER_TICK = 20;
-    private final long ONSET_IGNORE_DURATION = 0; //in miliseconds
-    private final long CHORD_LISTEN_DURATION = 500; //in miliseconds
-    private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
-    private final long CORRECTLY_PLAYED_DURATION = 160; //in milliseconds
+    static private final long TIMER_TICK = 20;
+    static private final long ONSET_IGNORE_DURATION = 0; //in miliseconds
+    static private final long CHORD_LISTEN_DURATION = 500; //in miliseconds
+    static private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
+    static private final long CORRECTLY_PLAYED_DURATION = 160; //in milliseconds
 
-    private final double VOLUME_THRESHOLD = -9;
+    static private final double VOLUME_THRESHOLD = -9;
 
-    CountDownTimer chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
+    private CountDownTimer chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
         public void onTick(long millisUntilFinished) {
             if (!audio.isProcessing() || !audio.isInitialized())
                 return;

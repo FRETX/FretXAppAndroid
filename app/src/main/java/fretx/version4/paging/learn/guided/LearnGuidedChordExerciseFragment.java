@@ -17,8 +17,8 @@ import java.util.HashMap;
 import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
+import fretx.version4.TimeUpdater;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.paging.learn.guided.GuidedChordExercise;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -30,12 +30,17 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 	private FretboardView fretboardView;
     private TextView chordsText;
     private TextView chordText;
+	private TextView positionText;
+    private TextView timeText;
 
 	//chords
 	int nRepetitions;
     int chordIndex;
 	ArrayList<Chord> exerciseChords;
     private HashMap<String,FingerPositions> chordDb;
+
+    //timeText
+    TimeUpdater timeUpadater;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +57,8 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
         FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.learn_guided_chord_exercise_layout, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
         chordsText = (TextView) rootView.findViewById(R.id.exerciseChordsTextView);
+		positionText = (TextView) rootView.findViewById(R.id.position);
+        timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
 
 		return rootView;
@@ -72,10 +79,22 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
         if (exerciseChords.size() > 0)
             setChord();
 
-		//chordExerciseView.startTimer();
+		timeUpadater = new TimeUpdater(timeText);
 	}
 
-	public void setExercise(GuidedChordExercise exercise){
+    @Override
+    public void onResume() {
+        super.onResume();
+        timeUpadater.resumeTimer();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        timeUpadater.pauseTimer();
+    }
+
+    public void setExercise(GuidedChordExercise exercise){
 		this.nRepetitions = exercise.nRepetitions;
 		ArrayList<Chord> repeatedChords = new ArrayList<>();
 		for (int i = 0; i < exercise.nRepetitions; i++) {
@@ -95,8 +114,10 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 
         //update chord title
         chordText.setText(actualChord.toString());
-        //update finger position
+        //update finger positionText
         fretboardView.setFretboardPositions(actualChord.getFingerPositions());
+		//update positionText
+		positionText.setText(chordIndex + "/" + exerciseChords.size());
         //update led
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(actualChord.toString(), chordDb);
         BluetoothClass.sendToFretX(bluetoothArray);

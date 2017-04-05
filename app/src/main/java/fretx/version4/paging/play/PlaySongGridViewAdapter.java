@@ -2,6 +2,7 @@ package fretx.version4.paging.play;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -25,20 +26,17 @@ import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.SongPunch;
 import rocks.fretx.audioprocessing.Chord;
 
-//import static fretx.version4.Config.mActivity;
-
-
 /**
  * 
  * @author manish.s
  *
  */
-public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
-	MainActivity mActivity;
-	int layoutResourceId;
-	ArrayList<SongItem> data = new ArrayList<SongItem>();
+class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
+	private MainActivity mActivity;
+	private int layoutResourceId;
+	private ArrayList<SongItem> data = new ArrayList<SongItem>();
 
-	public PlaySongGridViewAdapter(MainActivity context, int layoutResourceId,
+	PlaySongGridViewAdapter(MainActivity context, int layoutResourceId,
 	                               ArrayList<SongItem> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
@@ -47,7 +45,8 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	@NonNull
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 		View row = convertView;
 		RecordHolder holder = null;
 
@@ -188,14 +187,11 @@ public class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 			}
 		});
 		return row;
-
 	}
 
-	static class RecordHolder {
+	private static class RecordHolder {
 		TextView txtPrimary;
 		TextView txtSecondary;
 		ImageView imageItem;
-
-
 	}
 }
