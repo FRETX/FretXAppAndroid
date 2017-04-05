@@ -474,7 +474,7 @@ public class PlayOfflinePlayerFragment extends Fragment {
 	}
 
 	/*
-	 * A TransferListener class that can listen to a download task and be
+	 * A TransferListener class that can startListening to a download task and be
 	 * notified when the status changes.
 	 */
 	public class DownloadListener implements TransferListener {

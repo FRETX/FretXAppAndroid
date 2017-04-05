@@ -42,8 +42,15 @@ public class ChordListener extends Observable {
 
     private CountDownTimer chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
         public void onTick(long millisUntilFinished) {
-            if (!audio.isProcessing() || !audio.isInitialized())
+            if (!audio.isInitialized()) {
+                Log.d(TAG, "not initialized");
                 return;
+            }
+
+            if (!audio.isProcessing()) {
+                Log.d(TAG, "not processing");
+                return;
+            }
 
             if (!audio.isBufferAvailable()) {
                 Log.d(TAG, "isBufferAvailable = false");
@@ -53,31 +60,27 @@ public class ChordListener extends Observable {
             if (audio.getVolume() < VOLUME_THRESHOLD) {
                 correctlyPlayedAccumulator = 0;
                 Log.d(TAG, "prematurely canceled due to low volume");
+                return;
             }
 
             if (millisUntilFinished <= CHORD_LISTEN_DURATION) {
-                if (audio.isProcessing()) {
-                    Log.d(TAG, "audio processing");
-                    return;
-                }
-
                 Chord playedChord = audio.getChord();
                 Log.d(TAG, "played:" + playedChord.toString());
 
-                //if (targetChord.toString().equals(playedChord.toString())) {
-                correctlyPlayedAccumulator += TIMER_TICK;
-                Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
-                //} else {
-                //    correctlyPlayedAccumulator = 0;
-                //}
+                if (targetChord.toString().equals(playedChord.toString())) {
+                    correctlyPlayedAccumulator += TIMER_TICK;
+                    Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
+                } else {
+                    correctlyPlayedAccumulator = 0;
+                }
             }
 
             if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION) {
+                Log.d(TAG, "- - - - - chord detected - - - - -");
+                this.cancel();
                 success = true;
                 setChanged();
                 notifyObservers();
-                this.cancel();
-                Log.d(TAG, "- - - - - chord detected - - - - -");
             }
         }
 
@@ -102,8 +105,14 @@ public class ChordListener extends Observable {
         targetChord = chord;
     }
 
-    public void listen() {
+    public void startListening() {
         correctlyPlayedAccumulator = 0;
+        chordTimer.cancel();
         chordTimer.start();
+        Log.d(TAG, "starting the countdownTimer");
+    }
+
+    public void stopListening() {
+        chordTimer.cancel();
     }
 }

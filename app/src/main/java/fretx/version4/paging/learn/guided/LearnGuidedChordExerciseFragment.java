@@ -2,7 +2,6 @@ package fretx.version4.paging.learn.guided;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,15 +42,19 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
     private HashMap<String,FingerPositions> chordDb;
 
     //timeText
-    TimeUpdater timeUpadater;
+    TimeUpdater timeUpdater;
 
     //audio
     ChordListener chordListener;
 
     @Override
     public void update(Observable o, Object arg) {
-        Log.d("AUDIO", "Observer triggered");
         ++chordIndex;
+
+        //end of the exercise
+        if (chordIndex == exerciseChords.size())
+            chordIndex = 0;
+
         setChord();
     }
 
@@ -79,7 +82,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 
     @Override
 	public void onViewCreated(View v, Bundle savedInstanceState) {
-        timeUpadater = new TimeUpdater(timeText);
+        timeUpdater = new TimeUpdater(timeText);
         chordListener = new ChordListener(mActivity.audio);
         chordListener.addObserver(this);
 
@@ -87,26 +90,26 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 		String songChordsString = "";
 		for (int i = 0; i < exerciseChords.size(); i++) {
 			songChordsString += exerciseChords.get(i).toString() + " ";
-			Log.d("songChordString", songChordsString);
 		}
 		chordsText.setText(songChordsString);
 
         //setup the first chord
         chordIndex = 0;
-        if (exerciseChords.size() > 0)
-            setChord();
 	}
 
     @Override
     public void onResume() {
         super.onResume();
-        timeUpadater.resumeTimer();
+        timeUpdater.resumeTimer();
+        if (exerciseChords.size() > 0)
+            setChord();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        timeUpadater.pauseTimer();
+        timeUpdater.pauseTimer();
+        chordListener.stopListening();
     }
 
     public void setExercise(GuidedChordExercise exercise){
@@ -116,7 +119,6 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 			repeatedChords.addAll(exercise.chords);
 		}
 		this.setChords(repeatedChords);
-		Log.d("nRepetitions",Integer.toString(nRepetitions));
 	}
 
     @SuppressWarnings("unchecked")
@@ -129,13 +131,14 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 
         //update chord title
         chordText.setText(actualChord.toString());
-        //update finger positionText
+        //update finger position
         fretboardView.setFretboardPositions(actualChord.getFingerPositions());
 		//update positionText
 		positionText.setText(chordIndex + "/" + exerciseChords.size());
         //update chord listener
+        chordListener.success = false;
         chordListener.setTargetChord(actualChord);
-        chordListener.listen();
+        chordListener.startListening();
         //update led
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(actualChord.toString(), chordDb);
         BluetoothClass.sendToFretX(bluetoothArray);
