@@ -5,6 +5,8 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import java.util.Observable;
+
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.Chord;
 
@@ -12,13 +14,18 @@ import rocks.fretx.audioprocessing.Chord;
  * Created by Kickdrum on 21-Feb-17.
  */
 
-public class ChordListener {
+public class ChordListener extends Observable {
     private final String TAG = "AUDIO";
 
+    //observable
+    public boolean success;
+
+    //audio
     private AudioProcessing audio;
     private Chord targetChord;
     private double correctlyPlayedAccumulator;
 
+    //audio settings
     private long timerTick;
     private long onsetIgnoreDuration;
     private long chordListenDuration;
@@ -44,7 +51,6 @@ public class ChordListener {
             }
 
             if (audio.getVolume() < VOLUME_THRESHOLD) {
-                this.cancel();
                 correctlyPlayedAccumulator = 0;
                 Log.d(TAG, "prematurely canceled due to low volume");
             }
@@ -56,15 +62,18 @@ public class ChordListener {
                 Chord playedChord = audio.getChord();
                 Log.d(TAG, "played:" + playedChord.toString());
 
-                if (targetChord.toString().equals(playedChord.toString())) {
-                    correctlyPlayedAccumulator += TIMER_TICK;
-                } else {
-                    correctlyPlayedAccumulator = 0;
-                }
+                //if (targetChord.toString().equals(playedChord.toString())) {
+                correctlyPlayedAccumulator += TIMER_TICK;
+                //} else {
+                //    correctlyPlayedAccumulator = 0;
+                //}
                 Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
             }
 
             if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION) {
+                success = true;
+                setChanged();
+                notifyObservers();
                 this.cancel();
                 Log.d(TAG, "stopping timer");
             }
@@ -72,6 +81,8 @@ public class ChordListener {
 
         public void onFinish() {
             Log.d(TAG, "finished without hearing enough of correct chords");
+            correctlyPlayedAccumulator = 0;
+            chordTimer.start();
         }
     };
 
@@ -85,11 +96,11 @@ public class ChordListener {
         correctlyPlayedDuration = CORRECTLY_PLAYED_DURATION;
     }
 
-    void setTargetChord(Chord chord) {
+    public void setTargetChord(Chord chord) {
         targetChord = chord;
     }
 
-    void listen() {
+    public void listen() {
         correctlyPlayedAccumulator = 0;
         chordTimer.start();
     }

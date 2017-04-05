@@ -13,8 +13,11 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
 import fretx.version4.BluetoothClass;
+import fretx.version4.ChordListener;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.TimeUpdater;
@@ -23,7 +26,7 @@ import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-public class LearnGuidedChordExerciseFragment extends Fragment{
+public class LearnGuidedChordExerciseFragment extends Fragment implements Observer{
 	private MainActivity mActivity;
 
 	//view
@@ -41,6 +44,16 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 
     //timeText
     TimeUpdater timeUpadater;
+
+    //audio
+    ChordListener chordListener;
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Log.d("AUDIO", "Observer triggered");
+        ++chordIndex;
+        setChord();
+    }
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +79,10 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
 
     @Override
 	public void onViewCreated(View v, Bundle savedInstanceState) {
+        timeUpadater = new TimeUpdater(timeText);
+        chordListener = new ChordListener(mActivity.audio);
+        chordListener.addObserver(this);
+
 		//display all chords at bottom
 		String songChordsString = "";
 		for (int i = 0; i < exerciseChords.size(); i++) {
@@ -78,8 +95,6 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
         chordIndex = 0;
         if (exerciseChords.size() > 0)
             setChord();
-
-		timeUpadater = new TimeUpdater(timeText);
 	}
 
     @Override
@@ -118,6 +133,9 @@ public class LearnGuidedChordExerciseFragment extends Fragment{
         fretboardView.setFretboardPositions(actualChord.getFingerPositions());
 		//update positionText
 		positionText.setText(chordIndex + "/" + exerciseChords.size());
+        //update chord listener
+        chordListener.setTargetChord(actualChord);
+        chordListener.listen();
         //update led
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(actualChord.toString(), chordDb);
         BluetoothClass.sendToFretX(bluetoothArray);
