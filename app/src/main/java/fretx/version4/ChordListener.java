@@ -56,18 +56,20 @@ public class ChordListener extends Observable {
             }
 
             if (millisUntilFinished <= CHORD_LISTEN_DURATION) {
-                if (audio.isProcessing())
+                if (audio.isProcessing()) {
+                    Log.d(TAG, "audio processing");
                     return;
+                }
 
                 Chord playedChord = audio.getChord();
                 Log.d(TAG, "played:" + playedChord.toString());
 
                 //if (targetChord.toString().equals(playedChord.toString())) {
                 correctlyPlayedAccumulator += TIMER_TICK;
+                Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
                 //} else {
                 //    correctlyPlayedAccumulator = 0;
                 //}
-                Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
             }
 
             if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION) {
@@ -75,7 +77,7 @@ public class ChordListener extends Observable {
                 setChanged();
                 notifyObservers();
                 this.cancel();
-                Log.d(TAG, "stopping timer");
+                Log.d(TAG, "- - - - - chord detected - - - - -");
             }
         }
 
