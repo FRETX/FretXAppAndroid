@@ -1,7 +1,5 @@
 package fretx.version4.paging.play;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -16,14 +14,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -40,7 +34,6 @@ import fretx.version4.Util;
 import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.SongPunch;
 import rocks.fretx.audioprocessing.Chord;
-import rocks.fretx.audioprocessing.FretboardPosition;
 
 public class PlayYoutubeFragment extends Fragment {
 
@@ -329,7 +322,7 @@ public class PlayYoutubeFragment extends Fragment {
 	}
 
     private View inflateView(LayoutInflater inflater, ViewGroup container) {
-        rootView = inflater.inflate(R.layout.play_fragment_youtube_fragment, container, false);
+        rootView = inflater.inflate(R.layout.paging_play_youtube, container, false);
         return rootView;
     }
 

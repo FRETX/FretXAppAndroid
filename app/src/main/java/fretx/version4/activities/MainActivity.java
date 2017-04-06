@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.google.firebase.appindexing.Action;
 import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.builders.Actions;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.greysonparrelli.permiso.Permiso;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
@@ -44,12 +42,9 @@ import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.Songlist;
 import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnButtonsFragment;
-import fretx.version4.paging.learn.LearnFragment;
-import fretx.version4.paging.play.PlayFragment;
 import fretx.version4.paging.play.PlayFragmentSearchList;
 import fretx.version4.paging.tuner.TunerFragment;
 import rocks.fretx.audioprocessing.AudioProcessing;
-import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
@@ -87,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_activity_back);
+		setContentView(R.layout.paging_back);
 
         //initialize audio
         audio = new AudioProcessing();

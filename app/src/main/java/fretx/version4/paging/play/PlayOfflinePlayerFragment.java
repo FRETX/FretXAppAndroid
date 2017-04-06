@@ -3,7 +3,6 @@ package fretx.version4.paging.play;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -89,7 +87,7 @@ public class PlayOfflinePlayerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		VIDEO_ID = song.youtube_id;
 
-		rootView = inflater.inflate(R.layout.play_fragment_offline_player_layout, container, false);
+		rootView = inflater.inflate(R.layout.paging_play_offline_player, container, false);
 		initVars();
 		setEventListeners();
 		initTxt(SONG_TXT);

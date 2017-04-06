@@ -38,7 +38,7 @@ public class LearnScaleExerciseFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity)getActivity();
-		rootView = (LinearLayout) inflater.inflate(R.layout.learn_scale_exercise_layout, container, false);
+		rootView = (LinearLayout) inflater.inflate(R.layout.paging_learn_scale, container, false);
 
 		Bundle bundle = new Bundle();
 		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Scale Exercise activated");

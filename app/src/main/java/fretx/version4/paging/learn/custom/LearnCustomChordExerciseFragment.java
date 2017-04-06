@@ -76,7 +76,7 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		//setup view
-		rootView = (FrameLayout) inflater.inflate(R.layout.chord_custom_sequence_layout, container, false);
+		rootView = (FrameLayout) inflater.inflate(R.layout.paging_learn_custom_builder, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
 		chordText = (TextView) rootView.findViewById(R.id.textChord);
 		addButton = (Button) rootView.findViewById(R.id.addChordButton);

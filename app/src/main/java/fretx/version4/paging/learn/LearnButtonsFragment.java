@@ -38,7 +38,7 @@ public class LearnButtonsFragment extends Fragment {
 	    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Learn Tab activated");
 	    mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-        rootView = inflater.inflate(R.layout.learn_fragment_buttons, container, false);
+        rootView = inflater.inflate(R.layout.paging_learn_buttons, container, false);
         btExerciseOne = (CardView)rootView.findViewById(R.id.btExerciseOne);
         btExerciseOne.setOnClickListener(new View.OnClickListener() {
             @Override

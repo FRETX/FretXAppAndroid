@@ -8,24 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.billthefarmer.mididriver.GeneralMidiConstants;
-import org.billthefarmer.mididriver.MidiConstants;
 import org.billthefarmer.mididriver.MidiDriver;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import co.mobiwise.materialintro.shape.Focus;
-import co.mobiwise.materialintro.shape.FocusGravity;
-import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
 import fretx.version4.Util;
@@ -33,7 +26,6 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
-import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.MusicUtils;
 
 public class ChordFragment extends Fragment implements MidiDriver.OnMidiStartListener
@@ -69,7 +61,7 @@ public class ChordFragment extends Fragment implements MidiDriver.OnMidiStartLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mActivity = (MainActivity) getActivity();
-        rootView = inflater.inflate(R.layout.chord_fragment, container, false);
+        rootView = inflater.inflate(R.layout.paging_chord, container, false);
         return  rootView;
     }
 

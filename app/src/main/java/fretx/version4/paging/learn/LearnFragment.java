@@ -27,7 +27,7 @@ public class LearnFragment extends Fragment {
 
         mActivity = (MainActivity) getActivity();
 
-        rootView = inflater.inflate(R.layout.learn_fragment, container, false);
+        rootView = inflater.inflate(R.layout.paging_learn, container, false);
 
         FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

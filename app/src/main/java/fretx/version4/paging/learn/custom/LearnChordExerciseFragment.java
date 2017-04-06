@@ -59,7 +59,7 @@ public class LearnChordExerciseFragment extends Fragment implements Observer {
         chordDb = MusicUtils.parseChordDb();
 
         //setup view
-        LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.learn_chord_exercise_layout, container, false);
+        LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.paging_learn_custom_exercise, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
 		chordsText = (TextView) rootView.findViewById(R.id.exerciseChordsTextView);
         positionText = (TextView) rootView.findViewById(R.id.position);

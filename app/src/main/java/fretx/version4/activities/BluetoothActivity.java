@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,9 +37,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import co.mobiwise.materialintro.shape.Focus;
-import co.mobiwise.materialintro.shape.FocusGravity;
-import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.Config;
 import fretx.version4.Constants;
 import fretx.version4.R;
@@ -81,7 +77,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetooth_activity);
+        setContentView(R.layout.bluetooth);
 
         m_btnGoBack = (Button)findViewById(R.id.btGoBack);
         m_btnGoBack.setOnClickListener(new View.OnClickListener() {
@@ -351,7 +347,7 @@ public class BluetoothActivity extends AppCompatActivity implements AdapterView.
             if (convertView != null) {
                 vg = (ViewGroup) convertView;
             } else {
-                vg = (ViewGroup) inflater.inflate(R.layout.device_element, null);
+                vg = (ViewGroup) inflater.inflate(R.layout.bluetooth_device_element, null);
             }
 
             BluetoothDevice device = devices.get(position);

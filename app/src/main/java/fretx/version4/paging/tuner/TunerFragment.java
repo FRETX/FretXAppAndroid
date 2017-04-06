@@ -14,9 +14,6 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import co.mobiwise.materialintro.shape.Focus;
-import co.mobiwise.materialintro.shape.FocusGravity;
-import co.mobiwise.materialintro.view.MaterialIntroView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 
@@ -72,7 +69,7 @@ public class TunerFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d("Tuner Fragment", "created");
-		rootView = (RelativeLayout) inflater.inflate(R.layout.tuner_fragment, container, false);
+		rootView = (RelativeLayout) inflater.inflate(R.layout.paging_tuner, container, false);
 		tunerView = (TunerView) rootView.findViewById(R.id.tunerView);
 		tunerView.setmActivity(mActivity);
 		tunerView.setRootView(rootView);

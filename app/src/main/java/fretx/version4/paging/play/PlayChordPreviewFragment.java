@@ -51,7 +51,7 @@ public class PlayChordPreviewFragment extends Fragment
         chordDb = MusicUtils.parseChordDb();
 
         //setup view
-		FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.play_chord_preview_layout, container, false);
+		FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.paging_play_preview, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
 		chordText = (TextView) rootView.findViewById(R.id.textChord);
         position = (TextView) rootView.findViewById(R.id.position);

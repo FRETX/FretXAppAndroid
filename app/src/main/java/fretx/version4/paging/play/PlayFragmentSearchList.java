@@ -89,7 +89,7 @@ public class PlayFragmentSearchList extends Fragment {
     }
 
     private View inflateView(LayoutInflater inflater, ViewGroup container) {
-        rootView = inflater.inflate(R.layout.play_fragment_search_list, container, false);
+        rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
         return rootView;
     }
 
@@ -111,7 +111,7 @@ public class PlayFragmentSearchList extends Fragment {
     }
 
     public void setListData( ArrayList<SongItem> data ) {
-        listView.setAdapter( new PlaySongGridViewAdapter( context, R.layout.play_fragment_search_list_row_item, data) );
+        listView.setAdapter( new PlaySongGridViewAdapter( context, R.layout.paging_play_searchlist_item, data) );
     }
 
     /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////////////////////////////

@@ -48,17 +48,6 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
     ChordListener chordListener;
 
     @Override
-    public void update(Observable o, Object arg) {
-        ++chordIndex;
-
-        //end of the exercise
-        if (chordIndex == exerciseChords.size())
-            chordIndex = 0;
-
-        setChord();
-    }
-
-    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //firebase log
 		mActivity = (MainActivity) getActivity();
@@ -70,7 +59,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
         chordDb = MusicUtils.parseChordDb();
 
 		//setup view
-        FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.learn_guided_chord_exercise_layout, container, false);
+        FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.paging_learn_guided_exercise_layout, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
         chordsText = (TextView) rootView.findViewById(R.id.exerciseChordsTextView);
 		positionText = (TextView) rootView.findViewById(R.id.position);
@@ -110,6 +99,18 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
         super.onPause();
         timeUpdater.pauseTimer();
         chordListener.stopListening();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        ++chordIndex;
+
+        //end of the exercise
+        if (chordIndex == exerciseChords.size())
+
+            //chordIndex = 0;
+
+            setChord();
     }
 
     public void setExercise(GuidedChordExercise exercise){

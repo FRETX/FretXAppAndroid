@@ -37,7 +37,7 @@ public class LearnGuidedChordExerciseListFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
-		rootView = (LinearLayout) inflater.inflate(R.layout.learn_guided_chord_list, container, false);
+		rootView = (LinearLayout) inflater.inflate(R.layout.paging_learn_guided_list, container, false);
 		return  rootView;
 	}
 	@Override
@@ -52,7 +52,7 @@ public class LearnGuidedChordExerciseListFragment extends Fragment {
 		showTutorial();
 		listView = (GridView) mActivity.findViewById(R.id.guidedChordExerciseList);
 		initData();
-		listView.setAdapter(new LearnGuidedChordExerciseListAdapter(mActivity, R.layout.guided_chord_exercise_list_item, listData));
+		listView.setAdapter(new LearnGuidedChordExerciseListAdapter(mActivity, R.layout.paging_learn_guided_list_item, listData));
 	}
 
 	@Override

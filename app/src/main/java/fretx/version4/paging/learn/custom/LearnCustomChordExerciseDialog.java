@@ -67,7 +67,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
     @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.chord_custom_sequence_dialog);
+        dialog.setContentView(R.layout.paging_learn_custom_builder_dialog);
 
         //retrieve sequences from arguments
         sequences = (ArrayList<Sequence>) getArguments().getSerializable(SEQUENCES_EXTRA_IDENTIFIER);
@@ -250,7 +250,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
 
     private Dialog NameSelectionAlertDialogBuilder() {
         final Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.chord_custom_sequence_name_dialog);
+        dialog.setContentView(R.layout.paging_learn_custom_builder_dialog_name);
 
         final EditText nameEditText = (EditText) dialog.findViewById(R.id.name);
         final Button save = (Button) dialog.findViewById(R.id.save);
@@ -321,7 +321,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         private final Context context;
 
         ListViewSequenceArrayAdapter(Context context, ArrayList<Chord> chords) {
-            super(context, R.layout.chord_custom_sequence_dialog_item, chords);
+            super(context, R.layout.paging_learn_custom_builder_dialog_item, chords);
             this.context = context;
         }
 
@@ -330,7 +330,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         public View getView(final int position, final View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.chord_custom_sequence_dialog_item, parent, false);
+            View rowView = inflater.inflate(R.layout.paging_learn_custom_builder_dialog_item, parent, false);
             TextView textViewName = (TextView) rowView.findViewById(R.id.chordNameTextview);
             textViewName.setText(sequences.get(currentSequenceIndex).getChords().get(position).toString());
             ImageView image = (ImageView) rowView.findViewById(R.id.deleteImageView);
