@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.TimeUpdater;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.MidiPlayer;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -35,6 +37,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
     private TextView chordText;
 	private TextView positionText;
     private TextView timeText;
+    private Button playButton;
 
 	//chords
 	int nRepetitions;
@@ -43,10 +46,11 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
     private HashMap<String,FingerPositions> chordDb;
 
     //timeText
-    TimeUpdater timeUpdater;
+    private TimeUpdater timeUpdater;
 
     //audio
-    ChordListener chordListener;
+    private ChordListener chordListener;
+    private MidiPlayer midiPlayer;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 		positionText = (TextView) rootView.findViewById(R.id.position);
         timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
+        playButton = (Button) rootView.findViewById(R.id.playChordButton);
 
 		return rootView;
 	}
@@ -76,6 +81,14 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
         timeUpdater = new TimeUpdater(timeText);
         chordListener = new ChordListener(mActivity.audio);
         chordListener.addObserver(this);
+        midiPlayer = new MidiPlayer();
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                midiPlayer.playChord(exerciseChords.get(chordIndex));
+            }
+        });
 
 		//display all chords at bottom
 		String songChordsString = "";

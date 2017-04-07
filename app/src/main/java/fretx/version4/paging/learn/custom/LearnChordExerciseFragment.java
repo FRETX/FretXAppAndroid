@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import fretx.version4.ChordListener;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.MidiPlayer;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -31,6 +33,7 @@ public class LearnChordExerciseFragment extends Fragment implements Observer {
 	private TextView chordsText;
     private TextView chordText;
     private TextView positionText;
+    private Button playButton;
 
     //chords
     private HashMap<String,FingerPositions> chordDb;
@@ -39,6 +42,7 @@ public class LearnChordExerciseFragment extends Fragment implements Observer {
 
     //audio
     ChordListener chordListener;
+    MidiPlayer midiPlayer;
 
     @Override
     public void update(Observable o, Object arg) {
@@ -55,6 +59,9 @@ public class LearnChordExerciseFragment extends Fragment implements Observer {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mActivity = (MainActivity) getActivity();
 
+        // Instantiate the driver.
+        midiPlayer = new MidiPlayer();
+
         //retrieve chords database
         chordDb = MusicUtils.parseChordDb();
 
@@ -64,6 +71,7 @@ public class LearnChordExerciseFragment extends Fragment implements Observer {
 		chordsText = (TextView) rootView.findViewById(R.id.exerciseChordsTextView);
         positionText = (TextView) rootView.findViewById(R.id.position);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
+        Button playButton = (Button) rootView.findViewById(R.id.playChordButton);
 
         return rootView;
     }
@@ -72,6 +80,13 @@ public class LearnChordExerciseFragment extends Fragment implements Observer {
 	public void onViewCreated(View v , Bundle savedInstanceState){
         chordListener = new ChordListener(mActivity.audio);
         chordListener.addObserver(this);
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                midiPlayer.playChord(exerciseChords.get(chordIndex));
+            }
+        });
 
         //display all chords at bottom
         String songChordsString = "";
