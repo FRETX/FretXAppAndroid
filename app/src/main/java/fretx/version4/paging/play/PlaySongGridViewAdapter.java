@@ -83,7 +83,8 @@ class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 				mActivity.audio.disablePitchDetector();
 				if(mActivity.previewEnabled){
 					Bundle bundle = new Bundle();
-					bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Preview: " + item.fretx_id);
+					//bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Preview: " + item.fretx_id);
+					bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "SONG");
 					bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
 					mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 					//Launch exercise with sequence of chords
@@ -160,7 +161,8 @@ class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 
 				} else {
 					Bundle bundle = new Bundle();
-					bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Song: " + item.fretx_id);
+					//bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Song: " + item.fretx_id);
+					bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "SONG");
 					bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
 					mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 

@@ -29,7 +29,8 @@ public class TunerFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		mActivity = (MainActivity) getActivity();
 		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Tuner Tab activated");
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Tuner");
+		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TAB");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		if(mActivity == null || mActivity.audio == null) return;

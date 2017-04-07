@@ -72,7 +72,8 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 
 		//firebase log
 		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Custom Chord Exercise activated");
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Custom Chord");
+		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 		//setup view
