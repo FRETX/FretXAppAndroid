@@ -27,9 +27,10 @@ public class LearnGuidedChordExerciseDialog extends DialogFragment
     @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.paging_learn_custom_builder_dialog);
+        dialog.setContentView(R.layout.paging_learn_guided_exercise_dialog);
 
         //setup listeners
+        /*
         ImageButton ib = (ImageButton) dialog.findViewById(R.id.delete_button);
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +41,7 @@ public class LearnGuidedChordExerciseDialog extends DialogFragment
                 }
             }
         });
-
+        */
 
         return dialog;
     }

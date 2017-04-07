@@ -1,5 +1,6 @@
 package fretx.version4.paging.learn.guided;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -52,7 +53,8 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
         //firebase log
 		mActivity = (MainActivity) getActivity();
 		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Guided Chord Exercise activated");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
+		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Guided Chord");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         //retrieve chords database
@@ -106,9 +108,11 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
         ++chordIndex;
 
         //end of the exercise
-        if (chordIndex == exerciseChords.size())
-
-            //chordIndex = 0;
+        if (chordIndex == exerciseChords.size()) {
+            LearnGuidedChordExerciseDialog dialog = LearnGuidedChordExerciseDialog.newInstance();
+            dialog.show(getFragmentManager(), "dialog");
+        }
+        //chordIndex = 0;
 
             setChord();
     }
