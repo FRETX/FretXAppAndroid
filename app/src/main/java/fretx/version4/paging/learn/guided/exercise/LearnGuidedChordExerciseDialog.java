@@ -1,11 +1,9 @@
-package fretx.version4.paging.learn.guided;
+package fretx.version4.paging.learn.guided.exercise;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.View;
-import android.widget.ImageButton;
 
 import fretx.version4.R;
 

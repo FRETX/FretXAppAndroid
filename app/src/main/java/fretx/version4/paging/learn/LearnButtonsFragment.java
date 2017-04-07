@@ -14,7 +14,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.paging.learn.custom.builder.LearnCustomBuilderFragment;
-import fretx.version4.paging.learn.guided.LearnGuidedChordExerciseListFragment;
+import fretx.version4.paging.learn.guided.list.LearnGuidedChordExerciseListFragment;
 import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;
 
 public class LearnButtonsFragment extends Fragment {

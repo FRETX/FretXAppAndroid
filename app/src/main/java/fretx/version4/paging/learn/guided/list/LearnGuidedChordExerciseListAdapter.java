@@ -1,6 +1,6 @@
-package fretx.version4.paging.learn.guided;
+package fretx.version4.paging.learn.guided.list;
 
-import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +11,15 @@ import java.util.ArrayList;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.paging.learn.guided.GuidedChordExercise;
+import fretx.version4.paging.learn.guided.exercise.LearnGuidedChordExerciseFragment;
+import rocks.fretx.audioprocessing.Chord;
 
 class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExercise> {
 
-	MainActivity mActivity;
-	int layoutResourceId;
-	ArrayList<GuidedChordExercise> data = new ArrayList<GuidedChordExercise>();
+	private MainActivity mActivity;
+	private int layoutResourceId;
+	private ArrayList<GuidedChordExercise> data = new ArrayList<>();
 
 	LearnGuidedChordExerciseListAdapter(MainActivity context , int layoutResourceId, ArrayList<GuidedChordExercise> data){
 		super(context, layoutResourceId, data);
@@ -25,14 +28,13 @@ class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExerci
 		this.data = data;
 	}
 
-
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	@NonNull
+	public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
 		View row = convertView;
-
-		RecordHolder holder = null;
+		RecordHolder holder;
 
 		if (row == null) {
-			LayoutInflater inflater = ((Activity) mActivity).getLayoutInflater();
+			LayoutInflater inflater = mActivity.getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
 
 			holder = new RecordHolder();
@@ -48,10 +50,10 @@ class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExerci
 
 		final GuidedChordExercise item = data.get(position);
 
-		holder.name.setText(item.name);
+		holder.name.setText(item.getName());
 		String chordsString = "";
-		for (int i = 0; i < item.chords.size(); i++) {
-			chordsString += item.chords.get(i).toString() + " ";
+		for (Chord chord: item.getChords()) {
+			chordsString += chord.toString() + " ";
 		}
 		holder.chords.setText(chordsString);
 
@@ -67,7 +69,7 @@ class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExerci
 		return row;
 	}
 
-	static class RecordHolder{
+	private static class RecordHolder{
 		TextView name;
 		TextView chords;
 	}

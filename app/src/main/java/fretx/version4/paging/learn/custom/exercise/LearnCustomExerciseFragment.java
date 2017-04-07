@@ -30,7 +30,6 @@ public class LearnCustomExerciseFragment extends Fragment implements Observer {
 
     //view
 	private FretboardView fretboardView;
-	private TextView chordsText;
     private TextView chordText;
     private TextView positionText;
     private Button playButton;
@@ -68,10 +67,9 @@ public class LearnCustomExerciseFragment extends Fragment implements Observer {
         //setup view
         LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.paging_learn_custom_exercise, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
-		chordsText = (TextView) rootView.findViewById(R.id.exerciseChordsTextView);
         positionText = (TextView) rootView.findViewById(R.id.position);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
-        Button playButton = (Button) rootView.findViewById(R.id.playChordButton);
+        playButton = (Button) rootView.findViewById(R.id.playChordButton);
 
         return rootView;
     }
@@ -88,18 +86,24 @@ public class LearnCustomExerciseFragment extends Fragment implements Observer {
             }
         });
 
-        //display all chords at bottom
-        String songChordsString = "";
-		for (Chord chord: exerciseChords) {
-			songChordsString += chord.toString() + " ";
-		}
-		chordsText.setText(songChordsString);
-
         //setup the first chord
         chordIndex = 0;
+	}
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (exerciseChords.size() > 0)
             setChord();
-	}
+        midiPlayer.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        midiPlayer.stop();
+        chordListener.stopListening();
+    }
 
     @SuppressWarnings("unchecked")
 	public void setChords(@NonNull ArrayList<Chord> chords){

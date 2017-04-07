@@ -1,6 +1,5 @@
-package fretx.version4.paging.learn.guided;
+package fretx.version4.paging.learn.guided.exercise;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.TimeUpdater;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.paging.learn.guided.GuidedChordExercise;
 import fretx.version4.utils.MidiPlayer;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
@@ -33,7 +33,6 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 
 	//view
 	private FretboardView fretboardView;
-    private TextView chordsText;
     private TextView chordText;
 	private TextView positionText;
     private TextView timeText;
@@ -67,7 +66,6 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 		//setup view
         FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.paging_learn_guided_exercise_layout, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
-        chordsText = (TextView) rootView.findViewById(R.id.exerciseChordsTextView);
 		positionText = (TextView) rootView.findViewById(R.id.position);
         timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
@@ -90,13 +88,6 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
             }
         });
 
-		//display all chords at bottom
-		String songChordsString = "";
-		for (int i = 0; i < exerciseChords.size(); i++) {
-			songChordsString += exerciseChords.get(i).toString() + " ";
-		}
-		chordsText.setText(songChordsString);
-
         //setup the first chord
         chordIndex = 0;
 	}
@@ -105,6 +96,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
     public void onResume() {
         super.onResume();
         timeUpdater.resumeTimer();
+        midiPlayer.start();
         if (exerciseChords.size() > 0)
             setChord();
     }
@@ -113,6 +105,7 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
     public void onPause() {
         super.onPause();
         timeUpdater.pauseTimer();
+        midiPlayer.stop();
         chordListener.stopListening();
     }
 
@@ -124,17 +117,17 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
         if (chordIndex == exerciseChords.size()) {
             LearnGuidedChordExerciseDialog dialog = LearnGuidedChordExerciseDialog.newInstance();
             dialog.show(getFragmentManager(), "dialog");
+            chordIndex = 0;
         }
-        //chordIndex = 0;
 
-            setChord();
+        setChord();
     }
 
     public void setExercise(GuidedChordExercise exercise){
-		this.nRepetitions = exercise.nRepetitions;
+		this.nRepetitions = exercise.getRepetition();
 		ArrayList<Chord> repeatedChords = new ArrayList<>();
-		for (int i = 0; i < exercise.nRepetitions; i++) {
-			repeatedChords.addAll(exercise.chords);
+		for (int i = 0; i < exercise.getRepetition(); i++) {
+			repeatedChords.addAll(exercise.getChords());
 		}
 		this.setChords(repeatedChords);
 	}
