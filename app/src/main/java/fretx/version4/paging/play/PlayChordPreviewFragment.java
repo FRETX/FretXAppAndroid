@@ -2,6 +2,7 @@ package fretx.version4.paging.play;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.SongItem;
+import fretx.version4.utils.MidiPlayer;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -36,12 +38,16 @@ public class PlayChordPreviewFragment extends Fragment
     private TextView position;
 	private Button nextButton;
 	private Button playButton;
+	private Button playChordButton;
 
 	//chords
 	private HashMap<String,FingerPositions> chordDb;
 	private int chordIndex;
 	private ArrayList<Chord> exerciseChords;
 	private SongItem songItem;
+
+	//audio
+	private MidiPlayer midiPlayer;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +63,7 @@ public class PlayChordPreviewFragment extends Fragment
         position = (TextView) rootView.findViewById(R.id.position);
 		nextButton = (Button) rootView.findViewById(R.id.previewNextChordButton);
 		playButton = (Button) rootView.findViewById(R.id.previewStartSongButton);
+		playChordButton = (Button) rootView.findViewById(R.id.playChordButton);
 
 		return rootView;
 	}
@@ -79,6 +86,13 @@ public class PlayChordPreviewFragment extends Fragment
                 setChord();
 			}
 		});
+
+		playChordButton.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View view){
+				midiPlayer.playChord(exerciseChords.get(chordIndex));
+			}
+		});
+
 		playButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -107,7 +121,24 @@ public class PlayChordPreviewFragment extends Fragment
 		songItem = item;
 	}
 
-    @SuppressWarnings("unchecked")
+    @Override
+    public void onPause(){
+        super.onPause();
+        midiPlayer.stop();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        midiPlayer.start();
+        int[] config = midiPlayer.config();
+        Log.d(this.getClass().getName(), "maxVoices: " + config[0]);
+        Log.d(this.getClass().getName(), "numChannels: " + config[1]);
+        Log.d(this.getClass().getName(), "sampleRate: " + config[2]);
+        Log.d(this.getClass().getName(), "mixBufferSize: " + config[3]);
+    }
+
+	@SuppressWarnings("unchecked")
 	public void setChords(ArrayList<Chord> chords) {
 		this.exerciseChords = (ArrayList<Chord>) chords.clone();
 	}
