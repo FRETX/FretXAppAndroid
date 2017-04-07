@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.custom;
+package fretx.version4.paging.learn.custom.builder;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -32,7 +32,7 @@ import rocks.fretx.audioprocessing.Chord;
  * Created by pandor on 3/7/17.
  */
 
-public class LearnCustomChordExerciseDialog extends DialogFragment
+public class LearnCustomBuilderDialog extends DialogFragment
 {
     private static final String SEQUENCES_EXTRA_IDENTIFIER = "sequences";
     private static final String SEQUENCE_INDEX_EXTRA_IDENTIFIER = "sequence_index";
@@ -50,10 +50,10 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
         void onUpdate(ArrayList<Sequence> sequences, int currentSequenceIndex);
     }
 
-    public static LearnCustomChordExerciseDialog newInstance(LearnCustomChordExerciseListener listener,
-                                                             ArrayList<Sequence> sequences,
-                                                             int currentSequencePosition) {
-        LearnCustomChordExerciseDialog dialog = new LearnCustomChordExerciseDialog();
+    public static LearnCustomBuilderDialog newInstance(LearnCustomChordExerciseListener listener,
+                                                       ArrayList<Sequence> sequences,
+                                                       int currentSequencePosition) {
+        LearnCustomBuilderDialog dialog = new LearnCustomBuilderDialog();
         dialog.setTargetFragment((Fragment) listener, 1234);
         Bundle args = new Bundle();
         args.putSerializable(SEQUENCES_EXTRA_IDENTIFIER, sequences);
@@ -147,13 +147,13 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                     if (sequences.get(currentSequenceIndex).getName() == null) {
                         NameSelectionAlertDialogBuilder().show();
                     } else {
-                        ArrayList<Sequence> save = LearnCustomChordExerciseJson.load(getContext());
+                        ArrayList<Sequence> save = LearnCustomBuilderJson.load(getContext());
                         Sequence sequence = sequences.get(currentSequenceIndex);
                         String name = sequence.getName();
                         for (int i = 0; i < save.size(); ++i) {
                             if (save.get(i).getName().equals(name)) {
                                 save.get(i).setChords(sequence.getChords());
-                                LearnCustomChordExerciseJson.save(getContext(), save);
+                                LearnCustomBuilderJson.save(getContext(), save);
                                 break;
                             }
                         }
@@ -191,7 +191,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
 
     @Nullable
     private ArrayList<Sequence> isSequenceSavable(String name) {
-        ArrayList<Sequence> save = LearnCustomChordExerciseJson.load(getContext());
+        ArrayList<Sequence> save = LearnCustomBuilderJson.load(getContext());
         for (int i = 0; i < save.size(); ++i) {
             if (save.get(i).getName().equals(name)) {
                 return null;
@@ -212,11 +212,11 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                     public void onClick(DialogInterface dialog, int id) {
                         if (name != null) {
                             ArrayList<Sequence> save =
-                                    LearnCustomChordExerciseJson.load(getContext());
+                                    LearnCustomBuilderJson.load(getContext());
                             for (int i = 0; i < save.size(); ++i) {
                                 if (save.get(i).getName().equals(sequence.getName())) {
                                     save.remove(i);
-                                    LearnCustomChordExerciseJson.save(getContext(), save);
+                                    LearnCustomBuilderJson.save(getContext(), save);
                                     break;
                                 }
                             }
@@ -271,7 +271,7 @@ public class LearnCustomChordExerciseDialog extends DialogFragment
                     if (sequence.getName() == null)
                         sequences.remove(sequence);
                     currentSequenceIndex = sequences.size() - 1;
-                    LearnCustomChordExerciseJson.save(getContext(), save);
+                    LearnCustomBuilderJson.save(getContext(), save);
                     spinner.setSelection(currentSequenceIndex);
                     spinnerAdapter.notifyDataSetChanged();
                     dialog.dismiss();

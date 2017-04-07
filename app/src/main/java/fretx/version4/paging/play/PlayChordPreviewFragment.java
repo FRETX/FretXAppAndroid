@@ -70,6 +70,8 @@ public class PlayChordPreviewFragment extends Fragment
 
 	@Override
 	public void onViewCreated(View v, Bundle savedInstanceState) {
+        midiPlayer = new MidiPlayer();
+
 		//setup the first chord
 		chordIndex = 0;
 		if (exerciseChords.size() > 0)

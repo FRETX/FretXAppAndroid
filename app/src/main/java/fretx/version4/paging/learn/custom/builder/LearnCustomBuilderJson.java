@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.custom;
+package fretx.version4.paging.learn.custom.builder;
 
 import android.content.Context;
 
@@ -19,7 +19,7 @@ import rocks.fretx.audioprocessing.Chord;
  * Created by pandor on 3/7/17.
  */
 
-class LearnCustomChordExerciseJson {
+class LearnCustomBuilderJson {
     private final static String FILENAME = "customChordExerciseSaves.json";
 
     private static void chordToJson(StringBuffer sb, Chord chord) {

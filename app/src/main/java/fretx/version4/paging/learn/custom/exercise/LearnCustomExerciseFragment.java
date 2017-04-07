@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.custom;
+package fretx.version4.paging.learn.custom.exercise;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,7 +25,7 @@ import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-public class LearnChordExerciseFragment extends Fragment implements Observer {
+public class LearnCustomExerciseFragment extends Fragment implements Observer {
     private MainActivity mActivity;
 
     //view

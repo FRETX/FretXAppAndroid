@@ -13,7 +13,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.paging.learn.custom.LearnCustomChordExerciseFragment;
+import fretx.version4.paging.learn.custom.builder.LearnCustomBuilderFragment;
 import fretx.version4.paging.learn.guided.LearnGuidedChordExerciseListFragment;
 import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;
 
@@ -44,7 +44,7 @@ public class LearnButtonsFragment extends Fragment {
         btExerciseOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-	            mActivity.fragNavController.pushFragment(new LearnCustomChordExerciseFragment());
+	            mActivity.fragNavController.pushFragment(new LearnCustomBuilderFragment());
 	            mActivity.audio.disablePitchDetector();
 	            mActivity.audio.disableNoteDetector();
 	            mActivity.audio.enableChordDetector();

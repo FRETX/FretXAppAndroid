@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.custom;
+package fretx.version4.paging.learn.custom.builder;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -23,6 +23,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.paging.learn.custom.exercise.LearnCustomExerciseFragment;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -31,8 +32,8 @@ import rocks.fretx.audioprocessing.MusicUtils;
  * Created by onurb_000 on 15/12/16.
  */
 
-public class LearnCustomChordExerciseFragment extends Fragment
-implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
+public class LearnCustomBuilderFragment extends Fragment
+implements LearnCustomBuilderDialog.LearnCustomChordExerciseListener {
 	MainActivity mActivity;
 
 	//view
@@ -49,14 +50,14 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	ArrayList<Sequence> sequences;
 	int currentSequenceIndex;
 
-	public LearnCustomChordExerciseFragment(){}
+	public LearnCustomBuilderFragment(){}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		//retrieve saved sequences
-		sequences = LearnCustomChordExerciseJson.load(getContext());
+		sequences = LearnCustomBuilderJson.load(getContext());
 
 		//add a new empty sequence
 		sequences.add(0, new Sequence(null, new ArrayList<Chord>()));
@@ -169,7 +170,7 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	}
 
 	private void setOnClickListeners(){
-		final LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener listener = this;
+		final LearnCustomBuilderDialog.LearnCustomChordExerciseListener listener = this;
 
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -184,8 +185,8 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 		addedButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-                LearnCustomChordExerciseDialog dialog =
-						LearnCustomChordExerciseDialog.newInstance(listener, sequences,
+                LearnCustomBuilderDialog dialog =
+						LearnCustomBuilderDialog.newInstance(listener, sequences,
 								currentSequenceIndex);
                 dialog.show(getFragmentManager(), "dialog");
 			}
@@ -202,7 +203,7 @@ implements LearnCustomChordExerciseDialog.LearnCustomChordExerciseListener {
 	private void startExercise(){
 		ArrayList<Chord> chords = sequences.get(currentSequenceIndex).getChords();
 		if(chords.size()<1) return;
-		LearnChordExerciseFragment fragmentChordExercise = new LearnChordExerciseFragment();
+		LearnCustomExerciseFragment fragmentChordExercise = new LearnCustomExerciseFragment();
 		fragmentChordExercise.setChords(chords);
 		mActivity.fragNavController.pushFragment(fragmentChordExercise);
 	}

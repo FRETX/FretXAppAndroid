@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.custom;
+package fretx.version4.paging.learn.custom.builder;
 
 import android.support.annotation.Nullable;
 
