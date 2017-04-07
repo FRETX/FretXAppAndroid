@@ -27,6 +27,15 @@
             android:layout_height="@dimen/fretboardHeight"
             android:layout_margin="@dimen/fretboardMargin" />
 
+    <Button
+        android:text="Play Chord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/primary"
+        android:textColor="@color/background"
+        android:id="@+id/playChordButton" />
+
     <TextView
         android:text="Chords Played"
         android:layout_width="match_parent"
@@ -42,14 +51,5 @@
         android:textStyle="normal|bold"
         android:textAlignment="center"
         android:id="@+id/position" />
-
-    <Button
-        android:text="Play Chord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@color/primary"
-        android:textColor="@color/background"
-        android:id="@+id/playChordButton" />
 
 </LinearLayout>

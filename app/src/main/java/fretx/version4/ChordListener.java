@@ -67,12 +67,12 @@ public class ChordListener extends Observable {
                 Chord playedChord = audio.getChord();
                 Log.d(TAG, "played:" + playedChord.toString());
 
-                if (targetChord.toString().equals(playedChord.toString())) {
-                    correctlyPlayedAccumulator += TIMER_TICK;
-                    Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
-                } else {
-                    correctlyPlayedAccumulator = 0;
-                }
+                //if (targetChord.toString().equals(playedChord.toString())) {
+                correctlyPlayedAccumulator += TIMER_TICK;
+                //    Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
+                //} else {
+                //    correctlyPlayedAccumulator = 0;
+                //}
             }
 
             if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION) {
