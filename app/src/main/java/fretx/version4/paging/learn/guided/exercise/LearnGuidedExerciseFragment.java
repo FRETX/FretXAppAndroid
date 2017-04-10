@@ -18,7 +18,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import fretx.version4.BluetoothClass;
-import fretx.version4.ChordListener;
+import fretx.version4.utils.ChordListener;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.utils.TimeUpdater;
@@ -92,14 +92,9 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 
         //setup the first chord
         chordIndex = 0;
-
-        LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this, 0, 0);
-        dialog.show(getFragmentManager(), "dialog");
 	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
+	private void resumeAll() {
         timeUpdater.resumeTimer();
         midiPlayer.start();
         if (exerciseChords.size() > 0)
@@ -107,11 +102,21 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onResume() {
+        super.onResume();
+        resumeAll();
+    }
+
+    private void pauseAll() {
         timeUpdater.pauseTimer();
         midiPlayer.stop();
         chordListener.stopListening();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        pauseAll();
     }
 
     @Override
@@ -120,18 +125,23 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 
         //end of the exercise
         if (chordIndex == exerciseChords.size()) {
-            LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this, 0, 0);
+            pauseAll();
+            setPosition();
+            LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
+                    timeUpdater.getMinute(), timeUpdater.getSecond());
             dialog.show(getFragmentManager(), "dialog");
-            chordIndex = 0;
+        } else {
+            setChord();
         }
-
-        setChord();
     }
 
     @Override
     public void onUpdate(boolean replay) {
         if (replay) {
             Toast.makeText(getActivity(), "REPLAY!", Toast.LENGTH_SHORT).show();
+            chordIndex = 0;
+            timeUpdater.resetTimer();
+            resumeAll();
         } else {
             Toast.makeText(getActivity(), "DO NOT REPLAY!", Toast.LENGTH_SHORT).show();
         }
@@ -151,6 +161,10 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 		this.exerciseChords = (ArrayList<Chord>) chords.clone();
 	}
 
+	private void setPosition() {
+        positionText.setText(chordIndex + "/" + exerciseChords.size());
+    }
+
     private void setChord() {
         Chord actualChord = exerciseChords.get(chordIndex);
 
@@ -159,7 +173,7 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         //update finger position
         fretboardView.setFretboardPositions(actualChord.getFingerPositions());
 		//update positionText
-		positionText.setText(chordIndex + "/" + exerciseChords.size());
+		setPosition();
         //update chord listener
         chordListener.success = false;
         chordListener.setTargetChord(actualChord);

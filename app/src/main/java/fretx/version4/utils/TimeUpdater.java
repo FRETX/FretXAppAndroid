@@ -1,6 +1,8 @@
 package fretx.version4.utils;
 
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.Timer;
@@ -15,12 +17,14 @@ public class TimeUpdater {
     private Timer timer;
     private final TextView timeText;
     private final Handler handler = new Handler();
+    private TimerTask timerTask;
     private int second;
     private int minute;
 
-    public TimeUpdater(TextView timeText) {
+    public TimeUpdater(@Nullable TextView timeText) {
         this.timeText = timeText;
-        timeText.setText("00:00");
+        if (timeText != null)
+            timeText.setText("00:00");
     }
 
     public void resetTimer() {
@@ -32,6 +36,7 @@ public class TimeUpdater {
     public void pauseTimer() {
         //stop the timer, if it's not already null
         if (timer != null) {
+            timerTask.cancel();
             timer.cancel();
             timer = null;
         }
@@ -42,9 +47,9 @@ public class TimeUpdater {
         timer = new Timer();
 
         //initialize the TimerTask's job
-        TimerTask timerTask = new TimerTask() {
+        timerTask = new TimerTask() {
             public void run() {
-                //use a handler to run a toast that shows the current timestamp
+                //use a handler to run update text view
                 handler.post(new Runnable() {
                     public void run() {
                         //update time
@@ -56,8 +61,10 @@ public class TimeUpdater {
                         if (minute == 60) {
                             minute = 0;
                         }
+
                         //update textview
-                        timeText.setText(String.format("%1$02d:%2$02d", minute, second));
+                        if (timeText != null)
+                            timeText.setText(String.format("%1$02d:%2$02d", minute, second));
                     }
                 });
             }
@@ -65,5 +72,13 @@ public class TimeUpdater {
 
         //schedule the timer
         timer.schedule(timerTask, 1000, 1000); //
+    }
+
+    public int getSecond() {
+        return second;
+    }
+
+    public int getMinute() {
+        return minute;
     }
 }

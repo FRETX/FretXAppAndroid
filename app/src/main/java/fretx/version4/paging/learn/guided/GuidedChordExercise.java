@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import fretx.version4.utils.TimeUpdater;
 import rocks.fretx.audioprocessing.Chord;
 
 public class GuidedChordExercise {

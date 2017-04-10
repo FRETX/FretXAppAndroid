@@ -16,7 +16,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import fretx.version4.BluetoothClass;
-import fretx.version4.ChordListener;
+import fretx.version4.utils.ChordListener;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
