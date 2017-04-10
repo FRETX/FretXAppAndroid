@@ -156,7 +156,7 @@ public class ChordFragment extends Fragment
 	public void onResume(){
 		super.onResume();
 		midiPlayer.start();
-		int[] config = midiPlayer.config();
+		int[] config = midiPlayer.getConfig();
 		Log.d(this.getClass().getName(), "maxVoices: " + config[0]);
 		Log.d(this.getClass().getName(), "numChannels: " + config[1]);
 		Log.d(this.getClass().getName(), "sampleRate: " + config[2]);

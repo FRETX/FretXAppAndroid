@@ -120,7 +120,6 @@ public class LearnCustomExerciseFragment extends Fragment implements Observer {
         //update positionText
         positionText.setText(chordIndex + "/" + exerciseChords.size());
         //update chord listener
-        chordListener.success = false;
         chordListener.setTargetChord(actualChord);
         chordListener.startListening();
         //update led

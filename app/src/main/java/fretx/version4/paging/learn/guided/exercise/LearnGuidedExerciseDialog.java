@@ -21,8 +21,6 @@ public class LearnGuidedExerciseDialog extends DialogFragment
     private static final String ELAPSED_TIME_MIN = "elapsed_time_min";
     private static final String ELAPSED_TIME_SEC = "elapsed_time_sec";
     private Dialog dialog;
-    private int min;
-    private int sec;
     private boolean replay = true;
 
     interface LearnGuidedChordExerciseListener {
@@ -47,8 +45,8 @@ public class LearnGuidedExerciseDialog extends DialogFragment
         dialog.setContentView(R.layout.paging_learn_guided_exercise_dialog);
 
         //retrieve time from arguments
-        min = getArguments().getInt(ELAPSED_TIME_MIN);
-        sec = getArguments().getInt(ELAPSED_TIME_MIN);
+        int min = getArguments().getInt(ELAPSED_TIME_MIN);
+        int sec = getArguments().getInt(ELAPSED_TIME_SEC);
         getArguments().remove(ELAPSED_TIME_MIN);
         getArguments().remove(ELAPSED_TIME_SEC);
 
@@ -78,8 +76,8 @@ public class LearnGuidedExerciseDialog extends DialogFragment
     }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
+    public void onDismiss(DialogInterface dialogInterface) {
+        super.onDismiss(dialogInterface);
 
         Fragment parentFragment = getTargetFragment();
         ((LearnGuidedChordExerciseListener) parentFragment).onUpdate(replay);

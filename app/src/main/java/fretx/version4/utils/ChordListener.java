@@ -17,9 +17,6 @@ import rocks.fretx.audioprocessing.Chord;
 public class ChordListener extends Observable {
     private final String TAG = "AUDIO";
 
-    //observable
-    public boolean success;
-
     //audio
     private AudioProcessing audio;
     private Chord targetChord;
@@ -78,7 +75,6 @@ public class ChordListener extends Observable {
             if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION) {
                 Log.d(TAG, "- - - - - chord detected - - - - -");
                 this.cancel();
-                success = true;
                 setChanged();
                 notifyObservers();
             }

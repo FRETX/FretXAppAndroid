@@ -82,10 +82,13 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         chordListener = new ChordListener(mActivity.audio);
         chordListener.addObserver(this);
         midiPlayer = new MidiPlayer();
+        midiPlayer.addObserver(this);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playButton.setClickable(false);
+                chordListener.stopListening();
                 midiPlayer.playChord(exerciseChords.get(chordIndex));
             }
         });
@@ -95,10 +98,11 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 	}
 
 	private void resumeAll() {
-        timeUpdater.resumeTimer();
-        midiPlayer.start();
-        if (exerciseChords.size() > 0)
+        if (exerciseChords.size() > 0 && chordIndex < exerciseChords.size()) {
             setChord();
+            timeUpdater.resumeTimer();
+            midiPlayer.start();
+        }
     }
 
     @Override
@@ -119,52 +123,65 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         pauseAll();
     }
 
+    //get actions of observables
     @Override
     public void update(Observable o, Object arg) {
-        ++chordIndex;
+        //advance to the next chord
+        if (o instanceof ChordListener) {
+            ++chordIndex;
 
-        //end of the exercise
-        if (chordIndex == exerciseChords.size()) {
-            pauseAll();
-            setPosition();
-            LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
-                    timeUpdater.getMinute(), timeUpdater.getSecond());
-            dialog.show(getFragmentManager(), "dialog");
-        } else {
-            setChord();
+            //end of the exercise
+            if (chordIndex == exerciseChords.size()) {
+                pauseAll();
+                setPosition();
+                LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
+                        timeUpdater.getMinute(), timeUpdater.getSecond());
+                dialog.show(getFragmentManager(), "dialog");
+            }
+            //middle of an exercise
+            else {
+                setChord();
+            }
+        }
+        //audio preview finished
+        else if (o instanceof MidiPlayer) {
+            playButton.setClickable(true);
+            chordListener.startListening();
         }
     }
 
+    //retrieve result of the finished exercise dialog
     @Override
     public void onUpdate(boolean replay) {
+        //replay the actual exercise
         if (replay) {
-            Toast.makeText(getActivity(), "REPLAY!", Toast.LENGTH_SHORT).show();
             chordIndex = 0;
             timeUpdater.resetTimer();
             resumeAll();
-        } else {
+        }
+        //goes to the next exercise
+        else {
             Toast.makeText(getActivity(), "DO NOT REPLAY!", Toast.LENGTH_SHORT).show();
         }
     }
 
+    //setup exercise chords from predefined exercise
     public void setExercise(GuidedChordExercise exercise){
-		this.nRepetitions = exercise.getRepetition();
-		ArrayList<Chord> repeatedChords = new ArrayList<>();
-		for (int i = 0; i < exercise.getRepetition(); i++) {
-			repeatedChords.addAll(exercise.getChords());
-		}
-		this.setChords(repeatedChords);
-	}
-
-    @SuppressWarnings("unchecked")
-	public void setChords(ArrayList<Chord> chords) {
-		this.exerciseChords = (ArrayList<Chord>) chords.clone();
-	}
-
-	private void setPosition() {
-        positionText.setText(chordIndex + "/" + exerciseChords.size());
+        this.nRepetitions = exercise.getRepetition();
+        ArrayList<Chord> repeatedChords = new ArrayList<>();
+        for (int i = 0; i < exercise.getRepetition(); i++) {
+            repeatedChords.addAll(exercise.getChords());
+        }
+        this.setChords(repeatedChords);
     }
 
+    //setup exercises chords form list of chords
+    @SuppressWarnings("unchecked")
+    public void setChords(ArrayList<Chord> chords) {
+        this.exerciseChords = (ArrayList<Chord>) chords.clone();
+    }
+
+    //setup everything according actual chord
     private void setChord() {
         Chord actualChord = exerciseChords.get(chordIndex);
 
@@ -175,11 +192,15 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 		//update positionText
 		setPosition();
         //update chord listener
-        chordListener.success = false;
         chordListener.setTargetChord(actualChord);
         chordListener.startListening();
         //update led
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(actualChord.toString(), chordDb);
         BluetoothClass.sendToFretX(bluetoothArray);
+    }
+
+    //display chord position
+    private void setPosition() {
+        positionText.setText(chordIndex + "/" + exerciseChords.size());
     }
 }
