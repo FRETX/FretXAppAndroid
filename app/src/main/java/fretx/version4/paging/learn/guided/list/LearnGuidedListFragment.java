@@ -24,14 +24,14 @@ import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.paging.learn.guided.GuidedChordExercise;
 
-public class LearnGuidedChordExerciseListFragment extends Fragment {
+public class LearnGuidedListFragment extends Fragment {
 
 	MainActivity mActivity;
 	LinearLayout rootView;
 	GridView listView;
 	ArrayList<GuidedChordExercise> listData = new ArrayList<>();
 
-	public LearnGuidedChordExerciseListFragment(){
+	public LearnGuidedListFragment(){
 
 	}
 
@@ -53,7 +53,7 @@ public class LearnGuidedChordExerciseListFragment extends Fragment {
 		showTutorial();
 		listView = (GridView) mActivity.findViewById(R.id.guidedChordExerciseList);
 		initData();
-		listView.setAdapter(new LearnGuidedChordExerciseListAdapter(mActivity, R.layout.paging_learn_guided_list_item, listData));
+		listView.setAdapter(new LearnGuidedListAdapter(mActivity, R.layout.paging_learn_guided_list_item, listData));
 	}
 
 	@Override

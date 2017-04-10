@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.utils;
 
 import android.os.Handler;
 import android.widget.TextView;

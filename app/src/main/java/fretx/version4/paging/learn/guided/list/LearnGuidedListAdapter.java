@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.paging.learn.guided.GuidedChordExercise;
-import fretx.version4.paging.learn.guided.exercise.LearnGuidedChordExerciseFragment;
+import fretx.version4.paging.learn.guided.exercise.LearnGuidedExerciseFragment;
 import rocks.fretx.audioprocessing.Chord;
 
-class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExercise> {
+class LearnGuidedListAdapter extends ArrayAdapter<GuidedChordExercise> {
 
 	private MainActivity mActivity;
 	private int layoutResourceId;
 	private ArrayList<GuidedChordExercise> data = new ArrayList<>();
 
-	LearnGuidedChordExerciseListAdapter(MainActivity context , int layoutResourceId, ArrayList<GuidedChordExercise> data){
+	LearnGuidedListAdapter(MainActivity context , int layoutResourceId, ArrayList<GuidedChordExercise> data){
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.mActivity = context;
@@ -60,7 +60,7 @@ class LearnGuidedChordExerciseListAdapter extends ArrayAdapter<GuidedChordExerci
 		row.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LearnGuidedChordExerciseFragment guidedChordExerciseFragment = new LearnGuidedChordExerciseFragment();
+				LearnGuidedExerciseFragment guidedChordExerciseFragment = new LearnGuidedExerciseFragment();
 				guidedChordExerciseFragment.setExercise(item);
 				mActivity.fragNavController.pushFragment(guidedChordExerciseFragment);
 			}

@@ -46,7 +46,7 @@ public class LearnCustomBuilderDialog extends DialogFragment
     private ArrayList<Sequence> sequences;
     private int currentSequenceIndex;
 
-    public interface LearnCustomChordExerciseListener {
+    interface LearnCustomChordExerciseListener {
         void onUpdate(ArrayList<Sequence> sequences, int currentSequenceIndex);
     }
 

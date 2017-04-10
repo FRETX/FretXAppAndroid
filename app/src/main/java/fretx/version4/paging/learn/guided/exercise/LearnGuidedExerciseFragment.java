@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -20,7 +21,7 @@ import fretx.version4.BluetoothClass;
 import fretx.version4.ChordListener;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
-import fretx.version4.TimeUpdater;
+import fretx.version4.utils.TimeUpdater;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.paging.learn.guided.GuidedChordExercise;
 import fretx.version4.utils.MidiPlayer;
@@ -28,7 +29,8 @@ import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-public class LearnGuidedChordExerciseFragment extends Fragment implements Observer{
+public class LearnGuidedExerciseFragment extends Fragment implements Observer,
+        LearnGuidedExerciseDialog.LearnGuidedChordExerciseListener {
 	private MainActivity mActivity;
 
 	//view
@@ -90,6 +92,9 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 
         //setup the first chord
         chordIndex = 0;
+
+        LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this, 0, 0);
+        dialog.show(getFragmentManager(), "dialog");
 	}
 
     @Override
@@ -115,12 +120,21 @@ public class LearnGuidedChordExerciseFragment extends Fragment implements Observ
 
         //end of the exercise
         if (chordIndex == exerciseChords.size()) {
-            LearnGuidedChordExerciseDialog dialog = LearnGuidedChordExerciseDialog.newInstance();
+            LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this, 0, 0);
             dialog.show(getFragmentManager(), "dialog");
             chordIndex = 0;
         }
 
         setChord();
+    }
+
+    @Override
+    public void onUpdate(boolean replay) {
+        if (replay) {
+            Toast.makeText(getActivity(), "REPLAY!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "DO NOT REPLAY!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setExercise(GuidedChordExercise exercise){
