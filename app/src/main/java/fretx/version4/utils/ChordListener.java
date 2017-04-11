@@ -3,7 +3,9 @@ package fretx.version4.utils;
 import android.os.CountDownTimer;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import java.util.Observable;
 
@@ -34,8 +36,36 @@ public class ChordListener extends Observable {
     static private final long CHORD_LISTEN_DURATION = 500; //in miliseconds
     static private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
     static private final long CORRECTLY_PLAYED_DURATION = 160; //in milliseconds
-
     static private final double VOLUME_THRESHOLD = -9;
+
+    public ChordListener(@NonNull AudioProcessing audio) {
+        this.audio = audio;
+
+        timerTick = TIMER_TICK;
+        onsetIgnoreDuration = ONSET_IGNORE_DURATION;
+        chordListenDuration = CHORD_LISTEN_DURATION;
+        timerDuration = TIMER_DURATION;
+        correctlyPlayedDuration = CORRECTLY_PLAYED_DURATION;
+    }
+
+    public void setTargetChord(Chord chord) {
+        targetChord = chord;
+    }
+
+    public void startListening() {
+        correctlyPlayedAccumulator = 0;
+        chordTimer.cancel();
+        chordTimer.start();
+        Log.d(TAG, "starting the countdownTimer");
+    }
+
+    public void stopListening() {
+        chordTimer.cancel();
+    }
+
+    public double getProgress() {
+        return correctlyPlayedAccumulator / CORRECTLY_PLAYED_DURATION * 100;
+    }
 
     private CountDownTimer chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
         public void onTick(long millisUntilFinished) {
@@ -66,6 +96,8 @@ public class ChordListener extends Observable {
 
                 //if (targetChord.toString().equals(playedChord.toString())) {
                 correctlyPlayedAccumulator += TIMER_TICK;
+                setChanged();
+                notifyObservers();
                 //    Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
                 //} else {
                 //    correctlyPlayedAccumulator = 0;
@@ -86,29 +118,4 @@ public class ChordListener extends Observable {
             chordTimer.start();
         }
     };
-
-    public ChordListener(@NonNull AudioProcessing audio) {
-        this.audio = audio;
-
-        timerTick = TIMER_TICK;
-        onsetIgnoreDuration = ONSET_IGNORE_DURATION;
-        chordListenDuration = CHORD_LISTEN_DURATION;
-        timerDuration = TIMER_DURATION;
-        correctlyPlayedDuration = CORRECTLY_PLAYED_DURATION;
-    }
-
-    public void setTargetChord(Chord chord) {
-        targetChord = chord;
-    }
-
-    public void startListening() {
-        correctlyPlayedAccumulator = 0;
-        chordTimer.cancel();
-        chordTimer.start();
-        Log.d(TAG, "starting the countdownTimer");
-    }
-
-    public void stopListening() {
-        chordTimer.cancel();
-    }
 }

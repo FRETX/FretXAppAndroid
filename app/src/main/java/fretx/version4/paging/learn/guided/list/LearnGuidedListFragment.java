@@ -25,15 +25,10 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.paging.learn.guided.GuidedChordExercise;
 
 public class LearnGuidedListFragment extends Fragment {
-
 	MainActivity mActivity;
 	LinearLayout rootView;
-	GridView listView;
-	ArrayList<GuidedChordExercise> listData = new ArrayList<>();
-
-	public LearnGuidedListFragment(){
-
-	}
+	GridView gridView;
+	ArrayList<GuidedChordExercise> exercises = new ArrayList<>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,40 +39,24 @@ public class LearnGuidedListFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-//		chordFingerings = MusicUtils.parseChordDb();
 		BluetoothClass.sendToFretX(Util.str2array("{0}"));
 	}
 
 	@Override
 	public void onViewCreated(View v, Bundle b){
-		showTutorial();
-		listView = (GridView) mActivity.findViewById(R.id.guidedChordExerciseList);
-		initData();
-		listView.setAdapter(new LearnGuidedListAdapter(mActivity, R.layout.paging_learn_guided_list_item, listData));
+		gridView = (GridView) mActivity.findViewById(R.id.guidedChordExerciseList);
+		initExercises();
+		gridView.setAdapter(new LearnGuidedListAdapter(mActivity, R.layout.paging_learn_guided_list_item, exercises));
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if(mActivity == null || mActivity.audio == null) return;
-	}
-
-
-	private void showTutorial(){
-
-	}
-
-	private void initData(){
-		listData.clear();
+	private void initExercises(){
+		exercises.clear();
 		//TODO: implement this in backend and use AppCache.getFromCache
-//		String songJsonString = AppCache.getFromCache(songFile());
 		InputStream is = mActivity.getResources().openRawResource(R.raw.guided_chord_exercises_json);
-//		File file = new File( cacheDir, path);
 
-		StringBuffer contents = new StringBuffer();
-		BufferedReader reader = null;
-		reader = new BufferedReader(new InputStreamReader(is));
-		String text = null;
+		StringBuilder contents = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		String text;
 		try {
 			while ((text = reader.readLine()) != null) {
 				contents.append(text).append(System.getProperty("line.separator"));
@@ -87,22 +66,12 @@ public class LearnGuidedListFragment extends Fragment {
 			e.printStackTrace();
 		}
 
-//		JSONObject jsonObject = null;
-//		try {
-//			jsonObject = new JSONObject(contents.toString());
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-		JSONArray guidedExercises = null;
 		try {
-			guidedExercises = new JSONArray(contents.toString());
-			GuidedChordExercise tmpRecord = new GuidedChordExercise();
-			JSONObject chordExercise;//, chordJson;
-//			JSONArray tmpChordsArray;
+			JSONArray guidedExercises = new JSONArray(contents.toString());
 			for (int i = 0; i < guidedExercises.length(); i++) {
-				chordExercise = guidedExercises.getJSONObject(i);
-				tmpRecord = new GuidedChordExercise(chordExercise);
-				listData.add(tmpRecord);
+				JSONObject exerciseJson = guidedExercises.getJSONObject(i);
+				GuidedChordExercise exercise = new GuidedChordExercise(exerciseJson);
+				exercises.add(exercise);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

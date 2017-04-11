@@ -9,24 +9,41 @@
         android:layout_height="match_parent"
         android:background="@color/background"
         android:orientation="vertical"
-    >
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="20dp"
+        >
 
     <Space
         android:id="@+id/chordSpacer"
         android:layout_width="match_parent"
         android:layout_height="20sp" />
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="@color/primaryText"
-            android:background="@color/background"
-            android:id="@+id/textChord"
-            android:layout_gravity="center_vertical"
-            android:textSize="28sp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="25dp" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textChord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@color/background"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/textNextChord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:background="@color/background"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText"
+                android:textSize="12sp" />
+        </RelativeLayout>
 
         <fretx.version4.FretboardView
             android:id="@+id/fretboardView"
@@ -34,6 +51,12 @@
             android:layout_height="@dimen/fretboardHeight"
             android:layout_margin="@dimen/fretboardMargin"
             />
+
+        <ProgressBar
+            android:id="@+id/chord_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Button
             android:text="Play Chord"

@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import fretx.version4.R;
 
 /**
@@ -56,7 +58,7 @@ public class LearnGuidedExerciseDialog extends DialogFragment
 
         //display elapsed time
         TextView timeText = (TextView) dialog.findViewById(R.id.finishedElapsedTimeText);
-        timeText.setText(String.format("%1$02d:%2$02d", min, sec));
+        timeText.setText(String.format(Locale.getDefault(), "%1$02d:%2$02d", min, sec));
 
         //set button listeners
         Button button = (Button) dialog.findViewById(R.id.finishedBackButton);
@@ -90,63 +92,3 @@ public class LearnGuidedExerciseDialog extends DialogFragment
         ((LearnGuidedChordExerciseListener) parentFragment).onUpdate(replay);
     }
 }
-
-/*
-    public void finishExercise(long elapsedTime){
-
-
-        final Dialog dialog = new Dialog(mActivity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.guided_exercise_finished_layout);
-
-
-
-        int seconds = (int) (elapsedTime / 1000);
-        int minutes = seconds / 60;
-        seconds = seconds % 60;
-        TextView finishedElapsedTimeText = (TextView) dialog.findViewById(R.id.finishedElapsedTimeText);
-        finishedElapsedTimeText.setText("You finished this exercise in: " + String.format("%d:%02d", minutes, seconds));
-
-        //Set onclicklisteners
-        Button backToListButton = (Button) dialog.findViewById(R.id.finishedBackButton);
-        Button nextExerciseButton = (Button) dialog.findViewById(R.id.finishedNextExerciseButton);
-
-        final boolean lastExerciseInList;
-        if (listPosition == listData.size() - 1) {
-            nextExerciseButton.setText("FINISH");
-            lastExerciseInList = true;
-        } else lastExerciseInList = false;
-
-        backToListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mActivity.fragNavController.popFragment();
-                dialog.dismiss();
-            }
-        });
-
-        nextExerciseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (lastExerciseInList) {
-                    mActivity.fragNavController.popFragment();
-
-                    dialog.dismiss();
-                } else {
-                    LearnGuidedExerciseFragment guidedChordExerciseFragment = new LearnGuidedExerciseFragment();
-                    guidedChordExerciseFragment.setExercise(listData.get(listPosition + 1));
-                    guidedChordExerciseFragment.setListData(listData, listPosition + 1);
-                    mActivity.fragNavController.replaceFragment(guidedChordExerciseFragment);
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-
-    }
-*/

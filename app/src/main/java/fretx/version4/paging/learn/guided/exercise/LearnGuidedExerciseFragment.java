@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +39,11 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 	//view
 	private FretboardView fretboardView;
     private TextView chordText;
+    private TextView chordNextText;
 	private TextView positionText;
     private TextView timeText;
     private Button playButton;
+    private ProgressBar chordProgress;
 
 	//chords
 	int nRepetitions;
@@ -79,9 +82,11 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 		positionText = (TextView) rootView.findViewById(R.id.position);
         timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
+        chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);
         playButton = (Button) rootView.findViewById(R.id.playChordButton);
+        chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
 
-		return rootView;
+        return rootView;
 	}
 
     @Override
@@ -144,19 +149,28 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         if (o instanceof ChordListener) {
             Log.d("DEBUG_YOLO", "callback chord listener");
 
-            ++chordIndex;
+            double progress = chordListener.getProgress();
+            //chord totally played
+            if (progress >= 100) {
+                chordProgress.setProgress(100);
+                ++chordIndex;
 
-            //end of the exercise
-            if (chordIndex == exerciseChords.size()) {
-                pauseAll();
-                setPosition();
-                LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
-                        timeUpdater.getMinute(), timeUpdater.getSecond(), listIndex == exerciseList.size() - 1);
-                dialog.show(getFragmentManager(), "dialog");
+                //end of the exercise
+                if (chordIndex == exerciseChords.size()) {
+                    pauseAll();
+                    setPosition();
+                    LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
+                            timeUpdater.getMinute(), timeUpdater.getSecond(), listIndex == exerciseList.size() - 1);
+                    dialog.show(getFragmentManager(), "dialog");
+                }
+                //middle of an exercise
+                else {
+                    setChord();
+                }
             }
-            //middle of an exercise
+            //chord in progress
             else {
-                setChord();
+                chordProgress.setProgress((int)progress);
             }
         }
         //audio preview finished
@@ -212,11 +226,14 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     //setup everything according actual chord
     private void setChord() {
         Chord actualChord = exerciseChords.get(chordIndex);
-
         Log.d("DEBUG_YOLO", "setChord " + actualChord.toString());
 
         //update chord title
         chordText.setText(actualChord.toString());
+        if (chordIndex + 1 < exerciseChords.size())
+            chordNextText.setText(exerciseChords.get(chordIndex + 1).toString());
+        else
+            chordNextText.setText("");
         //update finger position
         fretboardView.setFretboardPositions(actualChord.getFingerPositions());
 		//update positionText
@@ -224,6 +241,8 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         //update chord listener
         chordListener.setTargetChord(actualChord);
         chordListener.startListening();
+        //setup the progress bar\
+        chordProgress.setProgress(0);
         //update led
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(actualChord.toString(), chordDb);
         BluetoothClass.sendToFretX(bluetoothArray);

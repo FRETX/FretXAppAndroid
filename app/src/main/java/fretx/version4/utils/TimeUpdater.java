@@ -1,10 +1,12 @@
 package fretx.version4.utils;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,6 +23,7 @@ public class TimeUpdater {
     private int second;
     private int minute;
 
+    @SuppressLint("SetTextI18n")
     public TimeUpdater(@Nullable TextView timeText) {
         this.timeText = timeText;
         if (timeText != null)
@@ -62,9 +65,10 @@ public class TimeUpdater {
                             minute = 0;
                         }
 
-                        //update textview
+                        //update textView
                         if (timeText != null)
-                            timeText.setText(String.format("%1$02d:%2$02d", minute, second));
+                            timeText.setText(String.format(Locale.getDefault(),
+                                    "%1$02d:%2$02d", minute, second));
                     }
                 });
             }
