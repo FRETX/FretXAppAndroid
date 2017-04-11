@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.guided.list;
+package fretx.version4.paging.learn.guided;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,7 +22,6 @@ import fretx.version4.BluetoothClass;
 import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.paging.learn.guided.GuidedChordExercise;
 
 public class LearnGuidedListFragment extends Fragment {
 	MainActivity mActivity;

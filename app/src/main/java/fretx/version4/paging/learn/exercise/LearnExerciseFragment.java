@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.guided.exercise;
+package fretx.version4.paging.learn.exercise;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,8 +32,8 @@ import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-public class LearnGuidedExerciseFragment extends Fragment implements Observer,
-        LearnGuidedExerciseDialog.LearnGuidedChordExerciseListener {
+public class LearnExerciseFragment extends Fragment implements Observer,
+        LearnExerciseDialog.LearnGuidedChordExerciseListener {
 	private MainActivity mActivity;
 
 	//view
@@ -177,8 +177,9 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
                         if (chordIndex == exerciseChords.size()) {
                             pauseAll();
                             setPosition();
-                            LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
-                                    timeUpdater.getMinute(), timeUpdater.getSecond(), listIndex == exerciseList.size() - 1);
+                            LearnExerciseDialog dialog = LearnExerciseDialog.newInstance(this,
+                                    timeUpdater.getMinute(), timeUpdater.getSecond(),
+                                    exerciseList == null || listIndex == exerciseList.size() - 1);
                             dialog.show(getFragmentManager(), "dialog");
                         }
                         //middle of an exercise
@@ -217,12 +218,13 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         }
         //goes to the next exercise
         else {
-            LearnGuidedExerciseFragment guidedChordExerciseFragment = new LearnGuidedExerciseFragment();
+            LearnExerciseFragment guidedChordExerciseFragment = new LearnExerciseFragment();
             guidedChordExerciseFragment.setExercise(exerciseList, listIndex + 1);
             mActivity.fragNavController.replaceFragment(guidedChordExerciseFragment);
         }
     }
 
+    //setup exercise flow & current exercise
     public void setExercise(List<GuidedChordExercise> exerciseList, int listIndex) {
         this.exerciseList = exerciseList;
         this.listIndex = listIndex;
@@ -239,7 +241,7 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 
     //setup exercises chords form list of chords
     @SuppressWarnings("unchecked")
-    private void setChords(ArrayList<Chord> chords) {
+    public void setChords(ArrayList<Chord> chords) {
         this.exerciseChords = (ArrayList<Chord>) chords.clone();
     }
 

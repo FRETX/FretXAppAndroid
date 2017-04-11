@@ -24,16 +24,18 @@ public class TimeUpdater {
     private int minute;
 
     @SuppressLint("SetTextI18n")
-    public TimeUpdater(@Nullable TextView timeText) {
+    public TimeUpdater(TextView timeText) {
         this.timeText = timeText;
         if (timeText != null)
             timeText.setText("00:00");
     }
 
+    @SuppressLint("SetTextI18n")
     public void resetTimer() {
         //zero time
         second = 0;
         minute = 0;
+        timeText.setText("00:00");
     }
 
     public void pauseTimer() {
@@ -66,9 +68,8 @@ public class TimeUpdater {
                         }
 
                         //update textView
-                        if (timeText != null)
-                            timeText.setText(String.format(Locale.getDefault(),
-                                    "%1$02d:%2$02d", minute, second));
+                        timeText.setText(String.format(Locale.getDefault(),
+                                "%1$02d:%2$02d", minute, second));
                     }
                 });
             }

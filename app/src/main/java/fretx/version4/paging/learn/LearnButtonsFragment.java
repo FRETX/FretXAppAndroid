@@ -13,8 +13,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.paging.learn.custom.builder.LearnCustomBuilderFragment;
-import fretx.version4.paging.learn.guided.list.LearnGuidedListFragment;
+import fretx.version4.paging.learn.custom.LearnCustomBuilderFragment;
+import fretx.version4.paging.learn.guided.LearnGuidedListFragment;
 import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;
 
 public class LearnButtonsFragment extends Fragment {

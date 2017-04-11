@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.guided.list;
+package fretx.version4.paging.learn.guided;
 
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -11,8 +11,7 @@ import java.util.ArrayList;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.paging.learn.guided.GuidedChordExercise;
-import fretx.version4.paging.learn.guided.exercise.LearnGuidedExerciseFragment;
+import fretx.version4.paging.learn.exercise.LearnExerciseFragment;
 import rocks.fretx.audioprocessing.Chord;
 
 class LearnGuidedListAdapter extends ArrayAdapter<GuidedChordExercise> {
@@ -60,7 +59,7 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedChordExercise> {
 		row.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LearnGuidedExerciseFragment guidedChordExerciseFragment = new LearnGuidedExerciseFragment();
+				LearnExerciseFragment guidedChordExerciseFragment = new LearnExerciseFragment();
 				guidedChordExerciseFragment.setExercise(data, position);
 				mActivity.fragNavController.pushFragment(guidedChordExerciseFragment);
 			}

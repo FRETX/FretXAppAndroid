@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.custom.builder;
+package fretx.version4.paging.learn.custom;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -23,7 +23,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.paging.learn.custom.exercise.LearnCustomExerciseFragment;
+import fretx.version4.paging.learn.exercise.LearnExerciseFragment;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -203,7 +203,7 @@ implements LearnCustomBuilderDialog.LearnCustomChordExerciseListener {
 	private void startExercise(){
 		ArrayList<Chord> chords = sequences.get(currentSequenceIndex).getChords();
 		if(chords.size()<1) return;
-		LearnCustomExerciseFragment fragmentChordExercise = new LearnCustomExerciseFragment();
+		LearnExerciseFragment fragmentChordExercise = new LearnExerciseFragment();
 		fragmentChordExercise.setChords(chords);
 		mActivity.fragNavController.pushFragment(fragmentChordExercise);
 	}
