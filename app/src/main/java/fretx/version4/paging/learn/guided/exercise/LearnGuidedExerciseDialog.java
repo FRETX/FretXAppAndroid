@@ -20,6 +20,7 @@ public class LearnGuidedExerciseDialog extends DialogFragment
 {
     private static final String ELAPSED_TIME_MIN = "elapsed_time_min";
     private static final String ELAPSED_TIME_SEC = "elapsed_time_sec";
+    private static final String LAST_EXERCISE = "last_exercise";
     private Dialog dialog;
     private boolean replay = true;
 
@@ -27,12 +28,13 @@ public class LearnGuidedExerciseDialog extends DialogFragment
         void onUpdate(boolean replay);
     }
 
-    public static LearnGuidedExerciseDialog newInstance(LearnGuidedChordExerciseListener listener, int min, int sec) {
+    public static LearnGuidedExerciseDialog newInstance(LearnGuidedChordExerciseListener listener, int min, int sec, boolean last) {
         LearnGuidedExerciseDialog dialog = new LearnGuidedExerciseDialog();
         dialog.setTargetFragment((Fragment) listener, 4321);
         Bundle args = new Bundle();
         args.putInt(ELAPSED_TIME_MIN, min);
         args.putInt(ELAPSED_TIME_SEC, sec);
+        args.putBoolean(LAST_EXERCISE, last);
         dialog.setArguments(args);
         return dialog;
     }
@@ -47,8 +49,10 @@ public class LearnGuidedExerciseDialog extends DialogFragment
         //retrieve time from arguments
         int min = getArguments().getInt(ELAPSED_TIME_MIN);
         int sec = getArguments().getInt(ELAPSED_TIME_SEC);
+        boolean last = getArguments().getBoolean(LAST_EXERCISE);
         getArguments().remove(ELAPSED_TIME_MIN);
         getArguments().remove(ELAPSED_TIME_SEC);
+        getArguments().remove(LAST_EXERCISE);
 
         //display elapsed time
         TextView timeText = (TextView) dialog.findViewById(R.id.finishedElapsedTimeText);
@@ -62,15 +66,18 @@ public class LearnGuidedExerciseDialog extends DialogFragment
                 dialog.dismiss();
             }
         });
-
         button = (Button) dialog.findViewById(R.id.finishedNextExerciseButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                replay = false;
-                dialog.dismiss();
-            }
-        });
+        if (last) {
+            button.setVisibility(View.GONE);
+        } else {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    replay = false;
+                    dialog.dismiss();
+                }
+            });
+        }
 
         return dialog;
     }

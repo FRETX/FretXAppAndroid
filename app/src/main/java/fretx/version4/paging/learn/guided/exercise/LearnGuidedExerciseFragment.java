@@ -2,6 +2,7 @@ package fretx.version4.paging.learn.guided.exercise;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -53,8 +55,14 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     private ChordListener chordListener;
     private MidiPlayer midiPlayer;
 
+    //exercises
+    private List<GuidedChordExercise> exerciseList;
+    private int listIndex;
+
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("DEBUG_YOLO", "onCreateView");
+
         //firebase log
 		mActivity = (MainActivity) getActivity();
 		Bundle bundle = new Bundle();
@@ -78,6 +86,8 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 
     @Override
 	public void onViewCreated(View v, Bundle savedInstanceState) {
+        Log.d("DEBUG_YOLO", "onViewCreated");
+
         timeUpdater = new TimeUpdater(timeText);
         chordListener = new ChordListener(mActivity.audio);
         chordListener.addObserver(this);
@@ -108,6 +118,8 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     @Override
     public void onResume() {
         super.onResume();
+
+        Log.d("DEBUG_YOLO", "onResume");
         resumeAll();
     }
 
@@ -120,6 +132,8 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     @Override
     public void onPause() {
         super.onPause();
+
+        Log.d("DEBUG_YOLO", "onPause");
         pauseAll();
     }
 
@@ -128,6 +142,8 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     public void update(Observable o, Object arg) {
         //advance to the next chord
         if (o instanceof ChordListener) {
+            Log.d("DEBUG_YOLO", "callback chord listener");
+
             ++chordIndex;
 
             //end of the exercise
@@ -135,7 +151,7 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
                 pauseAll();
                 setPosition();
                 LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
-                        timeUpdater.getMinute(), timeUpdater.getSecond());
+                        timeUpdater.getMinute(), timeUpdater.getSecond(), listIndex == exerciseList.size() - 1);
                 dialog.show(getFragmentManager(), "dialog");
             }
             //middle of an exercise
@@ -145,6 +161,8 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         }
         //audio preview finished
         else if (o instanceof MidiPlayer) {
+            Log.d("DEBUG_YOLO", "callback midiplayer");
+
             playButton.setClickable(true);
             chordListener.startListening();
         }
@@ -153,6 +171,8 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     //retrieve result of the finished exercise dialog
     @Override
     public void onUpdate(boolean replay) {
+        Log.d("DEBUG_YOLO", "onUpdate");
+
         //replay the actual exercise
         if (replay) {
             chordIndex = 0;
@@ -162,11 +182,19 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         //goes to the next exercise
         else {
             Toast.makeText(getActivity(), "DO NOT REPLAY!", Toast.LENGTH_SHORT).show();
+
+            LearnGuidedExerciseFragment guidedChordExerciseFragment = new LearnGuidedExerciseFragment();
+            guidedChordExerciseFragment.setExercise(exerciseList, listIndex + 1);
+            mActivity.fragNavController.replaceFragment(guidedChordExerciseFragment);
         }
     }
 
-    //setup exercise chords from predefined exercise
-    public void setExercise(GuidedChordExercise exercise){
+    public void setExercise(List<GuidedChordExercise> exerciseList, int listIndex) {
+        this.exerciseList = exerciseList;
+        this.listIndex = listIndex;
+
+        GuidedChordExercise exercise = exerciseList.get(listIndex);
+
         this.nRepetitions = exercise.getRepetition();
         ArrayList<Chord> repeatedChords = new ArrayList<>();
         for (int i = 0; i < exercise.getRepetition(); i++) {
@@ -177,13 +205,15 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
 
     //setup exercises chords form list of chords
     @SuppressWarnings("unchecked")
-    public void setChords(ArrayList<Chord> chords) {
+    private void setChords(ArrayList<Chord> chords) {
         this.exerciseChords = (ArrayList<Chord>) chords.clone();
     }
 
     //setup everything according actual chord
     private void setChord() {
         Chord actualChord = exerciseChords.get(chordIndex);
+
+        Log.d("DEBUG_YOLO", "setChord " + actualChord.toString());
 
         //update chord title
         chordText.setText(actualChord.toString());

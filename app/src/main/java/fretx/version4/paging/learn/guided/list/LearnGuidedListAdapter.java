@@ -61,7 +61,7 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedChordExercise> {
 			@Override
 			public void onClick(View view) {
 				LearnGuidedExerciseFragment guidedChordExerciseFragment = new LearnGuidedExerciseFragment();
-				guidedChordExerciseFragment.setExercise(item);
+				guidedChordExerciseFragment.setExercise(data, position);
 				mActivity.fragNavController.pushFragment(guidedChordExerciseFragment);
 			}
 		});
