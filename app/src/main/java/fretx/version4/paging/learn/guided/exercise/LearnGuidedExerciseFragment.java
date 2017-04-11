@@ -1,9 +1,8 @@
 package fretx.version4.paging.learn.guided.exercise;
 
-import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -110,6 +107,14 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
                 playButton.setClickable(false);
                 chordListener.stopListening();
                 midiPlayer.playChord(exerciseChords.get(chordIndex));
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        playButton.setClickable(true);
+                        chordListener.startListening();
+                    }
+                }, 1500);
             }
         });
 
@@ -189,12 +194,14 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
             }
         }
         //audio preview finished
+        /*
         else if (o instanceof MidiPlayer) {
             Log.d("DEBUG_YOLO", "callback midiplayer");
 
             playButton.setClickable(true);
             chordListener.startListening();
         }
+        */
     }
 
     //retrieve result of the finished exercise dialog
@@ -210,8 +217,6 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         }
         //goes to the next exercise
         else {
-            Toast.makeText(getActivity(), "DO NOT REPLAY!", Toast.LENGTH_SHORT).show();
-
             LearnGuidedExerciseFragment guidedChordExerciseFragment = new LearnGuidedExerciseFragment();
             guidedChordExerciseFragment.setExercise(exerciseList, listIndex + 1);
             mActivity.fragNavController.replaceFragment(guidedChordExerciseFragment);
