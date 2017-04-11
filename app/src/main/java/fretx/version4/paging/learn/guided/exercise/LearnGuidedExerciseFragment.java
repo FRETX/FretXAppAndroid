@@ -1,13 +1,16 @@
 package fretx.version4.paging.learn.guided.exercise;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +47,7 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     private TextView timeText;
     private Button playButton;
     private ProgressBar chordProgress;
+    private ImageView thresholdImage;
 
 	//chords
 	int nRepetitions;
@@ -85,6 +89,7 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
         chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);
         playButton = (Button) rootView.findViewById(R.id.playChordButton);
         chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
+        thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
 
         return rootView;
 	}
@@ -145,32 +150,42 @@ public class LearnGuidedExerciseFragment extends Fragment implements Observer,
     //get actions of observables
     @Override
     public void update(Observable o, Object arg) {
+        Log.d("DEBUG_YOLO", "callback chord listener");
+
         //advance to the next chord
         if (o instanceof ChordListener) {
-            Log.d("DEBUG_YOLO", "callback chord listener");
+            switch ((int) arg) {
+                case ChordListener.STATUS_BELOW_THRESHOLD:
+                    thresholdImage.setImageResource(android.R.drawable.presence_audio_busy);
+                    break;
+                case ChordListener.STATUS_UPSIDE_THRESHOLD:
+                    thresholdImage.setImageResource(android.R.drawable.presence_audio_online);
+                    break;
+                case ChordListener.STATUS_PROGRESS_UPDATE:
+                    double progress = chordListener.getProgress();
+                    //chord totally played
+                    if (progress >= 100) {
+                        chordProgress.setProgress(100);
+                        ++chordIndex;
 
-            double progress = chordListener.getProgress();
-            //chord totally played
-            if (progress >= 100) {
-                chordProgress.setProgress(100);
-                ++chordIndex;
-
-                //end of the exercise
-                if (chordIndex == exerciseChords.size()) {
-                    pauseAll();
-                    setPosition();
-                    LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
-                            timeUpdater.getMinute(), timeUpdater.getSecond(), listIndex == exerciseList.size() - 1);
-                    dialog.show(getFragmentManager(), "dialog");
-                }
-                //middle of an exercise
-                else {
-                    setChord();
-                }
-            }
-            //chord in progress
-            else {
-                chordProgress.setProgress((int)progress);
+                        //end of the exercise
+                        if (chordIndex == exerciseChords.size()) {
+                            pauseAll();
+                            setPosition();
+                            LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this,
+                                    timeUpdater.getMinute(), timeUpdater.getSecond(), listIndex == exerciseList.size() - 1);
+                            dialog.show(getFragmentManager(), "dialog");
+                        }
+                        //middle of an exercise
+                        else {
+                            setChord();
+                        }
+                    }
+                    //chord in progress
+                    else {
+                        chordProgress.setProgress((int)progress);
+                    }
+                    break;
             }
         }
         //audio preview finished

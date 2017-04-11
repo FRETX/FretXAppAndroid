@@ -3,10 +3,7 @@ package fretx.version4.utils;
 import android.os.CountDownTimer;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.ProgressBar;
-
 import java.util.Observable;
 
 import rocks.fretx.audioprocessing.AudioProcessing;
@@ -19,10 +16,16 @@ import rocks.fretx.audioprocessing.Chord;
 public class ChordListener extends Observable {
     private final String TAG = "AUDIO";
 
+    //observable
+    public static final int STATUS_BELOW_THRESHOLD = 0;
+    public static final int STATUS_UPSIDE_THRESHOLD = 1;
+    public static final int STATUS_PROGRESS_UPDATE = 2;
+
     //audio
     private AudioProcessing audio;
     private Chord targetChord;
     private double correctlyPlayedAccumulator;
+    private boolean upsideThreshold;
 
     //audio settings
     private long timerTick;
@@ -40,6 +43,7 @@ public class ChordListener extends Observable {
 
     public ChordListener(@NonNull AudioProcessing audio) {
         this.audio = audio;
+        this.upsideThreshold = false;
 
         timerTick = TIMER_TICK;
         onsetIgnoreDuration = ONSET_IGNORE_DURATION;
@@ -67,54 +71,71 @@ public class ChordListener extends Observable {
         return correctlyPlayedAccumulator / CORRECTLY_PLAYED_DURATION * 100;
     }
 
+    //todo replace with a handler to avoid restart of countdown timer
     private CountDownTimer chordTimer = new CountDownTimer(TIMER_DURATION, TIMER_TICK) {
         public void onTick(long millisUntilFinished) {
+
+            //todo remove this 2 checks - should not happen
             if (!audio.isInitialized()) {
-                Log.d(TAG, "not initialized");
+                //Log.d("USELESSSTUF", "not initialized");
                 return;
             }
-
             if (!audio.isProcessing()) {
-                Log.d(TAG, "not processing");
+                //Log.d("USELESSSTUF", "not processing");
                 return;
             }
 
             if (!audio.isBufferAvailable()) {
-                Log.d(TAG, "isBufferAvailable = false");
                 return;
             }
 
+            //nothing heard
             if (audio.getVolume() < VOLUME_THRESHOLD) {
-                correctlyPlayedAccumulator = 0;
-                Log.d(TAG, "prematurely canceled due to low volume");
-                return;
+                if (upsideThreshold) {
+                    upsideThreshold = false;
+                    correctlyPlayedAccumulator = 0;
+                    setChanged();
+                    notifyObservers(STATUS_BELOW_THRESHOLD);
+                }
+                //Log.d(TAG, "prematurely canceled due to low volume");
             }
+            //chord heard
+            else {
+                if (!upsideThreshold) {
+                    upsideThreshold = true;
+                    setChanged();
+                    notifyObservers(STATUS_UPSIDE_THRESHOLD);
+                }
 
-            if (millisUntilFinished <= CHORD_LISTEN_DURATION) {
-                Chord playedChord = audio.getChord();
-                Log.d(TAG, "played:" + playedChord.toString());
+                //update progress
+                if (millisUntilFinished <= CHORD_LISTEN_DURATION) {
+                    Chord playedChord = audio.getChord();
+                    //Log.d(TAG, "played:" + playedChord.toString());
 
-                //if (targetChord.toString().equals(playedChord.toString())) {
-                correctlyPlayedAccumulator += TIMER_TICK;
-                setChanged();
-                notifyObservers();
-                //    Log.d(TAG, "correctly played acc:" + correctlyPlayedAccumulator);
-                //} else {
-                //    correctlyPlayedAccumulator = 0;
-                //}
-            }
+                    //if (targetChord.toString().equals(playedChord.toString())) {
+                    correctlyPlayedAccumulator += TIMER_TICK;
+                    //Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
+                    //} else {
+                    //    correctlyPlayedAccumulator = 0;
+                    //    //Log.d(TAG, "not correctly played acc");
+                    //}
+                    setChanged();
+                    notifyObservers(STATUS_PROGRESS_UPDATE);
+                }
 
-            if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION) {
-                Log.d(TAG, "- - - - - chord detected - - - - -");
-                this.cancel();
-                setChanged();
-                notifyObservers();
+                //stop the count down timer
+                if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION) {
+                    //Log.d(TAG, "- - - - - chord detected - - - - -");
+                    this.cancel();
+                }
             }
         }
 
         public void onFinish() {
-            Log.d(TAG, "finished without hearing enough of correct chords");
+            //Log.d(TAG, "finished without hearing enough of correct chords");
             correctlyPlayedAccumulator = 0;
+            setChanged();
+            notifyObservers(STATUS_PROGRESS_UPDATE);
             chordTimer.start();
         }
     };
