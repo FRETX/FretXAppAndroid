@@ -20,12 +20,15 @@ public class ChordListener extends Observable {
     public static final int STATUS_BELOW_THRESHOLD = 0;
     public static final int STATUS_UPSIDE_THRESHOLD = 1;
     public static final int STATUS_PROGRESS_UPDATE = 2;
+    public static final int STATUS_TIMEOUT = 3;
 
     //audio
     private AudioProcessing audio;
     private Chord targetChord;
     private double correctlyPlayedAccumulator;
     private boolean upsideThreshold;
+    private int timeoutCounter;
+    private boolean timeoutNotified;
 
     //audio settings
     private long timerTick;
@@ -40,10 +43,12 @@ public class ChordListener extends Observable {
     static private final long TIMER_DURATION = ONSET_IGNORE_DURATION + CHORD_LISTEN_DURATION; //in miliseconds
     static private final long CORRECTLY_PLAYED_DURATION = 160; //in milliseconds
     static private final double VOLUME_THRESHOLD = -9;
+    static private final int TIMEOUT_THRESHOLD = 20;
 
     public ChordListener(@NonNull AudioProcessing audio) {
         this.audio = audio;
         this.upsideThreshold = false;
+        this.timeoutNotified = false;
 
         timerTick = TIMER_TICK;
         onsetIgnoreDuration = ONSET_IGNORE_DURATION;
@@ -58,6 +63,7 @@ public class ChordListener extends Observable {
 
     public void startListening() {
         correctlyPlayedAccumulator = 0;
+        timeoutCounter = 0;
         chordTimer.cancel();
         chordTimer.start();
         Log.d(TAG, "starting the countdownTimer");
@@ -136,6 +142,12 @@ public class ChordListener extends Observable {
             correctlyPlayedAccumulator = 0;
             setChanged();
             notifyObservers(STATUS_PROGRESS_UPDATE);
+            timeoutCounter += 1;
+            if (!timeoutNotified && timeoutCounter >= TIMEOUT_THRESHOLD) {
+                setChanged();
+                notifyObservers(STATUS_TIMEOUT);
+                timeoutNotified = true;
+            }
             chordTimer.start();
         }
     };

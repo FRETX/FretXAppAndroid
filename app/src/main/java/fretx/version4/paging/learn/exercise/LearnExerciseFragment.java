@@ -1,8 +1,11 @@
 package fretx.version4.paging.learn.exercise;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +61,7 @@ public class LearnExerciseFragment extends Fragment implements Observer,
     //audio
     private ChordListener chordListener;
     private MidiPlayer midiPlayer;
+    private AlertDialog dialog;
 
     //exercises
     private List<GuidedChordExercise> exerciseList;
@@ -160,10 +164,16 @@ public class LearnExerciseFragment extends Fragment implements Observer,
         //advance to the next chord
         if (o instanceof ChordListener) {
             switch ((int) arg) {
+                case ChordListener.STATUS_TIMEOUT:
+                    dialog = audioHelperDialog(getActivity());
+                    dialog.show();
+                    break;
                 case ChordListener.STATUS_BELOW_THRESHOLD:
                     thresholdImage.setImageResource(android.R.drawable.presence_audio_busy);
                     break;
                 case ChordListener.STATUS_UPSIDE_THRESHOLD:
+                    if (dialog != null)
+                        dialog.dismiss();
                     thresholdImage.setImageResource(android.R.drawable.presence_audio_online);
                     break;
                 case ChordListener.STATUS_PROGRESS_UPDATE:
@@ -273,5 +283,20 @@ public class LearnExerciseFragment extends Fragment implements Observer,
     //display chord position
     private void setPosition() {
         positionText.setText(chordIndex + "/" + exerciseChords.size());
+    }
+
+    //create a audio helper dialog
+    private AlertDialog audioHelperDialog(Context context) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        //todo change text of dialog
+        alertDialogBuilder.setTitle("Audio Detector")
+                .setMessage("Common guys . . .")
+                .setCancelable(false)
+                .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        return alertDialogBuilder.create();
     }
 }
