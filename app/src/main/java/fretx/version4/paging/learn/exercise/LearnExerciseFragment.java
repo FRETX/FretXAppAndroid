@@ -2,6 +2,7 @@ package fretx.version4.paging.learn.exercise;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import org.apache.poi.hssf.record.formula.functions.T;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,9 +113,20 @@ public class LearnExerciseFragment extends Fragment implements Observer,
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //stop listening
                 playButton.setClickable(false);
                 chordListener.stopListening();
+
+                //check if music volume is up
+                AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+                if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
+                    Toast.makeText(getActivity(), "Volume is low", Toast.LENGTH_SHORT).show();
+                }
+
+                //play the chord
                 midiPlayer.playChord(exerciseChords.get(chordIndex));
+
+                //start listening after delay
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override

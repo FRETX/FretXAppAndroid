@@ -1,5 +1,7 @@
 package fretx.version4.paging.play;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,6 +94,11 @@ public class PlayChordPreviewFragment extends Fragment
 
 		playChordButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View view){
+				//check if music volume is up
+				AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+				if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
+					Toast.makeText(getActivity(), "Volume is low", Toast.LENGTH_SHORT).show();
+				}
 				midiPlayer.playChord(exerciseChords.get(chordIndex));
 			}
 		});
