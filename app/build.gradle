@@ -52,7 +52,6 @@ dependencies {
     compile 'com.android.support:percent:25.1.1'
     compile 'com.github.billthefarmer:mididriver:v1.11'
     testCompile 'junit:junit:4.12'
-    compile project(':fretx-audio')
 }
 
 

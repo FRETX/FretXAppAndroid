@@ -144,6 +144,7 @@ public class LearnExerciseFragment extends Fragment implements Observer,
 
 	private void resumeAll() {
         if (exerciseChords.size() > 0 && chordIndex < exerciseChords.size()) {
+            chordListener.setTargetChords(exerciseChords);
             setChord();
             timeUpdater.resumeTimer();
             midiPlayer.start();
@@ -289,6 +290,7 @@ public class LearnExerciseFragment extends Fragment implements Observer,
         //update chord listener
         chordListener.setTargetChord(actualChord);
         chordListener.startListening();
+        Toast.makeText(getActivity(), "chord: " + actualChord.toString(), Toast.LENGTH_SHORT).show();
         //setup the progress bar\
         chordProgress.setProgress(0);
         //update led

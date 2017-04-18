@@ -4,6 +4,8 @@ import android.os.CountDownTimer;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Observable;
 
 import rocks.fretx.audioprocessing.AudioProcessing;
@@ -59,6 +61,10 @@ public class ChordListener extends Observable {
 
     public void setTargetChord(Chord chord) {
         targetChord = chord;
+    }
+
+    public void setTargetChords(ArrayList<Chord> chords) {
+        audio.setTargetChords(chords);
     }
 
     public void startListening() {
@@ -118,13 +124,13 @@ public class ChordListener extends Observable {
                     Chord playedChord = audio.getChord();
                     //Log.d(TAG, "played:" + playedChord.toString());
 
-                    //if (targetChord.toString().equals(playedChord.toString())) {
-                    correctlyPlayedAccumulator += TIMER_TICK;
-                    //Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
-                    //} else {
-                    //    correctlyPlayedAccumulator = 0;
-                    //    //Log.d(TAG, "not correctly played acc");
-                    //}
+                    if (targetChord.toString().equals(playedChord.toString())) {
+                        correctlyPlayedAccumulator += TIMER_TICK;
+                        Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
+                    } else {
+                        correctlyPlayedAccumulator = 0;
+                        Log.d(TAG, "not correctly played acc");
+                    }
                     setChanged();
                     notifyObservers(STATUS_PROGRESS_UPDATE);
                 }
