@@ -290,7 +290,6 @@ public class LearnExerciseFragment extends Fragment implements Observer,
         //update chord listener
         chordListener.setTargetChord(actualChord);
         chordListener.startListening();
-        Toast.makeText(getActivity(), "chord: " + actualChord.toString(), Toast.LENGTH_SHORT).show();
         //setup the progress bar\
         chordProgress.setProgress(0);
         //update led
