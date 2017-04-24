@@ -53,12 +53,16 @@ public class Midi extends MidiDriver implements MidiDriver.OnMidiStartListener {
 
     @Override
     public void start() {
+        if (!enabled)
+            return;
         Log.d(TAG, "start");
         super.start();
     }
 
     @Override
     public void stop() {
+        if (!enabled)
+            return;
         Log.d(TAG, "stop");
         super.start();
     }

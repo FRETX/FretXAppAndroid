@@ -66,6 +66,8 @@ public class Audio {
     }
 
     public void start() {
+        if (!enabled)
+            return;
         Log.d(TAG, "start");
         if (!audio.isInitialized())
             audio.initialize(FS, BUFFER_SIZE_S);
@@ -74,6 +76,8 @@ public class Audio {
     }
 
     public void stop() {
+        if (!enabled)
+            return;
         Log.d(TAG, "stop");
         if (audio.isProcessing() ) {
             audio.stop();

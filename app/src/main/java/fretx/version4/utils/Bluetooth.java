@@ -121,13 +121,19 @@ public class Bluetooth {
     }
 
     public void start() {
+        if (!enabled)
+            return;
         Log.d(TAG, "start");
+        if (scanning)
+            scan();
     }
 
     public void stop(){
+        if (!enabled)
+            return;
         handler.removeCallbacksAndMessages(null);
         if (scanning)
-            stopScan();
+            adapter.getBluetoothLeScanner().stopScan(scanCallback);
         mProgress.dismiss();
         Log.d(TAG, "stop");
     }
@@ -190,20 +196,11 @@ public class Bluetooth {
         handler.postDelayed(endOfScan, SCAN_DELAY);
     }
 
-    private void stopScan() {
-        Log.d(TAG, "stop scanning");
-        scanning = false;
-        adapter.getBluetoothLeScanner().stopScan(scanCallback);
-    }
-
-    public boolean isScanning() {
-        return scanning;
-    }
-
     private Runnable endOfScan = new Runnable() {
         @Override
         public void run() {
-            stopScan();
+            adapter.getBluetoothLeScanner().stopScan(scanCallback);
+            scanning = false;
             if (devices.size() == 1) {
                 handler.removeCallbacksAndMessages(null);
                 connect(devices.valueAt(0));
