@@ -45,9 +45,6 @@ public class LearnButtonsFragment extends Fragment {
             @Override
             public void onClick(View v) {
 	            mActivity.fragNavController.pushFragment(new LearnCustomBuilderFragment());
-	            mActivity.audio.disablePitchDetector();
-	            mActivity.audio.disableNoteDetector();
-	            mActivity.audio.enableChordDetector();
 
             }
         });
@@ -56,9 +53,6 @@ public class LearnButtonsFragment extends Fragment {
 		    @Override
 		    public void onClick(View v) {
 			    mActivity.fragNavController.pushFragment(new LearnScaleExerciseFragment());
-			    mActivity.audio.enablePitchDetector();
-			    mActivity.audio.enableNoteDetector();
-			    mActivity.audio.disableChordDetector();
 		    }
 	    });
 
@@ -67,9 +61,6 @@ public class LearnButtonsFragment extends Fragment {
 		    @Override
 		    public void onClick(View v) {
 			    mActivity.fragNavController.pushFragment(new LearnGuidedListFragment());
-			    mActivity.audio.disablePitchDetector();
-			    mActivity.audio.disableNoteDetector();
-			    mActivity.audio.enableChordDetector();
 		    }
 	    });
 

@@ -78,9 +78,6 @@ class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 
 			@Override
 			public void onClick(View v) {
-				mActivity.audio.enableChordDetector();
-				mActivity.audio.disableNoteDetector();
-				mActivity.audio.disablePitchDetector();
 				if(mActivity.previewEnabled){
 					Bundle bundle = new Bundle();
 					//bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Preview: " + item.fretx_id);

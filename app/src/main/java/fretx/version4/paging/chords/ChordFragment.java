@@ -14,12 +14,12 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;
 
-import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.utils.MidiPlayer;
+import fretx.version4.utils.Bluetooth;
+import fretx.version4.utils.Midi;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -31,7 +31,6 @@ public class ChordFragment extends Fragment
     View rootView;
 	FretboardView fretboardView;
 	Button playChordButton;
-	MidiPlayer midiPlayer;
 	HashMap<String,FingerPositions> chordFingerings;
 
 	public ChordFragment (){
@@ -39,7 +38,6 @@ public class ChordFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mActivity = (MainActivity) getActivity();
         rootView = inflater.inflate(R.layout.paging_chord, container, false);
         return  rootView;
@@ -60,10 +58,7 @@ public class ChordFragment extends Fragment
 		
 		chordFingerings = MusicUtils.parseChordDb();
 
-		// Instantiate the driver.
-		midiPlayer = new MidiPlayer();
-
-		BluetoothClass.sendToFretX(Util.str2array("{0}"));
+		Bluetooth.getInstance().clearMatrix();
 
 		String[] rootNotes = {"C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"};
 		String [] chordTypes = {"maj","m","maj7","m7","sus2","sus4","dim","dim7","aug",};
@@ -145,34 +140,20 @@ public class ChordFragment extends Fragment
 		playChordButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				midiPlayer.playChord(currentChord);
+				Midi.getInstance().playChord(currentChord);
 			}
 		});
-
-		showTutorial();
 	}
 
 	@Override
 	public void onResume(){
 		super.onResume();
-		midiPlayer.start();
-		int[] config = midiPlayer.getConfig();
+
+		int[] config = Midi.getInstance().config();
 		Log.d(this.getClass().getName(), "maxVoices: " + config[0]);
 		Log.d(this.getClass().getName(), "numChannels: " + config[1]);
 		Log.d(this.getClass().getName(), "sampleRate: " + config[2]);
 		Log.d(this.getClass().getName(), "mixBufferSize: " + config[3]);
-	}
-
-	@Override
-	public void onPause(){
-		super.onPause();
-		midiPlayer.stop();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if(mActivity == null || mActivity.audio == null) return;
 	}
 
 	private void updateCurrentChord(String root , String type){
@@ -188,28 +169,6 @@ public class ChordFragment extends Fragment
 //		int[] chordNotes = currentChord.getNotes();
 //		byte[] bluetoothArray = new byte[chordNotes.length+1];
 //		//TODO: gotta take care of the exceptions here, or somewhere this will probably create wrong fingerings for some chords
-
-		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(currentChord.toString(),chordFingerings);
-		Log.d("Chord picker BT","sending :" + bluetoothArray.toString());
-
-		BluetoothClass.sendToFretX(bluetoothArray);
+		Bluetooth.getInstance().setMatrix(currentChord);
 	}
-
-
-	private void showTutorial(){
-
-//		new MaterialIntroView.Builder(mActivity)
-//				.enableDotAnimation(false)
-//				.enableIcon(false)
-//				.setFocusGravity(FocusGravity.CENTER)
-//				.setFocusType(Focus.ALL)
-//				.setDelayMillis(300)
-//				.enableFadeAnimation(true)
-//				.performClick(true)
-//				.setInfoText("This is the Chord Library. You can review or learn any chord you choose here. \nJust pick any combination of chord and watch it show up on your guitar!")
-//				.setTarget((LinearLayout) mActivity.findViewById(R.id.chordPickerContainer))
-//				.setUsageId("tutorialChordLibrary") //THIS SHOULD BE UNIQUE ID
-//				.show();
-	}
-
 }

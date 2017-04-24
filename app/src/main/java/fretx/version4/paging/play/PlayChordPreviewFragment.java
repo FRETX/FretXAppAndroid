@@ -16,13 +16,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import fretx.version4.BluetoothClass;
 import fretx.version4.Config;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.SongItem;
-import fretx.version4.utils.MidiPlayer;
+import fretx.version4.utils.Bluetooth;
+import fretx.version4.utils.Midi;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -49,9 +49,6 @@ public class PlayChordPreviewFragment extends Fragment
 	private ArrayList<Chord> exerciseChords;
 	private SongItem songItem;
 
-	//audio
-	private MidiPlayer midiPlayer;
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (MainActivity) getActivity();
@@ -73,9 +70,7 @@ public class PlayChordPreviewFragment extends Fragment
 
 	@Override
 	public void onViewCreated(View v, Bundle savedInstanceState) {
-        midiPlayer = new MidiPlayer();
-
-		//setup the first chord
+        //setup the first chord
 		chordIndex = 0;
 		if (exerciseChords.size() > 0)
 			setChord();
@@ -99,7 +94,7 @@ public class PlayChordPreviewFragment extends Fragment
 				if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
 					Toast.makeText(getActivity(), "Volume is low", Toast.LENGTH_SHORT).show();
 				}
-				midiPlayer.playChord(exerciseChords.get(chordIndex));
+				Midi.getInstance().playChord(exerciseChords.get(chordIndex));
 			}
 		});
 
@@ -132,16 +127,9 @@ public class PlayChordPreviewFragment extends Fragment
 	}
 
     @Override
-    public void onPause(){
-        super.onPause();
-        midiPlayer.stop();
-    }
-
-    @Override
     public void onResume(){
         super.onResume();
-        midiPlayer.start();
-        int[] config = midiPlayer.getConfig();
+        int[] config = Midi.getInstance().config();
         Log.d(this.getClass().getName(), "maxVoices: " + config[0]);
         Log.d(this.getClass().getName(), "numChannels: " + config[1]);
         Log.d(this.getClass().getName(), "sampleRate: " + config[2]);
@@ -163,8 +151,7 @@ public class PlayChordPreviewFragment extends Fragment
         //update position
         position.setText(chordIndex + "/" + exerciseChords.size());
 		//update led
-		byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(actualChord.toString(), chordDb);
-		BluetoothClass.sendToFretX(bluetoothArray);
+		Bluetooth.getInstance().setMatrix(actualChord);
         //chord preview
         //todo add midiPlayer
 	}

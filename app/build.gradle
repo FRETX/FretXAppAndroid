@@ -15,8 +15,6 @@ android {
         dexOptions {
             javaMaxHeapSize "4g" //specify the heap size for the dex process
         }
-
-
     }
     buildTypes {
         release {
@@ -40,7 +38,6 @@ dependencies {
     compile 'com.github.wendykierp:JTransforms:3.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.greysonparrelli.permiso:permiso:0.3.0'
     compile 'com.android.support:design:25.1.1'
     compile 'com.github.iammert:MaterialIntroView:1.5.2'
     compile 'com.ncapdevi:frag-nav:1.4.0'
@@ -52,6 +49,8 @@ dependencies {
     compile 'com.android.support:percent:25.1.1'
     compile 'com.github.billthefarmer:mididriver:v1.11'
     testCompile 'junit:junit:4.12'
+    compile project(':permiso')
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 

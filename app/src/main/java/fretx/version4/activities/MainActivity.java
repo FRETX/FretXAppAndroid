@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,18 +21,22 @@ import com.google.firebase.appindexing.Action;
 import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.builders.Actions;
 
+import com.greysonparrelli.permiso.IOnPermissionResult;
+import com.greysonparrelli.permiso.IOnRationaleProvided;
 import com.greysonparrelli.permiso.Permiso;
+import com.greysonparrelli.permiso.ResultSet;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import org.apache.poi.hssf.record.formula.eval.BlankEval;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import co.mobiwise.materialintro.prefs.PreferencesManager;
-import fretx.version4.BluetoothClass;
 import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.Util;
@@ -44,31 +47,21 @@ import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnButtonsFragment;
 import fretx.version4.paging.play.PlayFragmentSearchList;
 import fretx.version4.paging.tuner.TunerFragment;
+import fretx.version4.utils.Bluetooth;
 import rocks.fretx.audioprocessing.AudioProcessing;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 	public FirebaseAnalytics mFirebaseAnalytics;
 	//VIEWS
 	private ImageView bluetoothButton, connectButton;
 	private BottomBar bottomBar;
 
 	//FLAGS
-	private boolean AUDIO_PERMISSIONS_GRANTED = false;
-	private String SHOWCASE_ID = "bluetoothConnect";
 	private MainActivity mActivity = this;
-	public HashMap<String,FingerPositions> chordFingerings;
 
-    //AUDIO PARAMETERS
-    public int fs = 16000;
-    public double bufferSizeInSeconds = 0.1;
-    public AudioProcessing audio;
-
-    byte[] btNoLightsArray = {Byte.valueOf("0")};
-	ImageView previewButton;
+	private ImageView previewButton;
 	public boolean previewEnabled = false;
 
 	private List<Fragment> fragments = new ArrayList<>(4);
@@ -84,15 +77,10 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.paging_back);
 
-        //initialize audio
-        audio = new AudioProcessing();
-
-		// Obtain the FirebaseAnalytics instance.
 		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-		chordFingerings = MusicUtils.parseChordDb();
-
-		Context ctx = getApplicationContext();
+        //// TODO: 24/04/17 move this to splashscreen
+        Context ctx = getApplicationContext();
 		Network.initialize(ctx);
 		AppCache.initialize(ctx);
 		Songlist.initialize(this);
@@ -103,7 +91,11 @@ public class MainActivity extends AppCompatActivity {
 		fragments.add(new TunerFragment());
 		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
 
-		getGuiReferences();
+        bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
+        connectButton = (ImageView) findViewById(R.id.connectButton);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        previewButton = (ImageView) findViewById(R.id.previewButton);
+
 		setGuiEventListeners();
 
 		setLocked(previewButton);
@@ -111,80 +103,11 @@ public class MainActivity extends AppCompatActivity {
 		bottomBar.selectTabAtPosition(INDEX_PLAY);
 	}
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        showConnectionState();
-	    Permiso.getInstance().setActivity(this);
-	    Permiso.getInstance().requestPermissions(new Permiso.IOnPermissionResult() {
-		    @Override
-		    public void onPermissionResult(Permiso.ResultSet resultSet) {
-			    if (resultSet.isPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
-				    Log.d("Permissions","Audio permissions granted");
-				    AUDIO_PERMISSIONS_GRANTED = true;
-				    // Audio permission granted!
-			    }
-			    if (resultSet.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)) {
-				    // Phone permission granted!
-				    Log.d("Permissions","Phone permissions granted");
-			    }
-			    if (resultSet.isPermissionGranted(Manifest.permission.BLUETOOTH_ADMIN)) {
-				    // Bluetooth permission granted!
-				    Log.d("Permissions","Bluetooth permissions granted");
-			    }
-			    if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-				    // Location permission granted!
-				    Log.d("Permissions","Location permissions granted");
-			    }
-		    }
-		    @Override
-		    public void onRationaleRequested(Permiso.IOnRationaleProvided callback, String... permissions) {
-			    Permiso.getInstance().showRationaleInDialog("Title", "Message", null, callback);
-		    }
-	    }, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_COARSE_LOCATION);
-
-	    if(AUDIO_PERMISSIONS_GRANTED){
-            if (!audio.isInitialized())
-                audio.initialize(fs, bufferSizeInSeconds);
-            if (!audio.isProcessing())
-                audio.start();
-            Log.d("onResume", "starting audio processing");
-	    }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (audio.isProcessing() ) {
-            audio.stop();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-	    FirebaseUserActions.getInstance().end(getAction());
-    }
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		FirebaseUserActions.getInstance().start(getAction());
-	}
-
-	//INITIALIZATION
-	public void getGuiReferences() {
-		bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
-		connectButton = (ImageView) findViewById(R.id.connectButton);
-		bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-		previewButton = (ImageView) findViewById(R.id.previewButton);
-	}
-
 	public void setGuiEventListeners() {
 		bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
 			@Override
 			public void onTabSelected(@IdRes int tabId) {
-				BluetoothClass.sendToFretX(btNoLightsArray);
+				Bluetooth.getInstance().clearMatrix();
 				previewButton.setVisibility(View.INVISIBLE);
 
 				switch(tabId){
@@ -200,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
 						break;
 					case R.id.bottomtab_tuner:
 						fragNavController.switchTab(INDEX_TUNER);
-						mActivity.audio.enablePitchDetector();
 						break;
 				}
 			}
@@ -216,23 +138,9 @@ public class MainActivity extends AppCompatActivity {
 		connectButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (Config.bBlueToothActive == false) {
-					Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
-					startActivity(intent);
-				} else {
-					try {
-						Util.stopViaData();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					new Handler().postDelayed(new Runnable() {
-						public void run() {
-							Config.bBlueToothActive = false;
-							showConnectionState();
-							BluetoothActivity.mBluetoothGatt.disconnect();
-						}
-					}, 200);
-				}
+				//// TODO: 24/04/17 add some reconnect code here!
+                Bluetooth.getInstance().disconnect();
+				Bluetooth.getInstance().scan();
 			}
 		});
 
@@ -264,26 +172,6 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
-	//PERMISSIONS
-    //This method will be called when the user will tap on allow or deny
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-	    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-	    Permiso.getInstance().onRequestPermissionResult(requestCode, permissions, grantResults);
-    }
-
-
-	//UTILITY
-	public void showConnectionState() {
-		if (Config.bBlueToothActive == true) {
-			setUnlocked(connectButton);
-//			bluetoothButton.setImageResource(R.drawable.ic_fretx);
-		} else {
-			setLocked(connectButton);
-//			bluetoothButton.setImageResource(R.drawable.ic_fretx);
-		}
-	}
-
 	@Override
 	public void onBackPressed(){
 		if (!fragNavController.isRootFragment()) {
@@ -297,10 +185,6 @@ public class MainActivity extends AppCompatActivity {
 		if (fragNavController != null) {
 			fragNavController.onSaveInstanceState(outState);
 		}
-	}
-
-	public Action getAction() {
-		return Actions.newView("Main Page", "http://[ENTER-YOUR-URL-HERE]");
 	}
 
 	public static void setLocked(ImageView v) {

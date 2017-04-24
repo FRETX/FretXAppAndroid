@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.Audio;
 import rocks.fretx.audioprocessing.AudioAnalyzer;
 import rocks.fretx.audioprocessing.MusicUtils;
 
@@ -99,11 +100,7 @@ public class TunerView extends View {
 		deltaTime = currentTime - prevTime;
 		prevTime = currentTime;
 
-		if(mActivity.audio.isInitialized() && mActivity.audio.isProcessing()){
-			currentPitch = mActivity.audio.getPitch();
-		} else {
-			currentPitch = -1;
-		}
+		currentPitch = Audio.getInstance().getPitch();
 
 		//Draw the note names and calculate pitch differences
 		TextView textCurrentNote = (TextView) rootView.findViewById(R.id.textCurrentNote);

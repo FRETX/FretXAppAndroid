@@ -20,27 +20,25 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import org.apache.poi.hssf.record.formula.functions.T;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import fretx.version4.BluetoothClass;
-import fretx.version4.utils.ChordListener;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
-import fretx.version4.utils.TimeUpdater;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.paging.learn.guided.GuidedChordExercise;
-import fretx.version4.utils.MidiPlayer;
+import fretx.version4.utils.Audio;
+import fretx.version4.utils.Bluetooth;
+import fretx.version4.utils.Midi;
+import fretx.version4.utils.TimeUpdater;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-public class LearnExerciseFragment extends Fragment implements Observer,
+public class LearnExerciseFragment extends Fragment implements Audio.AudioListener,
         LearnExerciseDialog.LearnGuidedChordExerciseListener {
 	private MainActivity mActivity;
 
@@ -58,15 +56,9 @@ public class LearnExerciseFragment extends Fragment implements Observer,
 	int nRepetitions;
     int chordIndex;
 	ArrayList<Chord> exerciseChords;
-    private HashMap<String,FingerPositions> chordDb;
 
-    //timeText
-    private TimeUpdater timeUpdater;
-
-    //audio
-    private ChordListener chordListener;
-    private MidiPlayer midiPlayer;
     private AlertDialog dialog;
+    private TimeUpdater timeUpdater;
 
     //exercises
     private List<GuidedChordExercise> exerciseList;
@@ -82,9 +74,6 @@ public class LearnExerciseFragment extends Fragment implements Observer,
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
 		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Guided Chord");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
-        //retrieve chords database
-        chordDb = MusicUtils.parseChordDb();
 
 		//setup view
         FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.paging_learn_guided_exercise_layout, container, false);
@@ -105,17 +94,14 @@ public class LearnExerciseFragment extends Fragment implements Observer,
         Log.d("DEBUG_YOLO", "onViewCreated");
 
         timeUpdater = new TimeUpdater(timeText);
-        chordListener = new ChordListener(mActivity.audio);
-        chordListener.addObserver(this);
-        midiPlayer = new MidiPlayer();
-        midiPlayer.addObserver(this);
+        Audio.getInstance().setAudioDetectorListener(this);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //stop listening
                 playButton.setClickable(false);
-                chordListener.stopListening();
+                Audio.getInstance().stopListening();
 
                 //check if music volume is up
                 AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
@@ -124,7 +110,7 @@ public class LearnExerciseFragment extends Fragment implements Observer,
                 }
 
                 //play the chord
-                midiPlayer.playChord(exerciseChords.get(chordIndex));
+                Midi.getInstance().playChord(exerciseChords.get(chordIndex));
 
                 //start listening after delay
                 Handler handler = new Handler();
@@ -132,7 +118,7 @@ public class LearnExerciseFragment extends Fragment implements Observer,
                     @Override
                     public void run() {
                         playButton.setClickable(true);
-                        chordListener.startListening();
+                        Audio.getInstance().startListening();
                     }
                 }, 1500);
             }
@@ -144,10 +130,9 @@ public class LearnExerciseFragment extends Fragment implements Observer,
 
 	private void resumeAll() {
         if (exerciseChords.size() > 0 && chordIndex < exerciseChords.size()) {
-            chordListener.setTargetChords(exerciseChords);
+            Audio.getInstance().setTargetChords(exerciseChords);
             setChord();
             timeUpdater.resumeTimer();
-            midiPlayer.start();
         }
     }
 
@@ -161,8 +146,7 @@ public class LearnExerciseFragment extends Fragment implements Observer,
 
     private void pauseAll() {
         timeUpdater.pauseTimer();
-        midiPlayer.stop();
-        chordListener.stopListening();
+        Audio.getInstance().stopListening();
     }
 
     @Override
@@ -171,65 +155,6 @@ public class LearnExerciseFragment extends Fragment implements Observer,
 
         Log.d("DEBUG_YOLO", "onPause");
         pauseAll();
-    }
-
-    //get actions of observables
-    @Override
-    public void update(Observable o, Object arg) {
-        Log.d("DEBUG_YOLO", "callback chord listener");
-
-        //advance to the next chord
-        if (o instanceof ChordListener) {
-            switch ((int) arg) {
-                case ChordListener.STATUS_TIMEOUT:
-                    dialog = audioHelperDialog(getActivity());
-                    dialog.show();
-                    break;
-                case ChordListener.STATUS_BELOW_THRESHOLD:
-                    thresholdImage.setImageResource(android.R.drawable.presence_audio_busy);
-                    break;
-                case ChordListener.STATUS_UPSIDE_THRESHOLD:
-                    if (dialog != null)
-                        dialog.dismiss();
-                    thresholdImage.setImageResource(android.R.drawable.presence_audio_online);
-                    break;
-                case ChordListener.STATUS_PROGRESS_UPDATE:
-                    double progress = chordListener.getProgress();
-                    //chord totally played
-                    if (progress >= 100) {
-                        chordProgress.setProgress(100);
-                        ++chordIndex;
-
-                        //end of the exercise
-                        if (chordIndex == exerciseChords.size()) {
-                            pauseAll();
-                            setPosition();
-                            LearnExerciseDialog dialog = LearnExerciseDialog.newInstance(this,
-                                    timeUpdater.getMinute(), timeUpdater.getSecond(),
-                                    exerciseList == null || listIndex == exerciseList.size() - 1);
-                            dialog.show(getFragmentManager(), "dialog");
-                        }
-                        //middle of an exercise
-                        else {
-                            setChord();
-                        }
-                    }
-                    //chord in progress
-                    else {
-                        chordProgress.setProgress((int)progress);
-                    }
-                    break;
-            }
-        }
-        //audio preview finished
-        /*
-        else if (o instanceof MidiPlayer) {
-            Log.d("DEBUG_YOLO", "callback midiplayer");
-
-            playButton.setClickable(true);
-            chordListener.startListening();
-        }
-        */
     }
 
     //retrieve result of the finished exercise dialog
@@ -249,6 +174,50 @@ public class LearnExerciseFragment extends Fragment implements Observer,
             guidedChordExerciseFragment.setExercise(exerciseList, listIndex + 1);
             mActivity.fragNavController.replaceFragment(guidedChordExerciseFragment);
         }
+    }
+
+    public void onProgress() {
+        double progress = Audio.getInstance().getProgress();
+        //chord totally played
+        if (progress >= 100) {
+            chordProgress.setProgress(100);
+            ++chordIndex;
+
+            //end of the exercise
+            if (chordIndex == exerciseChords.size()) {
+                pauseAll();
+                setPosition();
+                LearnExerciseDialog dialog = LearnExerciseDialog.newInstance(this,
+                        timeUpdater.getMinute(), timeUpdater.getSecond(),
+                        exerciseList == null || listIndex == exerciseList.size() - 1);
+                dialog.show(getFragmentManager(), "dialog");
+            }
+            //middle of an exercise
+            else {
+                setChord();
+            }
+        }
+        //chord in progress
+        else {
+            chordProgress.setProgress((int)progress);
+        }
+    }
+
+    public void onLowVolume() {
+        thresholdImage.setImageResource(android.R.drawable.presence_audio_busy);
+    }
+
+    public void onHighVolume() {
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
+        thresholdImage.setImageResource(android.R.drawable.presence_audio_online);
+    }
+
+    public void onTimeout() {
+        dialog = audioHelperDialog(getActivity());
+        dialog.show();
     }
 
     //setup exercise flow & current exercise
@@ -288,13 +257,12 @@ public class LearnExerciseFragment extends Fragment implements Observer,
 		//update positionText
 		setPosition();
         //update chord listener
-        chordListener.setTargetChord(actualChord);
-        chordListener.startListening();
+        Audio.getInstance().setTargetChord(actualChord);
+        Audio.getInstance().startListening();
         //setup the progress bar\
         chordProgress.setProgress(0);
         //update led
-        byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(actualChord.toString(), chordDb);
-        BluetoothClass.sendToFretX(bluetoothArray);
+        Bluetooth.getInstance().setMatrix(actualChord);
     }
 
     //display chord position

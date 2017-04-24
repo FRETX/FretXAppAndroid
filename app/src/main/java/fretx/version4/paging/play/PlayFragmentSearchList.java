@@ -18,6 +18,7 @@ import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.Songlist;
+import fretx.version4.utils.Bluetooth;
 
 public class PlayFragmentSearchList extends Fragment {
 
@@ -32,7 +33,8 @@ public class PlayFragmentSearchList extends Fragment {
 
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
 
-    @Override public void onResume() { super.onResume(); stop_led(); }
+    @Override public void onResume() { super.onResume();
+        Bluetooth.getInstance().clearMatrix(); }
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         inflateView(inflater, container);
@@ -116,7 +118,6 @@ public class PlayFragmentSearchList extends Fragment {
 
     /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////////////////////////////
 
-    public void stop_led() { if(Config.bBlueToothActive) { Util.stopViaData(); } }
     public void showBusy() { if(getActivity() != null ) dialog = ProgressDialog.show(context, getString(R.string.refreshing), getString(R.string.please_wait)); }
     public void hideBusy() { if( dialog != null ) dialog.dismiss(); }
 

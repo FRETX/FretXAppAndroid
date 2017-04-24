@@ -3,6 +3,7 @@ package fretx.version4.paging.tuner;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import fretx.version4.utils.Audio;
 
 
 public class TunerFragment extends Fragment {
@@ -33,18 +35,8 @@ public class TunerFragment extends Fragment {
 		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TAB");
 		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-		if(mActivity == null || mActivity.audio == null) return;
-
-		if (!mActivity.audio.isBufferAvailable()) {
-			Log.d("isBufferAvailable", "false");
-			if (!backgroundMicWarningShown) {
-				Toast.makeText(getContext(), getResources().getString(R.string.microphone_used_background), Toast.LENGTH_LONG).show();
-				backgroundMicWarningShown = true;
-			}
+		if (!Audio.getInstance().isEnabled())
 			return;
-		}
-
-		initSystemServices();
 	}
 
 	private void showTutorial(){
@@ -80,22 +72,5 @@ public class TunerFragment extends Fragment {
 	@Override
 	public void onViewCreated(View v, Bundle savedInstanceState){
 		showTutorial();
-	}
-	private void initSystemServices() {
-		//TODO: needs testing with calls
-		TelephonyManager telephonyManager =
-				(TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
-		telephonyManager.listen(new PhoneStateListener() {
-			@Override
-			public void onCallStateChanged(int state, String incomingNumber) {
-				if (mActivity.audio == null) return;
-				if (state == TelephonyManager.CALL_STATE_IDLE) {
-					if (!mActivity.audio.isInitialized()) mActivity.audio.initialize(mActivity.fs, mActivity.bufferSizeInSeconds);
-					if (!mActivity.audio.isProcessing()) mActivity.audio.start();
-				} else {
-					mActivity.audio.stop();
-				}
-			}
-		}, PhoneStateListener.LISTEN_CALL_STATE);
 	}
 }

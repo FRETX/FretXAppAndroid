@@ -25,7 +25,6 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import fretx.version4.BluetoothClass;
 import fretx.version4.Config;
 import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
@@ -33,6 +32,7 @@ import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.SongPunch;
+import fretx.version4.utils.Bluetooth;
 import rocks.fretx.audioprocessing.Chord;
 
 public class PlayYoutubeFragment extends Fragment {
@@ -495,7 +495,7 @@ public class PlayYoutubeFragment extends Fragment {
 
                 arrayCallStatus[nIndex] = true;
 //                BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[nIndex])));
-                BluetoothClass.sendToFretX(punch_list.get(arrayKeys[nIndex]));
+                Bluetooth.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[nIndex]));
                 Util.setDefaultValues(arrayCallStatus);
                 arrayCallStatus[nIndex] = true;
 
@@ -515,7 +515,7 @@ public class PlayYoutubeFragment extends Fragment {
 
             arrayCallStatus[arrayKeys.length -1] = true;
 //            BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[arrayKeys.length - 1])));
-            BluetoothClass.sendToFretX(punch_list.get(arrayKeys[arrayKeys.length - 1]));
+            Bluetooth.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[arrayKeys.length - 1]));
             Util.setDefaultValues(arrayCallStatus);
             arrayCallStatus[arrayKeys.length -1] = true;
 	        SongPunch sp = punches.get(arrayKeys.length - 1);

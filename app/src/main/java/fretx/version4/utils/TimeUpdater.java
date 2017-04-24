@@ -2,8 +2,6 @@ package fretx.version4.utils;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -11,11 +9,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by pandor on 4/5/17.
+ * FretXapp for FretX
+ * Created by pandor on 11/04/17 14:56.
  */
 
 public class TimeUpdater {
-
+    //private static final String TAG = "KJKP6_TIMEUPDATER";
     private Timer timer;
     private final TextView timeText;
     private final Handler handler = new Handler();

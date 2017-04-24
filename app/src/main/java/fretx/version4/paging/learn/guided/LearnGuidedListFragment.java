@@ -18,10 +18,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import fretx.version4.BluetoothClass;
 import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.Bluetooth;
 
 public class LearnGuidedListFragment extends Fragment {
 	MainActivity mActivity;
@@ -38,7 +38,7 @@ public class LearnGuidedListFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-		BluetoothClass.sendToFretX(Util.str2array("{0}"));
+		Bluetooth.getInstance().clearMatrix();
 	}
 
 	@Override

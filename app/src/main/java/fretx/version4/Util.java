@@ -9,10 +9,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,11 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-
-import fretx.version4.activities.BluetoothActivity;
 
 /**
  * Created by Misho on 2/21/2016.
@@ -338,22 +330,4 @@ public final class Util {
         }
         return array;
     }
-
-
-
-
-
-    public static void startViaData(byte[] array) {
-        if(Config.bBlueToothActive ==  true) {
-            BluetoothActivity.mHandler.obtainMessage(BluetoothActivity.FRET, array).sendToTarget();
-        }
-    }
-
-    public static void stopViaData() {
-        if(Config.bBlueToothActive ==  true) {
-            byte[] array = new byte[]{0};
-            BluetoothActivity.mHandler.obtainMessage(BluetoothActivity.FRET, array).sendToTarget();
-        }
-    }
-
 }

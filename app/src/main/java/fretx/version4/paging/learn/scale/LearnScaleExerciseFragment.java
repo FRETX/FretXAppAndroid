@@ -14,10 +14,10 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
-import fretx.version4.BluetoothClass;
 import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import fretx.version4.utils.Bluetooth;
 import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.Scale;
 
@@ -148,11 +148,7 @@ public class LearnScaleExerciseFragment extends Fragment {
 		for (int i = 0; i < fretboardPositions.size(); i++) {
 			bluetoothArray[i] = fretboardPositions.get(i).getByteCode();
 		}
-		bluetoothArray[fretboardPositions.size()] = Byte.valueOf("0");
-		BluetoothClass.sendToFretX(bluetoothArray);
-
-
-
+		Bluetooth.getInstance().setMatrix(bluetoothArray);
 	}
 
 
