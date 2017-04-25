@@ -50,6 +50,7 @@ public class Bluetooth {
     //states
     private boolean enabled;
     private boolean scanning;
+    private boolean wasScanning;
 
     private BluetoothAdapter adapter;
     private BluetoothGatt gatt;
@@ -57,15 +58,15 @@ public class Bluetooth {
     private static final int PROGRESS_MSG = 1;
     private static final int PROGRESS_DISMISS = 2;
     private static final int TOAST = 3;
-    private final Handler handler = new Handler() {
+    private static final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message message) {
             switch (message.what) {
                 case PROGRESS_MSG:
-                    mProgress.setMessage((String) message.obj);
+                    progress.setMessage((String) message.obj);
                     break;
                 case PROGRESS_DISMISS:
-                    mProgress.dismiss();
+                    progress.dismiss();
                     break;
                 case TOAST:
                     Toast.makeText(BaseActivity.getActivity(), (String) message.obj, Toast.LENGTH_SHORT).show();
@@ -76,7 +77,7 @@ public class Bluetooth {
         }
     };
 
-    private ProgressDialog mProgress;
+    private static ProgressDialog progress;
     private BluetoothListener listener;
     private int turn_on_try;
 
@@ -123,17 +124,22 @@ public class Bluetooth {
         if (!enabled)
             return;
         Log.d(TAG, "start");
-        if (scanning)
+        if (wasScanning && !scanning) {
+            wasScanning = false;
             scan();
+        }
     }
 
     public void stop(){
         if (!enabled)
             return;
         handler.removeCallbacksAndMessages(null);
-        if (scanning)
+        if (scanning) {
             adapter.getBluetoothLeScanner().stopScan(scanCallback);
-        mProgress.dismiss();
+            wasScanning = true;
+            scanning = false;
+        }
+        progress.dismiss();
         Log.d(TAG, "stop");
     }
 
@@ -143,12 +149,12 @@ public class Bluetooth {
 
     /* = = = = = = = = = = = = = = = = = = = SCANNING = = = = = = = = = = = = = = = = = = = = = */
     public void scan() {
-        mProgress = new ProgressDialog(BaseActivity.getActivity());
-        mProgress.setIndeterminate(true);
-        mProgress.setCancelable(false);
+        progress = new ProgressDialog(BaseActivity.getActivity());
+        progress.setIndeterminate(true);
+        progress.setCancelable(false);
 
         handler.obtainMessage(PROGRESS_MSG, "Enabling").sendToTarget();
-        mProgress.show();
+        progress.show();
 
         Log.d(TAG, "enabling...");
         if(!adapter.isEnabled()) {
@@ -172,9 +178,9 @@ public class Bluetooth {
                     handler.postDelayed(enable, TURN_ON_INTERVAL);
                 } else {
                     Log.d(TAG, "Enable failed");
-                    mProgress.dismiss();
+                    progress.dismiss();
                     if (listener != null)
-                        listener.onFailure();
+                        listener.onScanFailure();
                 }
             } else {
                 startScan();
@@ -205,13 +211,13 @@ public class Bluetooth {
                 connect(devices.valueAt(0));
             } else if (devices.size() > 1) {
                 Log.d(TAG, "Too many devices found");
-                mProgress.dismiss();
+                progress.dismiss();
                 if (listener != null) {
                     listener.onScanFailure();
                 }
             } else {
                 Log.d(TAG, "No device found");
-                mProgress.dismiss();
+                progress.dismiss();
                 if (listener != null) {
                     listener.onScanFailure();
                 }
@@ -247,7 +253,7 @@ public class Bluetooth {
             else if (errorCode == SCAN_FAILED_INTERNAL_ERROR)
                 Log.d(TAG, "Scan failed: SCAN_FAILED_ALREADY_STARTED");
 
-            mProgress.dismiss();
+            progress.dismiss();
             if (listener != null) {
                 listener.onScanFailure();
             }
@@ -274,45 +280,39 @@ public class Bluetooth {
     }
 
     private BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
-
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
+                handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
+                handler.obtainMessage(TOAST, "Connected").sendToTarget();
                 Log.d(TAG, "discovering...");
+                if (listener != null)
+                    listener.onConnect();
                 handler.obtainMessage(PROGRESS_MSG, "Discovering services").sendToTarget();
                 gatt.discoverServices();
-                if (listener != null) {
-                    listener.onConnect();
-                }
             } else if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.d(TAG, "disconnected");
+                if (listener != null)
+                    listener.onDisconnect();
                 Bluetooth.this.gatt = null;
                 handler.obtainMessage(TOAST, "Connection failed").sendToTarget();
                 handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
-                if (listener != null) {
-                    listener.onDisconnect();
-                }
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "failure, disconnecting");
                 gatt.close();
                 Bluetooth.this.gatt = null;
                 handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
                 handler.obtainMessage(TOAST, "Connection failed").sendToTarget();
-                if (listener != null) {
+                if (listener != null)
                     listener.onFailure();
-                }
             }
         }
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
-
             BluetoothGattService RxService = Bluetooth.this.gatt.getService(RX_SERVICE_UUID);
             rx = RxService.getCharacteristic(RX_CHAR_UUID);
-
-            handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
-            handler.obtainMessage(TOAST, "Connected").sendToTarget();
             clearMatrix();
         }
     };

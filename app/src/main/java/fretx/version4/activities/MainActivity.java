@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
 	private final Runnable setConnected = new Runnable() {
 		@Override
 		public void run() {
-            setGreyed(connectButton);
+            setNonGreyed(connectButton);
 			invalidateOptionsMenu();
 		}
 	};
@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity {
 	private Runnable setDisconnected = new Runnable() {
 		@Override
 		public void run() {
-            setNonGreyed(connectButton);
+            setGreyed(connectButton);
             invalidateOptionsMenu();
 		}
 	};
@@ -232,16 +232,15 @@ public class MainActivity extends BaseActivity {
 	}
 
 	public static void setGreyed(ImageView v) {
-        v.setColorFilter(null);
-        v.setAlpha(255);
+		ColorMatrix matrix = new ColorMatrix();
+		matrix.setSaturation(0);  //0 means grayscale
+		ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
+		v.setColorFilter(cf);
+		v.setAlpha(128);   // 128 = 0.5
 	}
 
 	public static void setNonGreyed(ImageView v) {
-        ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);  //0 means grayscale
-        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
-        v.setColorFilter(cf);
-        v.setAlpha(128);   // 128 = 0.5
+		v.setColorFilter(null);
+		v.setAlpha(255);
 	}
-
 }

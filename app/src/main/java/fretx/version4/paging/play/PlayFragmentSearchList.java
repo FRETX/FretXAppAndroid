@@ -12,10 +12,8 @@ import android.widget.SearchView;
 
 import java.util.ArrayList;
 
-import fretx.version4.Config;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.Util;
 import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.Songlist;
 import fretx.version4.utils.Bluetooth;

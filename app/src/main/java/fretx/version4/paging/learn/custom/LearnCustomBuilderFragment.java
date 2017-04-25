@@ -20,7 +20,6 @@ import java.util.HashMap;
 
 import fretx.version4.FretboardView;
 import fretx.version4.R;
-import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.paging.learn.exercise.LearnExerciseFragment;
 import fretx.version4.utils.Bluetooth;

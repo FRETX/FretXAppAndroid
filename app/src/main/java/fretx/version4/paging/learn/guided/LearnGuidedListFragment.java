@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import fretx.version4.R;
-import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.Bluetooth;
 

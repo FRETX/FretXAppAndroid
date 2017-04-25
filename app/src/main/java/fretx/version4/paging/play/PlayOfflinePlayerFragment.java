@@ -17,8 +17,6 @@ import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 
-import org.apache.poi.hssf.record.formula.eval.BlankEval;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;

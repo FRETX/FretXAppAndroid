@@ -21,10 +21,7 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import fretx.version4.FretboardView;
 import fretx.version4.R;
@@ -35,8 +32,6 @@ import fretx.version4.utils.Bluetooth;
 import fretx.version4.utils.Midi;
 import fretx.version4.utils.TimeUpdater;
 import rocks.fretx.audioprocessing.Chord;
-import rocks.fretx.audioprocessing.FingerPositions;
-import rocks.fretx.audioprocessing.MusicUtils;
 
 public class LearnExerciseFragment extends Fragment implements Audio.AudioListener,
         LearnExerciseDialog.LearnGuidedChordExerciseListener {
