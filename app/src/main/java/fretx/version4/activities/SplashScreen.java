@@ -18,6 +18,7 @@ import com.greysonparrelli.permiso.ResultSet;
 import fretx.version4.R;
 import fretx.version4.utils.Audio;
 import fretx.version4.utils.Bluetooth;
+import fretx.version4.utils.BluetoothListener;
 import fretx.version4.utils.Midi;
 
 public class SplashScreen extends BaseActivity {
@@ -44,18 +45,35 @@ public class SplashScreen extends BaseActivity {
         });
 
         //bluetooth callback called when the scan is done
-        Bluetooth.getInstance().setOnUpdate(new Bluetooth.IOnUpdate() {
-            public void onSuccess() {
+        Bluetooth.getInstance().setListener(new BluetoothListener() {
+            @Override
+            public void onConnect() {
                 Log.d(TAG, "Success!");
-                Bluetooth.getInstance().setOnUpdate(null);
+                Bluetooth.getInstance().setListener(null);
                 Bluetooth.getInstance().clearMatrix();
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDisconnect() {
+                Log.d(TAG, "Failure!");
+                Bluetooth.getInstance().setListener(null);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onScanFailure() {
+                Log.d(TAG, "Failure!");
+                Bluetooth.getInstance().setListener(null);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
 
             public void onFailure() {
                 Log.d(TAG, "Failure!");
-                Bluetooth.getInstance().setOnUpdate(null);
+                Bluetooth.getInstance().setListener(null);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }

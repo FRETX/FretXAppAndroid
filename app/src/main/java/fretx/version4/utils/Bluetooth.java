@@ -33,7 +33,6 @@ import rocks.fretx.audioprocessing.MusicUtils;
 import rocks.fretx.audioprocessing.Scale;
 
 import static android.content.Context.BLUETOOTH_SERVICE;
-import static android.content.Context.DISPLAY_SERVICE;
 
 /**
  * FretXapp for FretX
@@ -78,7 +77,7 @@ public class Bluetooth {
     };
 
     private ProgressDialog mProgress;
-    private IOnUpdate onUpdate;
+    private BluetoothListener listener;
     private int turn_on_try;
 
     //fretx specific
@@ -174,8 +173,8 @@ public class Bluetooth {
                 } else {
                     Log.d(TAG, "Enable failed");
                     mProgress.dismiss();
-                    if (onUpdate != null)
-                        onUpdate.onFailure();
+                    if (listener != null)
+                        listener.onFailure();
                 }
             } else {
                 startScan();
@@ -207,14 +206,14 @@ public class Bluetooth {
             } else if (devices.size() > 1) {
                 Log.d(TAG, "Too many devices found");
                 mProgress.dismiss();
-                if (onUpdate != null) {
-                    onUpdate.onFailure();
+                if (listener != null) {
+                    listener.onScanFailure();
                 }
             } else {
                 Log.d(TAG, "No device found");
                 mProgress.dismiss();
-                if (onUpdate != null) {
-                    onUpdate.onFailure();
+                if (listener != null) {
+                    listener.onScanFailure();
                 }
             }
         }
@@ -249,8 +248,8 @@ public class Bluetooth {
                 Log.d(TAG, "Scan failed: SCAN_FAILED_ALREADY_STARTED");
 
             mProgress.dismiss();
-            if (onUpdate != null) {
-                onUpdate.onFailure();
+            if (listener != null) {
+                listener.onScanFailure();
             }
         }
     };
@@ -282,19 +281,25 @@ public class Bluetooth {
                 Log.d(TAG, "discovering...");
                 handler.obtainMessage(PROGRESS_MSG, "Discovering services").sendToTarget();
                 gatt.discoverServices();
+                if (listener != null) {
+                    listener.onConnect();
+                }
             } else if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.d(TAG, "disconnected");
                 Bluetooth.this.gatt = null;
                 handler.obtainMessage(TOAST, "Connection failed").sendToTarget();
                 handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
+                if (listener != null) {
+                    listener.onDisconnect();
+                }
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "failure, disconnecting");
                 gatt.close();
                 Bluetooth.this.gatt = null;
                 handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
                 handler.obtainMessage(TOAST, "Connection failed").sendToTarget();
-                if (onUpdate != null) {
-                    onUpdate.onFailure();
+                if (listener != null) {
+                    listener.onFailure();
                 }
             }
         }
@@ -308,9 +313,7 @@ public class Bluetooth {
 
             handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
             handler.obtainMessage(TOAST, "Connected").sendToTarget();
-            if (onUpdate != null) {
-                onUpdate.onSuccess();
-            }
+            clearMatrix();
         }
     };
 
@@ -346,12 +349,7 @@ public class Bluetooth {
     }
 
     /* = = = = = = = = = = = = = = = = = = = LISTENERS = = = = = = = = = = = = = = = = = = = = = */
-    public void setOnUpdate(@Nullable IOnUpdate onUpdate) {
-        this.onUpdate = onUpdate;
-    }
-
-    public interface IOnUpdate {
-        void onFailure();
-        void onSuccess();
+    public void setListener(@Nullable BluetoothListener listener) {
+        this.listener = listener;
     }
 }
