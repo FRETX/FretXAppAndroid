@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -52,7 +53,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 	//chords
     private int chordIndex;
 	private ArrayList<Chord> exerciseChords;
-    private ArrayList<Chord> targetChords;
+    private final ArrayList<Chord> targetChords = new ArrayList<>();;
 
     private AlertDialog dialog;
     private TimeUpdater timeUpdater;
@@ -122,7 +123,6 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         });
 
         //setup the first chord
-        targetChords = new ArrayList<>();
         chordIndex = 0;
 	}
 
