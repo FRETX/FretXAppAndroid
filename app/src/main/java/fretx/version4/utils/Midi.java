@@ -23,6 +23,7 @@ public class Midi extends MidiDriver implements MidiDriver.OnMidiStartListener {
     private int noteDelay = 30;
     private int sustainDelay = 500;
     private boolean enabled;
+    private boolean started;
 
     /* = = = = = = = = = = = = = = = = = SINGLETON PATTERN = = = = = = = = = = = = = = = = = = = */
     private static class Holder {
@@ -55,6 +56,10 @@ public class Midi extends MidiDriver implements MidiDriver.OnMidiStartListener {
     public void start() {
         if (!enabled)
             return;
+        if (!started)
+            started = true;
+        else
+            return;
         Log.d(TAG, "start");
         super.start();
     }
@@ -63,8 +68,12 @@ public class Midi extends MidiDriver implements MidiDriver.OnMidiStartListener {
     public void stop() {
         if (!enabled)
             return;
+        if (started)
+            started = false;
+        else
+            return;
         Log.d(TAG, "stop");
-        super.start();
+        super.stop();
     }
 
     public boolean isEnabled() {
