@@ -133,8 +133,9 @@ public class Audio {
             if (audio.getVolume() < VOLUME_THRESHOLD) {
                 if (upsideThreshold) {
                     upsideThreshold = false;
-                    correctlyPlayedAccumulator = 0;
                     listener.onLowVolume();
+                    correctlyPlayedAccumulator = 0;
+                    listener.onProgress();
                 }
                 //Log.d(TAG, "prematurely canceled due to low volume");
             }
