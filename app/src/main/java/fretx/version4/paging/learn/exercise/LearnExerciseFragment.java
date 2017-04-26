@@ -21,7 +21,9 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import fretx.version4.FretboardView;
 import fretx.version4.R;
@@ -125,7 +127,13 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
 	private void resumeAll() {
         if (exerciseChords.size() > 0 && chordIndex < exerciseChords.size()) {
+            List<String> targetChords = new ArrayList<>();
+            Set<String> hs = new LinkedHashSet<>();
+            hs.addAll(targetChords);
+            targetChords.clear();
+            targetChords.addAll(hs);
             Audio.getInstance().setTargetChords(exerciseChords);
+
             setChord();
             timeUpdater.resumeTimer();
         }
