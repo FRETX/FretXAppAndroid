@@ -50,9 +50,9 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
     private ImageView thresholdImage;
 
 	//chords
-	int nRepetitions;
-    int chordIndex;
-	ArrayList<Chord> exerciseChords;
+    private int chordIndex;
+	private ArrayList<Chord> exerciseChords;
+    private ArrayList<Chord> targetChords;
 
     private AlertDialog dialog;
     private TimeUpdater timeUpdater;
@@ -122,17 +122,13 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         });
 
         //setup the first chord
+        targetChords = new ArrayList<>();
         chordIndex = 0;
 	}
 
 	private void resumeAll() {
         if (exerciseChords.size() > 0 && chordIndex < exerciseChords.size()) {
-            List<String> targetChords = new ArrayList<>();
-            Set<String> hs = new LinkedHashSet<>();
-            hs.addAll(targetChords);
-            targetChords.clear();
-            targetChords.addAll(hs);
-            Audio.getInstance().setTargetChords(exerciseChords);
+            Audio.getInstance().setTargetChords(targetChords);
 
             setChord();
             timeUpdater.resumeTimer();
@@ -230,7 +226,6 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
         GuidedChordExercise exercise = exerciseList.get(listIndex);
 
-        this.nRepetitions = exercise.getRepetition();
         ArrayList<Chord> repeatedChords = new ArrayList<>();
         for (int i = 0; i < exercise.getRepetition(); i++) {
             repeatedChords.addAll(exercise.getChords());
@@ -241,7 +236,11 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
     //setup exercises chords form list of chords
     @SuppressWarnings("unchecked")
     public void setChords(ArrayList<Chord> chords) {
-        this.exerciseChords = (ArrayList<Chord>) chords.clone();
+        exerciseChords = (ArrayList<Chord>) chords.clone();
+        targetChords.clear();
+        Set<Chord> hs = new LinkedHashSet<>();
+        hs.addAll(chords);
+        targetChords.addAll(hs);
     }
 
     //setup everything according actual chord
