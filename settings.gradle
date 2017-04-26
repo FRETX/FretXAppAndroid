@@ -1,1 +1,1 @@
-include ':app', ':fretx-audio', ':permiso'
+include ':app', ':permiso', ':fretx-audio'

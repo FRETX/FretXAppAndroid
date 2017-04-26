@@ -129,7 +129,6 @@ public class Audio {
             if (!audio.isBufferAvailable()) {
                 return;
             }
-
             //nothing heard
             if (audio.getVolume() < VOLUME_THRESHOLD) {
                 if (upsideThreshold) {
@@ -145,11 +144,11 @@ public class Audio {
                     upsideThreshold = true;
                     listener.onHighVolume();
                 }
-
                 //update progress
                 if (millisUntilFinished <= CHORD_LISTEN_DURATION_MS) {
                     Chord playedChord = audio.getChord();
                     Log.d(TAG, "played:" + playedChord.toString());
+//                    Log.d(TAG, "possible:" + audio.getTargetChords().toString());
 
                     if (targetChord.toString().equals(playedChord.toString())) {
                         correctlyPlayedAccumulator += TIMER_TICK;
@@ -182,7 +181,7 @@ public class Audio {
         }
     };
 
-    /* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
+    /* = = = = = = = = = = = = = = = = = = = = = = =  = = = = = = = = = = = = = = = = = = = = = = */
     public void setAudioDetectorListener(AudioListener listener) {
         this.listener = listener;
     }
