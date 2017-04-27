@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,8 +54,9 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
 	//chords
     private int chordIndex;
-	private ArrayList<Chord> exerciseChords;
-    private final ArrayList<Chord> targetChords = new ArrayList<>();;
+	private final ArrayList<Chord> exerciseChords = new ArrayList<>();
+    private final ArrayList<Chord> targetChords = new ArrayList<>();
+    private final ArrayList<Chord> majorChords = new ArrayList<>();
 
     private AlertDialog dialog;
     private TimeUpdater timeUpdater;
@@ -62,6 +64,16 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
     //exercises
     private List<GuidedChordExercise> exerciseList;
     private int listIndex;
+
+    public LearnExerciseFragment() {
+        majorChords.add(new Chord("A", "maj"));
+        majorChords.add(new Chord("B", "maj"));
+        majorChords.add(new Chord("C", "maj"));
+        majorChords.add(new Chord("D", "maj"));
+        majorChords.add(new Chord("E", "maj"));
+        majorChords.add(new Chord("F", "maj"));
+        majorChords.add(new Chord("G", "maj"));
+    }
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -206,13 +218,11 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
     @Override
     public void onLowVolume() {
-        Log.d(TAG, "LOW");
         thresholdImage.setImageResource(android.R.drawable.presence_audio_busy);
     }
 
     @Override
     public void onHighVolume() {
-        Log.d(TAG, "UP");
         if (dialog != null) {
             dialog.dismiss();
             dialog = null;
@@ -231,28 +241,37 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         this.exerciseList = exerciseList;
         this.listIndex = listIndex;
 
-        GuidedChordExercise exercise = exerciseList.get(listIndex);
+        final GuidedChordExercise exercise = exerciseList.get(listIndex);
+        setTargetChords(exercise.getChords());
+        setChords(exercise.getChords(), exercise.getRepetition());
+    }
 
-        ArrayList<Chord> repeatedChords = new ArrayList<>();
-        for (int i = 0; i < exercise.getRepetition(); i++) {
-            repeatedChords.addAll(exercise.getChords());
+    public void setTargetChords(ArrayList<Chord> chords) {
+        targetChords.clear();
+        targetChords.addAll(new HashSet<>(chords));
+        for (Chord majorChord: majorChords) {
+            final String chordRoot = majorChord.getRoot();
+            boolean rootExist = false;
+            for (Chord e: chords) {
+                if (e.getRoot().equals(chordRoot)) {
+                    rootExist = true;
+                    break;
+                }
+            }
+            if (!rootExist)
+                targetChords.add(majorChord);
         }
-        this.setChords(repeatedChords);
     }
 
     //setup exercises chords form list of chords
-    @SuppressWarnings("unchecked")
     public void setChords(ArrayList<Chord> chords) {
-        exerciseChords = (ArrayList<Chord>) chords.clone();
-        targetChords.clear();
-        Set<Chord> hs = new LinkedHashSet<>();
-        hs.addAll(chords);
-        hs.add(new Chord("A","maj"));
-        hs.add(new Chord("B","maj"));
-        hs.add(new Chord("E","maj"));
-        hs.add(new Chord("F","maj"));
-        hs.add(new Chord("G","maj"));
-        targetChords.addAll(hs);
+        exerciseChords.addAll(chords);
+    }
+
+    public void setChords(ArrayList<Chord> chords, int rep) {
+        for (int i = 0; i < rep; i++) {
+            exerciseChords.addAll(chords);
+        }
     }
 
     //setup everything according actual chord
@@ -273,7 +292,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         //update chord listener
         Audio.getInstance().setTargetChord(actualChord);
         Audio.getInstance().startListening();
-        //setup the progress bar\
+        //setup the progress bar
         chordProgress.setProgress(0);
         //update led
         Bluetooth.getInstance().setMatrix(actualChord);
