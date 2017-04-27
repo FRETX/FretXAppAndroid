@@ -133,6 +133,7 @@ public class Audio {
             if (audio.getVolume() < VOLUME_THRESHOLD) {
                 if (upsideThreshold) {
                     upsideThreshold = false;
+                    Log.d(TAG, "LOW");
                     listener.onLowVolume();
                     correctlyPlayedAccumulator = 0;
                     listener.onProgress();
@@ -143,6 +144,7 @@ public class Audio {
             else {
                 if (!upsideThreshold) {
                     upsideThreshold = true;
+                    Log.d(TAG, "UP");
                     listener.onHighVolume();
                 }
                 //update progress

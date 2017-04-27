@@ -38,6 +38,7 @@ import rocks.fretx.audioprocessing.Chord;
 
 public class LearnExerciseFragment extends Fragment implements Audio.AudioListener,
         LearnExerciseDialog.LearnGuidedChordExerciseListener {
+    private final static String TAG = "KJKP6_LEARNEXERCISE";
 	private MainActivity mActivity;
 
 	//view
@@ -64,7 +65,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("DEBUG_YOLO", "onCreateView");
+        Log.d(TAG, "onCreateView");
 
         //firebase log
 		mActivity = (MainActivity) getActivity();
@@ -89,7 +90,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
     @Override
 	public void onViewCreated(View v, Bundle savedInstanceState) {
-        Log.d("DEBUG_YOLO", "onViewCreated");
+        Log.d(TAG, "onViewCreated");
 
         timeUpdater = new TimeUpdater(timeText);
         Audio.getInstance().setAudioDetectorListener(this);
@@ -139,7 +140,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
     public void onResume() {
         super.onResume();
 
-        Log.d("DEBUG_YOLO", "onResume");
+        Log.d(TAG, "onResume");
         resumeAll();
     }
 
@@ -152,14 +153,14 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
     public void onPause() {
         super.onPause();
 
-        Log.d("DEBUG_YOLO", "onPause");
+        Log.d(TAG, "onPause");
         pauseAll();
     }
 
     //retrieve result of the finished exercise dialog
     @Override
     public void onUpdate(boolean replay) {
-        Log.d("DEBUG_YOLO", "onUpdate");
+        Log.d(TAG, "onUpdate");
 
         //replay the actual exercise
         if (replay) {
@@ -175,6 +176,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         }
     }
 
+    @Override
     public void onProgress() {
         double progress = Audio.getInstance().getProgress();
         //chord totally played
@@ -202,11 +204,15 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         }
     }
 
+    @Override
     public void onLowVolume() {
+        Log.d(TAG, "LOW");
         thresholdImage.setImageResource(android.R.drawable.presence_audio_busy);
     }
 
+    @Override
     public void onHighVolume() {
+        Log.d(TAG, "UP");
         if (dialog != null) {
             dialog.dismiss();
             dialog = null;
@@ -214,6 +220,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         thresholdImage.setImageResource(android.R.drawable.presence_audio_online);
     }
 
+    @Override
     public void onTimeout() {
         dialog = audioHelperDialog(getActivity());
         dialog.show();
@@ -240,13 +247,18 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         targetChords.clear();
         Set<Chord> hs = new LinkedHashSet<>();
         hs.addAll(chords);
+        hs.add(new Chord("A","maj"));
+        hs.add(new Chord("B","maj"));
+        hs.add(new Chord("E","maj"));
+        hs.add(new Chord("F","maj"));
+        hs.add(new Chord("G","maj"));
         targetChords.addAll(hs);
     }
 
     //setup everything according actual chord
     private void setChord() {
         Chord actualChord = exerciseChords.get(chordIndex);
-        Log.d("DEBUG_YOLO", "setChord " + actualChord.toString());
+        Log.d(TAG, "setChord " + actualChord.toString());
 
         //update chord title
         chordText.setText(actualChord.toString());
