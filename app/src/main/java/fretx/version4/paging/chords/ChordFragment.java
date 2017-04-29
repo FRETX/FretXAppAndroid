@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ public class ChordFragment extends Fragment
     MainActivity mActivity;
     View rootView;
 	FretboardView fretboardView;
-	Button playChordButton;
+	ImageButton playChordButton;
 	HashMap<String,FingerPositions> chordFingerings;
 
 	public ChordFragment (){
@@ -53,7 +54,7 @@ public class ChordFragment extends Fragment
 
 		fretboardView = (FretboardView) mActivity.findViewById(R.id.fretboardView);
 		
-		playChordButton = (Button) mActivity.findViewById(R.id.playChordButton);
+		playChordButton = (ImageButton) mActivity.findViewById(R.id.playChordButton);
 		
 		chordFingerings = MusicUtils.parseChordDb();
 

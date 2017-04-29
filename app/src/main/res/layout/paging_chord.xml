@@ -13,15 +13,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.25"
+        android:layout_weight="0.2"
         android:orientation="vertical"
+        android:background="@color/primary"
         android:id="@+id/chordPickerContainer"
+        android:layout_marginBottom="5dp"
         >
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
         android:scrollbars="none"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         >
         <LinearLayout
             android:id="@+id/chordPickerRootNoteView"
@@ -34,9 +37,10 @@
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
         android:scrollbars="none"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         >
         <LinearLayout
             android:id="@+id/chordPickerTypeView"
@@ -71,7 +75,7 @@
         android:id="@+id/fretboardView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.55"
+        android:layout_weight="0.5"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         />
@@ -80,21 +84,30 @@
         android:layout_height="0dp"
         android:layout_weight="0.01"
         />
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.07"
-        android:text="Play Chord"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@color/primary"
-        android:textColor="@color/tertiaryText"
-        android:id="@+id/playChordButton"
-        android:textSize="18sp"
-        android:layout_gravity="center_horizontal"
-        android:textAllCaps="false"
-        android:textAlignment="center"
-        android:paddingLeft="10sp"
-        android:paddingRight="10sp"
-        />
+        android:src="@drawable/ic_play_chord"
+        android:textColor="@color/background"
+        android:padding="5dp"
+        android:id="@+id/playChordButton" />
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="0.08"-->
+        <!--android:text="Play Chord"-->
+        <!--android:background="@color/primary"-->
+        <!--android:textColor="@color/tertiaryText"-->
+        <!--android:id="@+id/playChordButton"-->
+        <!--android:textSize="18sp"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textAlignment="center"-->
+        <!--android:paddingLeft="10sp"-->
+        <!--android:paddingRight="10sp"-->
+        <!--/>-->
 </LinearLayout>
 
 

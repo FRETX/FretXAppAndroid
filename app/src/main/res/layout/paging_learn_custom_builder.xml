@@ -11,18 +11,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:orientation="vertical"
-            android:id="@+id/chordPickerContainer" >
+            android:layout_weight="0.20"
+            android:background="@color/primary"
+            android:id="@+id/chordPickerContainer"
+            android:layout_marginBottom="5dp"
+            >
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:scrollbars="none" >
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                >
 
                 <LinearLayout
                     android:id="@+id/chordPickerRootNoteView"
@@ -35,8 +44,11 @@
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:scrollbars="none" >
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                >
 
                 <LinearLayout
                     android:id="@+id/chordPickerTypeView"
@@ -59,16 +71,21 @@
             android:background="@color/background"
             android:textSize="30sp"
             android:id="@+id/textChord"
+            android:layout_marginBottom="3dp"
             />
 
         <fretx.version4.FretboardView
             android:id="@+id/fretboardView"
             android:layout_width="match_parent"
-            android:layout_height="230dp" />
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:layout_margin="8dp"
+            />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
             android:id="@+id/addedChordButton"
             android:text="Chord List"
 
@@ -76,11 +93,19 @@
             android:textColor="@color/background"
             android:textSize="20sp"
             android:textAllCaps="false"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+
+            android:layout_marginBottom="2dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+
+            />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
             android:id="@+id/addChordButton"
             android:text="+ Add Chord"
 
@@ -88,19 +113,31 @@
             android:textColor="@color/background"
             android:textSize="20sp"
             android:textAllCaps="false"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+
+            android:layout_marginBottom="2dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            />
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
             android:id="@+id/startExerciseButton"
-            android:text="Play"
+            android:text="Start"
 
             android:background="@color/primary"
             android:textColor="@color/background"
             android:textSize="20sp"
             android:textAllCaps="false"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            />
 
     </LinearLayout>
 

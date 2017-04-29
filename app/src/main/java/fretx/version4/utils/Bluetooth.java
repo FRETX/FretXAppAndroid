@@ -69,7 +69,7 @@ public class Bluetooth {
                     progress.dismiss();
                     break;
                 case TOAST:
-                    Toast.makeText(BaseActivity.getActivity(), (String) message.obj, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseActivity.getActivity(), (String) message.obj, Toast.LENGTH_LONG).show();
                     break;
                 default:
                     super.handleMessage(message);
@@ -281,6 +281,7 @@ public class Bluetooth {
 
     private BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
+        //TODO: move all strings to @strings and use Resources.getSystem().getString()
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
                 handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
@@ -295,14 +296,14 @@ public class Bluetooth {
                 if (listener != null)
                     listener.onDisconnect();
                 Bluetooth.this.gatt = null;
-                handler.obtainMessage(TOAST, "Connection failed").sendToTarget();
+                handler.obtainMessage(TOAST, "Lost connection to FretX device. Please turn it on again and tap the guitar icon on the top right").sendToTarget();
                 handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "failure, disconnecting");
                 gatt.close();
                 Bluetooth.this.gatt = null;
                 handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
-                handler.obtainMessage(TOAST, "Connection failed").sendToTarget();
+                handler.obtainMessage(TOAST, "Lost connection to FretX device. Please turn it on again and tap the guitar icon on the top right").sendToTarget();
                 if (listener != null)
                     listener.onFailure();
             }

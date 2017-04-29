@@ -203,7 +203,10 @@ implements LearnCustomBuilderDialog.LearnCustomChordExerciseListener {
 		ArrayList<Chord> chords = sequences.get(currentSequenceIndex).getChords();
 		if(chords.size()<1) return;
 		LearnExerciseFragment fragmentChordExercise = new LearnExerciseFragment();
+
+		fragmentChordExercise.setTargetChords(chords);
 		fragmentChordExercise.setChords(chords);
+
 		mActivity.fragNavController.pushFragment(fragmentChordExercise);
 	}
 

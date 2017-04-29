@@ -21,13 +21,13 @@ public class Audio {
     //audio settings
     static private final int FS = 16000;
     static private final double BUFFER_SIZE_S = 0.1;
-    static private final long TIMER_TICK = 20;
+    static private final long TIMER_TICK = 10;
     static private final long ONSET_IGNORE_DURATION_MS = 0;
     static private final long CHORD_LISTEN_DURATION_MS = 500;
     static private final long TIMER_DURATION_MS = ONSET_IGNORE_DURATION_MS + CHORD_LISTEN_DURATION_MS;
     static private final long CORRECTLY_PLAYED_DURATION_MS = 160;
     static private final double VOLUME_THRESHOLD = -9;
-    static private final int TIMEOUT_THRESHOLD = 20;
+    static private final int TIMEOUT_THRESHOLD = 600;
 
     //audio
     private boolean enabled;
@@ -131,13 +131,16 @@ public class Audio {
             }
             //nothing heard
             if (audio.getVolume() < VOLUME_THRESHOLD) {
-                if (upsideThreshold) {
-                    upsideThreshold = false;
-                    Log.d(TAG, "LOW");
-                    listener.onLowVolume();
-                    correctlyPlayedAccumulator = 0;
-                    listener.onProgress();
-                }
+                upsideThreshold = false;
+                Log.d(TAG, "LOW");
+                listener.onLowVolume();
+                correctlyPlayedAccumulator = 0;
+                listener.onProgress();
+                this.cancel();
+                this.onFinish();
+//                if (upsideThreshold) {
+//
+//                }
                 //Log.d(TAG, "prematurely canceled due to low volume");
             }
             //chord heard
@@ -148,25 +151,25 @@ public class Audio {
                     listener.onHighVolume();
                 }
                 //update progress
-                if (millisUntilFinished <= CHORD_LISTEN_DURATION_MS) {
-                    Chord playedChord = audio.getChord();
-                    Log.d(TAG, "played:" + playedChord.toString());
-//                    Log.d(TAG, "possible:" + audio.getTargetChords().toString());
 
-                    if (targetChord.toString().equals(playedChord.toString())) {
-                        correctlyPlayedAccumulator += TIMER_TICK;
-                        Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
-                    } else {
-                        correctlyPlayedAccumulator = 0;
-                        Log.d(TAG, "not correctly played acc");
-                    }
-                    listener.onProgress();
+                Chord playedChord = audio.getChord();
+                Log.d(TAG, "played:" + playedChord.toString());
+                Log.d(TAG, "played:" + Double.toString(audio.getChordSimilarity()));
+                Log.d(TAG, "possible:" + audio.getTargetChords().toString());
+                if (targetChord.toString().equals(playedChord.toString()) && audio.getChordSimilarity() > 0.5) {
+                    correctlyPlayedAccumulator += TIMER_TICK;
+                    Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
+                } else {
+                    correctlyPlayedAccumulator = 0;
+                    Log.d(TAG, "not correctly played acc");
                 }
+                listener.onProgress();
 
                 //stop the count down timer
                 if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION_MS) {
                     //Log.d(TAG, "- - - - - chord detected - - - - -");
                     this.cancel();
+                    this.onFinish();
                 }
             }
         }

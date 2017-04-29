@@ -67,5 +67,6 @@
         <item >Leave a Comment</item>
         <item >Sign Out</item>
     </string-array>
+    <string name="fretx_disconnected">Lost connection to FretX device. Please turn it on again and hit the guitar icon on the top right</string>
 
 </resources>

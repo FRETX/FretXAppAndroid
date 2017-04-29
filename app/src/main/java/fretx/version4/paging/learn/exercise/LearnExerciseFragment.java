@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,7 +49,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
     private TextView chordNextText;
 	private TextView positionText;
     private TextView timeText;
-    private Button playButton;
+    private ImageButton playButton;
     private ProgressBar chordProgress;
     private ImageView thresholdImage;
 
@@ -93,7 +94,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
         chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);
-        playButton = (Button) rootView.findViewById(R.id.playChordButton);
+        playButton = (ImageButton) rootView.findViewById(R.id.playChordButton);
         chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
 
@@ -223,10 +224,10 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
     @Override
     public void onHighVolume() {
-        if (dialog != null) {
-            dialog.dismiss();
-            dialog = null;
-        }
+//        if (dialog != null) {
+//            dialog.dismiss();
+//            dialog = null;
+//        }
         thresholdImage.setImageResource(android.R.drawable.presence_audio_online);
     }
 
@@ -253,7 +254,10 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
             final String chordRoot = majorChord.getRoot();
             boolean rootExist = false;
             for (Chord e: chords) {
-                if (e.getRoot().equals(chordRoot)) {
+                if ( e.getRoot().equals(chordRoot) ||
+                     ((e.getRoot().equals("A")) && chordRoot.equals("F")) || //temporary heuristic
+                     ((e.getRoot().equals("F")) && chordRoot.equals("A"))
+                   ) {
                     rootExist = true;
                     break;
                 }
@@ -276,6 +280,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
     //setup everything according actual chord
     private void setChord() {
+        if(chordIndex >= exerciseChords.size()) return;
         Chord actualChord = exerciseChords.get(chordIndex);
         Log.d(TAG, "setChord " + actualChord.toString());
 
@@ -308,7 +313,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         //todo change text of dialog
         alertDialogBuilder.setTitle("Audio Detector")
-                .setMessage("Common guys . . .")
+                .setMessage("Low sound detected. Please try bringing your guitar closer or playing louder.")
                 .setCancelable(false)
                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
