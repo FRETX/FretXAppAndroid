@@ -89,6 +89,7 @@ public class Audio {
     }
 
     public void setTargetChords(ArrayList<Chord> chords) {
+        if(audio == null) return;
         audio.setTargetChords(chords);
     }
 

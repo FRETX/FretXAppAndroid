@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
@@ -104,6 +105,10 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.paging_back);
+
+
+		String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+		Log.d(TAG, "Refreshed token: " + refreshedToken);
 
 		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 

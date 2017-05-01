@@ -7,8 +7,8 @@ android {
         applicationId 'fretx.app'
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 33
-        versionName "0.8.12"
+        versionCode 35
+        versionName "0.8.13"
         multiDexEnabled true
         sourceSets.main.jni.srcDirs = []
 
@@ -51,15 +51,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':permiso')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
-    compile project(':fretx-audio')
     compile project(':fretx-audio')
 }
 

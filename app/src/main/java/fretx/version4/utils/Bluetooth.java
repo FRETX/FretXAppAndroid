@@ -156,6 +156,7 @@ public class Bluetooth {
         handler.obtainMessage(PROGRESS_MSG, "Enabling").sendToTarget();
         progress.show();
 
+        if(adapter == null) return;
         Log.d(TAG, "enabling...");
         if(!adapter.isEnabled()) {
             adapter.enable();
@@ -190,7 +191,7 @@ public class Bluetooth {
 
     private void startScan() {
         Log.d(TAG, "scanning...");
-        handler.obtainMessage(PROGRESS_MSG, "Scanning").sendToTarget();
+        handler.obtainMessage(PROGRESS_MSG, "Scanning for FretX").sendToTarget();
         devices.clear();
         ScanSettings settings = new ScanSettings.Builder().build();
         ScanFilter filter = new ScanFilter.Builder().setDeviceName(DEVICE_NAME).build();
