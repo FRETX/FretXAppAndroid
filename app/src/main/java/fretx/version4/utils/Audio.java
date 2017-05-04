@@ -91,6 +91,7 @@ public class Audio {
     public void setTargetChords(ArrayList<Chord> chords) {
         if(audio == null) return;
         audio.setTargetChords(chords);
+        Log.d(TAG,audio.getTargetChords().toString());
     }
 
     public void startListening() {
@@ -154,9 +155,9 @@ public class Audio {
                 //update progress
 
                 Chord playedChord = audio.getChord();
-                Log.d(TAG, "played:" + playedChord.toString());
-                Log.d(TAG, "played:" + Double.toString(audio.getChordSimilarity()));
-                Log.d(TAG, "possible:" + audio.getTargetChords().toString());
+//                Log.d(TAG, "played:" + playedChord.toString());
+//                Log.d(TAG, "played:" + Double.toString(audio.getChordSimilarity()));
+//                Log.d(TAG, "possible:" + audio.getTargetChords().toString());
                 if (targetChord.toString().equals(playedChord.toString()) && audio.getChordSimilarity() > 0.5) {
                     correctlyPlayedAccumulator += TIMER_TICK;
                     Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);

@@ -83,6 +83,7 @@ public class Bluetooth {
 
     //fretx specific
     private static final String DEVICE_NAME = "FretX";
+    private static final String PHOTO_BOARD_NAME = "Smart Watch";
     private static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
     private static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
 
@@ -194,7 +195,7 @@ public class Bluetooth {
         handler.obtainMessage(PROGRESS_MSG, "Scanning for FretX").sendToTarget();
         devices.clear();
         ScanSettings settings = new ScanSettings.Builder().build();
-        ScanFilter filter = new ScanFilter.Builder().setDeviceName(DEVICE_NAME).build();
+        ScanFilter filter = new ScanFilter.Builder().setDeviceName(PHOTO_BOARD_NAME).build();
         List<ScanFilter> filters = new ArrayList<>();
         filters.add(filter);
         scanning = true;
