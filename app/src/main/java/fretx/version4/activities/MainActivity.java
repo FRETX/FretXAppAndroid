@@ -28,7 +28,7 @@ import co.mobiwise.materialintro.prefs.PreferencesManager;
 import fretx.version4.R;
 import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
-import fretx.version4.fretxapi.Songlist;
+import fretx.version4.fretxapi.SongList;
 import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnButtonsFragment;
 import fretx.version4.paging.play.PlayFragmentSearchList;
@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity {
         Context ctx = getApplicationContext();
 		Network.initialize(ctx);
 		AppCache.initialize(ctx);
-		Songlist.initialize(this);
+		SongList.initialize(this);
 
 		fragments.add(new PlayFragmentSearchList());
 		fragments.add(new LearnButtonsFragment());
@@ -200,7 +200,7 @@ public class MainActivity extends BaseActivity {
 			public boolean onLongClick(View v) {
 				PreferencesManager tutorialPrefs = new PreferencesManager(getApplicationContext());
 				tutorialPrefs.resetAll();
-				Songlist.forceDownloadIndexFromServer();
+				SongList.forceDownloadIndexFromServer();
 				Toast.makeText(mActivity,"All tutorials reset, cache refreshed",Toast.LENGTH_SHORT).show( );
 				return true;
 			}

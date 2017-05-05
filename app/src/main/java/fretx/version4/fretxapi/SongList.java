@@ -23,7 +23,7 @@ import cz.msebera.android.httpclient.Header;
 import fretx.version4.Config;
 import fretx.version4.R;
 
-public class Songlist {
+public class SongList {
 
     static String          apiBase       = Config.apiBase;
     static JSONArray       index         = new JSONArray();
@@ -151,9 +151,7 @@ public class Songlist {
     public static SongItem getSongItem(int i) {
         try {
             JSONObject song = index.getJSONObject(i);
-            //Drawable image = Util.LoadImageFromWeb("http://img.youtube.com/vi/" + song.getString("youtube_id") + "/0.jpg");
-
-            return new SongItem(song.getString("fretx_id"), song.getString("youtube_id"), song.getString("title"), song.getString("artist"),song.getString("song_title"),song.getString("uploaded_on"));
+            return new SongItem(song);
         }
         catch (Exception e) {
             Log.d("FRETX API", String.format("Failed Getting Song Item\r\n%s", e.toString()));
@@ -201,7 +199,4 @@ public class Songlist {
 
     private static void fireBusy()  { ready = false; for(int i=0; i < callbacks.size(); i++) { callbacks.get(i).onBusy();  } }
     private static void fireReady() { ready = true;  for(int i=0; i < callbacks.size(); i++) { callbacks.get(i).onReady(); } }
-
-    ///////////////////////////// CALLBACKS /////////////////////////////////////
-
 }

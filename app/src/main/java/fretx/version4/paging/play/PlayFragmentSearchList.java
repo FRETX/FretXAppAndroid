@@ -2,12 +2,12 @@ package fretx.version4.paging.play;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
@@ -15,108 +15,101 @@ import java.util.ArrayList;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.fretxapi.SongItem;
-import fretx.version4.fretxapi.Songlist;
+import fretx.version4.fretxapi.SongList;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 
 public class PlayFragmentSearchList extends Fragment {
 
-    public  ArrayList<SongItem> mainData = new ArrayList<>();
-    public  SearchView          searchBox;
-    public  GridView            listView;
+    private final ArrayList<SongItem> rawData = new ArrayList<>();
+    private final ArrayList<SongItem> filteredData = new ArrayList<>();
+    private PlaySongGridViewAdapter adapter;
+    private SearchView searchBox;
+    private GridView listView;
+    private final ProgressDialog dialog = new ProgressDialog(getActivity());
 
-    private MainActivity        context;
-    private View                rootView;
-    private ImageView           refreshBtn;
-    private ProgressDialog      dialog;
-
-    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
-
-    @Override public void onResume() { super.onResume();
-        BluetoothLE.getInstance().clearMatrix(); }
-
-    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        inflateView(inflater, container);
-        initVars();
-        setEventListeners();
-        setListData(mainData);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
+        searchBox = (SearchView) rootView.findViewById(R.id.svSongs);
+        listView = (GridView) rootView.findViewById(R.id.lvSongList);
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        adapter = new PlaySongGridViewAdapter((MainActivity) getActivity(),
+                R.layout.paging_play_searchlist_item, filteredData);
+        listView.setAdapter(adapter);
 
-    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
+        dialog.setTitle(getString(R.string.refreshing));
+        dialog.setMessage(getString(R.string.please_wait));
 
-
-    ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
-
-    private void initVars() {
-        mainData   = new ArrayList<>();
-        context    = (MainActivity) getActivity();
-        searchBox  = (SearchView)   rootView.findViewById(R.id.svSongs);
-//        refreshBtn = (ImageView)    rootView.findViewById(R.id.fresh);
-        listView   = (GridView)     rootView.findViewById(R.id.lvSongList);
-    }
-
-    private void setEventListeners() {
         searchBox.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 searchBox.setIconified(false);
             }
         });
         searchBox.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
-            @Override public boolean onQueryTextSubmit(String query) { filterList(query); return false; }
-            @Override public boolean onQueryTextChange(String query) { filterList(query); return false; }
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterList(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                filterList(query);
+                return false;
+            }
         });
 
-//        refreshBtn.setOnClickListener( new View.OnClickListener() {
-//            @Override public void onClick(View view) {
-//                if( Network.isConnected() ) { Songlist.initialize(); }
-//                else                        { Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show(); }
-//            }
-//        });
+        //// TODO: 05/05/17 check if this piece of code run on UI thread
+        SongList.setListener(new SongList.Callback() {
+            @Override
+            public void onBusy() {
+                dialog.show();
+            }
 
-        Songlist.setListener( new Songlist.Callback() {
-            @Override public void onBusy()  { showBusy(); }
-            @Override public void onReady() { initData(); }
+            @Override public void onReady() {
+                rawData.clear();
+                for(int i = 0; i< SongList.length(); ++i) {
+                    final SongItem item = SongList.getSongItem(i);
+                    if (item.published) {
+                        rawData.add(item);
+                    }
+                }
+
+                filteredData.clear();
+                filteredData.addAll(rawData);
+                adapter.notifyDataSetChanged();
+
+                dialog.hide();
+            }
         });
     }
 
-    private void initData() {
-        mainData.clear();
-        for(int i = 0; i< Songlist.length(); i++) { mainData.add(Songlist.getSongItem(i)); }
-        setListData(mainData);
-        hideBusy();
+    @Override
+    public void onResume() {
+        super.onResume();
+        BluetoothLE.getInstance().clearMatrix();
     }
 
-    private View inflateView(LayoutInflater inflater, ViewGroup container) {
-        rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
-        return rootView;
-    }
-
-    ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
-
-
-    /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////////////////////////////
-
+    /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////
     public void filterList(String query) {
-        //lvListNews.setVisibility(View.VISIBLE);
-        if (query == null ) { setListData(mainData); return; }
-
-        ArrayList<SongItem> filterList = new ArrayList<>();
-        for ( int i = 0; i < mainData.size(); i++ ) {
-            String title = mainData.get(i).title.toLowerCase();
-            if( title.contains(query.toLowerCase()) ) { filterList.add(mainData.get(i)); }
+        filteredData.clear();
+        if (query == null ) {
+            filteredData.addAll(rawData);
+        } else {
+            final String lowercaseQuery = query.toLowerCase();
+            for (SongItem item: rawData) {
+                final String title = item.title.toLowerCase();
+                if (title.contains(lowercaseQuery)) {
+                    filteredData.add(item);
+                }
+            }
         }
-        setListData(filterList);
+        adapter.notifyDataSetChanged();
     }
-
-    public void setListData( ArrayList<SongItem> data ) {
-        listView.setAdapter( new PlaySongGridViewAdapter( context, R.layout.paging_play_searchlist_item, data) );
-    }
-
-    /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////////////////////////////
-
-    public void showBusy() { if(getActivity() != null ) dialog = ProgressDialog.show(context, getString(R.string.refreshing), getString(R.string.please_wait)); }
-    public void hideBusy() { if( dialog != null ) dialog.dismiss(); }
-
 }
