@@ -22,7 +22,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.paging.learn.exercise.LearnExerciseFragment;
-import fretx.version4.utils.Bluetooth;
+import fretx.version4.utils.bluetooth.BluetoothLE;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -92,7 +92,7 @@ implements LearnCustomBuilderDialog.LearnCustomChordExerciseListener {
 		super.onActivityCreated(savedInstanceState);
 
 		//clear fretx matrix
-		Bluetooth.getInstance().clearMatrix();
+		BluetoothLE.getInstance().clearMatrix();
     }
 
 	@Override

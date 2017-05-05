@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,8 +17,8 @@ import java.util.HashMap;
 import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.utils.Bluetooth;
-import fretx.version4.utils.Midi;
+import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.audio.Midi;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -58,7 +57,7 @@ public class ChordFragment extends Fragment
 		
 		chordFingerings = MusicUtils.parseChordDb();
 
-		Bluetooth.getInstance().clearMatrix();
+		BluetoothLE.getInstance().clearMatrix();
 
 		String[] rootNotes = {"C","C#","D","Eb","E","F","F#","G","G#","A","Bb","B"};
 		String [] chordTypes = {"maj","m","maj7","m7","sus2","sus4","dim","dim7","aug",};
@@ -169,6 +168,6 @@ public class ChordFragment extends Fragment
 //		int[] chordNotes = currentChord.getNotes();
 //		byte[] bluetoothArray = new byte[chordNotes.length+1];
 //		//TODO: gotta take care of the exceptions here, or somewhere this will probably create wrong fingerings for some chords
-		Bluetooth.getInstance().setMatrix(currentChord);
+		BluetoothLE.getInstance().setMatrix(currentChord);
 	}
 }

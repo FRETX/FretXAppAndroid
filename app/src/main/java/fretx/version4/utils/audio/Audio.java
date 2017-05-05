@@ -1,9 +1,7 @@
-package fretx.version4.utils;
+package fretx.version4.utils.audio;
 
 import android.os.CountDownTimer;
 import android.util.Log;
-
-import org.billthefarmer.mididriver.GeneralMidiConstants;
 
 import java.util.ArrayList;
 

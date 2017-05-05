@@ -1,4 +1,4 @@
-package fretx.version4.utils;
+package fretx.version4.utils.bluetooth;
 
 /**
  * FretXapp for FretX

@@ -16,10 +16,10 @@ import com.greysonparrelli.permiso.Permiso;
 import com.greysonparrelli.permiso.ResultSet;
 
 import fretx.version4.R;
-import fretx.version4.utils.Audio;
-import fretx.version4.utils.Bluetooth;
-import fretx.version4.utils.BluetoothListener;
-import fretx.version4.utils.Midi;
+import fretx.version4.utils.audio.Audio;
+import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.BluetoothListener;
+import fretx.version4.utils.audio.Midi;
 
 public class SplashScreen extends BaseActivity {
     private static final String TAG = "KJKP6_PERMISO";
@@ -35,8 +35,8 @@ public class SplashScreen extends BaseActivity {
         Permiso.getInstance().setOnComplete(new IOnComplete() {
             public void onComplete(){
                 Log.d(TAG, "Complete!");
-                if (Bluetooth.getInstance().isEnabled()) {
-                    Bluetooth.getInstance().scan();
+                if (BluetoothLE.getInstance().isEnabled()) {
+                    BluetoothLE.getInstance().scan();
                 } else {
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
@@ -45,12 +45,13 @@ public class SplashScreen extends BaseActivity {
         });
 
         //bluetooth callback called when the scan is done
-        Bluetooth.getInstance().setListener(new BluetoothListener() {
+
+        BluetoothLE.getInstance().setListener(new BluetoothListener() {
             @Override
             public void onConnect() {
                 Log.d(TAG, "Success!");
-                Bluetooth.getInstance().setListener(null);
-                Bluetooth.getInstance().clearMatrix();
+                BluetoothLE.getInstance().setListener(null);
+                BluetoothLE.getInstance().clearMatrix();
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
@@ -58,7 +59,7 @@ public class SplashScreen extends BaseActivity {
             @Override
             public void onDisconnect() {
                 Log.d(TAG, "Failure!");
-                Bluetooth.getInstance().setListener(null);
+                BluetoothLE.getInstance().setListener(null);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
@@ -66,14 +67,14 @@ public class SplashScreen extends BaseActivity {
             @Override
             public void onScanFailure() {
                 Log.d(TAG, "Failure!");
-                Bluetooth.getInstance().setListener(null);
+                BluetoothLE.getInstance().setListener(null);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
 
             public void onFailure() {
                 Log.d(TAG, "Failure!");
-                Bluetooth.getInstance().setListener(null);
+                BluetoothLE.getInstance().setListener(null);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
@@ -144,9 +145,9 @@ public class SplashScreen extends BaseActivity {
     //init bluetooth
     private void initBluetooth() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && !Bluetooth.getInstance().isEnabled()) {
-            Bluetooth.getInstance().init();
-            Bluetooth.getInstance().start();
+                && !BluetoothLE.getInstance().isEnabled()) {
+            BluetoothLE.getInstance().init();
+            BluetoothLE.getInstance().start();
         }
     }
 }

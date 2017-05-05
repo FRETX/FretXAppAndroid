@@ -8,9 +8,10 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
-import fretx.version4.utils.Audio;
-import fretx.version4.utils.Bluetooth;
-import fretx.version4.utils.Midi;
+import fretx.version4.utils.audio.Audio;
+import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.BluetoothStd;
+import fretx.version4.utils.audio.Midi;
 
 /**
  * FretXapp for FretX
@@ -49,7 +50,7 @@ public class BaseActivity extends AppCompatActivity {
 
         Midi.getInstance().start();
         Audio.getInstance().start();
-        Bluetooth.getInstance().start();
+        BluetoothLE.getInstance().start();
     }
 
     @Override
@@ -59,8 +60,8 @@ public class BaseActivity extends AppCompatActivity {
 
         Midi.getInstance().stop();
         Audio.getInstance().stop();
-        Bluetooth.getInstance().clearMatrix();
-        Bluetooth.getInstance().stop();
+        BluetoothLE.getInstance().clearMatrix();
+        BluetoothLE.getInstance().stop();
     }
 
     public static AppCompatActivity getActivity() {

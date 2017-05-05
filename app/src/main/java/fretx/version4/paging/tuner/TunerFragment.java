@@ -1,23 +1,18 @@
 package fretx.version4.paging.tuner;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.utils.Audio;
+import fretx.version4.utils.audio.Audio;
 
 
 public class TunerFragment extends Fragment {

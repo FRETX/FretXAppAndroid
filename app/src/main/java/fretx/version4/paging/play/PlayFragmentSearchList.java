@@ -16,7 +16,7 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.fretxapi.SongItem;
 import fretx.version4.fretxapi.Songlist;
-import fretx.version4.utils.Bluetooth;
+import fretx.version4.utils.bluetooth.BluetoothLE;
 
 public class PlayFragmentSearchList extends Fragment {
 
@@ -32,7 +32,7 @@ public class PlayFragmentSearchList extends Fragment {
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
 
     @Override public void onResume() { super.onResume();
-        Bluetooth.getInstance().clearMatrix(); }
+        BluetoothLE.getInstance().clearMatrix(); }
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         inflateView(inflater, container);

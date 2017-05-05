@@ -5,14 +5,12 @@ import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,17 +22,15 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.paging.learn.guided.GuidedChordExercise;
-import fretx.version4.utils.Audio;
-import fretx.version4.utils.Bluetooth;
-import fretx.version4.utils.Midi;
+import fretx.version4.utils.audio.Audio;
+import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.audio.Midi;
 import fretx.version4.utils.TimeUpdater;
 import rocks.fretx.audioprocessing.Chord;
 
@@ -300,7 +296,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         //setup the progress bar
         chordProgress.setProgress(0);
         //update led
-        Bluetooth.getInstance().setMatrix(actualChord);
+        BluetoothLE.getInstance().setMatrix(actualChord);
     }
 
     //display chord position

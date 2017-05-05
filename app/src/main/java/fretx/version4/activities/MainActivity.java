@@ -33,8 +33,8 @@ import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnButtonsFragment;
 import fretx.version4.paging.play.PlayFragmentSearchList;
 import fretx.version4.paging.tuner.TunerFragment;
-import fretx.version4.utils.Bluetooth;
-import fretx.version4.utils.BluetoothListener;
+import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.BluetoothListener;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "KJKP6_MAINACTIVITY";
@@ -133,7 +133,7 @@ public class MainActivity extends BaseActivity {
 
 		bottomBar.selectTabAtPosition(INDEX_PLAY);
 
-        Bluetooth.getInstance().setListener(bluetoothListener);
+        BluetoothLE.getInstance().setListener(bluetoothListener);
 	}
 
     @Override
@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity {
 			setGreyed(previewButton);
         }
 
-        if (Bluetooth.getInstance().isConnected()) {
+        if (BluetoothLE.getInstance().isConnected()) {
             setNonGreyed(connectButton);
         } else {
             setGreyed(connectButton);
@@ -157,7 +157,7 @@ public class MainActivity extends BaseActivity {
 		bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
 			@Override
 			public void onTabSelected(@IdRes int tabId) {
-				Bluetooth.getInstance().clearMatrix();
+				BluetoothLE.getInstance().clearMatrix();
 				previewButton.setVisibility(View.INVISIBLE);
 
 				switch(tabId){
@@ -189,8 +189,8 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View view) {
                 setGreyed(connectButton);
-                Bluetooth.getInstance().disconnect();
-				Bluetooth.getInstance().scan();
+                BluetoothLE.getInstance().disconnect();
+				BluetoothLE.getInstance().scan();
 			}
 		});
 

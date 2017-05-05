@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.utils.Bluetooth;
+import fretx.version4.utils.bluetooth.BluetoothLE;
 
 public class LearnGuidedListFragment extends Fragment {
 	MainActivity mActivity;
@@ -37,7 +37,7 @@ public class LearnGuidedListFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
-		Bluetooth.getInstance().clearMatrix();
+		BluetoothLE.getInstance().clearMatrix();
 	}
 
 	@Override
