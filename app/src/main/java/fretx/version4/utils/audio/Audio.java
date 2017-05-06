@@ -25,7 +25,7 @@ public class Audio {
     static private final long TIMER_DURATION_MS = ONSET_IGNORE_DURATION_MS + CHORD_LISTEN_DURATION_MS;
     static private final long CORRECTLY_PLAYED_DURATION_MS = 160;
     static private final double VOLUME_THRESHOLD = -9;
-    static private final int TIMEOUT_THRESHOLD_MS = 10000;
+    static private final int TIMEOUT_MS = 10000;
 
     //audio
     private boolean enabled;
@@ -115,11 +115,10 @@ public class Audio {
         return enabled ? audio.getPitch() : -1;
     }
 
-    //todo replace with a handler to avoid restart of countdown timer
+    //// TODO: 06/05/17 replace with a handler to avoid restart of countdown timer
     private CountDownTimer chordTimer = new CountDownTimer(TIMER_DURATION_MS, TIMER_TICK) {
         public void onTick(long millisUntilFinished) {
-
-            //todo remove this 2 or 3 checks - should not happen
+            //// TODO: 06/05/17 remove this 2 or 3 checks - should not happen
             if (!audio.isInitialized()) {
                 //Log.d("USELESSSTUF", "not initialized");
                 return;
@@ -132,12 +131,11 @@ public class Audio {
             if (!audio.isBufferAvailable()) {
                 return;
             }
+
             //nothing heard
             if (audio.getVolume() < VOLUME_THRESHOLD) {
                 correctlyPlayedAccumulator = 0;
                 listener.onProgress();
-                this.cancel();
-                this.onFinish();
                 if (upsideThreshold) {
                     upsideThreshold = false;
                     Log.d(TAG, "LOW");
@@ -160,28 +158,26 @@ public class Audio {
 //                Log.d(TAG, "possible:" + audio.getTargetChords().toString());
                 if (targetChord.toString().equals(playedChord.toString()) && audio.getChordSimilarity() > 0.5) {
                     correctlyPlayedAccumulator += TIMER_TICK;
-                    Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
+                    //Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
                 } else {
                     correctlyPlayedAccumulator = 0;
-                    Log.d(TAG, "not correctly played acc");
+                    //Log.d(TAG, "not correctly played acc");
                 }
                 listener.onProgress();
 
                 //stop the count down timer
                 if (correctlyPlayedAccumulator >= CORRECTLY_PLAYED_DURATION_MS) {
-                    //Log.d(TAG, "- - - - - chord detected - - - - -");
+                    Log.d(TAG, "chord detected");
                     this.cancel();
-                    this.onFinish();
                 }
             }
         }
 
         public void onFinish() {
-            Log.d(TAG, "finished without hearing enough of correct chords: " + timeoutCounter);
             correctlyPlayedAccumulator = 0;
             listener.onProgress();
             timeoutCounter += CHORD_LISTEN_DURATION_MS;
-            if (!timeoutNotified && timeoutCounter >= TIMEOUT_THRESHOLD_MS) {
+            if (!timeoutNotified && timeoutCounter >= TIMEOUT_MS) {
                 listener.onTimeout();
                 timeoutNotified = true;
             }

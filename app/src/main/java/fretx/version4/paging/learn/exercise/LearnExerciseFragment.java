@@ -94,6 +94,8 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
         chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
 
+        dialog = audioHelperDialog(getActivity());
+
         return rootView;
 	}
 
@@ -230,7 +232,6 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
     @Override
     public void onTimeout() {
-        dialog = audioHelperDialog(getActivity());
         dialog.show();
     }
 
@@ -314,7 +315,7 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
                 .setCancelable(false)
                 .setPositiveButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
+                        dialog.dismiss();
                     }
                 });
         return alertDialogBuilder.create();
