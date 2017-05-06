@@ -189,8 +189,10 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View view) {
                 setGreyed(connectButton);
-                BluetoothLE.getInstance().disconnect();
-				BluetoothLE.getInstance().scan();
+				if (BluetoothLE.getInstance().isEnabled()) {
+					BluetoothLE.getInstance().disconnect();
+					BluetoothLE.getInstance().scan();
+				}
 			}
 		});
 

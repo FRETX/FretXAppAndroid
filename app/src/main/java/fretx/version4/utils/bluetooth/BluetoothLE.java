@@ -156,7 +156,6 @@ public class BluetoothLE {
         handler.obtainMessage(PROGRESS_MSG, "Enabling").sendToTarget();
         progress.show();
 
-        if(adapter == null) return;
         Log.d(TAG, "enabling...");
         if(!adapter.isEnabled()) {
             adapter.enable();

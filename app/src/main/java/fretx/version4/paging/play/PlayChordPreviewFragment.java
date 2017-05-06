@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +42,7 @@ public class PlayChordPreviewFragment extends Fragment
     private TextView position;
 	private Button nextButton;
 	private Button playButton;
-	private Button playChordButton;
+	private ImageButton playChordButton;
 
 	//chords
 	private HashMap<String,FingerPositions> chordDb;
@@ -63,7 +64,7 @@ public class PlayChordPreviewFragment extends Fragment
         position = (TextView) rootView.findViewById(R.id.position);
 		nextButton = (Button) rootView.findViewById(R.id.previewNextChordButton);
 		playButton = (Button) rootView.findViewById(R.id.previewStartSongButton);
-		playChordButton = (Button) rootView.findViewById(R.id.playChordButton);
+		playChordButton = (ImageButton) rootView.findViewById(R.id.playChordButton);
 
 		return rootView;
 	}

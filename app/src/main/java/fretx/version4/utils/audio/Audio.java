@@ -87,7 +87,8 @@ public class Audio {
     }
 
     public void setTargetChords(ArrayList<Chord> chords) {
-        if(audio == null) return;
+        if (!enabled)
+            return;
         audio.setTargetChords(chords);
         Log.d(TAG,audio.getTargetChords().toString());
     }
@@ -131,16 +132,15 @@ public class Audio {
             }
             //nothing heard
             if (audio.getVolume() < VOLUME_THRESHOLD) {
-                upsideThreshold = false;
-                Log.d(TAG, "LOW");
-                listener.onLowVolume();
                 correctlyPlayedAccumulator = 0;
                 listener.onProgress();
                 this.cancel();
                 this.onFinish();
-//                if (upsideThreshold) {
-//
-//                }
+                if (upsideThreshold) {
+                    upsideThreshold = false;
+                    Log.d(TAG, "LOW");
+                    listener.onLowVolume();
+                }
                 //Log.d(TAG, "prematurely canceled due to low volume");
             }
             //chord heard

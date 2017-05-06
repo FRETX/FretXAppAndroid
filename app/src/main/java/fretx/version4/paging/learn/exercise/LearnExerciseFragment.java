@@ -138,8 +138,9 @@ public class LearnExerciseFragment extends Fragment implements Audio.AudioListen
 
 	private void resumeAll() {
         if (exerciseChords.size() > 0 && chordIndex < exerciseChords.size()) {
-            Audio.getInstance().setTargetChords(targetChords);
-
+            if (Audio.getInstance().isEnabled()) {
+                Audio.getInstance().setTargetChords(targetChords);
+            }
             setChord();
             timeUpdater.resumeTimer();
         }
