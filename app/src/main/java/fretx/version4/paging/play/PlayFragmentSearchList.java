@@ -1,37 +1,48 @@
 package fretx.version4.paging.play;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.fretxapi.SongItem;
-import fretx.version4.fretxapi.SongList;
+import fretx.version4.fretxapi.song.SongCallback;
+import fretx.version4.fretxapi.song.SongItem;
+import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 
 public class PlayFragmentSearchList extends Fragment {
-
+    private static final String TAG = "KJKP6_PLAYFRAGMENT_LIST";
     private final ArrayList<SongItem> rawData = new ArrayList<>();
     private final ArrayList<SongItem> filteredData = new ArrayList<>();
+    //// TODO: 05/05/17 handle update on query
+    private String lastQuery;
     private PlaySongGridViewAdapter adapter;
+
     private SearchView searchBox;
     private GridView listView;
-    private final ProgressDialog dialog = new ProgressDialog(getActivity());
+    private Button retry;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
         searchBox = (SearchView) rootView.findViewById(R.id.svSongs);
         listView = (GridView) rootView.findViewById(R.id.lvSongList);
+        retry = (Button) rootView.findViewById(R.id.retry);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+
+        retry.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         return rootView;
     }
 
@@ -43,8 +54,7 @@ public class PlayFragmentSearchList extends Fragment {
                 R.layout.paging_play_searchlist_item, filteredData);
         listView.setAdapter(adapter);
 
-        dialog.setTitle(getString(R.string.refreshing));
-        dialog.setMessage(getString(R.string.please_wait));
+        refreshData();
 
         searchBox.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -65,27 +75,20 @@ public class PlayFragmentSearchList extends Fragment {
             }
         });
 
-        //// TODO: 05/05/17 check if this piece of code run on UI thread
-        SongList.setListener(new SongList.Callback() {
+        SongList.setListener(new SongCallback() {
             @Override
-            public void onBusy() {
-                dialog.show();
+            public void onUpdate() {
+                progressBar.setVisibility(View.INVISIBLE);
+                refreshData();
             }
+        });
 
-            @Override public void onReady() {
-                rawData.clear();
-                for(int i = 0; i< SongList.length(); ++i) {
-                    final SongItem item = SongList.getSongItem(i);
-                    if (item.published) {
-                        rawData.add(item);
-                    }
-                }
-
-                filteredData.clear();
-                filteredData.addAll(rawData);
-                adapter.notifyDataSetChanged();
-
-                dialog.hide();
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retry.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                SongList.forceDownloadIndexFromServer();
             }
         });
     }
@@ -96,10 +99,32 @@ public class PlayFragmentSearchList extends Fragment {
         BluetoothLE.getInstance().clearMatrix();
     }
 
-    /////////////////////////////////////// SEARCH LIST  ///////////////////////////////////////////
+    private boolean refreshData() {
+        rawData.clear();
+        for(int i = 0; i< SongList.length(); ++i) {
+            final SongItem item = SongList.getSongItem(i);
+            if (item.published) {
+                rawData.add(item);
+            }
+        }
+
+        filteredData.clear();
+        filteredData.addAll(rawData);
+        adapter.notifyDataSetChanged();
+
+        progressBar.setVisibility(View.INVISIBLE);
+        if (rawData.size() == 0) {
+            retry.setVisibility(View.VISIBLE);
+            return false;
+        }
+        retry.setVisibility(View.INVISIBLE);
+        return true;
+    }
+
+    //// TODO: 05/05/17 handle onUpdate with a search on going
     public void filterList(String query) {
         filteredData.clear();
-        if (query == null ) {
+        if (query == null) {
             filteredData.addAll(rawData);
         } else {
             final String lowercaseQuery = query.toLowerCase();

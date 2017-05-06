@@ -3,8 +3,6 @@ package fretx.version4.paging.play;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +20,8 @@ import java.util.ArrayList;
 import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.fretxapi.SongItem;
-import fretx.version4.fretxapi.SongPunch;
+import fretx.version4.fretxapi.song.SongItem;
+import fretx.version4.fretxapi.song.SongPunch;
 import rocks.fretx.audioprocessing.Chord;
 
 /**
@@ -34,7 +32,7 @@ import rocks.fretx.audioprocessing.Chord;
 class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 	private MainActivity mActivity;
 	private int layoutResourceId;
-	private ArrayList<SongItem> data = new ArrayList<SongItem>();
+	private ArrayList<SongItem> data = new ArrayList<>();
 
 	PlaySongGridViewAdapter(MainActivity context, int layoutResourceId,
 	                               ArrayList<SongItem> data) {

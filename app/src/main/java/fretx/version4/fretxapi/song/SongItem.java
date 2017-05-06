@@ -1,4 +1,4 @@
-package fretx.version4.fretxapi;
+package fretx.version4.fretxapi.song;
 
 import android.util.Log;
 
@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import fretx.version4.Util;
+import fretx.version4.fretxapi.AppCache;
 
 public class SongItem {
     public String fretx_id;

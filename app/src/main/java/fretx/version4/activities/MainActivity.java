@@ -28,7 +28,7 @@ import co.mobiwise.materialintro.prefs.PreferencesManager;
 import fretx.version4.R;
 import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
-import fretx.version4.fretxapi.SongList;
+import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnButtonsFragment;
 import fretx.version4.paging.play.PlayFragmentSearchList;

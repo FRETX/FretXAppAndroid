@@ -20,7 +20,7 @@ import fretx.version4.Config;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.fretxapi.SongItem;
+import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.audio.Midi;
 import rocks.fretx.audioprocessing.Chord;

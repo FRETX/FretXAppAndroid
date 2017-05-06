@@ -2,7 +2,7 @@ package fretx.version4;
 
 import java.util.ArrayList;
 
-import fretx.version4.fretxapi.SongItem;
+import fretx.version4.fretxapi.song.SongItem;
 
 /*
  * Copyright 2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.

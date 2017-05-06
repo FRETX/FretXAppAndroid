@@ -9,55 +9,55 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 
 public class AppCache {
-
+    private static final String TAG = "KJKP6_APPCACHE";
     private static File cacheDir;
 
-    public static void initialize(Context context) { cacheDir = context.getCacheDir(); }
+
+    public static void initialize(Context context) {
+        cacheDir = context.getCacheDir();
+    }
 
     public static String getFromCache(String path) {
         try {
-            File file = getFile( path );
-
-            StringBuffer contents = new StringBuffer();
-            BufferedReader reader = null;
-            reader = new BufferedReader(new FileReader(file));
-            String text = null;
+            final File file = getFile( path );
+            final StringBuffer contents = new StringBuffer();
+            final BufferedReader reader = new BufferedReader(new FileReader(file));
+            String text;
             while ((text = reader.readLine()) != null) {
                 contents.append(text).append(System.getProperty("line.separator"));
             }
             reader.close();
-
-            Log.d( "APP CACHE", String.format( "Got From Cache %s", path ) );
             return contents.toString();
-        }
-
-        catch (Exception e) {
-            Log.d( "APP CACHE", String.format( "Failed Getting From Cache %s\r\n%s", path, e.toString() ) );
+        } catch (Exception e) {
+            Log.d(TAG, String.format( "Failed Getting From Cache %s\n%s", path, e.toString() ) );
             return "";
         }
 
     }
 
     public static void saveToCache(String path, byte[] body) {
-
         try {
-            File file = getFile( path );
-            if( file.exists() ) file.delete();
+            final File file = getFile(path);
+            if(file.exists())
+                file.delete();
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(body);
             fos.close();
-            Log.d( "APP CACHE", String.format( "Saved To Cache %s", path ) );
-        }
-
-        catch (Exception e) {
-            Log.d( "APP CACHE", String.format( "Failed Saving To Cache %s\r\n%s", path, e.toString() ) );
+        } catch (Exception e) {
+            Log.d(TAG, String.format( "Failed Saving To Cache %s\n%s", path, e.toString() ) );
         }
 
     }
 
-    public static File    getFile       ( String path ) { return new File( cacheDir, path);      }
-    public static Boolean exists        ( String path ) { return getFile( path ).exists();       }
-    public static long    last_modified ( String path ) { return getFile( path ).lastModified(); }
+    private static File getFile(String path) {
+        return new File( cacheDir, path);
+    }
 
+    public static Boolean exists(String path) {
+        return getFile(path).exists();
+    }
 
+    public static long last_modified (String path) {
+        return getFile(path).lastModified();
+    }
 }

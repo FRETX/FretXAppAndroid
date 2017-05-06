@@ -1,4 +1,4 @@
-package fretx.version4.fretxapi;
+package fretx.version4.fretxapi.song;
 
 public class SongPunch {
 	public int timeMs;
