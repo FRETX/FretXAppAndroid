@@ -25,7 +25,7 @@ public class Audio {
     static private final long TIMER_DURATION_MS = ONSET_IGNORE_DURATION_MS + CHORD_LISTEN_DURATION_MS;
     static private final long CORRECTLY_PLAYED_DURATION_MS = 160;
     static private final double VOLUME_THRESHOLD = -9;
-    static private final int TIMEOUT_THRESHOLD = 600;
+    static private final int TIMEOUT_THRESHOLD_MS = 10000;
 
     //audio
     private boolean enabled;
@@ -71,6 +71,8 @@ public class Audio {
             audio.initialize(FS, BUFFER_SIZE_S);
         if (!audio.isProcessing())
             audio.start();
+        timeoutCounter = 0;
+        timeoutNotified = false;
     }
 
     public void stop() {
@@ -175,11 +177,11 @@ public class Audio {
         }
 
         public void onFinish() {
-            //Log.d(TAG, "finished without hearing enough of correct chords");
+            Log.d(TAG, "finished without hearing enough of correct chords: " + timeoutCounter);
             correctlyPlayedAccumulator = 0;
             listener.onProgress();
-            timeoutCounter += 1;
-            if (!timeoutNotified && timeoutCounter >= TIMEOUT_THRESHOLD) {
+            timeoutCounter += CHORD_LISTEN_DURATION_MS;
+            if (!timeoutNotified && timeoutCounter >= TIMEOUT_THRESHOLD_MS) {
                 listener.onTimeout();
                 timeoutNotified = true;
             }

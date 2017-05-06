@@ -11,6 +11,8 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 import fretx.version4.activities.MainActivity;
@@ -25,7 +27,6 @@ public class PlayFragmentSearchList extends Fragment {
     private final ArrayList<SongItem> rawData = new ArrayList<>();
     private final ArrayList<SongItem> filteredData = new ArrayList<>();
     //// TODO: 05/05/17 handle update on query
-    private String lastQuery;
     private PlaySongGridViewAdapter adapter;
 
     private SearchView searchBox;
@@ -54,8 +55,6 @@ public class PlayFragmentSearchList extends Fragment {
                 R.layout.paging_play_searchlist_item, filteredData);
         listView.setAdapter(adapter);
 
-        refreshData();
-
         searchBox.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 searchBox.setIconified(false);
@@ -77,9 +76,18 @@ public class PlayFragmentSearchList extends Fragment {
 
         SongList.setListener(new SongCallback() {
             @Override
-            public void onUpdate() {
-                progressBar.setVisibility(View.INVISIBLE);
-                refreshData();
+            public void onUpdate(boolean requesting, JSONArray index) {
+                if (requesting) {
+                    retry.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                } else if (index == null){
+                    progressBar.setVisibility(View.INVISIBLE);
+                    retry.setVisibility(View.VISIBLE);
+                } else {
+                    retry.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    refreshData();
+                }
             }
         });
 
@@ -88,7 +96,7 @@ public class PlayFragmentSearchList extends Fragment {
             public void onClick(View v) {
                 retry.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
-                SongList.forceDownloadIndexFromServer();
+                SongList.getIndexFromServer();
             }
         });
     }
@@ -103,7 +111,7 @@ public class PlayFragmentSearchList extends Fragment {
         rawData.clear();
         for(int i = 0; i< SongList.length(); ++i) {
             final SongItem item = SongList.getSongItem(i);
-            if (item.published) {
+            if (item != null && item.published) {
                 rawData.add(item);
             }
         }
@@ -111,13 +119,6 @@ public class PlayFragmentSearchList extends Fragment {
         filteredData.clear();
         filteredData.addAll(rawData);
         adapter.notifyDataSetChanged();
-
-        progressBar.setVisibility(View.INVISIBLE);
-        if (rawData.size() == 0) {
-            retry.setVisibility(View.VISIBLE);
-            return false;
-        }
-        retry.setVisibility(View.INVISIBLE);
         return true;
     }
 

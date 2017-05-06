@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity {
         Context ctx = getApplicationContext();
 		Network.initialize(ctx);
 		AppCache.initialize(ctx);
-		SongList.initialize(this);
+		SongList.initialize();
 
 		fragments.add(new PlayFragmentSearchList());
 		fragments.add(new LearnButtonsFragment());
@@ -202,7 +202,7 @@ public class MainActivity extends BaseActivity {
 			public boolean onLongClick(View v) {
 				PreferencesManager tutorialPrefs = new PreferencesManager(getApplicationContext());
 				tutorialPrefs.resetAll();
-				SongList.forceDownloadIndexFromServer();
+				SongList.getIndexFromServer();
 				Toast.makeText(mActivity,"All tutorials reset, cache refreshed",Toast.LENGTH_SHORT).show( );
 				return true;
 			}

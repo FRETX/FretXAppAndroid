@@ -5,19 +5,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.google.api.client.util.DateTime;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.ResponseHandlerInterface;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.HttpResponse;
 import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
@@ -25,64 +23,86 @@ import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
 
 public class SongList {
-    private final static String TAG = "KJKP6_API_SONGLIST";
+    private static final String TAG = "KJKP6_API_SONGLIST";
+    private static final String API_BASE = Config.apiBase;
 
-    private static String apiBase = Config.apiBase;
-    private static JSONArray index = new JSONArray();
+    private static JSONArray index;
+    private static AlertDialog dialog;
     private final static AsyncHttpClient async_client  = new AsyncHttpClient();
     private final static ArrayList<SongCallback> callbacks = new ArrayList<>();
 
+    private static boolean requesting;
+
     /* = = = = = = = = = = = = = = = = = = = = = PUBLIC = = = = = = = = = = = = = = = = = = = = = */
-    public static void initialize(final Context ctx) {
+    public static void initialize() {
+        dialog = createConnectionRetryDialog(BaseActivity.getActivity());
         if (getIndexFromCache()) {
             Log.d(TAG, "Data already in cache");
             notifyListener();
         } else {
             Log.d(TAG, "Need to retrieve data");
-            if (Network.isConnected()) {
-                Log.d(TAG, "Network ok");
-                getIndexFromServer();
-            } else{
-                Log.d(TAG, "Network ko");
-                AlertDialog dialog = createConnectionRetryDialog(BaseActivity.getActivity());
-                dialog.show();
-            }
+            getIndexFromServer();
         }
     }
 
-    public static void forceDownloadIndexFromServer() {
+    //// TODO: 06/05/17 remove code duplicate
+    public static void getIndexFromServer() {
         if (Network.isConnected()) {
             Log.d(TAG, "Network ok");
-            async_client.get(apiBase + "/songs/index.json", new JsonHttpResponseHandler() {
+            async_client.setTimeout(5);
+            async_client.get(API_BASE + "/songs/index.json", new JsonHttpResponseHandler() {
                 @Override
                 public void onStart() {
-                    Log.d(TAG, "on start");
+                    Log.d(TAG, "start retrieval of index from server");
+                    requesting = true;
+                    notifyListener();
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray data) {
-                    Log.d(TAG, "on success");
-                    index = data;
+                public void onFinish() {
+                    Log.d(TAG, "finish retrieval of index from server");
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray o) {
+                    Log.d(TAG, "success");
+                    index = o;
                     saveIndexToCache();
                     checkSongsInCache();
+                    requesting = false;
                     notifyListener();
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONArray data) {
-                    Log.d(TAG, "on failure");
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d(TAG, "failure");
+                    requesting = false;
                     notifyListener();
                 }
+
+                @Override
+                public void onRetry(int retryNo) {
+                    Log.d(TAG, "retry");
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.d(TAG, "cancel");
+                }
+
+                @Override
+                public void onUserException(Throwable error) {
+                    Log.d(TAG, error.toString());
+                }
             });
-        } else {
+        } else{
             Log.d(TAG, "Network ko");
-            AlertDialog dialog = createConnectionRetryDialog(BaseActivity.getActivity());
             dialog.show();
         }
     }
 
     public static int length() {
-        return index.length();
+        return index != null ? index.length() : 0;
     }
 
     public static SongItem getSongItem(int i) {
@@ -90,59 +110,13 @@ public class SongList {
             JSONObject song = index.getJSONObject(i);
             return new SongItem(song);
         } catch (Exception e) {
-            Log.d(TAG, String.format("Failed Getting Song Item\r\n%s", e.toString()));
+            Log.d(TAG, String.format("Failed Getting Song Item\n%s", e.toString()));
             return null;
         }
     }
 
     //// TODO: 06/05/17 clean this handler, useless overides
     /* = = = = = = = = = = = = = = = = = = = = = PRIVATE = = = = = = = = = = = = = = = = = = = = */
-    private static void getIndexFromServer() {
-        async_client.setTimeout(5);
-        async_client.get(apiBase + "/songs/index.json", new JsonHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                Log.d(TAG, "START");
-            }
-
-            @Override
-            public void onFinish() {
-                Log.d(TAG, "FINISH");
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray o) {
-                Log.d(TAG, "SUCCESS");
-                index = o;
-                saveIndexToCache();
-                Log.d(TAG, String.format("got index: %s", index ));
-                checkSongsInCache();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d(TAG, "FAILURE");
-                notifyListener();
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                Log.d(TAG, "RETRY");
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "CANCEL");
-            }
-
-            @Override
-            public void onUserException(Throwable error) {
-                Log.d(TAG, error.toString());
-            }
-        });
-    }
-
     private static boolean getIndexFromCache() {
         String data = AppCache.getFromCache("index.json");
         try {
@@ -160,45 +134,17 @@ public class SongList {
 
     private static void getSongFromServer(final String fretx_id) {
 
-        String path = apiBase + String.format( "/songs/%s.json", fretx_id );
+        String path = API_BASE + String.format( "/songs/%s.json", fretx_id );
 
-        //// TODO: 06/05/17 clean this handler, useless overides
+        //// TODO: 06/05/17 clean this handler, useless override
         async_client.get(path, new AsyncHttpResponseHandler() {
             @Override
-            public void onStart() {
-                Log.d(TAG, "START");
-            }
-
-            @Override
-            public void onFinish() {
-                Log.d(TAG, "FNINISH");
-            }
-
-            @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Log.d(TAG, "SUCCESS");
                 AppCache.saveToCache(fretx_id + ".json", responseBody);
-                notifyListener();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.d(TAG, error.toString());
-                notifyListener();
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                Log.d(TAG, "RETRY");
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "CANCEL");
-            }
-
-            @Override
-            public void onUserException(Throwable error) {
                 Log.d(TAG, error.toString());
             }
         });
@@ -219,11 +165,11 @@ public class SongList {
                 Log.d(TAG, entry.getString("uploaded_on"));
                 DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
                 boolean is_latest   = AppCache.last_modified(fretx_id + ".json") > uploaded_on.getValue();
-                Log.d(TAG,"Parsed JSON for " + fretx_id);
+                //Log.d(TAG,"Parsed JSON for " + fretx_id);
                 if(AppCache.exists(fretx_id + ".json") && is_latest ) {
                     continue;
                 }
-                Log.d(TAG, "Getting Song From Server: " + entry.getString("title"));
+                //Log.d(TAG, "Getting Song From Server: " + entry.getString("title"));
                 getSongFromServer(fretx_id);
             } catch (Exception e) {
                 Log.d(TAG, String.format("Failed Checking Song In Cache\r\n%s", e.toString()));
@@ -240,7 +186,7 @@ public class SongList {
         builder.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                initialize(ctx);
+                initialize();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -256,11 +202,12 @@ public class SongList {
     //// TODO: 05/05/17 add remove listener method
     public static void setListener(SongCallback cb) {
         callbacks.add(cb);
+        cb.onUpdate(requesting, index);
     }
 
     private static void notifyListener() {
         for (SongCallback callback: callbacks) {
-            callback.onUpdate();
+            callback.onUpdate(requesting, index);
         }
     }
 }
