@@ -95,6 +95,7 @@ public class SongList {
         }
     }
 
+    //// TODO: 06/05/17 clean this handler, useless overides
     /* = = = = = = = = = = = = = = = = = = = = = PRIVATE = = = = = = = = = = = = = = = = = = = = */
     private static void getIndexFromServer() {
         async_client.setTimeout(5);
@@ -161,6 +162,7 @@ public class SongList {
 
         String path = apiBase + String.format( "/songs/%s.json", fretx_id );
 
+        //// TODO: 06/05/17 clean this handler, useless overides
         async_client.get(path, new AsyncHttpResponseHandler() {
             @Override
             public void onStart() {
