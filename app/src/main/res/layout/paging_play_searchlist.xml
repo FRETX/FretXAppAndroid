@@ -55,10 +55,14 @@
             android:id="@+id/retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/progress"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="Retry"
-            android:visibility="visible" />
+            android:background="@color/primary"
+            android:padding="5dp"
+            android:text="Retry Song Download"
+            android:textAllCaps="false"
+            android:textColor="@color/tertiaryText"
+            android:visibility="invisible"/>
 
         <ProgressBar
             android:id="@+id/progress"

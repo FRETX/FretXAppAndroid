@@ -108,7 +108,7 @@ public class SongList {
 
             @Override
             public void onFinish() {
-                Log.d(TAG, "FNINISH");
+                Log.d(TAG, "FINISH");
             }
 
             @Override
