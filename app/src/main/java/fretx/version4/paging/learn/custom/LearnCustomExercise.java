@@ -55,6 +55,7 @@ public class LearnCustomExercise extends Fragment implements ExerciseListener, L
         exerciseFragment.setListener(this);
 
         exerciseFragment.setChords(chords);
+        exerciseFragment.setTargetChords(chords);
 
         fragmentTransaction.replace(R.id.exercise_fragment_container, exerciseFragment);
         fragmentTransaction.commit();
