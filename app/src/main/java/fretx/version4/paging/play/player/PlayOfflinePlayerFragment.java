@@ -1,4 +1,4 @@
-package fretx.version4.paging.play;
+package fretx.version4.paging.play.player;
 
 import android.net.Uri;
 import android.os.Bundle;

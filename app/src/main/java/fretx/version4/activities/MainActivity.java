@@ -31,7 +31,7 @@ import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnButtonsFragment;
-import fretx.version4.paging.play.PlayFragmentSearchList;
+import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.tuner.TunerFragment;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;

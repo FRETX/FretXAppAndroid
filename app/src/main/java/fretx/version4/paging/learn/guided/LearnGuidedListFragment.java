@@ -26,7 +26,7 @@ public class LearnGuidedListFragment extends Fragment {
 	MainActivity mActivity;
 	LinearLayout rootView;
 	GridView gridView;
-	ArrayList<GuidedChordExercise> exercises = new ArrayList<>();
+	ArrayList<GuidedExercise> exercises = new ArrayList<>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class LearnGuidedListFragment extends Fragment {
 			JSONArray guidedExercises = new JSONArray(contents.toString());
 			for (int i = 0; i < guidedExercises.length(); i++) {
 				JSONObject exerciseJson = guidedExercises.getJSONObject(i);
-				GuidedChordExercise exercise = new GuidedChordExercise(exerciseJson);
+				GuidedExercise exercise = new GuidedExercise(exerciseJson);
 				exercises.add(exercise);
 			}
 		} catch (JSONException e) {

@@ -11,16 +11,15 @@ import java.util.ArrayList;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.paging.learn.exercise.LearnExerciseFragment;
 import rocks.fretx.audioprocessing.Chord;
 
-class LearnGuidedListAdapter extends ArrayAdapter<GuidedChordExercise> {
+class LearnGuidedListAdapter extends ArrayAdapter<GuidedExercise> {
 
 	private MainActivity mActivity;
 	private int layoutResourceId;
-	private ArrayList<GuidedChordExercise> data = new ArrayList<>();
+	private ArrayList<GuidedExercise> data = new ArrayList<>();
 
-	LearnGuidedListAdapter(MainActivity context , int layoutResourceId, ArrayList<GuidedChordExercise> data){
+	LearnGuidedListAdapter(MainActivity context , int layoutResourceId, ArrayList<GuidedExercise> data){
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.mActivity = context;
@@ -47,7 +46,7 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedChordExercise> {
 			holder = (RecordHolder) row.getTag();
 		}
 
-		final GuidedChordExercise item = data.get(position);
+		final GuidedExercise item = data.get(position);
 
 		holder.name.setText(item.getName());
 		String chordsString = "";
@@ -59,7 +58,7 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedChordExercise> {
 		row.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LearnExerciseFragment guidedChordExerciseFragment = new LearnExerciseFragment();
+				LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
 				guidedChordExerciseFragment.setExercise(data, position);
 				mActivity.fragNavController.pushFragment(guidedChordExerciseFragment);
 			}

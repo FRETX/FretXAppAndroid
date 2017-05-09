@@ -10,20 +10,20 @@ import java.util.ArrayList;
 
 import rocks.fretx.audioprocessing.Chord;
 
-public class GuidedChordExercise {
+public class GuidedExercise {
 	private String name;
 	private String id;
 	private ArrayList<Chord> chords;
 	private int nRepetitions;
 
-	public GuidedChordExercise(){
+	public GuidedExercise(){
 		name = "";
 		id = "";
 		chords = new ArrayList<>();
 		nRepetitions = 0;
 	}
 
-	public GuidedChordExercise(JSONObject chordExercise){
+	public GuidedExercise(JSONObject chordExercise){
 		JSONObject chordJson;
 		JSONArray tmpChordsArray;
 		try {

@@ -10,7 +10,6 @@ import java.lang.ref.WeakReference;
 
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.BluetoothLE;
-import fretx.version4.utils.bluetooth.BluetoothStd;
 import fretx.version4.utils.audio.Midi;
 
 /**

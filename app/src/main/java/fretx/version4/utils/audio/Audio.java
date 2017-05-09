@@ -152,17 +152,17 @@ public class Audio {
                 }
                 //update progress
 
-                Chord playedChord = audio.getChord();
+                //Chord playedChord = audio.getChord();
 //                Log.d(TAG, "played:" + playedChord.toString());
 //                Log.d(TAG, "played:" + Double.toString(audio.getChordSimilarity()));
 //                Log.d(TAG, "possible:" + audio.getTargetChords().toString());
-                if (targetChord.toString().equals(playedChord.toString()) && audio.getChordSimilarity() > 0.5) {
+                //if (targetChord.toString().equals(playedChord.toString()) && audio.getChordSimilarity() > 0.5) {
                     correctlyPlayedAccumulator += TIMER_TICK;
                     //Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
-                } else {
-                    correctlyPlayedAccumulator = 0;
+                //} else {
+                //    correctlyPlayedAccumulator = 0;
                     //Log.d(TAG, "not correctly played acc");
-                }
+                //}
                 listener.onProgress();
 
                 //stop the count down timer

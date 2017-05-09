@@ -1,4 +1,4 @@
-package fretx.version4.paging.play;
+package fretx.version4.paging.play.list;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

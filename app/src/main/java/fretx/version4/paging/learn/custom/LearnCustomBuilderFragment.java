@@ -21,7 +21,6 @@ import java.util.HashMap;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.paging.learn.exercise.LearnExerciseFragment;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
@@ -32,7 +31,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
  */
 
 public class LearnCustomBuilderFragment extends Fragment
-implements LearnCustomBuilderDialog.LearnCustomChordExerciseListener {
+implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 	MainActivity mActivity;
 
 	//view
@@ -169,7 +168,7 @@ implements LearnCustomBuilderDialog.LearnCustomChordExerciseListener {
 	}
 
 	private void setOnClickListeners(){
-		final LearnCustomBuilderDialog.LearnCustomChordExerciseListener listener = this;
+		final LearnCustomBuilderDialog.LearnCustomBuilderDialogListener listener = this;
 
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -201,10 +200,9 @@ implements LearnCustomBuilderDialog.LearnCustomChordExerciseListener {
 
 	private void startExercise(){
 		ArrayList<Chord> chords = sequences.get(currentSequenceIndex).getChords();
-		if(chords.size()<1) return;
-		LearnExerciseFragment fragmentChordExercise = new LearnExerciseFragment();
-
-		fragmentChordExercise.setTargetChords(chords);
+		if(chords.size() < 1)
+			return;
+		LearnCustomExercise fragmentChordExercise = new LearnCustomExercise();
 		fragmentChordExercise.setChords(chords);
 
 		mActivity.fragNavController.pushFragment(fragmentChordExercise);

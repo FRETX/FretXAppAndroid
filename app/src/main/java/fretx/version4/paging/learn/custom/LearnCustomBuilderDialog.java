@@ -46,11 +46,11 @@ public class LearnCustomBuilderDialog extends DialogFragment
     private ArrayList<Sequence> sequences;
     private int currentSequenceIndex;
 
-    interface LearnCustomChordExerciseListener {
+    interface LearnCustomBuilderDialogListener {
         void onUpdate(ArrayList<Sequence> sequences, int currentSequenceIndex);
     }
 
-    public static LearnCustomBuilderDialog newInstance(LearnCustomChordExerciseListener listener,
+    public static LearnCustomBuilderDialog newInstance(LearnCustomBuilderDialogListener listener,
                                                        ArrayList<Sequence> sequences,
                                                        int currentSequencePosition) {
         LearnCustomBuilderDialog dialog = new LearnCustomBuilderDialog();
@@ -185,7 +185,7 @@ public class LearnCustomBuilderDialog extends DialogFragment
     @Override
     public void onCancel(DialogInterface dialogInterface){
         Fragment parentFragment = getTargetFragment();
-        ((LearnCustomChordExerciseListener) parentFragment).onUpdate(sequences, currentSequenceIndex);
+        ((LearnCustomBuilderDialogListener) parentFragment).onUpdate(sequences, currentSequenceIndex);
 //        Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
     }
 

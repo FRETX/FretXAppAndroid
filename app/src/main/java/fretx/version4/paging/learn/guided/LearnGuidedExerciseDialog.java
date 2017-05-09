@@ -1,4 +1,4 @@
-package fretx.version4.paging.learn.exercise;
+package fretx.version4.paging.learn.guided;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,7 +18,7 @@ import fretx.version4.R;
  * Created by pandor on 3/7/17.
  */
 
-public class LearnExerciseDialog extends DialogFragment
+public class LearnGuidedExerciseDialog extends DialogFragment
 {
     private static final String ELAPSED_TIME_MIN = "elapsed_time_min";
     private static final String ELAPSED_TIME_SEC = "elapsed_time_sec";
@@ -26,12 +26,12 @@ public class LearnExerciseDialog extends DialogFragment
     private Dialog dialog;
     private boolean replay = true;
 
-    interface LearnGuidedChordExerciseListener {
+    public interface LearnGuidedChordExerciseListener {
         void onUpdate(boolean replay);
     }
 
-    public static LearnExerciseDialog newInstance(LearnGuidedChordExerciseListener listener, int min, int sec, boolean last) {
-        LearnExerciseDialog dialog = new LearnExerciseDialog();
+    public static LearnGuidedExerciseDialog newInstance(LearnGuidedChordExerciseListener listener, int min, int sec, boolean last) {
+        LearnGuidedExerciseDialog dialog = new LearnGuidedExerciseDialog();
         dialog.setTargetFragment((Fragment) listener, 4321);
         Bundle args = new Bundle();
         args.putInt(ELAPSED_TIME_MIN, min);

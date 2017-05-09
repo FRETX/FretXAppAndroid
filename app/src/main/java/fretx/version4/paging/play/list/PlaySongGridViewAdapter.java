@@ -1,4 +1,4 @@
-package fretx.version4.paging.play;
+package fretx.version4.paging.play.list;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -22,6 +22,9 @@ import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
+import fretx.version4.paging.play.preview.PlayPreview;
+import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
+import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import rocks.fretx.audioprocessing.Chord;
 
 /**
@@ -113,45 +116,9 @@ class PlaySongGridViewAdapter extends ArrayAdapter<SongItem> {
 						return;
 					}
 
-					//Find Unique chords
-//					ArrayList<SongPunch> punches = item.punches();
-//					SongPunch tmpSp;
-//					String tmpKey;
-//					HashMap<String, SongPunch> uniqueChords = new HashMap<String, SongPunch>();
-//					for (int i = 0; i < punches.size(); i++) {
-//						tmpSp = punches.get(i);
-//						tmpKey = tmpSp.root + tmpSp.type;
-//						if (tmpKey.equals("No Chord")) {
-//							continue;
-//						}
-//						if (uniqueChords.containsKey(tmpKey)) {
-//							continue;
-//						}
-//						uniqueChords.put(tmpKey, tmpSp);
-//					}
-//
-//					Set<String> keys = uniqueChords.keySet();
-//					Iterator it = keys.iterator();
-//					ArrayList<Chord> chords = new ArrayList<Chord>();
-//					String root, type;
-//					while (it.hasNext()) {
-//						tmpSp = uniqueChords.get(it.next());
-//						root = tmpSp.root;
-//						type = tmpSp.type.toLowerCase();
-//						if (root.equals("") || type.equals("")) continue;
-//						Log.d("ViewAdapter", "root " + root);
-//						Log.d("ViewAdapter", "type " + type);
-//						if (type.equals("min")) {
-//							type = "m";
-//							Log.d("ViewAdapter", "new type " + type);
-//						}
-//						if (root == null || type == null) return;
-//						chords.add(new Chord(root, type));
-//					}
-
-					PlayChordPreviewFragment fragmentChordExercise = new PlayChordPreviewFragment();
+					PlayPreview fragmentChordExercise = new PlayPreview();
 					fragmentChordExercise.setChords(chords);
-					fragmentChordExercise.setSongData(item);
+					fragmentChordExercise.setSong(item);
 					mActivity.fragNavController.pushFragment(fragmentChordExercise);
 
 				} else {
