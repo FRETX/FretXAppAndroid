@@ -35,8 +35,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignEnd="@id/l1"
-            android:layout_below="@+id/l1"
             android:background="@color/deepBackground">
 
             <GridView
