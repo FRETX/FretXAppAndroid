@@ -3,27 +3,39 @@ package fretx.version4.paging.play.list;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 
+import fretx.version4.Config;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.fretxapi.song.SongCallback;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongList;
+import fretx.version4.fretxapi.song.SongPunch;
+import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
+import fretx.version4.paging.play.player.PlayYoutubeFragment;
+import fretx.version4.paging.play.preview.PlayPreview;
 import fretx.version4.utils.bluetooth.BluetoothLE;
+import rocks.fretx.audioprocessing.Chord;
 
 public class PlayFragmentSearchList extends Fragment implements SongCallback {
     private static final String TAG = "KJKP6_PLAYFRAGMENT_LIST";
+    private MainActivity mActivity;
     private final ArrayList<SongItem> rawData = new ArrayList<>();
     private final ArrayList<SongItem> filteredData = new ArrayList<>();
     //// TODO: 05/05/17 handle update on query
@@ -36,6 +48,8 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mActivity = (MainActivity) getActivity();
+
         View rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
         searchBox = (SearchView) rootView.findViewById(R.id.svSongs);
         listView = (GridView) rootView.findViewById(R.id.lvSongList);
@@ -56,6 +70,22 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
                 R.layout.paging_play_searchlist_item, filteredData);
         listView.setAdapter(adapter);
         refreshData();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final SongItem item = filteredData.get(position);
+
+                searchBox.setQuery("", true);
+                searchBox.clearFocus();
+
+                if(mActivity.previewEnabled){
+                    startSongPreview(item);
+                } else {
+                    startSong(item);
+                }
+            }
+        });
 
         searchBox.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -124,7 +154,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
         adapter.notifyDataSetChanged();
     }
 
-    //// TODO: 05/05/17 handle onUpdate with a search on going
     public void filterList(String query) {
         filteredData.clear();
         if (query == null) {
@@ -139,5 +168,52 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
             }
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private void startSongPreview(SongItem item) {
+        //firebase
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "SONG");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
+        mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+        //Launch exercise with sequence of chords
+        ArrayList<Chord> chords = item.getChords();
+
+        if (chords.size() < 1) {
+            Toast.makeText(mActivity, "No chord data found for this song", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        PlayPreview fragmentChordExercise = new PlayPreview();
+        fragmentChordExercise.setChords(chords);
+        fragmentChordExercise.setSong(item);
+        mActivity.fragNavController.pushFragment(fragmentChordExercise);
+    }
+
+    private void startSong(SongItem item) {
+        //firebase
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "SONG");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
+        mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+        boolean loadOfflinePlayer = false;
+        if (Config.useOfflinePlayer) {
+            String fileName = "fretx" + item.youtube_id.toLowerCase().replace("-", "_");
+            int resourceIdentifier = getContext().getResources().getIdentifier(fileName, "raw", getContext().getPackageName());
+            if(resourceIdentifier != 0){
+                loadOfflinePlayer = true;
+            }
+        }
+        if (loadOfflinePlayer) {
+            PlayOfflinePlayerFragment offlinePlayerFragment = new PlayOfflinePlayerFragment();
+            offlinePlayerFragment.setSong(item);
+            mActivity.fragNavController.pushFragment(offlinePlayerFragment);
+        } else {
+            PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
+            youtubeFragment.setSong(item);
+            mActivity.fragNavController.pushFragment(youtubeFragment);
+        }
     }
 }

@@ -45,10 +45,6 @@ public class SongList {
         }
     }
 
-    public JSONArray getIndex() {
-        return index;
-    }
-
     //// TODO: 06/05/17 remove code duplicate
     public static void getIndexFromServer() {
         if (Network.isConnected()) {

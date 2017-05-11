@@ -10,8 +10,10 @@ import java.util.ArrayList;
 
 import fretx.version4.Util;
 import fretx.version4.fretxapi.AppCache;
+import rocks.fretx.audioprocessing.Chord;
 
 public class SongItem {
+    private final String TAG = "KJKP6_SONGITEM";
     public String fretx_id;
     public String youtube_id;
     public String title;
@@ -73,4 +75,29 @@ public class SongItem {
         return punches;
     }
 
+    public ArrayList<Chord> getChords() {
+        ArrayList<SongPunch> punches = punches();
+        ArrayList<Chord> chords = new ArrayList<>();
+
+        for (int i = 0; i < punches.size(); i++) {
+            final SongPunch tmpSp = punches.get(i);
+            final String root = tmpSp.root;
+            String type = tmpSp.type.toLowerCase();
+
+            if((root + type).equals("No Chord"))
+                continue;
+            if (root.equals("") || type.equals(""))
+                continue;
+            if (type.equals("min")) {
+                type = "m";
+                Log.d(TAG, "new type " + type);
+            }
+            try {
+                chords.add(new Chord(root, type));
+            } catch(Exception e){
+                Log.d(TAG, e.toString());
+            }
+        }
+        return chords;
+    }
 }
