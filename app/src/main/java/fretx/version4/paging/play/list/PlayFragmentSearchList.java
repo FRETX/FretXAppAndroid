@@ -44,6 +44,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
 
         retry.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
+
         return rootView;
     }
 
@@ -54,6 +55,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
         adapter = new PlaySongGridViewAdapter((MainActivity) getActivity(),
                 R.layout.paging_play_searchlist_item, filteredData);
         listView.setAdapter(adapter);
+        refreshData();
 
         searchBox.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -107,9 +109,10 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
         BluetoothLE.getInstance().clearMatrix();
     }
 
-    private boolean refreshData() {
+    private void refreshData() {
         rawData.clear();
-        for(int i = 0; i< SongList.length(); ++i) {
+        final int length = SongList.length();
+        for(int i = 0; i < length; ++i) {
             final SongItem item = SongList.getSongItem(i);
             if (item != null && item.published) {
                 rawData.add(item);
@@ -119,7 +122,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
         filteredData.clear();
         filteredData.addAll(rawData);
         adapter.notifyDataSetChanged();
-        return true;
     }
 
     //// TODO: 05/05/17 handle onUpdate with a search on going
