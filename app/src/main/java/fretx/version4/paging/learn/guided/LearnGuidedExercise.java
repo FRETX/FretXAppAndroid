@@ -43,15 +43,13 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         View rootView = inflater.inflate(R.layout.paging_learn_guided_exercise_layout, container, false);
 
         fragmentManager = getActivity().getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         exerciseFragment = new ExerciseFragment();
         exerciseFragment.setListener(this);
-
         final GuidedExercise exercise = exerciseList.get(listIndex);
         exerciseFragment.setTargetChords(exercise.getChords());
         exerciseFragment.setChords(exercise.getChords(), exercise.getRepetition());
-
         fragmentTransaction.replace(R.id.exercise_fragment_container, exerciseFragment);
         fragmentTransaction.commit();
 

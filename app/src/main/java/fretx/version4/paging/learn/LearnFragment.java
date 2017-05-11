@@ -19,7 +19,6 @@ public class LearnFragment extends Fragment {
     private View rootView = null;
 
     public LearnFragment(){
-
     }
 
     @Override
@@ -33,7 +32,6 @@ public class LearnFragment extends Fragment {
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.learn_container, new LearnButtonsFragment());
         fragmentTransaction.commit();
-
 
         return rootView;
     }

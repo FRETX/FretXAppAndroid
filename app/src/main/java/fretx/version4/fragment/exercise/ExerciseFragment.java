@@ -78,8 +78,6 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
-
         //setup view
         RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.exercise_fragment, container, false);
         fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
@@ -99,8 +97,6 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
 
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
-        Log.d(TAG, "onViewCreated");
-
         timeUpdater = new TimeUpdater(timeText);
         Audio.getInstance().setAudioDetectorListener(this);
 
@@ -139,7 +135,11 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         chordIndex = 0;
     }
 
-    private void resumeAll() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        sound = new SoundPoolPlayer(getActivity());
+
         if (exerciseChords.size() > 0 && chordIndex < exerciseChords.size()) {
             Audio.getInstance().setTargetChords(targetChords);
             setChord();
@@ -152,27 +152,22 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        sound = new SoundPoolPlayer(getActivity());
-
-        Log.d(TAG, "onResume");
-        resumeAll();
-    }
-
-    private void pauseAll() {
+    public void onPause() {
+        Log.d(TAG, "onPause");
         timeUpdater.pauseTimer();
         Audio.getInstance().stopListening();
+
+        //in case success actions were playing
         handler.removeCallbacksAndMessages(null);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        Log.d(TAG, "onPause");
-        pauseAll();
+        greenTick.setVisibility(View.INVISIBLE);
         sound.release();
+
+        //if the last chord has been played, display dialog
+        if (chordIndex == exerciseChords.size()) {
+            listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
+        }
+
+        super.onPause();
     }
 
     private final Runnable hideSuccess = new Runnable() {
@@ -315,7 +310,11 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
 
     public void reset() {
         chordIndex = 0;
+
+        //reset timer
         timeUpdater.resetTimer();
-        resumeAll();
+        timeUpdater.resumeTimer();
+
+        setChord();
     }
 }

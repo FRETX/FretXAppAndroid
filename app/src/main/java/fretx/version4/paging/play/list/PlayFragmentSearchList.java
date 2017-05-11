@@ -22,7 +22,7 @@ import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 
-public class PlayFragmentSearchList extends Fragment {
+public class PlayFragmentSearchList extends Fragment implements SongCallback {
     private static final String TAG = "KJKP6_PLAYFRAGMENT_LIST";
     private final ArrayList<SongItem> rawData = new ArrayList<>();
     private final ArrayList<SongItem> filteredData = new ArrayList<>();
@@ -74,23 +74,6 @@ public class PlayFragmentSearchList extends Fragment {
             }
         });
 
-        SongList.setListener(new SongCallback() {
-            @Override
-            public void onUpdate(boolean requesting, JSONArray index) {
-                if (requesting) {
-                    retry.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
-                } else if (index == null){
-                    progressBar.setVisibility(View.INVISIBLE);
-                    retry.setVisibility(View.VISIBLE);
-                } else {
-                    retry.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    refreshData();
-                }
-            }
-        });
-
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +82,23 @@ public class PlayFragmentSearchList extends Fragment {
                 SongList.getIndexFromServer();
             }
         });
+
+        SongList.setListener(this);
+    }
+
+    @Override
+    public void onUpdate(boolean requesting, JSONArray index) {
+        if (requesting) {
+            retry.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        } else if (index == null){
+            progressBar.setVisibility(View.INVISIBLE);
+            retry.setVisibility(View.VISIBLE);
+        } else {
+            retry.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            refreshData();
+        }
     }
 
     @Override

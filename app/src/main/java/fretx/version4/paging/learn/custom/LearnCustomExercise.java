@@ -49,14 +49,12 @@ public class LearnCustomExercise extends Fragment implements ExerciseListener, L
         View rootView = inflater.inflate(R.layout.paging_learn_custom_exercise_layout, container, false);
 
         fragmentManager = getActivity().getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         exerciseFragment = new ExerciseFragment();
         exerciseFragment.setListener(this);
-
         exerciseFragment.setChords(chords);
         exerciseFragment.setTargetChords(chords);
-
         fragmentTransaction.replace(R.id.exercise_fragment_container, exerciseFragment);
         fragmentTransaction.commit();
 

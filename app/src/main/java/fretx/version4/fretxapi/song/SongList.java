@@ -115,7 +115,6 @@ public class SongList {
         }
     }
 
-    //// TODO: 06/05/17 clean this handler, useless overides
     /* = = = = = = = = = = = = = = = = = = = = = PRIVATE = = = = = = = = = = = = = = = = = = = = */
     private static boolean getIndexFromCache() {
         String data = AppCache.getFromCache("index.json");
@@ -136,7 +135,6 @@ public class SongList {
 
         String path = API_BASE + String.format( "/songs/%s.json", fretx_id );
 
-        //// TODO: 06/05/17 clean this handler, useless override
         async_client.get(path, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

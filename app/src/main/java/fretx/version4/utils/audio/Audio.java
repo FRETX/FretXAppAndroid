@@ -96,14 +96,15 @@ public class Audio {
     }
 
     public void startListening() {
+        Log.d(TAG, "start listening");
         correctlyPlayedAccumulator = 0;
         timeoutCounter = 0;
         chordTimer.cancel();
         chordTimer.start();
-        Log.d(TAG, "starting the countdownTimer");
     }
 
     public void stopListening() {
+        Log.d(TAG, "stop listening");
         chordTimer.cancel();
     }
 
@@ -153,16 +154,24 @@ public class Audio {
                 //update progress
 
                 Chord playedChord = audio.getChord();
-//                Log.d(TAG, "played:" + playedChord.toString());
+                if (playedChord == null) {
+                    Log.d(TAG, "played chord is null");
+                    return;
+                }
+
+// Log.d(TAG, "played:" + playedChord.toString());
 //                Log.d(TAG, "played:" + Double.toString(audio.getChordSimilarity()));
 //                Log.d(TAG, "possible:" + audio.getTargetChords().toString());
-                if (targetChord.toString().equals(playedChord.toString()) && audio.getChordSimilarity() > 0.5) {
+
+                if (targetChord.toString().equals(playedChord.toString())) {
+                    // && audio.getChordSimilarity() > 0.5
                     correctlyPlayedAccumulator += TIMER_TICK;
                     Log.d(TAG, "correctly played acc -> " + correctlyPlayedAccumulator);
                 } else {
                     correctlyPlayedAccumulator = 0;
                     //Log.d(TAG, "not correctly played acc");
                 }
+
                 listener.onProgress();
 
                 //stop the count down timer

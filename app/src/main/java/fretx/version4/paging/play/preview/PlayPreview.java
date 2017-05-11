@@ -41,14 +41,12 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         View rootView = inflater.inflate(R.layout.paging_play_preview, container, false);
 
         fragmentManager = getActivity().getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         exerciseFragment = new ExerciseFragment();
         exerciseFragment.setListener(this);
-
         exerciseFragment.setTargetChords(exerciseChords);
         exerciseFragment.setChords(exerciseChords);
-
         fragmentTransaction.replace(R.id.exercise_fragment_container, exerciseFragment);
         fragmentTransaction.commit();
 
