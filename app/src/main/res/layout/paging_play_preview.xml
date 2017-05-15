@@ -1,7 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/exercise_fragment_container"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+
+            android:background="@color/primary"
+            android:text="Play"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/background"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/nextChord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="@dimen/pad_5dp"
+            android:layout_weight="1"
+
+            android:background="@color/primary"
+            android:text="Next Chord"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/background"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/exercise_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+
+        android:layout_above="@id/linear"
+        android:layout_alignParentStart="true"/>
+
+</RelativeLayout>

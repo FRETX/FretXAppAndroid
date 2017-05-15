@@ -61,6 +61,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     private final ArrayList<Chord> majorChords = new ArrayList<>();
 
     private AlertDialog dialog;
+    private boolean finished;
     private TimeUpdater timeUpdater;
 
     @Override
@@ -144,10 +145,6 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
             Audio.getInstance().setTargetChords(targetChords);
             setChord();
             timeUpdater.resumeTimer();
-        } else if (chordIndex == exerciseChords.size()) {
-            timeUpdater.pauseTimer();
-            setPosition();
-            listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
         }
     }
 
@@ -163,7 +160,8 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         sound.release();
 
         //if the last chord has been played, display dialog
-        if (chordIndex == exerciseChords.size()) {
+        if (chordIndex == exerciseChords.size() && !finished) {
+            finished = true;
             listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
         }
 
@@ -179,6 +177,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
             if (chordIndex == exerciseChords.size()) {
                 timeUpdater.pauseTimer();
                 setPosition();
+                finished = true;
                 listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
             }
             //middle of the exercise
@@ -315,6 +314,22 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         timeUpdater.resetTimer();
         timeUpdater.resumeTimer();
 
+        finished = false;
+
         setChord();
+    }
+
+    public void nextChord() {
+        if (exerciseChords.size() > 0 && chordIndex < exerciseChords.size()) {
+            ++chordIndex;
+            setChord();
+        }
+        if (chordIndex == exerciseChords.size()) {
+            timeUpdater.pauseTimer();
+            Audio.getInstance().stopListening();
+            setPosition();
+            finished = true;
+            listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
+        }
     }
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import fretx.version4.R;
@@ -26,6 +27,7 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
     private static final String TAG = "KJKP6_GUIDED_EXERCISE";
 
     private ExerciseFragment exerciseFragment;
+
     private FragmentManager fragmentManager;
     private SongItem song;
     private MainActivity mActivity;
@@ -49,6 +51,24 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         exerciseFragment.setChords(exerciseChords);
         fragmentTransaction.replace(R.id.exercise_fragment_container, exerciseFragment);
         fragmentTransaction.commit();
+
+        final Button play = (Button) rootView.findViewById(R.id.play);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
+                youtubeFragment.setSong(song);
+                mActivity.fragNavController.replaceFragment(youtubeFragment);
+            }
+        });
+
+        final Button nextChord = (Button) rootView.findViewById(R.id.nextChord);
+        nextChord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exerciseFragment.nextChord();
+            }
+        });
 
         return rootView;
     }
