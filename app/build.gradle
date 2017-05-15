@@ -51,6 +51,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':permiso')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 }
 
 

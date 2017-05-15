@@ -1,5 +1,6 @@
 package fretx.version4.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import java.lang.ref.WeakReference;
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.audio.Midi;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * FretXapp for FretX
@@ -61,6 +63,12 @@ public class BaseActivity extends AppCompatActivity {
         Audio.getInstance().stop();
         BluetoothLE.getInstance().clearMatrix();
         BluetoothLE.getInstance().stop();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        Log.d(TAG, "========================= ATTACH BASE CONTEXT =========================");
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     public static AppCompatActivity getActivity() {

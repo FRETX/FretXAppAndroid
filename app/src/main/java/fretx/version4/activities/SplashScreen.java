@@ -1,6 +1,7 @@
 package fretx.version4.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 import fretx.version4.utils.audio.Midi;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SplashScreen extends BaseActivity {
     private static final String TAG = "KJKP6_PERMISO";
@@ -27,6 +30,12 @@ public class SplashScreen extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/GothamRoundedBook.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
 
         setContentView(R.layout.activity_splash_screen);
         Permiso.getInstance().setActivity(this);
