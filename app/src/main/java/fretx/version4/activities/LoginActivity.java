@@ -139,7 +139,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
-                Log.d(TAG, "Authentication result: failure.");
+                Log.d(TAG, "Authentication result: failed");
+                Log.d(TAG, "Authentication result: " + result.getStatus().getStatusMessage());
+                Log.d(TAG, "Authentication result: " + result.getStatus().getStatusCode());
                 Toast.makeText(BaseActivity.getActivity(), "Authentication result: failure.", Toast.LENGTH_SHORT).show();
                 // Google Sign In failed, update UI appropriately
                 // ...
