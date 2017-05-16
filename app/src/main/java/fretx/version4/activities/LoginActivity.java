@@ -90,7 +90,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
 // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("918041591082-k4es6un1a0kigoo1d2v11bmnt62n04kc.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         // Build a GoogleApiClient with access to the Google Sign-In API and the
