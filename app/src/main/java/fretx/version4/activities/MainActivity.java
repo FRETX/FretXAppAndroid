@@ -39,7 +39,6 @@ import fretx.version4.utils.bluetooth.BluetoothListener;
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "KJKP6_MAINACTIVITY";
 
-	public FirebaseAnalytics mFirebaseAnalytics;
 	//VIEWS
 	private ImageView bluetoothButton;
 	private BottomBar bottomBar;
@@ -109,8 +108,6 @@ public class MainActivity extends BaseActivity {
 
 		String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 		Log.d(TAG, "Refreshed token: " + refreshedToken);
-
-		mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         //// TODO: 24/04/17 move this to splashscreen
         Context ctx = getApplicationContext();

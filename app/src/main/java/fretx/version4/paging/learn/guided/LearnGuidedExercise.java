@@ -17,29 +17,28 @@ import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fragment.exercise.ExerciseFragment;
 import fretx.version4.fragment.exercise.ExerciseListener;
+import fretx.version4.utils.bluetooth.BluetoothLE;
 
 public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         LearnGuidedExerciseDialog.LearnGuidedChordExerciseListener {
     private static final String TAG = "KJKP6_GUIDED_EXERCISE";
     private FragmentManager fragmentManager;
-
-    private MainActivity mActivity;
     private ExerciseFragment exerciseFragment;
 
     //exercises
     private List<GuidedExercise> exerciseList;
     private int listIndex;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        fretx.version4.utils.firebase.FirebaseAnalytics.getInstance().logSelectEvent("EXERCISE", "Guided Chord");
+        BluetoothLE.getInstance().clearMatrix();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //firebase log
-        mActivity = (MainActivity) getActivity();
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Guided Chord");
-        mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
         View rootView = inflater.inflate(R.layout.paging_learn_guided_exercise_layout, container, false);
 
         fragmentManager = getActivity().getSupportFragmentManager();
@@ -73,7 +72,7 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         } else {
             LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
             guidedChordExerciseFragment.setExercise(exerciseList, listIndex + 1);
-            mActivity.fragNavController.replaceFragment(guidedChordExerciseFragment);
+            ((MainActivity)getActivity()).fragNavController.replaceFragment(guidedChordExerciseFragment);
         }
     }
 

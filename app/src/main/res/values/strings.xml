@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">FretX</string>
+
     <string name="title_activity_test">FretX</string>
     <string name="str_text_according_tempo">Text According to Tempo</string>
     <string name="str_reproduction_time">Reproduction Time\n(in milliseconds)</string>
     <string name="str_loop_mode">Loop Mode</string>
     <string name="str_start_loop">Start Loop</string>
     <string name="str_end_loop">End Loop</string>
-    <!--<string name="facebook_app_id">1032065650194225</string>-->
     <string name="facebook_app_id">465114530355883</string>
 
     <string name="searchhidenText">Search songs</string>

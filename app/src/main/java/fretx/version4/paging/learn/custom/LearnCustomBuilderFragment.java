@@ -13,18 +13,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import fretx.version4.FretboardView;
 import fretx.version4.R;
+import fretx.version4.activities.BaseActivity;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.firebase.FirebaseAnalytics;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
-import rocks.fretx.audioprocessing.MusicUtils;
 
 /**
  * Created by onurb_000 on 15/12/16.
@@ -32,7 +30,6 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 public class LearnCustomBuilderFragment extends Fragment
 implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
-	MainActivity mActivity;
 
 	//view
 	FrameLayout rootView;
@@ -54,27 +51,15 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//retrieve saved sequences
-		sequences = LearnCustomBuilderJson.load(getContext());
+		FirebaseAnalytics.getInstance().logSelectEvent("EXERCISE", "Custom Chord");
 
-		//add a new empty sequence
+		sequences = LearnCustomBuilderJson.load(getContext());
 		sequences.add(0, new Sequence(null, new ArrayList<Chord>()));
 		currentSequenceIndex = 0;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mActivity = (MainActivity) getActivity();
-
-		//retrieve chords database
-		chordDb = MusicUtils.parseChordDb();
-
-		//firebase log
-		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Custom Chord");
-		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
-		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
 		//setup view
 		rootView = (FrameLayout) inflater.inflate(R.layout.paging_learn_custom_builder, container, false);
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
@@ -86,19 +71,10 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 		return  rootView;
 	}
 
-    @Override
-	public void onActivityCreated(Bundle savedInstanceState){
-		super.onActivityCreated(savedInstanceState);
-
-		//clear fretx matrix
-		BluetoothLE.getInstance().clearMatrix();
-    }
-
 	@Override
 	public void onViewCreated(View v, Bundle b){
 		populateChordPicker();
 		setOnClickListeners();
-		showTutorial();
 	}
 
 	private void updateCurrentChord(String root , String type){
@@ -109,10 +85,10 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 
 	private TextView populateChordPickerLine(String[] contents, @IdRes int idRes,
 										 View.OnClickListener onClickListener) {
-		LinearLayout linearLayout = (LinearLayout) mActivity.findViewById(idRes);
+		LinearLayout linearLayout = (LinearLayout) BaseActivity.getActivity().findViewById(idRes);
 		TextView tmpTextView;
 		for (String str : contents) {
-			tmpTextView = new TextView(mActivity);
+			tmpTextView = new TextView(BaseActivity.getActivity());
 			tmpTextView.setText(str);
 			tmpTextView.setTextSize(26);
 			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -126,7 +102,7 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 		}
 		TextView initial = (TextView) linearLayout.getChildAt(0);
 		initial.setBackgroundResource(R.drawable.picker_text_background);
-		initial.setTextColor(mActivity.getResources().getColor(R.color.tertiaryText));
+		initial.setTextColor(BaseActivity.getActivity().getResources().getColor(R.color.tertiaryText));
 		return initial;
 	}
 
@@ -138,7 +114,7 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.chordPickerRootNoteView);
+						LinearLayout layout = (LinearLayout) BaseActivity.getActivity().findViewById(R.id.chordPickerRootNoteView);
 						for (int i = 0; i < layout.getChildCount(); i++) {
 							View v = layout.getChildAt(i);
 							v.setBackgroundResource(0);
@@ -153,7 +129,7 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.chordPickerTypeView);
+						LinearLayout layout = (LinearLayout) BaseActivity.getActivity().findViewById(R.id.chordPickerTypeView);
 						for (int i = 0; i < layout.getChildCount(); i++) {
 							View v = layout.getChildAt(i);
 							v.setBackgroundResource(0);
@@ -205,24 +181,7 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 		LearnCustomExercise fragmentChordExercise = new LearnCustomExercise();
 		fragmentChordExercise.setChords(chords);
 
-		mActivity.fragNavController.pushFragment(fragmentChordExercise);
-	}
-
-	private void showTutorial(){
-        /*
-        new MaterialIntroView.Builder(mActivity)
-        .enableDotAnimation(false)
-        .enableIcon(false)
-        .setFocusGravity(FocusGravity.CENTER)
-        .setFocusType(Focus.ALL)
-        .setDelayMillis(300)
-        .enableFadeAnimation(true)
-        .performClick(true)
-        .setInfoText("This is the Chord Library. You can review or learn any chord you choose here. \nJust pick any combination of chord and watch it show up on your guitar!")
-        .setTarget((LinearLayout) mActivity.findViewById(R.id.chordPickerContainer))
-        .setUsageId("tutorialChordLibrary") //THIS SHOULD BE UNIQUE ID
-        .show();
-         */
+		((MainActivity)getActivity()).fragNavController.pushFragment(fragmentChordExercise);
 	}
 
     public void onUpdate(ArrayList<Sequence> sequences, int currentSequenceIndex){

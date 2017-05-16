@@ -2,6 +2,7 @@ package fretx.version4.paging.learn.scale;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
@@ -18,6 +18,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.firebase.FirebaseAnalytics;
 import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.Scale;
 
@@ -32,26 +33,23 @@ public class LearnScaleExerciseFragment extends Fragment {
 	FretboardView fretboardView;
 	Scale currentScale;
 
-	public LearnScaleExerciseFragment(){
+	public LearnScaleExerciseFragment(){}
 
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mActivity = (MainActivity)getActivity();
+		FirebaseAnalytics.getInstance().logSelectEvent("EXERCISE", "Scale");
+		BluetoothLE.getInstance().clearMatrix();
 	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mActivity = (MainActivity)getActivity();
-		rootView = (LinearLayout) inflater.inflate(R.layout.paging_learn_scale, container, false);
-
-		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Scale");
-		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
-		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+		View rootView = inflater.inflate(R.layout.paging_learn_scale, container, false);
 
 		fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
-
 		scaleRootPicker = (LinearLayout) rootView.findViewById(R.id.scaleRootPickerView);
 		scaleTypePicker = (LinearLayout) rootView.findViewById(R.id.scaleTypePickerView);
-
-//		currentScale = new Scale(Scale.ALL_ROOT_NOTES[0],Scale.ALL_SCALE_TYPES[0]);
-//		currentScale = new Scale("A","Major");
 
 		TextView tmpTextView;
 		for (String str : Scale.ALL_ROOT_NOTES) {
@@ -72,13 +70,11 @@ public class LearnScaleExerciseFragment extends Fragment {
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-//							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
-							((TextView) v).setBackgroundResource(0);
+							v.setBackgroundResource(0);
 							v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
 						}
 					}
-//					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
-					((TextView) view).setBackgroundResource(R.drawable.picker_text_background);
+					view.setBackgroundResource(R.drawable.picker_text_background);
 					updateScale(((TextView) view).getText().toString(), currentScale.getType());
 					scaleRootPicker.getChildAt(0).setSelected(true);
 				}
@@ -103,17 +99,13 @@ public class LearnScaleExerciseFragment extends Fragment {
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
-//							((TextView) v).setTextColor(mActivity.getResources().getColor(R.color.secondaryText));
-							((TextView) v).setBackgroundResource(0);
+							v.setBackgroundResource(0);
 							v.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
 						}
 					}
-//					((TextView) view).setTextColor(mActivity.getResources().getColor(R.color.primaryText));
-					((TextView) view).setBackgroundResource(R.drawable.picker_text_background);
+					view.setBackgroundResource(R.drawable.picker_text_background);
 					updateScale(currentScale.getRoot() , ((TextView) view).getText().toString());
 					scaleTypePicker.getChildAt(0).setSelected(true);
-
-
 				}
 			});
 		}

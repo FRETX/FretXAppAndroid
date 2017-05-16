@@ -3,6 +3,7 @@ package fretx.version4.paging.play.player;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -33,6 +34,7 @@ import fretx.version4.Util;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
 import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.firebase.FirebaseAnalytics;
 import rocks.fretx.audioprocessing.Chord;
 
 public class PlayYoutubeFragment extends Fragment {
@@ -83,6 +85,12 @@ public class PlayYoutubeFragment extends Fragment {
     static private Handler mCurTimeShowHandler = new Handler();
 
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FirebaseAnalytics.getInstance().logSelectEvent("SONG", song.song_title);
+        BluetoothLE.getInstance().clearMatrix();
+    }
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        VIDEO_ID = getArguments().getString("URL");

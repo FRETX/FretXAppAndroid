@@ -3,7 +3,6 @@ package fretx.version4.paging.play.list;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONArray;
 
@@ -26,11 +23,11 @@ import fretx.version4.R;
 import fretx.version4.fretxapi.song.SongCallback;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongList;
-import fretx.version4.fretxapi.song.SongPunch;
 import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
 import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import fretx.version4.paging.play.preview.PlayPreview;
 import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.firebase.FirebaseAnalytics;
 import rocks.fretx.audioprocessing.Chord;
 
 public class PlayFragmentSearchList extends Fragment implements SongCallback {
@@ -38,7 +35,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
     private MainActivity mActivity;
     private final ArrayList<SongItem> rawData = new ArrayList<>();
     private final ArrayList<SongItem> filteredData = new ArrayList<>();
-    //// TODO: 05/05/17 handle update on query
     private PlaySongGridViewAdapter adapter;
 
     private SearchView searchBox;
@@ -47,9 +43,15 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
     private ProgressBar progressBar;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
+        FirebaseAnalytics.getInstance().logSelectEvent("TAB", "Play");
+        BluetoothLE.getInstance().clearMatrix();
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
         searchBox = (SearchView) rootView.findViewById(R.id.svSongs);
         listView = (GridView) rootView.findViewById(R.id.lvSongList);
@@ -171,12 +173,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
     }
 
     private void startSongPreview(SongItem item) {
-        //firebase
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "SONG");
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
-        mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
         //Launch exercise with sequence of chords
         ArrayList<Chord> chords = item.getChords();
 
@@ -192,12 +188,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
     }
 
     private void startSong(SongItem item) {
-        //firebase
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "SONG");
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item.song_title);
-        mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
         boolean loadOfflinePlayer = false;
         if (Config.useOfflinePlayer) {
             String fileName = "fretx" + item.youtube_id.toLowerCase().replace("-", "_");

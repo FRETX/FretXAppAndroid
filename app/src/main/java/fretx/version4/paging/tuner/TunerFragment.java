@@ -8,64 +8,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
-import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.utils.audio.Audio;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.firebase.FirebaseAnalytics;
 
 
 public class TunerFragment extends Fragment {
-	private MainActivity mActivity;
-	RelativeLayout rootView = null;
-	TunerView tunerView = null;
-	private boolean backgroundMicWarningShown;
+    private final static String TAG = "KJKP6_TUNER";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mActivity = (MainActivity) getActivity();
-		Bundle bundle = new Bundle();
-		bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Tuner");
-		bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TAB");
-		mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
-		if (!Audio.getInstance().isEnabled())
-			return;
-	}
-
-	private void showTutorial(){
-//		new MaterialIntroView.Builder(mActivity)
-//				.enableDotAnimation(false)
-//				.enableIcon(false)
-//				.setFocusGravity(FocusGravity.CENTER)
-//				.setFocusType(Focus.NORMAL)
-//				.setDelayMillis(300)
-//				.enableFadeAnimation(true)
-//				.performClick(true)
-//				.setInfoText("Play strings one by one. Adjust until needle is green for each string. It's that simple to tune your guitar!")
-//				.setTarget((TunerView) mActivity.findViewById(R.id.tunerView))
-//				.setUsageId("tutorialTuner") //THIS SHOULD BE UNIQUE ID
-//				.show();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+		FirebaseAnalytics.getInstance().logSelectEvent("TAB", "Tuner");
+        BluetoothLE.getInstance().clearMatrix();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d("Tuner Fragment", "created");
-		rootView = (RelativeLayout) inflater.inflate(R.layout.paging_tuner, container, false);
-		tunerView = (TunerView) rootView.findViewById(R.id.tunerView);
-		tunerView.setmActivity(mActivity);
-		tunerView.setRootView(rootView);
-		return rootView;
-	}
+		Log.d(TAG, "created");
 
-	@Override
-	public void onViewCreated(View v, Bundle savedInstanceState){
-		showTutorial();
+        View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
+		TunerView tunerView = (TunerView) rootView.findViewById(R.id.tunerView);
+		tunerView.setmActivity((MainActivity) getActivity());
+		tunerView.setRootView((RelativeLayout) rootView);
+
+        return rootView;
 	}
 }

@@ -21,6 +21,7 @@ import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 import fretx.version4.utils.audio.Midi;
+import fretx.version4.utils.firebase.FirebaseAnalytics;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -47,7 +48,7 @@ public class SplashScreen extends BaseActivity {
                 if (BluetoothLE.getInstance().isEnabled()) {
                     BluetoothLE.getInstance().scan();
                 } else {
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
             }
@@ -61,7 +62,7 @@ public class SplashScreen extends BaseActivity {
                 Log.d(TAG, "Success!");
                 BluetoothLE.getInstance().setListener(null);
                 BluetoothLE.getInstance().clearMatrix();
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
             }
 
@@ -69,7 +70,7 @@ public class SplashScreen extends BaseActivity {
             public void onDisconnect() {
                 Log.d(TAG, "Failure!");
                 BluetoothLE.getInstance().setListener(null);
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
             }
 
@@ -77,14 +78,14 @@ public class SplashScreen extends BaseActivity {
             public void onScanFailure() {
                 Log.d(TAG, "Failure!");
                 BluetoothLE.getInstance().setListener(null);
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
             }
 
             public void onFailure() {
                 Log.d(TAG, "Failure!");
                 BluetoothLE.getInstance().setListener(null);
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -124,6 +125,12 @@ public class SplashScreen extends BaseActivity {
         if (!Midi.getInstance().isEnabled()) {
             Midi.getInstance().init();
             Midi.getInstance().start();
+        }
+
+        //initialize firebase
+        if (!FirebaseAnalytics.getInstance().isEnabled()) {
+            FirebaseAnalytics.getInstance().init();
+            FirebaseAnalytics.getInstance().start();
         }
     }
 

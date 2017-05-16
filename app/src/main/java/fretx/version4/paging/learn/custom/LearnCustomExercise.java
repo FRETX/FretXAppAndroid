@@ -10,14 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import java.util.ArrayList;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fragment.exercise.ExerciseFragment;
 import fretx.version4.fragment.exercise.ExerciseListener;
+import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.firebase.FirebaseAnalytics;
 import rocks.fretx.audioprocessing.Chord;
 
 /**
@@ -28,27 +28,23 @@ import rocks.fretx.audioprocessing.Chord;
 public class LearnCustomExercise extends Fragment implements ExerciseListener, LearnCustomExerciseDialog.LearnCustomExerciseDialogListener {
     private static final String TAG = "KJKP6_CUSTOM_EXERCISE";
 
-    private MainActivity mActivity;
     private FragmentManager fragmentManager;
     private ExerciseFragment exerciseFragment;
 
     private ArrayList<Chord> chords;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FirebaseAnalytics.getInstance().logSelectEvent("EXERCISE", "Custom Chord");
+        BluetoothLE.getInstance().clearMatrix();
+        fragmentManager = getActivity().getSupportFragmentManager();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mActivity = (MainActivity) getActivity();
-
-        //firebase log
-        mActivity = (MainActivity) getActivity();
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EXERCISE");
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Custom Chord");
-        mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
         View rootView = inflater.inflate(R.layout.paging_learn_custom_exercise_layout, container, false);
-
-        fragmentManager = getActivity().getSupportFragmentManager();
 
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         exerciseFragment = new ExerciseFragment();
@@ -74,7 +70,7 @@ public class LearnCustomExercise extends Fragment implements ExerciseListener, L
         if (replay) {
             exerciseFragment.reset();
         } else {
-            mActivity.fragNavController.popFragment();
+            ((MainActivity)getActivity()).fragNavController.popFragment();
         }
     }
 

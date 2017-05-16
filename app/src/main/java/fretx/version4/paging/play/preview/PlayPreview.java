@@ -17,6 +17,8 @@ import fretx.version4.fragment.exercise.ExerciseFragment;
 import fretx.version4.fragment.exercise.ExerciseListener;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.paging.play.player.PlayYoutubeFragment;
+import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.firebase.FirebaseAnalytics;
 import rocks.fretx.audioprocessing.Chord;
 
 /**
@@ -34,6 +36,13 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
 
     //exercises
     private ArrayList<Chord> exerciseChords;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FirebaseAnalytics.getInstance().logSelectEvent("PREVIEW", song.song_title);
+        BluetoothLE.getInstance().clearMatrix();
+    }
 
     @Nullable
     @Override
