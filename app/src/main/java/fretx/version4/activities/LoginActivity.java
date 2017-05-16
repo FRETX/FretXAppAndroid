@@ -32,7 +32,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import fretx.version4.R;
 
 public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener{
-    private static final String TAG = "FACEBOOK_LOGIN";
+    private static final String TAG = "KJKP6_LOGIN";
 
     //facebook
     private LoginButton loginButton;
@@ -57,9 +57,9 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Log.d(TAG, "signed in: " + user.getUid());
+                    Log.d(TAG, "firebase signed in: " + user.getUid());
                 } else {
-                    Log.d(TAG, "signed out");
+                    Log.d(TAG, "firebase signed out");
                 }
             }
         };
@@ -71,18 +71,18 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "Login Success");
+                Log.d(TAG, "Facebook login Success");
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "Login cancelled");
+                Log.d(TAG, "Facebook login cancelled");
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "Login failed");
+                Log.d(TAG, "Facebook login failed");
             }
         });
 
@@ -133,11 +133,13 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
+                Log.d(TAG, "Authentication result: success.");
                 Toast.makeText(BaseActivity.getActivity(), "Authentication result: success.", Toast.LENGTH_SHORT).show();
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
+                Log.d(TAG, "Authentication result: failure.");
                 Toast.makeText(BaseActivity.getActivity(), "Authentication result: failure.", Toast.LENGTH_SHORT).show();
                 // Google Sign In failed, update UI appropriately
                 // ...
@@ -157,12 +159,12 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.d(TAG, "signInWithCredential: success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(BaseActivity.getActivity(), "Authentication succeeded: " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Log.w(TAG, "signInWithCredential: failure", task.getException());
                             Toast.makeText(BaseActivity.getActivity(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -193,6 +195,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "Connection failed");
         Toast.makeText(this, "Connection failed", Toast.LENGTH_SHORT).show();
     }
 }
