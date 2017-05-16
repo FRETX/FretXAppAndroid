@@ -98,17 +98,17 @@ public class SplashScreen extends BaseActivity {
                         if (resultSet.isPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
                             Log.d(TAG,"Record Audio permissions granted");
                             // Audio permission granted!
-                            initAudio();
+                            //initAudio();
                         }
                         if (resultSet.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)) {
                             Log.d(TAG,"Phone permissions granted");
                             // Phone permission granted!
-                            initAudio();
+                            //initAudio();
                         }
                         if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                             // Location permission granted!
                             Log.d(TAG,"Location permissions granted");
-                            initBluetooth();
+                            //initBluetooth();
                         }
                     }
                     @Override
