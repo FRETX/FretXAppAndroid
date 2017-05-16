@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "918041591082-1eks4vdif3nmhih26v3m8kkuf9rv19hd.apps.googleusercontent.com",
+          "client_id": "918041591082-62n2jq3enq9an34t5m4v6m0o6qmlbj0j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "fretx.app",
@@ -23,15 +23,7 @@
           }
         },
         {
-          "client_id": "918041591082-ksuq03ocrlr6r85p7t6reve40rn0cc5c.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "fretx.app",
-            "certificate_hash": "dcf80b6d2baec4c9795df41725103e09f2998f8f"
-          }
-        },
-        {
-          "client_id": "918041591082-k4es6un1a0kigoo1d2v11bmnt62n04kc.apps.googleusercontent.com",
+          "client_id": "918041591082-n49hrtoli9a1p44bkqbbql6n7kg3fkgf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -51,7 +43,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "918041591082-k4es6un1a0kigoo1d2v11bmnt62n04kc.apps.googleusercontent.com",
+              "client_id": "918041591082-n49hrtoli9a1p44bkqbbql6n7kg3fkgf.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
