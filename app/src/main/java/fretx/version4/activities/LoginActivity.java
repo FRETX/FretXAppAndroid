@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -20,6 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -41,6 +45,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
     //google
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 666;
+    private Button logout;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -72,24 +77,27 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "Facebook login Success");
+                Toast.makeText(BaseActivity.getActivity(), "login success", Toast.LENGTH_SHORT).show();
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
             public void onCancel() {
                 Log.d(TAG, "Facebook login cancelled");
+                Toast.makeText(BaseActivity.getActivity(), "login cancelled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "Facebook login failed");
+                Toast.makeText(BaseActivity.getActivity(), "login failed", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        final GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
@@ -107,6 +115,30 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
             public void onClick(View v) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        });
+        logout = (Button) findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mGoogleApiClient.isConnected()) {
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                            new ResultCallback<Status>() {
+                                @Override
+                                public void onResult(Status status) {
+                                    Log.d(TAG, "Disconnect google");
+                                    Toast.makeText(BaseActivity.getActivity(), "Disconnect google", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+
+                AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                if (accessToken != null) {
+                    LoginManager.getInstance().logOut();
+                    Log.d(TAG, "Disconnect facebook");
+                    Toast.makeText(BaseActivity.getActivity(), "Disconnect facebook", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

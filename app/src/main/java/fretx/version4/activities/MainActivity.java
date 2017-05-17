@@ -13,8 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
@@ -103,7 +101,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.paging_back);
+		setContentView(R.layout.activity_main);
 
 
 		String refreshedToken = FirebaseInstanceId.getInstance().getToken();
