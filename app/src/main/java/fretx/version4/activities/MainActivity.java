@@ -28,7 +28,7 @@ import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.chords.ChordFragment;
-import fretx.version4.paging.learn.LearnButtonsFragment;
+import fretx.version4.paging.learn.LearnFragment;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.tuner.TunerFragment;
 import fretx.version4.utils.bluetooth.BluetoothLE;
@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity {
 		SongList.initialize();
 
 		fragments.add(new PlayFragmentSearchList());
-		fragments.add(new LearnButtonsFragment());
+		fragments.add(new LearnFragment());
 		fragments.add(new ChordFragment());
 		fragments.add(new TunerFragment());
 		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);

@@ -32,13 +32,13 @@
         android:text="Login" />
 
     <Button
-        android:id="@+id/forgot_button"
+        android:id="@+id/recover_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Forgot password" />
 
     <Button
-        android:id="@+id/member_button"
+        android:id="@+id/register_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="not a member yet" />
