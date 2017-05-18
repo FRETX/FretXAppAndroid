@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.greysonparrelli.permiso.IOnComplete;
 import com.greysonparrelli.permiso.IOnPermissionResult;
 import com.greysonparrelli.permiso.IOnRationaleProvided;
@@ -46,8 +47,7 @@ public class SplashScreen extends BaseActivity {
                 if (BluetoothLE.getInstance().isEnabled()) {
                     BluetoothLE.getInstance().scan();
                 } else {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
+                    onComplete();
                 }
             }
         });
@@ -58,33 +58,24 @@ public class SplashScreen extends BaseActivity {
             @Override
             public void onConnect() {
                 Log.d(TAG, "Success!");
-                BluetoothLE.getInstance().setListener(null);
-                BluetoothLE.getInstance().clearMatrix();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
+                onComplete();
             }
 
             @Override
             public void onDisconnect() {
                 Log.d(TAG, "Failure!");
-                BluetoothLE.getInstance().setListener(null);
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
+                onComplete();
             }
 
             @Override
             public void onScanFailure() {
                 Log.d(TAG, "Failure!");
-                BluetoothLE.getInstance().setListener(null);
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
+                onComplete();
             }
 
             public void onFailure() {
                 Log.d(TAG, "Failure!");
-                BluetoothLE.getInstance().setListener(null);
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
+                onComplete();
             }
         });
 
@@ -96,17 +87,17 @@ public class SplashScreen extends BaseActivity {
                         if (resultSet.isPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
                             Log.d(TAG,"Record Audio permissions granted");
                             // Audio permission granted!
-                            //initAudio();
+                            initAudio();
                         }
                         if (resultSet.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)) {
                             Log.d(TAG,"Phone permissions granted");
                             // Phone permission granted!
-                            //initAudio();
+                            initAudio();
                         }
                         if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                             // Location permission granted!
                             Log.d(TAG,"Location permissions granted");
-                            //initBluetooth();
+                            initBluetooth();
                         }
                     }
                     @Override
@@ -129,6 +120,19 @@ public class SplashScreen extends BaseActivity {
         if (!Analytics.getInstance().isEnabled()) {
             Analytics.getInstance().init();
             Analytics.getInstance().start();
+        }
+    }
+
+    private void onComplete() {
+        BluetoothLE.getInstance().setListener(null);
+        BluetoothLE.getInstance().clearMatrix();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
         }
     }
 

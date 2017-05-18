@@ -51,20 +51,22 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
 
         mAuth = FirebaseAuth.getInstance();
 
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        // Configure Google Sign In
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
+        if (gso == null) {
+            // Configure sign-in to request the user's ID, email address, and basic
+            // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+            // Configure Google Sign In
+            gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
 
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity(), this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+            // Build a GoogleApiClient with access to the Google Sign-In API and the
+            // options specified by gso.
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .enableAutoManage(getActivity(), this)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+        }
     }
 
     @Override
@@ -85,28 +87,25 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
 
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getActivity(), "Invalid input", Toast.LENGTH_SHORT).show();
+                } else if (!((LoginActivity)getActivity()).isInternetAvailable()) {
+                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
                 } else {
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Log.d(TAG, "signInWithEmail:success");
+                                        Log.d(TAG, "email login success");
+                                        ((LoginActivity)getActivity()).onLoginSuccess();
                                     } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                        Toast.makeText(getActivity(), "Login failed", Toast.LENGTH_SHORT).show();
+                                        Log.w(TAG, "email login failure", task.getException());
                                     }
                                 }
                             });
                 }
-
-                if (((LoginActivity)getActivity()).isInternetAvailable()) {
-                    Toast.makeText(getActivity(), "Logged in!", Toast.LENGTH_SHORT).show();
-                } else {
-                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
-                }
             }
-        });
+    });
 
         final Button recoverButton = (Button) rootView.findViewById(R.id.recover_button);
         recoverButton.setOnClickListener(new View.OnClickListener() {
@@ -164,13 +163,11 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                Log.d(TAG, "Authentication result: success.");
-                Toast.makeText(BaseActivity.getActivity(), "Authentication result: success.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "google login succeed.");
+                ((LoginActivity)getActivity()).noInternetAccessDialod().show();
             } else {
-                Log.d(TAG, "Authentication result: failed");
-                Log.d(TAG, "Authentication result: " + result.getStatus().getStatusMessage());
-                Log.d(TAG, "Authentication result: " + result.getStatus().getStatusCode());
-                Toast.makeText(BaseActivity.getActivity(), "Authentication result: failure.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "google login failed (code: " + result.getStatus().getStatusCode() + ")");
+                Toast.makeText(BaseActivity.getActivity(), "login failed", Toast.LENGTH_SHORT).show();
             }
         }
     }

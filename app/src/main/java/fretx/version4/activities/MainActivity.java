@@ -2,6 +2,7 @@ package fretx.version4.activities;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
@@ -9,10 +10,12 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
@@ -123,6 +126,16 @@ public class MainActivity extends BaseActivity {
         connectButton = (ImageButton) findViewById(R.id.connectButton);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         previewButton = (ImageView) findViewById(R.id.previewButton);
+
+		final Button disconnectButton = (Button) findViewById(R.id.disconnect_button);
+		disconnectButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FirebaseAuth.getInstance().signOut();
+				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				startActivity(intent);
+			}
+		});
 
 		setGuiEventListeners();
 

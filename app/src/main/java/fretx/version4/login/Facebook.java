@@ -63,20 +63,19 @@ public class Facebook extends Fragment {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "Facebook login Success");
-                Toast.makeText(getActivity(), "login success", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "login Success");
+                ((LoginActivity)getActivity()).onLoginSuccess();
             }
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "Facebook login cancelled");
+                Log.d(TAG, "login cancelled");
                 Toast.makeText(getActivity(), "login cancelled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "Facebook login failed");
-                Log.d(TAG, error.toString());
+                Log.d(TAG, "login failed: " + error.toString());
                 Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
             }
         });

@@ -79,10 +79,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
-        app:bb_tabXmlResource="@xml/bottombar_tabs"
-        app:bb_inActiveTabColor="@color/primaryText"
         app:bb_activeTabColor="@color/tertiaryText"
-        app:bb_titleTextAppearance="@style/bottomBarText"
-        />
+        app:bb_inActiveTabColor="@color/primaryText"
+        app:bb_tabXmlResource="@xml/bottombar_tabs"
+        app:bb_titleTextAppearance="@style/bottomBarText" />
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/disconnect_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="disconnect" />
+
+</LinearLayout>

@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
@@ -42,6 +43,7 @@ public class Register extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.login_register, container, false);
 
+        final EditText nameEditText = (EditText) rootView.findViewById(R.id.name_edittext);
         final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_edittext);
         final EditText passwordEditText = (EditText) rootView.findViewById(R.id.password_edittext);
 
@@ -51,10 +53,11 @@ public class Register extends Fragment {
             public void onClick(View v) {
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
 
-                    String email = emailEditText.getText().toString();
-                    String password = passwordEditText.getText().toString();
+                    final String name = nameEditText.getText().toString();
+                    final String email = emailEditText.getText().toString();
+                    final String password = passwordEditText.getText().toString();
 
-                    if (email.isEmpty() || password.isEmpty()) {
+                    if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
                         Toast.makeText(getActivity(), "Invalid input", Toast.LENGTH_SHORT).show();
                     } else {
                         mAuth.createUserWithEmailAndPassword(email, password)
@@ -62,8 +65,28 @@ public class Register extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
+                                            ((LoginActivity)getActivity()).noInternetAccessDialod().show();
                                             // Sign in success, update UI with the signed-in user's information
                                             Log.d(TAG, "createUserWithEmail:success");
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            if (user != null) {
+                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                        .setDisplayName(name)
+                                                        .build();
+                                                user.updateProfile(profileUpdates)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d(TAG, "User profile updated");
+                                                                } else {
+                                                                    Log.d(TAG, "User profile update failed");
+                                                                }
+                                                            }
+                                                        });
+                                            } else {
+                                                Log.d(TAG, "user creation failed");
+                                            }
                                         } else {
                                             // If sign in fails, display a message to the user.
                                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

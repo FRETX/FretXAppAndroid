@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import fretx.version4.R;
@@ -22,15 +23,21 @@ public class Recover extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.login_recover, container, false);
 
+        final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_edittext);
+
         final Button recoverButton = (Button) rootView.findViewById(R.id.recover_button);
         recoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((LoginActivity)getActivity()).isInternetAvailable()) {
+
+                final String email = emailEditText.getText().toString();
+                if (email.isEmpty()) {
+                    Toast.makeText(getActivity(), "Invalid input", Toast.LENGTH_SHORT).show();
+                } else if (!((LoginActivity)getActivity()).isInternetAvailable()) {
+                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
+                } else {
                     Toast.makeText(getActivity(), "Recover password!", Toast.LENGTH_SHORT).show();
                     getActivity().getSupportFragmentManager().popBackStack();
-                } else {
-                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
                 }
             }
         });
