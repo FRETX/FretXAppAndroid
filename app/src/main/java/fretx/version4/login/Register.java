@@ -21,6 +21,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
+import fretx.version4.activities.MainActivity;
 
 /**
  * FretXAppAndroid for FretX
@@ -51,53 +52,49 @@ public class Register extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((LoginActivity)getActivity()).isInternetAvailable()) {
+                final String name = nameEditText.getText().toString();
+                final String email = emailEditText.getText().toString();
+                final String password = passwordEditText.getText().toString();
 
-                    final String name = nameEditText.getText().toString();
-                    final String email = emailEditText.getText().toString();
-                    final String password = passwordEditText.getText().toString();
-
-                    if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
-                        Toast.makeText(getActivity(), "Invalid input", Toast.LENGTH_SHORT).show();
-                    } else {
-                        mAuth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            ((LoginActivity)getActivity()).noInternetAccessDialod().show();
-                                            // Sign in success, update UI with the signed-in user's information
-                                            Log.d(TAG, "createUserWithEmail:success");
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            if (user != null) {
-                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                                        .setDisplayName(name)
-                                                        .build();
-                                                user.updateProfile(profileUpdates)
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    Log.d(TAG, "User profile updated");
-                                                                } else {
-                                                                    Log.d(TAG, "User profile update failed");
-                                                                }
-                                                            }
-                                                        });
-                                            } else {
-                                                Log.d(TAG, "user creation failed");
-                                            }
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                            Toast.makeText(getActivity(), "Authentication failed.",
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                    }
-                } else {
+                if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
+                    Toast.makeText(getActivity(), "Invalid input", Toast.LENGTH_SHORT).show();
+                } else if (!((LoginActivity)getActivity()).isInternetAvailable()) {
                     ((LoginActivity)getActivity()).noInternetAccessDialod().show();
+                } else {
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "createUserWithEmail:success");
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        if (user != null) {
+                                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                    .setDisplayName(name)
+                                                    .build();
+                                            user.updateProfile(profileUpdates)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Log.d(TAG, "User profile updated");
+                                                            } else {
+                                                                Log.d(TAG, "User profile update failed");
+                                                            }
+                                                        }
+                                                    });
+                                            ((LoginActivity)getActivity()).onLoginSuccess();
+                                        } else {
+                                            Log.d(TAG, "user creation failed");
+                                        }
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                        Toast.makeText(getActivity(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 }
             }
         });
