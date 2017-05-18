@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import fretx.version4.R;
+import fretx.version4.activities.LoginActivity;
 
 /**
  * FretXAppAndroid for FretX
@@ -25,8 +26,12 @@ public class Recover extends Fragment{
         recoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Recover password!", Toast.LENGTH_SHORT).show();
-                getActivity().getSupportFragmentManager().popBackStack();
+                if (((LoginActivity)getActivity()).isInternetAvailable()) {
+                    Toast.makeText(getActivity(), "Recover password!", Toast.LENGTH_SHORT).show();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
+                }
             }
         });
         return rootView;

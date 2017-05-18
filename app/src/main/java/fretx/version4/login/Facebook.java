@@ -20,6 +20,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import fretx.version4.R;
+import fretx.version4.activities.LoginActivity;
 
 /**
  * FretXAppAndroid for FretX
@@ -79,6 +80,19 @@ public class Facebook extends Fragment {
                 Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
             }
         });
+
+        final Button facebookOverlay = (Button) rootView.findViewById(R.id.facebook_button_overlay);
+        facebookOverlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((LoginActivity)getActivity()).isInternetAvailable()) {
+                    loginButton.performClick();
+                } else {
+                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
+                }
+            }
+        });
+
         return rootView;
     }
 

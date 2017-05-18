@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
+import fretx.version4.activities.LoginActivity;
 
 /**
  * FretXAppAndroid for FretX
@@ -65,7 +66,11 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Logged in!", Toast.LENGTH_SHORT).show();
+                if (((LoginActivity)getActivity()).isInternetAvailable()) {
+                    Toast.makeText(getActivity(), "Logged in!", Toast.LENGTH_SHORT).show();
+                } else {
+                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
+                }
             }
         });
 
@@ -96,12 +101,24 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         });
 
         // Set the dimensions of the sign-in button.
-        SignInButton signInButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
+        final SignInButton signInButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        });
+
+        final Button googleOverlay = (Button) rootView.findViewById(R.id.google_overlay);
+        googleOverlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((LoginActivity)getActivity()).isInternetAvailable()) {
+                    signInButton.performClick();
+                } else {
+                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
+                }
             }
         });
         return rootView;
