@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.bluetooth.BluetoothLE;
-import fretx.version4.utils.firebase.FirebaseAnalytics;
+import fretx.version4.utils.firebase.Analytics;
 
 
 public class TunerFragment extends Fragment {
@@ -20,7 +20,7 @@ public class TunerFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		FirebaseAnalytics.getInstance().logSelectEvent("TAB", "Tuner");
+		Analytics.getInstance().logSelectEvent("TAB", "Tuner");
         BluetoothLE.getInstance().clearMatrix();
 	}
 

@@ -35,53 +35,54 @@ dependencies {
     compile project(':permiso')
 
     //Support
+    
+
+    //FFT
+    
+    //Http
+    
+    //Picasso image loader
+    
+    //
+    
+    //Fragment manager
+    
+    //
+    
+    //
+    
+    //Firebase
+    
+    //Midi player
+    
+    //Custom font
+    
+    //Facebook
+    
+    //google services
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:percent:25.3.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    //FFT
     compile 'com.github.wendykierp:JTransforms:3.1'
-
-    //Http
     compile 'com.loopj.android:android-async-http:1.4.9'
-
-    //Picasso image loader
     compile 'com.squareup.picasso:picasso:2.5.2'
-
-    //
     compile 'com.github.iammert:MaterialIntroView:1.5.2'
-
-    //Fragment manager
     compile 'com.ncapdevi:frag-nav:1.4.0'
-
-    //
     compile 'com.roughike:bottom-bar:2.1.1'
-
-    //
     compile 'com.afollestad:easyvideoplayer:0.3.0'
-
-    //Firebase
     compile 'com.google.firebase:firebase-messaging:10.2.0'
     compile 'com.google.firebase:firebase-appindexing:10.2.0'
     compile 'com.google.firebase:firebase-core:10.2.0'
     compile 'com.google.firebase:firebase-auth:10.2.0'
-
-    //Midi player
     compile 'com.github.billthefarmer:mididriver:v1.11'
-
-    //Custom font
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
-
-    //Facebook
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-
-    //google services
     compile 'com.google.android.gms:play-services-auth:10.2.0'
-
     testCompile 'junit:junit:4.12'
 }
+
 
 
 

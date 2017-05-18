@@ -34,7 +34,7 @@ import fretx.version4.Util;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
 import fretx.version4.utils.bluetooth.BluetoothLE;
-import fretx.version4.utils.firebase.FirebaseAnalytics;
+import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 
 public class PlayYoutubeFragment extends Fragment {
@@ -88,7 +88,7 @@ public class PlayYoutubeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseAnalytics.getInstance().logSelectEvent("SONG", song.song_title);
+        Analytics.getInstance().logSelectEvent("SONG", song.song_title);
         BluetoothLE.getInstance().clearMatrix();
     }
 

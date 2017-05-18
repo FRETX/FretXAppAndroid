@@ -17,7 +17,7 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.fragment.exercise.ExerciseFragment;
 import fretx.version4.fragment.exercise.ExerciseListener;
 import fretx.version4.utils.bluetooth.BluetoothLE;
-import fretx.version4.utils.firebase.FirebaseAnalytics;
+import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 
 /**
@@ -36,7 +36,7 @@ public class LearnCustomExercise extends Fragment implements ExerciseListener, L
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseAnalytics.getInstance().logSelectEvent("EXERCISE", "Custom Chord");
+        Analytics.getInstance().logSelectEvent("EXERCISE", "Custom Chord");
         BluetoothLE.getInstance().clearMatrix();
         fragmentManager = getActivity().getSupportFragmentManager();
     }

@@ -10,21 +10,21 @@ import fretx.version4.activities.BaseActivity;
  * Created by pandor on 15/05/17 15:25.
  */
 
-public class FirebaseAnalytics {
+public class Analytics {
 
-    private final static String TAG = "KJKP6_FIREBASE";
+    private final static String TAG = "KJKP6_ANALYTICS";
     private com.google.firebase.analytics.FirebaseAnalytics analytics;
     private boolean enabled;
 
     /* = = = = = = = = = = = = = = = = = SINGLETON PATTERN = = = = = = = = = = = = = = = = = = = */
     private static class Holder {
-        private static final FirebaseAnalytics instance = new FirebaseAnalytics();
+        private static final Analytics instance = new Analytics();
     }
 
-    private FirebaseAnalytics() {
+    private Analytics() {
     }
 
-    public static FirebaseAnalytics getInstance() {
+    public static Analytics getInstance() {
         return Holder.instance;
     }
 

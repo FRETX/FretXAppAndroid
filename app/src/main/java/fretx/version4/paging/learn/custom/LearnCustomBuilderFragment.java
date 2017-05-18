@@ -20,7 +20,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.utils.firebase.FirebaseAnalytics;
+import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 
@@ -51,7 +51,7 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		FirebaseAnalytics.getInstance().logSelectEvent("EXERCISE", "Custom Chord");
+		Analytics.getInstance().logSelectEvent("EXERCISE", "Custom Chord");
 
 		sequences = LearnCustomBuilderJson.load(getContext());
 		sequences.add(0, new Sequence(null, new ArrayList<Chord>()));

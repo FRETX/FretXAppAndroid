@@ -1,7 +1,6 @@
 package fretx.version4.activities;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -21,9 +20,8 @@ import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 import fretx.version4.utils.audio.Midi;
-import fretx.version4.utils.firebase.FirebaseAnalytics;
+import fretx.version4.utils.firebase.Analytics;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SplashScreen extends BaseActivity {
     private static final String TAG = "KJKP6_PERMISO";
@@ -128,9 +126,9 @@ public class SplashScreen extends BaseActivity {
         }
 
         //initialize firebase
-        if (!FirebaseAnalytics.getInstance().isEnabled()) {
-            FirebaseAnalytics.getInstance().init();
-            FirebaseAnalytics.getInstance().start();
+        if (!Analytics.getInstance().isEnabled()) {
+            Analytics.getInstance().init();
+            Analytics.getInstance().start();
         }
     }
 

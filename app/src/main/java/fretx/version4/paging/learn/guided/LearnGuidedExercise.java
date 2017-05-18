@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
 
@@ -18,6 +15,7 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.fragment.exercise.ExerciseFragment;
 import fretx.version4.fragment.exercise.ExerciseListener;
 import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.firebase.Analytics;
 
 public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         LearnGuidedExerciseDialog.LearnGuidedChordExerciseListener {
@@ -32,7 +30,7 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fretx.version4.utils.firebase.FirebaseAnalytics.getInstance().logSelectEvent("EXERCISE", "Guided Chord");
+        Analytics.getInstance().logSelectEvent("EXERCISE", "Guided Chord");
         BluetoothLE.getInstance().clearMatrix();
     }
 
