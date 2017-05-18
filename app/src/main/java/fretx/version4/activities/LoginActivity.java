@@ -36,6 +36,13 @@ public class LoginActivity extends BaseActivity {
         fragmentTransaction.commit();
 
         skip = (Button) findViewById(R.id.skip_login);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
         if (!isInternetAvailable()) {
             skip.setVisibility(View.VISIBLE);
         }
@@ -62,8 +69,6 @@ public class LoginActivity extends BaseActivity {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
             }
         });
         skip.setVisibility(View.VISIBLE);
