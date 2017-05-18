@@ -73,7 +73,6 @@ public class Register extends Fragment {
                                     }
                                 });
                     }
-                    getActivity().getSupportFragmentManager().popBackStack();
                 } else {
                     ((LoginActivity)getActivity()).noInternetAccessDialod().show();
                 }

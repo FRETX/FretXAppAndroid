@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -20,6 +21,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
@@ -33,6 +39,8 @@ import fretx.version4.activities.LoginActivity;
 public class Other extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "KJKP6_OTHER";
 
+    private FirebaseAuth mAuth;
+
     private GoogleSignInOptions gso;
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 666;
@@ -40,6 +48,8 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -62,10 +72,34 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.login_other, container, false);
 
+        final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_edittext);
+        final EditText passwordEditText = (EditText) rootView.findViewById(R.id.password_edittext);
+
         final Button loginButton = (Button) rootView.findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String email = emailEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(getActivity(), "Invalid input", Toast.LENGTH_SHORT).show();
+                } else {
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "signInWithEmail:success");
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                    }
+                                }
+                            });
+                }
+
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
                     Toast.makeText(getActivity(), "Logged in!", Toast.LENGTH_SHORT).show();
                 } else {

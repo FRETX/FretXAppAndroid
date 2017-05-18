@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.widget.Button;
 
 import java.net.InetAddress;
 
@@ -29,6 +31,11 @@ public class LoginActivity extends BaseActivity {
         fragment = new Facebook();
         fragmentTransaction.add(R.id.login_fragment_container, fragment);
         fragmentTransaction.commit();
+
+        final Button skip = (Button) findViewById(R.id.skip_login);
+        if (!isInternetAvailable()) {
+            skip.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
