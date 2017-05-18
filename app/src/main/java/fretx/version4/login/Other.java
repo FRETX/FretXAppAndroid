@@ -105,17 +105,9 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-            }
-        });
-
-        final Button googleOverlay = (Button) rootView.findViewById(R.id.google_overlay);
-        googleOverlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
-                    signInButton.performClick();
+                    Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                    startActivityForResult(signInIntent, RC_SIGN_IN);
                 } else {
                     ((LoginActivity)getActivity()).noInternetAccessDialod().show();
                 }
