@@ -22,6 +22,7 @@ import fretx.version4.login.Facebook;
 
 public class LoginActivity extends BaseActivity {
     private Facebook fragment;
+    private Button skip;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class LoginActivity extends BaseActivity {
         fragmentTransaction.add(R.id.login_fragment_container, fragment);
         fragmentTransaction.commit();
 
-        final Button skip = (Button) findViewById(R.id.skip_login);
+        skip = (Button) findViewById(R.id.skip_login);
         if (!isInternetAvailable()) {
             skip.setVisibility(View.VISIBLE);
         }
@@ -60,8 +61,12 @@ public class LoginActivity extends BaseActivity {
         builder.setCancelable(false);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {}
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
         });
+        skip.setVisibility(View.VISIBLE);
         return builder.create();
     }
 
