@@ -161,6 +161,13 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "Connection failed");
         Toast.makeText(getActivity(), "Connection failed", Toast.LENGTH_SHORT).show();
