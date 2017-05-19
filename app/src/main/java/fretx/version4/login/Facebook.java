@@ -85,6 +85,7 @@ public class Facebook extends Fragment {
                                     Log.d(TAG, "firebase login success");
                                 } else {
                                     Log.w(TAG, "firebase login failed", task.getException());
+                                    LoginManager.getInstance().logOut();
                                     Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
                                 }
                             }

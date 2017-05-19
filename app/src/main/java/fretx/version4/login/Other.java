@@ -191,6 +191,14 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                             Log.d(TAG, "firebase login success");
                             ((LoginActivity)getActivity()).noInternetAccessDialod().show();
                         } else {
+                            if (mGoogleApiClient.isConnected()) {
+                                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                                        new ResultCallback<Status>() {
+                                            @Override
+                                            public void onResult(Status status) {
+                                            }
+                                        });
+                            }
                             Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "firebase login failed");
                         }
