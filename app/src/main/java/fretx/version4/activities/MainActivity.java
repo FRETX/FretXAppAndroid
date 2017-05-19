@@ -33,6 +33,7 @@ import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnFragment;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
+import fretx.version4.paging.profile.Profile;
 import fretx.version4.paging.tuner.TunerFragment;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity {
 	private static int INDEX_LEARN = FragNavController.TAB2;
 	private static int INDEX_CHORDS = FragNavController.TAB3;
 	private static int INDEX_TUNER = FragNavController.TAB4;
+	private static int INDEX_PROFILE = FragNavController.TAB5;
 
 	private final Runnable setConnected = new Runnable() {
 		@Override
@@ -120,22 +122,13 @@ public class MainActivity extends BaseActivity {
 		fragments.add(new LearnFragment());
 		fragments.add(new ChordFragment());
 		fragments.add(new TunerFragment());
+		fragments.add(new Profile());
 		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
 
         bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
         connectButton = (ImageButton) findViewById(R.id.connectButton);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         previewButton = (ImageView) findViewById(R.id.previewButton);
-
-		final Button disconnectButton = (Button) findViewById(R.id.disconnect_button);
-		disconnectButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				FirebaseAuth.getInstance().signOut();
-				Intent intent = new Intent(getActivity(), LoginActivity.class);
-				startActivity(intent);
-			}
-		});
 
 		setGuiEventListeners();
 
@@ -181,6 +174,9 @@ public class MainActivity extends BaseActivity {
 						break;
 					case R.id.bottomtab_tuner:
 						fragNavController.switchTab(INDEX_TUNER);
+						break;
+					case R.id.bottomtab_profile:
+						fragNavController.switchTab(INDEX_PROFILE);
 						break;
 				}
 			}

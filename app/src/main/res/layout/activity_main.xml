@@ -84,10 +84,4 @@
         app:bb_tabXmlResource="@xml/bottombar_tabs"
         app:bb_titleTextAppearance="@style/bottomBarText" />
 
-    <Button
-        android:id="@+id/disconnect_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="disconnect" />
-
 </LinearLayout>

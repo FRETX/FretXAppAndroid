@@ -2,6 +2,7 @@ package fretx.version4.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,13 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
@@ -65,19 +73,33 @@ public class Facebook extends Fragment {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "login Success");
-                ((LoginActivity)getActivity()).onLoginSuccess();
+                Log.d(TAG, "facebook login Success");
+
+                AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+                FirebaseAuth.getInstance().signInWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    ((LoginActivity)getActivity()).onLoginSuccess();
+                                    Log.d(TAG, "firebase login success");
+                                } else {
+                                    Log.w(TAG, "firebase login failed", task.getException());
+                                    Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "login cancelled");
+                Log.d(TAG, "facebook login cancelled");
                 Toast.makeText(getActivity(), "login cancelled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG, "login failed: " + error.toString());
+                Log.d(TAG, "facebook login failed: " + error.toString());
                 Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
             }
         });
