@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.greysonparrelli.permiso.IOnComplete;
 import com.greysonparrelli.permiso.IOnPermissionResult;
 import com.greysonparrelli.permiso.IOnRationaleProvided;
