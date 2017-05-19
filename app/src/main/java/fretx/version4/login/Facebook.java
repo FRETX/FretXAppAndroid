@@ -74,6 +74,7 @@ public class Facebook extends Fragment {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook login Success");
+                Toast.makeText(getActivity(), "facebook login Success", Toast.LENGTH_SHORT).show();
 
                 AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
                 FirebaseAuth.getInstance().signInWithCredential(credential)
@@ -86,7 +87,7 @@ public class Facebook extends Fragment {
                                 } else {
                                     Log.w(TAG, "firebase login failed", task.getException());
                                     LoginManager.getInstance().logOut();
-                                    Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "firebase login failed", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -95,13 +96,13 @@ public class Facebook extends Fragment {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook login cancelled");
-                Toast.makeText(getActivity(), "login cancelled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "facebook login cancelled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook login failed: " + error.toString());
-                Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "facebook login failed", Toast.LENGTH_SHORT).show();
             }
         });
 

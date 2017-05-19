@@ -116,7 +116,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                             });
                 }
             }
-    });
+        });
 
         final Button recoverButton = (Button) rootView.findViewById(R.id.recover_button);
         recoverButton.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +189,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "firebase login success");
-                            ((LoginActivity)getActivity()).noInternetAccessDialod().show();
+                            ((LoginActivity)getActivity()).onLoginSuccess();
                         } else {
                             if (mGoogleApiClient.isConnected()) {
                                 Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
@@ -199,14 +199,14 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                                             }
                                         });
                             }
-                            Toast.makeText(getActivity(), "login failed", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "firebase login failed");
+                            Toast.makeText(getActivity(), "firebase login failed", Toast.LENGTH_SHORT).show();
+                            Log.w(TAG, "firebase login failed", task.getException());
                         }
                     }
                 });
             } else {
                 Log.d(TAG, "google login failed (code: " + result.getStatus().getStatusCode() + ")");
-                Toast.makeText(BaseActivity.getActivity(), "login failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BaseActivity.getActivity(), "google login failed", Toast.LENGTH_SHORT).show();
             }
         }
     }
