@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId 'fretx.app'
         minSdkVersion 21
@@ -61,11 +62,12 @@ dependencies {
     compile 'com.afollestad:easyvideoplayer:0.3.0'
 
     //firebase
-    compile 'com.google.firebase:firebase-messaging:10.2.0'
-    compile 'com.google.firebase:firebase-appindexing:10.2.0'
-    compile 'com.google.firebase:firebase-core:10.2.0'
-    compile 'com.google.firebase:firebase-auth:10.2.0'
-    compile 'com.google.firebase:firebase-crash:10.2.0'
+    compile 'com.google.firebase:firebase-messaging:10.2.6'
+    compile 'com.google.firebase:firebase-appindexing:10.2.6'
+    compile 'com.google.firebase:firebase-core:10.2.6'
+    compile 'com.google.firebase:firebase-auth:10.2.6'
+    compile 'com.google.firebase:firebase-crash:10.2.6'
+    compile 'com.google.firebase:firebase-perf:10.2.6'
 
     //play midi
     compile 'com.github.billthefarmer:mididriver:v1.11'
@@ -73,8 +75,13 @@ dependencies {
     //use custom fonts
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
+    //facebook auth
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-    compile 'com.google.android.gms:play-services-auth:10.2.0'
+
+    //google auth
+    compile 'com.google.android.gms:play-services-auth:10.2.6'
+
+    //unit test
     testCompile 'junit:junit:4.12'
 }
 

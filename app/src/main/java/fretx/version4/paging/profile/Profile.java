@@ -33,7 +33,7 @@ public class Profile extends Fragment {
 
         disconnectButton = (TextView) rootView.findViewById(R.id.disconnect_button);
         nameTextView = (TextView) rootView.findViewById(R.id.name_textview);
-        emailTextView = (TextView) rootView.findViewById(R.id.name_textview);
+        emailTextView = (TextView) rootView.findViewById(R.id.email_textview);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
