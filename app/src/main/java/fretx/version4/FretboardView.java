@@ -23,14 +23,8 @@ public class FretboardView extends View {
 	private ArrayList<FretboardPosition> fretboardPositions;
 
 	private float width, height, nStrings, nFrets, xPadding, yPadding, yPaddingTop, yPaddingBottom, stringStep, fretStep;
-	private float left, top, bottom;
 
-	private Rect imageBounds = new Rect();
-	private int baseFret;
-
-    //painter
-	private final int color;
-	private final Paint paint;
+	private final Rect imageBounds = new Rect();
 
     //drawables
 	private final Drawable fretboardImage;
@@ -39,12 +33,6 @@ public class FretboardView extends View {
 
 	public FretboardView(Context context, AttributeSet attrs){
 		super(context,attrs);
-
-		paint = new Paint();
-
-		final TypedValue typedValue = new TypedValue();
-		context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
-		color = typedValue.data;
 
 		nStrings = 6;
 		nFrets = 4;
@@ -75,7 +63,6 @@ public class FretboardView extends View {
 				int fret = fp.getFret();
 				if(fret == -1) continue; //-1 means "don't play this string"
 				int string = fp.getString();
-				if(baseFret > 0) { fret -= baseFret; }
 
 				float yString = (1f - (yPaddingTop + (((int) nStrings - string) * stringStep))) * height;
 				float xFret = (xPadding + ((fret - 0.5f) * fretStep)) * width;
@@ -87,18 +74,6 @@ public class FretboardView extends View {
 				}
 				currentLed.setBounds((int)(xFret-width*0.04),(int)(yString-width*0.04),(int)((width*0.08)+xFret),(int)((width*0.08)+yString));
 				currentLed.draw(canvas);
-			}
-
-			//Draw the base fret indicator
-			if(baseFret > 0) {
-				paint.setColor(color);
-				paint.setTextSize(xPadding * width * 1.2f);
-				paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-				canvas.drawText(Integer.toString(baseFret), xPadding / 10 * width, yPadding * height, paint);
-				paint.setStyle(Paint.Style.STROKE);
-				paint.setStrokeWidth(yPadding * height / 4);
-				paint.setColor(color);
-				canvas.drawLine(left, top, left, bottom, paint);
 			}
 		}
 	}
@@ -113,10 +88,6 @@ public class FretboardView extends View {
 
 		stringStep = (1 - ((yPaddingTop + yPaddingBottom))) / (nStrings - 1);
 
-
 		fretStep = (1 - (2 * xPadding)) / (nFrets - 1);
-		left = xPadding * width;
-		top = yPaddingTop * height;
-		bottom = (1 - yPadding) * height;
 	}
 }

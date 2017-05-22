@@ -6,12 +6,13 @@ package fretx.version4.login;
  */
 
 public class User {
+    private final static String TAG = "KJKP6_USER";
+
     public String guitar;
     public String hand;
     public String level;
 
     public User() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
     public User(String guitar, String hand, String level) {

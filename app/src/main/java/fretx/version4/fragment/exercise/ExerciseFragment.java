@@ -24,6 +24,7 @@ import java.util.HashSet;
 
 import fretx.version4.FretboardView;
 import fretx.version4.R;
+import fretx.version4.utils.Preference;
 import fretx.version4.utils.TimeUpdater;
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.audio.Midi;
@@ -90,6 +91,10 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
         greenTick = (ImageView) rootView.findViewById(R.id.green_tick);
+
+        if (Preference.getInstance().isLeftHanded()) {
+            fretboardView.setScaleX(-1.0f);
+        }
 
         dialog = audioHelperDialog(getActivity());
 

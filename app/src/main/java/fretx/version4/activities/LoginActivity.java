@@ -102,7 +102,7 @@ public class LoginActivity extends BaseActivity {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+                final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
 
                 if (dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class) == null) {
                     Intent intent = new Intent(getActivity(), OnboardingActivity.class);
