@@ -7,13 +7,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,15 +22,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.net.InetAddress;
-
 import fretx.version4.R;
 import fretx.version4.login.Facebook;
 import fretx.version4.login.User;
 
 public class LoginActivity extends BaseActivity {
     private final static String TAG = "KJKP6_LOGIN_ACT";
-    private Facebook fragment;
+    private Fragment fragment;
     private Button skip;
 
     @Override
@@ -58,10 +55,17 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    public void setFragment(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStack();
+            final String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+            fragment = fragmentManager.findFragmentByTag(fragmentTag);
         }
     }
 

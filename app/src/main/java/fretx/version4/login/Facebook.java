@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
+import fretx.version4.activities.MainActivity;
 
 /**
  * FretXAppAndroid for FretX
@@ -63,6 +64,7 @@ public class Facebook extends Fragment {
                 final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Other fragment = new Other();
+                ((LoginActivity) getActivity()).setFragment(fragment);
                 fragmentTransaction.replace(R.id.login_fragment_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();

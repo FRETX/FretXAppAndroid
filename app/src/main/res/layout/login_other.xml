@@ -10,6 +10,21 @@
         android:layout_gravity="center_horizontal"
         android:visibility="visible" />
 
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/twitter_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tw__btn_composer_tweet"
+        android:text="twitter"
+        android:textColor="@color/background" />
+
     <EditText
         android:id="@+id/email_edittext"
         android:layout_width="match_parent"

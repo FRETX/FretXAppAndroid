@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,10 +32,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.TwitterAuthProvider;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.activities.LoginActivity;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * FretXAppAndroid for FretX
@@ -46,7 +58,9 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
     private Button loginButton;
     private Button recoverButton;
     private Button forgotButton;
-    private SignInButton signInButton;
+    private SignInButton googleButton;
+    private TwitterLoginButton twitterButton;
+    private Button twitterOverlay;
 
     private FirebaseAuth mAuth;
 
@@ -74,6 +88,10 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 .enableAutoManage(getActivity(), this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        TwitterAuthConfig authConfig = new TwitterAuthConfig("OUWR4SvbsSYZAVdlJaLWCQ9Jw",
+                "wz7H5TUVwPHIgFNxHcpbRqDqYl9WYVIf0ByNaqtqGZOfUy268B");
+        Fabric.with(getActivity(), new Twitter(authConfig));
 
         if (mGoogleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
@@ -130,6 +148,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Recover fragment = new Recover();
+                ((LoginActivity) getActivity()).setFragment(fragment);
                 fragmentTransaction.replace(R.id.login_fragment_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -143,6 +162,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Register fragment = new Register();
+                ((LoginActivity) getActivity()).setFragment(fragment);
                 fragmentTransaction.replace(R.id.login_fragment_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -150,8 +170,8 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         });
 
         // Set the dimensions of the sign-in button.
-        signInButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        googleButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
+        googleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
@@ -163,6 +183,56 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 }
             }
         });
+
+        twitterButton = (TwitterLoginButton) rootView.findViewById(R.id.twitter_button);
+        twitterButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                Log.v(TAG, "Twitter success");
+
+                final TwitterSession session = result.data;
+
+                AuthCredential credential = TwitterAuthProvider.getCredential(
+                        session.getAuthToken().token,
+                        session.getAuthToken().secret);
+
+                mAuth.signInWithCredential(credential)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "firebase login success");
+                                    ((LoginActivity)getActivity()).onLoginSuccess();
+                                } else {
+                                    Log.d(TAG, "firebase login failed");
+                                    buttonsClickable(true);
+                                }
+                            }
+                        });
+
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Log.v(TAG, "Twitter failed");
+                Log.d(TAG, "Twitter login failed");
+                buttonsClickable(true);
+            }
+        });
+
+        twitterOverlay = (Button) rootView.findViewById(R.id.twitter_overlay);
+        twitterOverlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((LoginActivity)getActivity()).isInternetAvailable()) {
+                    buttonsClickable(false);
+                    twitterButton.performClick();
+                } else {
+                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -170,7 +240,8 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         loginButton.setClickable(clickable);
         recoverButton.setClickable(clickable);
         forgotButton.setClickable(clickable);
-        signInButton.setClickable(clickable);
+        googleButton.setClickable(clickable);
+        twitterOverlay.setClickable(clickable);
     }
 
     @Override
@@ -210,7 +281,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                                 Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                                         new ResultCallback<Status>() {
                                             @Override
-                                            public void onResult(Status status) {
+                                            public void onResult(@NonNull Status status) {
                                             }
                                         });
                             }
@@ -225,6 +296,9 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 Log.d(TAG, "google login failed (code: " + result.getStatus().getStatusCode() + ")");
                 Toast.makeText(BaseActivity.getActivity(), "google login failed", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Log.v(TAG, "Twitter on activity result");
+            twitterButton.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
