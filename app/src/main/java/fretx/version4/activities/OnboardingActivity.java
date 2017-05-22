@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
@@ -46,6 +47,12 @@ public class OnboardingActivity extends BaseActivity {
         fragmentTransaction.commit();
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
+        seekBar.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         final Button next = (Button) findViewById(R.id.next_button);
         next.setOnClickListener(new View.OnClickListener() {
