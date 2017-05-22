@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,18 +23,15 @@ import fretx.version4.activities.LoginActivity;
 
 public class Profile extends Fragment {
     private final static String TAG = "KJKP6_PROFILE";
-    private TextView disconnectButton;
-    private TextView nameTextView;
-    private TextView emailTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paging_profile, container, false);
 
-        disconnectButton = (TextView) rootView.findViewById(R.id.disconnect_button);
-        nameTextView = (TextView) rootView.findViewById(R.id.name_textview);
-        emailTextView = (TextView) rootView.findViewById(R.id.email_textview);
+        final TextView disconnectButton = (TextView) rootView.findViewById(R.id.disconnect_button);
+        final TextView nameTextView = (TextView) rootView.findViewById(R.id.name_textview);
+        final TextView emailTextView = (TextView) rootView.findViewById(R.id.email_textview);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {

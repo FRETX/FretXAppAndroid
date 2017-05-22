@@ -41,6 +41,7 @@ public class Facebook extends Fragment {
 
     private CallbackManager callbackManager;
     private Button facebookOverlay;
+    private Button otherButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class Facebook extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.login_facebook, container, false);
 
-        final Button otherButton = (Button) rootView.findViewById(R.id.other_button);
+        otherButton = (Button) rootView.findViewById(R.id.other_button);
         otherButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +92,7 @@ public class Facebook extends Fragment {
                                     Log.w(TAG, "firebase login failed", task.getException());
                                     LoginManager.getInstance().logOut();
                                     Toast.makeText(getActivity(), "firebase login failed", Toast.LENGTH_SHORT).show();
-                                    facebookOverlay.setClickable(true);
+                                    buttonsClickable(true);
                                 }
                             }
                         });
@@ -100,14 +101,15 @@ public class Facebook extends Fragment {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook login cancelled");
+                buttonsClickable(true);
                 facebookOverlay.setClickable(true);
                 Toast.makeText(getActivity(), "facebook login cancelled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
+                buttonsClickable(true);
                 Log.d(TAG, "facebook login failed: " + error.toString());
-                facebookOverlay.setClickable(true);
                 Toast.makeText(getActivity(), "facebook login failed", Toast.LENGTH_SHORT).show();
             }
         });
@@ -117,7 +119,7 @@ public class Facebook extends Fragment {
             @Override
             public void onClick(View v) {
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
-                    facebookOverlay.setClickable(false);
+                    buttonsClickable(false);
                     loginButton.performClick();
                 } else {
                     ((LoginActivity)getActivity()).noInternetAccessDialod().show();
@@ -126,6 +128,11 @@ public class Facebook extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void buttonsClickable(boolean clickable) {
+        facebookOverlay.setClickable(clickable);
+        otherButton.setClickable(clickable);
     }
 
     @Override

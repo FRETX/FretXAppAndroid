@@ -43,6 +43,11 @@ import fretx.version4.activities.LoginActivity;
 public class Other extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "KJKP6_OTHER";
 
+    private Button loginButton;
+    private Button recoverButton;
+    private Button forgotButton;
+    private SignInButton signInButton;
+
     private FirebaseAuth mAuth;
 
     private GoogleSignInOptions gso;
@@ -88,7 +93,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_edittext);
         final EditText passwordEditText = (EditText) rootView.findViewById(R.id.password_edittext);
 
-        final Button loginButton = (Button) rootView.findViewById(R.id.login_button);
+        loginButton = (Button) rootView.findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +123,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             }
         });
 
-        final Button recoverButton = (Button) rootView.findViewById(R.id.recover_button);
+        recoverButton = (Button) rootView.findViewById(R.id.recover_button);
         recoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +136,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             }
         });
 
-        final Button forgotButton = (Button) rootView.findViewById(R.id.register_button);
+        forgotButton = (Button) rootView.findViewById(R.id.register_button);
         forgotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,11 +150,12 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         });
 
         // Set the dimensions of the sign-in button.
-        final SignInButton signInButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
+        signInButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
+                    buttonsClickable(false);
                     Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                     startActivityForResult(signInIntent, RC_SIGN_IN);
                 } else {
@@ -158,6 +164,13 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             }
         });
         return rootView;
+    }
+
+    private void buttonsClickable(boolean clickable) {
+        loginButton.setClickable(clickable);
+        recoverButton.setClickable(clickable);
+        forgotButton.setClickable(clickable);
+        signInButton.setClickable(clickable);
     }
 
     @Override
@@ -201,12 +214,14 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                                             }
                                         });
                             }
+                            buttonsClickable(true);
                             Toast.makeText(getActivity(), "firebase login failed", Toast.LENGTH_SHORT).show();
                             Log.w(TAG, "firebase login failed", task.getException());
                         }
                     }
                 });
             } else {
+                buttonsClickable(true);
                 Log.d(TAG, "google login failed (code: " + result.getStatus().getStatusCode() + ")");
                 Toast.makeText(BaseActivity.getActivity(), "google login failed", Toast.LENGTH_SHORT).show();
             }
