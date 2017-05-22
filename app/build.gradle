@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 25
@@ -28,8 +29,10 @@ android {
     }
 }
 
-
-
+repositories {
+    jcenter()   // <- *add this
+    maven { url 'https://maven.fabric.io/repo' }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':fretx-audio')
@@ -68,6 +71,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:10.2.6'
     compile 'com.google.firebase:firebase-crash:10.2.6'
     compile 'com.google.firebase:firebase-perf:10.2.6'
+    compile 'com.google.firebase:firebase-database:10.2.6'
 
     //play midi
     compile 'com.github.billthefarmer:mididriver:v1.11'
@@ -80,6 +84,11 @@ dependencies {
 
     //google auth
     compile 'com.google.android.gms:play-services-auth:10.2.6'
+
+    //twitter
+    compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
+        transitive = true;
+    }
 
     //unit test
     testCompile 'junit:junit:4.12'

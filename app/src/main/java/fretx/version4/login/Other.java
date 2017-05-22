@@ -183,7 +183,9 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             if (result.isSuccess()) {
                 Log.d(TAG, "google login succeed.");
 
+                //google credential
                 AuthCredential credential = GoogleAuthProvider.getCredential(result.getSignInAccount().getIdToken(), null);
+
                 mAuth.signInWithCredential(credential).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

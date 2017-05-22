@@ -33,6 +33,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9c2102608533348ff0f99bddd1be48cd90eaf806" />
 
         <activity
             android:name=".activities.SplashScreen"

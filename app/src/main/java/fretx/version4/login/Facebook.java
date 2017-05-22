@@ -76,7 +76,9 @@ public class Facebook extends Fragment {
                 Log.d(TAG, "facebook login Success");
                 Toast.makeText(getActivity(), "facebook login Success", Toast.LENGTH_SHORT).show();
 
+                //facebook credential
                 AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+
                 FirebaseAuth.getInstance().signInWithCredential(credential)
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @Override
