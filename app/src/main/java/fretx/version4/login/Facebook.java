@@ -40,6 +40,7 @@ public class Facebook extends Fragment {
     private final static String TAG = "KJKP6_FACEBOOK";
 
     private CallbackManager callbackManager;
+    private Button facebookOverlay;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class Facebook extends Fragment {
                                     Log.w(TAG, "firebase login failed", task.getException());
                                     LoginManager.getInstance().logOut();
                                     Toast.makeText(getActivity(), "firebase login failed", Toast.LENGTH_SHORT).show();
+                                    facebookOverlay.setClickable(true);
                                 }
                             }
                         });
@@ -98,21 +100,24 @@ public class Facebook extends Fragment {
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook login cancelled");
+                facebookOverlay.setClickable(true);
                 Toast.makeText(getActivity(), "facebook login cancelled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook login failed: " + error.toString());
+                facebookOverlay.setClickable(true);
                 Toast.makeText(getActivity(), "facebook login failed", Toast.LENGTH_SHORT).show();
             }
         });
 
-        final Button facebookOverlay = (Button) rootView.findViewById(R.id.facebook_button_overlay);
+        facebookOverlay = (Button) rootView.findViewById(R.id.facebook_button_overlay);
         facebookOverlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
+                    facebookOverlay.setClickable(false);
                     loginButton.performClick();
                 } else {
                     ((LoginActivity)getActivity()).noInternetAccessDialod().show();
