@@ -65,7 +65,7 @@ public class Facebook extends Fragment {
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Other fragment = new Other();
                 ((LoginActivity) getActivity()).setFragment(fragment);
-                fragmentTransaction.replace(R.id.login_fragment_container, fragment);
+                fragmentTransaction.replace(R.id.login_fragment_container, fragment, LoginActivity.OTHER_TAG);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

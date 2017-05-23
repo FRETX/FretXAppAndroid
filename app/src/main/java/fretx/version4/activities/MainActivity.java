@@ -144,22 +144,28 @@ public class MainActivity extends BaseActivity {
 
         BluetoothLE.getInstance().setListener(bluetoothListener);
 
+		//// TODO: 23/05/17 replacce with a try/catch block to get internet failure
 		final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 		final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+		Preference.getInstance().init("classic", "right", "beginner");
 		if (fUser != null) {
+			Log.v(TAG, "fUser is not null");
 			mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
+					Log.v(TAG, "can get data");
 					User user = dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class);
 					Preference.getInstance().init(user.guitar, user.hand, user.level);
 				}
 				@Override
 				public void onCancelled(DatabaseError databaseError) {
 					//failure, use local save instead...
+					Log.v(TAG, "cant get data");
                     Preference.getInstance().init("classic", "right", "beginner");
 				}
 			});
 		} else {
+			Log.v(TAG, "fUser is null");
 			//user not connected, use local save instead...
             Preference.getInstance().init("classic", "right", "beginner");
 		}
