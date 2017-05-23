@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import fretx.version4.R;
 import fretx.version4.login.Facebook;
 import fretx.version4.login.User;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 
 public class LoginActivity extends BaseActivity {
     private final static String TAG = "KJKP6_LOGIN_ACT";
@@ -58,6 +59,8 @@ public class LoginActivity extends BaseActivity {
         if (!isInternetAvailable()) {
             skip.setVisibility(View.VISIBLE);
         }
+
+        BluetoothAnimator.getInstance().fretFall();
     }
 
     public void setFragment(Fragment fragment) {
