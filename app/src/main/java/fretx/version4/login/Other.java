@@ -149,7 +149,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Recover fragment = new Recover();
                 ((LoginActivity) getActivity()).setFragment(fragment);
-                fragmentTransaction.replace(R.id.login_fragment_container, fragment);
+                fragmentTransaction.replace(R.id.login_fragment_container, fragment, LoginActivity.RECOVER_TAG);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -163,7 +163,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Register fragment = new Register();
                 ((LoginActivity) getActivity()).setFragment(fragment);
-                fragmentTransaction.replace(R.id.login_fragment_container, fragment);
+                fragmentTransaction.replace(R.id.login_fragment_container, fragment, LoginActivity.REGISTER_TAG);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

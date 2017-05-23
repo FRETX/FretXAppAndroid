@@ -213,6 +213,13 @@ public class BluetoothLE {
     private Runnable endOfScan = new Runnable() {
         @Override
         public void run() {
+            if(adapter.getBluetoothLeScanner() == null) {
+                Log.d(TAG, "Bluetooth off");
+                progress.dismiss();
+                if (listener != null) {
+                    listener.onScanFailure();
+                }
+            }
             adapter.getBluetoothLeScanner().stopScan(scanCallback);
             scanning = false;
             if (devices.size() == 1) {
