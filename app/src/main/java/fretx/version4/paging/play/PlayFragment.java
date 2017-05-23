@@ -16,6 +16,7 @@ import java.util.List;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import fretx.version4.utils.firebase.Analytics;
 
 
 public class PlayFragment extends Fragment {
@@ -32,12 +33,10 @@ public class PlayFragment extends Fragment {
 
         mActivity = (MainActivity) getActivity();
 
-        rootView = inflater.inflate(R.layout.play_fragment, container, false);
+        rootView = inflater.inflate(R.layout.paging_play, container, false);
 
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Play");
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TAB");
-        mActivity.mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        Analytics.getInstance().logSelectEvent("TAB","Play");
+
         return rootView;
     }
 
