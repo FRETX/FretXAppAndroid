@@ -21,7 +21,6 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
-import fretx.version4.activities.MainActivity;
 
 /**
  * FretXAppAndroid for FretX
@@ -45,8 +44,8 @@ public class Register extends Fragment {
         View rootView = inflater.inflate(R.layout.login_register, container, false);
 
         final EditText nameEditText = (EditText) rootView.findViewById(R.id.name_edittext);
-        final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_edittext);
-        final EditText passwordEditText = (EditText) rootView.findViewById(R.id.password_edittext);
+        final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_signin_edittext);
+        final EditText passwordEditText = (EditText) rootView.findViewById(R.id.password_signin_edittext);
 
         final Button registerButton = (Button) rootView.findViewById(R.id.register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {

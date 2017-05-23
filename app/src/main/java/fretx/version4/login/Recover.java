@@ -23,7 +23,7 @@ public class Recover extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.login_recover, container, false);
 
-        final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_edittext);
+        final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_signin_edittext);
 
         final Button recoverButton = (Button) rootView.findViewById(R.id.recover_button);
         recoverButton.setOnClickListener(new View.OnClickListener() {

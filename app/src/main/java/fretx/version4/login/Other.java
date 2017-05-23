@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,7 +28,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.twitter.sdk.android.Twitter;
@@ -39,7 +36,6 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import fretx.version4.R;
@@ -108,8 +104,8 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.login_other, container, false);
 
-        final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_edittext);
-        final EditText passwordEditText = (EditText) rootView.findViewById(R.id.password_edittext);
+        final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_signin_edittext);
+        final EditText passwordEditText = (EditText) rootView.findViewById(R.id.password_signin_edittext);
 
         loginButton = (Button) rootView.findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {

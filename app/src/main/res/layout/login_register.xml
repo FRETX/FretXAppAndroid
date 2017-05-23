@@ -33,7 +33,7 @@
         />
 
     <EditText
-        android:id="@+id/email_edittext"
+        android:id="@+id/email_signin_edittext"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
@@ -45,7 +45,7 @@
         />
 
     <EditText
-        android:id="@+id/password_edittext"
+        android:id="@+id/password_signin_edittext"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
