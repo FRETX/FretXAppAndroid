@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/background_profile" />
+            android:src="@drawable/background_guitar_01" />
 
         <ImageButton
             android:id="@+id/user_profile_photo"
@@ -32,12 +32,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/header_cover_image"
-            android:background="#ebca0707"
+            android:background="@color/primary"
             android:elevation="4dp"
             android:paddingBottom="24dp">
 
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/add_friend"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -46,6 +47,7 @@
                 android:layout_toLeftOf="@+id/drop_down_option_menu" />
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/drop_down_option_menu"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -93,7 +95,8 @@
                 android:clickable="true"
                 android:elevation="4dp"
                 android:padding="20dp"
-                android:text="disconnect" />
+                android:textColor="@color/primaryText"
+                android:text="Sign Out" />
 
         </LinearLayout>
     </RelativeLayout>
