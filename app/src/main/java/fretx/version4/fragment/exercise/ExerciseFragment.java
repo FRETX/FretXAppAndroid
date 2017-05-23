@@ -48,12 +48,12 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     private FretboardView fretboardView;
     private TextView chordText;
     private TextView chordNextText;
-    private TextView positionText;
     private TextView timeText;
     private ImageButton playButton;
     private ProgressBar chordProgress;
     private ImageView thresholdImage;
     private ImageView greenTick;
+    private ProgressBar exerciseProgress;
 
     //chords
     private int chordIndex;
@@ -83,7 +83,6 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         //setup view
         RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.exercise_fragment, container, false);
         fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
-        positionText = (TextView) rootView.findViewById(R.id.position);
         timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
         chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);
@@ -91,10 +90,13 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
         greenTick = (ImageView) rootView.findViewById(R.id.green_tick);
+        exerciseProgress = (ProgressBar) rootView.findViewById(R.id.exercise_progress);
 
         if (Preference.getInstance().isLeftHanded()) {
             fretboardView.setScaleX(-1.0f);
         }
+
+        exerciseProgress.setMax(exerciseChords.size());
 
         dialog = audioHelperDialog(getActivity());
 
@@ -181,7 +183,6 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
             //end of the exercise
             if (chordIndex == exerciseChords.size()) {
                 timeUpdater.pauseTimer();
-                setPosition();
                 finished = true;
                 listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
             }
@@ -277,20 +278,14 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
             chordNextText.setText("");
         //update finger position
         fretboardView.setFretboardPositions(actualChord.getFingerPositions());
-        //update positionText
-        setPosition();
         //update chord listener
         Audio.getInstance().setTargetChord(actualChord);
         Audio.getInstance().startListening();
         //setup the progress bar
         chordProgress.setProgress(0);
+        exerciseProgress.setProgress(chordIndex);
         //update led
         BluetoothLE.getInstance().setMatrix(actualChord);
-    }
-
-    //display chord position
-    private void setPosition() {
-        positionText.setText(chordIndex + "/" + exerciseChords.size());
     }
 
     //create a audio helper dialog
@@ -332,7 +327,6 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         if (chordIndex == exerciseChords.size()) {
             timeUpdater.pauseTimer();
             Audio.getInstance().stopListening();
-            setPosition();
             finished = true;
             listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
         }

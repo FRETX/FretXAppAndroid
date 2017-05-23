@@ -60,6 +60,12 @@
                 app:srcCompat="@drawable/green_tick" />
         </RelativeLayout>
 
+        <ProgressBar
+            android:id="@+id/exercise_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <ImageView
             android:id="@+id/audio_thresold"
             android:layout_width="wrap_content"
@@ -96,57 +102,23 @@
             android:padding="5dp"
             android:id="@+id/playChordButton" />
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="Time Spent"
+            android:textAlignment="center"
+            android:textColor="@color/primaryText"
+            android:textSize="21sp" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/primaryText"
+            android:textStyle="normal|bold" />
 
-                <TextView
-                    android:text="Chords Played"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primaryText"
-                    android:textSize="21sp"
-                    android:textAlignment="center" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primaryText"
-                    android:textStyle="normal|bold"
-                    android:textAlignment="center"
-                    android:id="@+id/position" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:text="Time Spent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primaryText"
-                    android:textSize="21sp"
-                    android:textAlignment="center" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primaryText"
-                    android:textStyle="normal|bold"
-                    android:textAlignment="center"
-                    android:id="@+id/time" />
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
