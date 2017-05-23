@@ -28,6 +28,11 @@ import fretx.version4.login.User;
 
 public class LoginActivity extends BaseActivity {
     private final static String TAG = "KJKP6_LOGIN_ACT";
+    public final static String FACEBOOK_TAG = "FACEBOOK_TAG";
+    public final static String OTHER_TAG = "FACEBOOK_TAG";
+    public final static String RECOVER_TAG = "RECOVER_TAG";
+    public final static String REGISTER_TAG = "REGISTER_TAG";
+
     private Fragment fragment;
     private Button skip;
 
@@ -39,7 +44,7 @@ public class LoginActivity extends BaseActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragment = new Facebook();
-        fragmentTransaction.add(R.id.login_fragment_container, fragment);
+        fragmentTransaction.add(R.id.login_fragment_container, fragment, FACEBOOK_TAG);
         fragmentTransaction.commit();
 
         skip = (Button) findViewById(R.id.skip_login);
@@ -64,8 +69,8 @@ public class LoginActivity extends BaseActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.popBackStack();
-            final String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
-            fragment = fragmentManager.findFragmentByTag(fragmentTag);
+
+            fragment = getSupportFragmentManager().findFragmentById(R.id.login_fragment_container);
         }
     }
 
