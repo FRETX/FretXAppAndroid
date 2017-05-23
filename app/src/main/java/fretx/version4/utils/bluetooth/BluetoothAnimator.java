@@ -1,6 +1,9 @@
 package fretx.version4.utils.bluetooth;
 
 import android.os.Handler;
+import android.util.Log;
+
+import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;
 
@@ -12,6 +15,7 @@ import fretx.version4.onboarding.Hand;
  */
 
 public class BluetoothAnimator {
+    private static final String TAG = "KJKP6_BLE_ANIM";
     private static final byte[] F0 = new byte[] {1, 2, 3, 4, 5, 6, 0};
     private static final byte[] F1 = new byte[] {11, 12, 13, 14, 15, 16, 0};
     private static final byte[] F2 = new byte[] {21, 22, 23, 24, 25, 26, 0};
@@ -31,7 +35,7 @@ public class BluetoothAnimator {
     private static final byte[] S6_NO_F0 = new byte[] {16, 26, 36, 46, 0};
     private static final byte[] BLANK = new byte[] {0};
 
-    private static final int DEFAULT_DELAY_MS = 300;
+    private static final int DEFAULT_DELAY_MS = 500;
 
     private final Handler handler = new Handler();
     private final ArrayList<Animation> animations = new ArrayList<>();
@@ -71,6 +75,7 @@ public class BluetoothAnimator {
         public void run() {
             final Animation anim = animations.get(index);
             BluetoothLE.getInstance().setMatrix(anim.bluetoothArray);
+            Log.v(TAG, "set matrix");
             handler.postDelayed(this, anim.delayMs);
             ++index;
             if (index == animationSize)

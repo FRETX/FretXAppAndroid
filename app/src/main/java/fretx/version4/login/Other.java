@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
@@ -43,22 +45,24 @@ import fretx.version4.activities.BaseActivity;
 import fretx.version4.activities.LoginActivity;
 import io.fabric.sdk.android.Fabric;
 
+import static android.view.KeyEvent.KEYCODE_BACK;
+
 /**
  * FretXAppAndroid for FretX
  * Created by pandor on 17/05/17 14:50.
  */
 
-public class Other extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class Other extends Fragment implements GoogleApiClient.OnConnectionFailedListener, LoginFragnent {
     private static final String TAG = "KJKP6_OTHER";
 
+
+    private LoginActivity activity;
     private Button loginButton;
     private Button recoverButton;
     private Button forgotButton;
     private SignInButton googleButton;
     private TwitterLoginButton twitterButton;
     private Button twitterOverlay;
-
-    private FirebaseAuth mAuth;
 
     private GoogleSignInOptions gso;
     private GoogleApiClient mGoogleApiClient;
@@ -67,28 +71,16 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mAuth = FirebaseAuth.getInstance();
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        // Configure Google Sign In
+        activity = (LoginActivity) getActivity();
+        //google setup
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .enableAutoManage(getActivity(), this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        TwitterAuthConfig authConfig = new TwitterAuthConfig("OUWR4SvbsSYZAVdlJaLWCQ9Jw",
-                "wz7H5TUVwPHIgFNxHcpbRqDqYl9WYVIf0ByNaqtqGZOfUy268B");
-        Fabric.with(getActivity(), new Twitter(authConfig));
-
         if (mGoogleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                     new ResultCallback<Status>() {
@@ -97,6 +89,10 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                         }
                     });
         }
+        //twitter setup
+        TwitterAuthConfig authConfig = new TwitterAuthConfig("OUWR4SvbsSYZAVdlJaLWCQ9Jw",
+                "wz7H5TUVwPHIgFNxHcpbRqDqYl9WYVIf0ByNaqtqGZOfUy268B");
+        Fabric.with(getActivity(), new Twitter(authConfig));
     }
 
     @Override
@@ -111,7 +107,6 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
@@ -120,19 +115,8 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 } else if (!((LoginActivity)getActivity()).isInternetAvailable()) {
                     ((LoginActivity)getActivity()).noInternetAccessDialod().show();
                 } else {
-                    mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        Log.d(TAG, "email login success");
-                                        ((LoginActivity)getActivity()).onLoginSuccess();
-                                    } else {
-                                        Toast.makeText(getActivity(), "Login failed", Toast.LENGTH_SHORT).show();
-                                        Log.w(TAG, "email login failure", task.getException());
-                                    }
-                                }
-                            });
+                    AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+                    activity.onServiceLoginSuccess(credential);
                 }
             }
         });
@@ -145,7 +129,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Recover fragment = new Recover();
                 ((LoginActivity) getActivity()).setFragment(fragment);
-                fragmentTransaction.replace(R.id.login_fragment_container, fragment, LoginActivity.RECOVER_TAG);
+                fragmentTransaction.replace(R.id.login_fragment_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -159,7 +143,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Register fragment = new Register();
                 ((LoginActivity) getActivity()).setFragment(fragment);
-                fragmentTransaction.replace(R.id.login_fragment_container, fragment, LoginActivity.REGISTER_TAG);
+                fragmentTransaction.replace(R.id.login_fragment_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -171,7 +155,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             @Override
             public void onClick(View v) {
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
-                    buttonsClickable(false);
+                    onLoginStart();
                     Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                     startActivityForResult(signInIntent, RC_SIGN_IN);
                 } else {
@@ -184,35 +168,19 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         twitterButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                Log.v(TAG, "Twitter success");
-
+                Log.v(TAG, "Twitter login success");
                 final TwitterSession session = result.data;
-
                 AuthCredential credential = TwitterAuthProvider.getCredential(
                         session.getAuthToken().token,
                         session.getAuthToken().secret);
-
-                mAuth.signInWithCredential(credential)
-                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "firebase login success");
-                                    ((LoginActivity)getActivity()).onLoginSuccess();
-                                } else {
-                                    Log.d(TAG, "firebase login failed");
-                                    buttonsClickable(true);
-                                }
-                            }
-                        });
-
+                activity.onServiceLoginSuccess(credential);
             }
 
             @Override
             public void failure(TwitterException exception) {
-                Log.v(TAG, "Twitter failed");
                 Log.d(TAG, "Twitter login failed");
-                buttonsClickable(true);
+                activity.onServiceLoginFailed("Twitter");
+                onLoginFailure();
             }
         });
 
@@ -221,7 +189,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             @Override
             public void onClick(View v) {
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
-                    buttonsClickable(false);
+                    onLoginStart();
                     twitterButton.performClick();
                 } else {
                     ((LoginActivity)getActivity()).noInternetAccessDialod().show();
@@ -230,14 +198,6 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         });
 
         return rootView;
-    }
-
-    private void buttonsClickable(boolean clickable) {
-        loginButton.setClickable(clickable);
-        recoverButton.setClickable(clickable);
-        forgotButton.setClickable(clickable);
-        googleButton.setClickable(clickable);
-        twitterOverlay.setClickable(clickable);
     }
 
     @Override
@@ -249,8 +209,8 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "Connection failed");
-        Toast.makeText(getActivity(), "Connection failed", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Google connection failed");
+        activity.onServiceLoginFailed("Google");
     }
 
     @Override
@@ -265,36 +225,31 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
 
                 //google credential
                 AuthCredential credential = GoogleAuthProvider.getCredential(result.getSignInAccount().getIdToken(), null);
-
-                mAuth.signInWithCredential(credential).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "firebase login success");
-                            ((LoginActivity)getActivity()).onLoginSuccess();
-                        } else {
-                            if (mGoogleApiClient.isConnected()) {
-                                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                                        new ResultCallback<Status>() {
-                                            @Override
-                                            public void onResult(@NonNull Status status) {
-                                            }
-                                        });
-                            }
-                            buttonsClickable(true);
-                            Toast.makeText(getActivity(), "firebase login failed", Toast.LENGTH_SHORT).show();
-                            Log.w(TAG, "firebase login failed", task.getException());
-                        }
-                    }
-                });
+                activity.onServiceLoginSuccess(credential);
             } else {
-                buttonsClickable(true);
+                onLoginFailure();
                 Log.d(TAG, "google login failed (code: " + result.getStatus().getStatusCode() + ")");
-                Toast.makeText(BaseActivity.getActivity(), "google login failed", Toast.LENGTH_SHORT).show();
+                activity.onServiceLoginFailed("Google");
             }
         } else {
             Log.v(TAG, "Twitter on activity result");
             twitterButton.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void onLoginStart() {
+        buttonsClickable(false);
+    }
+
+    public void onLoginFailure(){
+        buttonsClickable(true);
+    }
+
+    private void buttonsClickable(boolean clickable) {
+        loginButton.setClickable(clickable);
+        recoverButton.setClickable(clickable);
+        forgotButton.setClickable(clickable);
+        googleButton.setClickable(clickable);
+        twitterOverlay.setClickable(clickable);
     }
 }

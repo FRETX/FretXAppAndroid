@@ -37,26 +37,49 @@ import fretx.version4.activities.MainActivity;
  * Created by pandor on 17/05/17 14:50.
  */
 
-public class Facebook extends Fragment {
+public class Facebook extends Fragment implements LoginFragnent {
     private final static String TAG = "KJKP6_FACEBOOK";
 
+    private LoginActivity activity;
     private CallbackManager callbackManager;
     private Button facebookOverlay;
     private Button otherButton;
 
+    private FacebookCallback<LoginResult> facebookCallback = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            Log.d(TAG, "facebook login Success");
+            AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+            activity.onServiceLoginSuccess(credential);
+        }
+
+        @Override
+        public void onCancel() {
+            Log.d(TAG, "facebook login cancelled");
+            buttonsClickable(true);
+        }
+
+        @Override
+        public void onError(FacebookException error) {
+            Log.d(TAG, "facebook login failed: " + error.toString());
+            activity.onServiceLoginFailed("Facebook");
+            buttonsClickable(true);
+        }
+    };
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         LoginManager.getInstance().logOut();
+        activity = (LoginActivity) getActivity();
         callbackManager = CallbackManager.Factory.create();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.login_facebook, container, false);
 
+        //goes to other kind of login
         otherButton = (Button) rootView.findViewById(R.id.other_button);
         otherButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,57 +88,19 @@ public class Facebook extends Fragment {
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Other fragment = new Other();
                 ((LoginActivity) getActivity()).setFragment(fragment);
-                fragmentTransaction.replace(R.id.login_fragment_container, fragment, LoginActivity.OTHER_TAG);
+                fragmentTransaction.replace(R.id.login_fragment_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });
 
+        //invisible facebook button
         final LoginButton loginButton = (LoginButton) rootView.findViewById(R.id.facebook_button);
         loginButton.setFragment(this);
         loginButton.setReadPermissions("email");
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "facebook login Success");
-                Toast.makeText(getActivity(), "facebook login Success", Toast.LENGTH_SHORT).show();
+        loginButton.registerCallback(callbackManager, facebookCallback);
 
-                //facebook credential
-                AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
-
-                FirebaseAuth.getInstance().signInWithCredential(credential)
-                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    ((LoginActivity)getActivity()).onLoginSuccess();
-                                    Log.d(TAG, "firebase login success");
-                                } else {
-                                    Log.w(TAG, "firebase login failed", task.getException());
-                                    LoginManager.getInstance().logOut();
-                                    Toast.makeText(getActivity(), "firebase login failed", Toast.LENGTH_SHORT).show();
-                                    buttonsClickable(true);
-                                }
-                            }
-                        });
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "facebook login cancelled");
-                buttonsClickable(true);
-                facebookOverlay.setClickable(true);
-                Toast.makeText(getActivity(), "facebook login cancelled", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                buttonsClickable(true);
-                Log.d(TAG, "facebook login failed: " + error.toString());
-                Toast.makeText(getActivity(), "facebook login failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        //visible facebook buton
         facebookOverlay = (Button) rootView.findViewById(R.id.facebook_button_overlay);
         facebookOverlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,5 +126,10 @@ public class Facebook extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onLoginFailure() {
+        LoginManager.getInstance().logOut();
+        buttonsClickable(true);
     }
 }

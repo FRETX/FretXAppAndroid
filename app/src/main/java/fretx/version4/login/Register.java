@@ -27,15 +27,15 @@ import fretx.version4.activities.LoginActivity;
  * Created by pandor on 17/05/17 14:51.
  */
 
-public class Register extends Fragment {
+public class Register extends Fragment implements LoginFragnent {
     private final static String TAG = "KJKP6_REGISTER";
-    private FirebaseAuth mAuth;
+    private LoginActivity activity;
+    private Button registerButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mAuth = FirebaseAuth.getInstance();
+        activity = (LoginActivity) getActivity();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Register extends Fragment {
         final EditText emailEditText = (EditText) rootView.findViewById(R.id.email_signin_edittext);
         final EditText passwordEditText = (EditText) rootView.findViewById(R.id.password_signin_edittext);
 
-        final Button registerButton = (Button) rootView.findViewById(R.id.register_button);
+        registerButton = (Button) rootView.findViewById(R.id.register_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,43 +60,16 @@ public class Register extends Fragment {
                 } else if (!((LoginActivity)getActivity()).isInternetAvailable()) {
                     ((LoginActivity)getActivity()).noInternetAccessDialod().show();
                 } else {
-                    mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d(TAG, "createUserWithEmail:success");
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        if (user != null) {
-                                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                                    .setDisplayName(name)
-                                                    .build();
-                                            user.updateProfile(profileUpdates)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if (task.isSuccessful()) {
-                                                                Log.d(TAG, "User profile updated");
-                                                            } else {
-                                                                Log.d(TAG, "User profile update failed");
-                                                            }
-                                                        }
-                                                    });
-                                            ((LoginActivity)getActivity()).onLoginSuccess();
-                                        } else {
-                                            Log.d(TAG, "user creation failed");
-                                        }
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                        Toast.makeText(getActivity(), "Authentication failed.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+                    registerButton.setClickable(false);
+                    activity.onUserCreation(name, email, password);
                 }
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onLoginFailure() {
+        registerButton.setClickable(true);
     }
 }
