@@ -4,15 +4,14 @@ package fretx.version4.paging.tuner;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.renderscript.Double2;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.audio.Audio;
 import rocks.fretx.audioprocessing.AudioAnalyzer;
 import rocks.fretx.audioprocessing.MusicUtils;
 
@@ -99,11 +98,7 @@ public class TunerView extends View {
 		deltaTime = currentTime - prevTime;
 		prevTime = currentTime;
 
-		if(mActivity.audio.isInitialized() && mActivity.audio.isProcessing()){
-			currentPitch = mActivity.audio.getPitch();
-		} else {
-			currentPitch = -1;
-		}
+		currentPitch = Audio.getInstance().getPitch();
 
 		//Draw the note names and calculate pitch differences
 		TextView textCurrentNote = (TextView) rootView.findViewById(R.id.textCurrentNote);

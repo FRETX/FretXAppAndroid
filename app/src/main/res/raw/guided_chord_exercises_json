@@ -44,23 +44,8 @@
 		],
 		"nRepetitions" : 10
 	},
-		{
-	    "name" : "Exercise 4",
-		"id": "",
-		"chords" : [
-				{
-					"root": "E",
-					"type" : "m"
-				},
-				{
-					"root": "A",
-					"type" : "m7"
-				}
-		],
-		"nRepetitions" : 10
-	},
 	{
-	    "name" : "Exercise 5",
+	    "name" : "Exercise 4",
 		"id": "",
 		"chords" : [
 				{
@@ -75,7 +60,7 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 6",
+	    "name" : "Exercise 5",
 		"id": "",
 		"chords" : [
 				{
@@ -90,7 +75,7 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 7",
+	    "name" : "Exercise 6",
 		"id": "",
 		"chords" : [
 				{
@@ -105,11 +90,26 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 8",
+	    "name" : "Exercise 7",
 		"id": "",
 		"chords" : [
 				{
 					"root": "C",
+					"type" : "maj"
+				},
+				{
+					"root": "A",
+					"type" : "maj"
+				}
+		],
+		"nRepetitions" : 10
+	},
+	{
+	    "name" : "Exercise 8",
+		"id": "",
+		"chords" : [
+				{
+					"root": "E",
 					"type" : "maj"
 				},
 				{
@@ -124,21 +124,6 @@
 		"id": "",
 		"chords" : [
 				{
-					"root": "E",
-					"type" : "maj"
-				},
-				{
-					"root": "A",
-					"type" : "maj"
-				}
-		],
-		"nRepetitions" : 10
-	},
-	{
-	    "name" : "Exercise 10",
-		"id": "",
-		"chords" : [
-				{
 					"root": "A",
 					"type" : "m"
 				},
@@ -150,7 +135,7 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 11",
+	    "name" : "Exercise 10",
 		"id": "",
 		"chords" : [
 				{
@@ -165,7 +150,7 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 12",
+	    "name" : "Exercise 11",
 		"id": "",
 		"chords" : [
 				{
@@ -180,7 +165,7 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 13",
+	    "name" : "Exercise 12",
 		"id": "",
 		"chords" : [
 				{
@@ -195,7 +180,7 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 14",
+	    "name" : "Exercise 13",
 		"id": "",
 		"chords" : [
 				{
@@ -210,7 +195,7 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 15",
+	    "name" : "Exercise 14",
 		"id": "",
 		"chords" : [
 				{
@@ -225,7 +210,7 @@
 		"nRepetitions" : 10
 	},
 	{
-	    "name" : "Exercise 16",
+	    "name" : "Exercise 15",
 		"id": "",
 		"chords" : [
 				{

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textChord"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@color/background"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/textNextChord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@color/background"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText"
+                android:layout_marginRight="5dp"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <fretx.version4.FretboardView
+                android:id="@+id/fretboardView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fretboardHeight"
+                android:layout_margin="@dimen/fretboardMargin" />
+
+            <ImageView
+                android:id="@+id/green_tick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/fretboardView"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/fretboardView"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/green_tick" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/audio_thresold"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@android:drawable/presence_audio_busy" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/chord_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:visibility="invisible" />
+
+
+
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/primary"
+            android:src="@drawable/ic_play_chord"
+            android:textColor="@color/background"
+            android:padding="5dp"
+            android:id="@+id/playChordButton" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Chords Played"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primaryText"
+                    android:textSize="21sp"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primaryText"
+                    android:textStyle="normal|bold"
+                    android:textAlignment="center"
+                    android:id="@+id/position" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Time Spent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primaryText"
+                    android:textSize="21sp"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primaryText"
+                    android:textStyle="normal|bold"
+                    android:textAlignment="center"
+                    android:id="@+id/time" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -45,7 +45,8 @@ public class FretXAndroidFirebaseMessagingService extends FirebaseMessagingServi
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
 				PendingIntent.FLAG_ONE_SHOT);
-		if(action != null){
+//		if(action != null){
+		if(true){
 			if(action.toLowerCase().equals("update")){
 				Log.d(TAG,"This is an update notif!");
 				String appPackageName = getPackageName();

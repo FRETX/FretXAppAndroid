@@ -24,4 +24,10 @@
         title="TUNER"
         barColorWhenSelected="@color/primary"
         />
+    <tab
+        id="@+id/bottomtab_profile"
+        icon="@drawable/ic_settings_black_24dp"
+        title="SETTINGS"
+        barColorWhenSelected="@color/primary"
+        />
 </tabs>

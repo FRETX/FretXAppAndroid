@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <Space
+        android:id="@+id/chordSpacer"
+        android:layout_width="match_parent"
+        android:layout_height="20sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/primaryText"
+        android:background="@color/background"
+        android:id="@+id/textChord"
+        android:layout_gravity="center_vertical"
+        android:textSize="80sp" />
+
+    <fretx.version4.FretboardView
+            android:id="@+id/fretboardView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/fretboardHeight"
+            android:layout_margin="@dimen/fretboardMargin" />
+
+    <Button
+        android:text="Play Chord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/primary"
+        android:textColor="@color/background"
+        android:id="@+id/playChordButton" />
+
+    <TextView
+        android:text="Chords Played"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primaryText"
+        android:textSize="21sp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primaryText"
+        android:textStyle="normal|bold"
+        android:textAlignment="center"
+        android:id="@+id/position" />
+
+</LinearLayout>
