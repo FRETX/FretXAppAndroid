@@ -9,8 +9,8 @@ android {
         applicationId 'fretx.app'
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 37
-        versionName "0.8.16"
+        versionCode 38
+        versionName "0.8.17"
         multiDexEnabled true
         sourceSets.main.jni.srcDirs = []
 
@@ -62,6 +62,7 @@ dependencies {
     //bottom bar
     compile 'com.roughike:bottom-bar:2.1.1'
 
+    //offline video player for non-official expo builds
     compile 'com.afollestad:easyvideoplayer:0.3.0'
 
     //firebase
