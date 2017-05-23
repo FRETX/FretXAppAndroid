@@ -16,6 +16,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
@@ -30,11 +36,13 @@ import fretx.version4.R;
 import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.song.SongList;
+import fretx.version4.login.User;
 import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnFragment;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.profile.Profile;
 import fretx.version4.paging.tuner.TunerFragment;
+import fretx.version4.utils.Preference;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 
@@ -135,6 +143,26 @@ public class MainActivity extends BaseActivity {
 		bottomBar.selectTabAtPosition(INDEX_PLAY);
 
         BluetoothLE.getInstance().setListener(bluetoothListener);
+
+		final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+		final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+		if (fUser != null) {
+			mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot dataSnapshot) {
+					User user = dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class);
+					Preference.getInstance().init(user.guitar, user.hand, user.level);
+				}
+				@Override
+				public void onCancelled(DatabaseError databaseError) {
+					//failure, use local save instead...
+                    Preference.getInstance().init("classic", "right", "beginner");
+				}
+			});
+		} else {
+			//user not connected, use local save instead...
+            Preference.getInstance().init("classic", "right", "beginner");
+		}
 	}
 
     @Override

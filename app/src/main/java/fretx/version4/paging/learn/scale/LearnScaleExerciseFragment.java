@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import fretx.version4.FretboardView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import fretx.version4.utils.Preference;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.FretboardPosition;
@@ -24,21 +25,17 @@ import rocks.fretx.audioprocessing.Scale;
 
 public class LearnScaleExerciseFragment extends Fragment {
 
-	MainActivity mActivity;
+	private static final String TAG = "KJKP6_SCALE";
 
-	LinearLayout rootView = null;
-	LinearLayout scaleRootPicker, scaleTypePicker;
-	int[] notes;
-	ArrayList<FretboardPosition> fretboardPositions;
-	FretboardView fretboardView;
-	Scale currentScale;
+	private LinearLayout scaleRootPicker, scaleTypePicker;
+	private FretboardView fretboardView;
+	private Scale currentScale;
 
 	public LearnScaleExerciseFragment(){}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mActivity = (MainActivity)getActivity();
 		Analytics.getInstance().logSelectEvent("EXERCISE", "Scale");
 		BluetoothLE.getInstance().clearMatrix();
 	}
@@ -51,9 +48,13 @@ public class LearnScaleExerciseFragment extends Fragment {
 		scaleRootPicker = (LinearLayout) rootView.findViewById(R.id.scaleRootPickerView);
 		scaleTypePicker = (LinearLayout) rootView.findViewById(R.id.scaleTypePickerView);
 
+		if (Preference.getInstance().isLeftHanded()) {
+			fretboardView.setScaleX(-1.0f);
+		}
+
 		TextView tmpTextView;
 		for (String str : Scale.ALL_ROOT_NOTES) {
-			tmpTextView = new TextView(mActivity);
+			tmpTextView = new TextView(getActivity());
 			tmpTextView.setText(str);
 			tmpTextView.setTextSize(26);
 			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -66,7 +67,7 @@ public class LearnScaleExerciseFragment extends Fragment {
 			tmpTextView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.scaleRootPickerView);
+					LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.scaleRootPickerView);
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
@@ -82,7 +83,7 @@ public class LearnScaleExerciseFragment extends Fragment {
 		}
 
 		for (String str :Scale.ALL_SCALE_TYPES) {
-			tmpTextView = new TextView(mActivity);
+			tmpTextView = new TextView(getActivity());
 			tmpTextView.setText(str);
 			tmpTextView.setTextSize(26);
 			tmpTextView.setLayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -95,7 +96,7 @@ public class LearnScaleExerciseFragment extends Fragment {
 			tmpTextView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.scaleTypePickerView);
+					LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.scaleTypePickerView);
 					for (int i = 0; i < layout.getChildCount(); i++) {
 						View v = layout.getChildAt(i);
 						if (v instanceof TextView) {
@@ -125,12 +126,11 @@ public class LearnScaleExerciseFragment extends Fragment {
 	}
 
 	private void updateScale(String scaleRootNote, String scaleType){
-		Log.d("update root",scaleRootNote);
-		Log.d("update type",scaleType);
+		Log.d(TAG, scaleRootNote);
+		Log.d(TAG, scaleType);
 
 		currentScale = new Scale(scaleRootNote,scaleType);
-		notes = currentScale.getNotes();
-		fretboardPositions = currentScale.getFretboardPositions();
+		final ArrayList<FretboardPosition> fretboardPositions = currentScale.getFretboardPositions();
 
 		//Show on FretboardView
 		fretboardView.setFretboardPositions(fretboardPositions);

@@ -1,5 +1,6 @@
 package fretx.version4.paging.chords;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,9 +12,21 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import fretx.version4.FretboardView;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.R;
+import fretx.version4.activities.MainActivity;
+import fretx.version4.activities.OnboardingActivity;
+import fretx.version4.login.User;
+import fretx.version4.utils.Preference;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.audio.Midi;
 import fretx.version4.utils.firebase.Analytics;
@@ -48,6 +61,11 @@ public class ChordFragment extends Fragment
         rootNoteView = (LinearLayout) rootView.findViewById(R.id.chordPickerRootNoteView);
         chordTypeView = (LinearLayout) rootView.findViewById(R.id.chordPickerTypeView);
         textChord = (TextView) rootView.findViewById(R.id.textChord);
+
+        if (Preference.getInstance().isLeftHanded()) {
+            Log.v(TAG, "left handed");
+            fretboardView.setScaleX(-1.0f);
+        }
 
         return  rootView;
     }

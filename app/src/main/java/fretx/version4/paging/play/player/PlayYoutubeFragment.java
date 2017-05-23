@@ -33,6 +33,7 @@ import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
+import fretx.version4.utils.Preference;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
@@ -148,6 +149,11 @@ public class PlayYoutubeFragment extends Fragment {
 	    timeSeekBar = (SeekBar) rootView.findViewById(R.id.timeSeekbar);
 	    timeElapsedText = (TextView) rootView.findViewById(R.id.elapsedTimeText);
 	    timeTotalText = (TextView) rootView.findViewById(R.id.totalTimeText);
+
+        if (Preference.getInstance().isLeftHanded()) {
+            fretboardCurrent.setScaleX(-1.0f);
+            fretboardNext.setScaleX(-1.0f);
+        }
     }
 
     private void setEventListeners() {
