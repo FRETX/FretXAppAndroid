@@ -232,11 +232,12 @@ public class MainActivity extends BaseActivity {
 		bluetoothButton.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				PreferencesManager tutorialPrefs = new PreferencesManager(getApplicationContext());
-				tutorialPrefs.resetAll();
-				SongList.getIndexFromServer();
-				Toast.makeText(mActivity,"All tutorials reset, cache refreshed",Toast.LENGTH_SHORT).show( );
-				return true;
+				//Disabled for Firebase robo testing
+//				PreferencesManager tutorialPrefs = new PreferencesManager(getApplicationContext());
+//				tutorialPrefs.resetAll();
+//				SongList.getIndexFromServer();
+//				Toast.makeText(mActivity,"All tutorials reset, cache refreshed",Toast.LENGTH_SHORT).show( );
+//				return true;
 			}
 		});
 
