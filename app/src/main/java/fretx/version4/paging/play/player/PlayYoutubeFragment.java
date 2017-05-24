@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import fretx.version4.Config;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.Util;
+import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
 import fretx.version4.utils.Preference;
@@ -37,7 +39,7 @@ import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 
-public class PlayYoutubeFragment extends Fragment {
+public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.PlayedEndDialogListener {
     private final static String TAG = "KJKP6_YOUTUBE";
     //Youtube
     private static final String API_KEY = Config.YOUTUBE_API_KEY;
@@ -75,6 +77,7 @@ public class PlayYoutubeFragment extends Fragment {
 	private boolean seeking = false;
 	private int seekToTarget = -1;
     static private Handler mCurTimeShowHandler = new Handler();
+    private PlayerEndDialog.PlayedEndDialogListener listener = this;
 
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
     @Override
@@ -341,7 +344,11 @@ public class PlayYoutubeFragment extends Fragment {
         }
         @Override public void onAdStarted() {Log.d(TAG, "YOUTUBE Ad Started");}
         @Override public void onVideoStarted() {Log.d(TAG, "YOUTUBE VideoStarted!");}
-        @Override public void onVideoEnded() {Log.d(TAG, "YOUTUBE VideoEnded!");}
+        @Override public void onVideoEnded() {
+            Log.d(TAG, "YOUTUBE VideoEnded!");
+            PlayerEndDialog dialog = PlayerEndDialog.newInstance(listener, song.song_title);
+            dialog.show(getFragmentManager(), null);
+        }
         @Override public void onError(YouTubePlayer.ErrorReason err) { Log.d(TAG, "YOUTUBE Error");}
     }
 
@@ -373,8 +380,6 @@ public class PlayYoutubeFragment extends Fragment {
 
         if ( repeatedTime ) { m_currentTime = youtubeElapsedTime + sysClockDelta;                  }
         else                { lastSysClockTime = sysClockTime; m_currentTime = youtubeElapsedTime; }
-
-        Log.d(TAG, "Current Time : " + m_currentTime );
     }
 
     Runnable playerTimingLoop = new Runnable() {
@@ -458,8 +463,6 @@ public class PlayYoutubeFragment extends Fragment {
     }
 
     /////////////////////////////////////////// UTILITIES //////////////////////////////////////////
-
-    //UTILITY
 	private void resetPrerollButtons(){
 		if(preRollButtons.size() > 0){
 			for (Button b:preRollButtons) {
@@ -475,4 +478,19 @@ public class PlayYoutubeFragment extends Fragment {
 	private void activateButton(Button b) {
 		b.setBackgroundColor(getResources().getColor(R.color.activeButton));
 	}
+
+    //////////////////////////////////////////// LISTENER //////////////////////////////////////////
+    public void onReplay() {
+        initTxt();
+        initYoutubePlayer();
+    }
+    public void onCancel() {
+        ((MainActivity)getActivity()).fragNavController.popFragment();
+    }
+    public void onRandom(SongItem item) {
+        final PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
+        youtubeFragment.setSong(item);
+        ((MainActivity)getActivity()).fragNavController.replaceFragment(youtubeFragment);
+    }
+
 }

@@ -53,9 +53,6 @@ public class MainActivity extends BaseActivity {
 	private ImageView bluetoothButton;
 	private BottomBar bottomBar;
 
-	//FLAGS
-	private MainActivity mActivity = this;
-
 	private ImageView previewButton;
 	private ImageButton connectButton;
 	public boolean previewEnabled = true;

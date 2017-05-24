@@ -32,7 +32,10 @@ public class Analytics {
     public void init() {
         Log.d(TAG, "init");
         analytics = com.google.firebase.analytics.FirebaseAnalytics.getInstance(BaseActivity.getActivity());
-        enabled = true;
+        if (analytics != null)
+            enabled = true;
+        else
+            enabled = false;
     }
 
     public void start() {
@@ -53,6 +56,8 @@ public class Analytics {
 
     /* = = = = = = = = = = = = = = = = = = = EVENT = = = = = = = = = = = = = = = = = = = = = */
     public void logSelectEvent(String content_type, String item_id) {
+        if (!enabled)
+            return;
         Bundle bundle = new Bundle();
         bundle.putString(com.google.firebase.analytics.FirebaseAnalytics.Param.CONTENT_TYPE, content_type);
         bundle.putString(com.google.firebase.analytics.FirebaseAnalytics.Param.ITEM_ID, item_id);

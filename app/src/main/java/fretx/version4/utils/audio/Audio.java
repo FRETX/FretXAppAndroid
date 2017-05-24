@@ -68,7 +68,12 @@ public class Audio {
             return;
         Log.d(TAG, "start");
         if (!audio.isInitialized())
-            audio.initialize(FS, BUFFER_SIZE_S);
+            try {
+                audio.initialize(FS, BUFFER_SIZE_S);
+            } catch (IllegalArgumentException e) {
+                enabled = false;
+                return;
+            }
         if (!audio.isProcessing())
             audio.start();
         timeoutCounter = 0;
