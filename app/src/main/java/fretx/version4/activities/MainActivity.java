@@ -152,19 +152,20 @@ public class MainActivity extends BaseActivity {
 				public void onDataChange(DataSnapshot dataSnapshot) {
 					Log.v(TAG, "can get data");
 					User user = dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class);
+					//// TODO: 24/05/17 use nested class to get directly the useful part
 					Preference.getInstance().init(user.guitar, user.hand, user.level);
 				}
 				@Override
 				public void onCancelled(DatabaseError databaseError) {
 					//failure, use local save instead...
 					Log.v(TAG, "cant get data");
-                    Preference.getInstance().init("classic", "right", "beginner");
+					Preference.getInstance().init(Preference.CLASSICAL_GUITAR, Preference.RIGHT_HANDED, Preference.LEVEL_BEGINNER);
 				}
 			});
 		} else {
 			Log.v(TAG, "fUser is null");
-			//user not connected, use local save instead...
-            Preference.getInstance().init("classic", "right", "beginner");
+			//// TODO: 24/05/17 use a local save instead of default
+			Preference.getInstance().init(Preference.CLASSICAL_GUITAR, Preference.RIGHT_HANDED, Preference.LEVEL_BEGINNER);
 		}
 	}
 
