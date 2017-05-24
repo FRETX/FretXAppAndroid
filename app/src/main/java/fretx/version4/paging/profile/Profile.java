@@ -47,9 +47,9 @@ public class Profile extends Fragment {
             disconnectButton.setVisibility(View.GONE);
         }
 
-        //final Uri url = user.getPhotoUrl();
-        //if (url != null)
-        //    Picasso.with(getActivity()).load(url).placeholder(R.drawable.defaultthumb).into(photo);
+        final Uri url = user.getPhotoUrl();
+        if (url != null)
+            Picasso.with(getActivity()).load(url).placeholder(R.drawable.defaultthumb).into(photo);
 
         disconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override

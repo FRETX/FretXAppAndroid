@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -32,54 +33,27 @@ import fretx.version4.fretxapi.song.SongPunch;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 
 public class PlayOfflinePlayerFragment extends Fragment {
-
-	private static final int RECOVERY_REQUEST = 1;
-	public String videoUri;
-	public int resourceId;
-
-	private static final String API_KEY = Config.YOUTUBE_API_KEY;
-
 	private SongItem song;
-
 	private MainActivity context;
 	private View rootView;
 	private SeekBar prerollSlider;
 	private TextView prerollValue;
-	//    private TextView     loopStartTime;
-//    private TextView     loopEndTime;
 	private Button loopStartBtn;
 	private Button loopEndBtn;
-//    private ImageView    loopTglOn;
-//    private ImageView    loopTglOff;
-
 	private int preroll = 0;
 	private String VIDEO_ID = "";
 	private String SONG_TXT;
 	static Hashtable punch_list;
 	static int[] arrayKeys;
 	static Boolean[] arrayCallStatus;
-
 	private boolean startButtonPressed = false;
 	private boolean endButtonPressed = false;
-
-	//	private YouTubePlayer m_player = null;
 	private EasyVideoPlayer m_player = null;
-
-//    static boolean bStartCheckFlag = false;    // Flag that current time is passed start time.
-//    static boolean bEndCheckFlag = false;      // Flag that current time is passed end time.
-
-	static long lastSysClockTime = 0;
-	static long lastYoutubeElapsedTime = 0;
-	static long m_currentTime = 0;          // Now playing time.
-
-	private long startPos = 0;               // start point of loop
-	private long endPos = 0;                 // end point of loop
-
-	//    static boolean mbLoopable = false;         // flag of checking loop
-	static boolean mbPlaying = true;           // Flag of now playing.
-	static boolean mbSendingFlag = false;
-
+	static long m_currentTime = 0;
+	private long startPos = 0;
+	private long endPos = 0;
 	static private Handler mCurTimeShowHandler = new Handler();
+    static boolean mbPlaying = true;
 
 	///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
 
@@ -94,18 +68,25 @@ public class PlayOfflinePlayerFragment extends Fragment {
 		m_player = (EasyVideoPlayer) rootView.findViewById(R.id.videoPlayer);
 		m_player.setCallback(new MyPlaybackEventListener());
 
-		String fileName = "fretx" + VIDEO_ID.toLowerCase().replace("-", "_");
+		final String fileName = "fretx" + VIDEO_ID.toLowerCase().replace("-", "_");
 		m_player.setAutoPlay(true);
 		m_player.setSource(Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + fileName));
 
 		prerollValue.setText("0 ms");
-		TextView tv10 = (TextView) rootView.findViewById(R.id.textView10);
+		final TextView tv10 = (TextView) rootView.findViewById(R.id.textView10);
 		tv10.setText("Early Lights");
 
 		return rootView;
 	}
 
-	@Override
+    @Override
+    public void onResume() {
+        super.onResume();
+        ImageButton preview = (ImageButton) getActivity().findViewById(R.id.previewButton);
+        preview.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
 	public void onStop() {
 		super.onStop();
 		Log.d("PlayFragmentYT", "onStop");

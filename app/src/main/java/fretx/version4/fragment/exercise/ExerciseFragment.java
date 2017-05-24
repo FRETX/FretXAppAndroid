@@ -168,6 +168,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
 
         //if the last chord has been played, display dialog
         if (chordIndex == exerciseChords.size() && !finished) {
+            BluetoothLE.getInstance().clearMatrix();
             finished = true;
             listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
         }
