@@ -52,7 +52,7 @@
         android:textAllCaps="false"
         android:background="@color/primary"
         android:textColor="@color/tertiaryText"
-        android:text="Other Sign-in" />
+        android:text="E-mail Sign-in" />
     <android.support.v4.widget.Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
