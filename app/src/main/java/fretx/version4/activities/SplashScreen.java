@@ -48,7 +48,7 @@ public class SplashScreen extends BaseActivity {
                 if (BluetoothLE.getInstance().isEnabled()) {
                     BluetoothLE.getInstance().scan();
                 } else {
-                    onComplete();
+                    onInitComplete();
                 }
             }
         });
@@ -59,24 +59,24 @@ public class SplashScreen extends BaseActivity {
             @Override
             public void onConnect() {
                 Log.d(TAG, "Success!");
-                onComplete();
+                onInitComplete();
             }
 
             @Override
             public void onDisconnect() {
                 Log.d(TAG, "Failure!");
-                onComplete();
+                onInitComplete();
             }
 
             @Override
             public void onScanFailure() {
                 Log.d(TAG, "Failure!");
-                onComplete();
+                onInitComplete();
             }
 
             public void onFailure() {
                 Log.d(TAG, "Failure!");
-                onComplete();
+                onInitComplete();
             }
         });
 
@@ -124,7 +124,7 @@ public class SplashScreen extends BaseActivity {
         }
     }
 
-    private void onComplete() {
+    private void onInitComplete() {
         BluetoothLE.getInstance().setListener(null);
         BluetoothLE.getInstance().clearMatrix();
 

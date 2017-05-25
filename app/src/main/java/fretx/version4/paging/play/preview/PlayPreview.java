@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import fretx.version4.R;
@@ -82,6 +83,13 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ImageButton preview = (ImageButton) getActivity().findViewById(R.id.previewButton);
+        preview.setVisibility(View.INVISIBLE);
+    }
+
     //when the exercise fragment report the end of current exercise
     @Override
     public void onFinish(int min, int sec) {
@@ -97,7 +105,7 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         } else {
             PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
             youtubeFragment.setSong(song);
-            mActivity.fragNavController.replaceFragment(youtubeFragment);
+            mActivity.fragNavController.pushFragment(youtubeFragment);
         }
     }
 

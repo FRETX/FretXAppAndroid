@@ -10,6 +10,11 @@ public class Preference {
 
     public final static String LEFT_HANDED = "left";
     public final static String RIGHT_HANDED = "right";
+    public final static String ACCOUSTIC_GUITAR = "acoustic";
+    public final static String ELECTRIC_GUITAR = "electric";
+    public final static String CLASSICAL_GUITAR = "classical";
+    public final static String LEVEL_BEGINNER = "beginner";
+    public final static String LEVEL_PLAYER = "player";
 
     private String guitar;
     private String hand;
@@ -33,6 +38,10 @@ public class Preference {
         this.guitar = guitar;
         this.hand = hand;
         this.level = level;
+    }
+
+    public void setHand(String hand) {
+        this.hand = hand;
     }
 
     public boolean isLeftHanded() {

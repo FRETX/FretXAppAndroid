@@ -6,16 +6,25 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,15 +33,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import fretx.version4.R;
 import fretx.version4.login.Facebook;
+import fretx.version4.login.LoginFragnent;
 import fretx.version4.login.User;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 
 public class LoginActivity extends BaseActivity {
     private final static String TAG = "KJKP6_LOGIN_ACT";
-    public final static String FACEBOOK_TAG = "FACEBOOK_TAG";
-    public final static String OTHER_TAG = "FACEBOOK_TAG";
-    public final static String RECOVER_TAG = "RECOVER_TAG";
-    public final static String REGISTER_TAG = "REGISTER_TAG";
-
     private Fragment fragment;
     private Button skip;
 
@@ -44,7 +50,7 @@ public class LoginActivity extends BaseActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragment = new Facebook();
-        fragmentTransaction.add(R.id.login_fragment_container, fragment, FACEBOOK_TAG);
+        fragmentTransaction.add(R.id.login_fragment_container, fragment);
         fragmentTransaction.commit();
 
         skip = (Button) findViewById(R.id.skip_login);
@@ -58,10 +64,6 @@ public class LoginActivity extends BaseActivity {
         if (!isInternetAvailable()) {
             skip.setVisibility(View.VISIBLE);
         }
-    }
-
-    public void setFragment(Fragment fragment) {
-        this.fragment = fragment;
     }
 
     @Override
@@ -78,6 +80,10 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void setFragment(Fragment fragment) {
+        this.fragment = fragment;
     }
 
     public AlertDialog noInternetAccessDialod() {
@@ -101,7 +107,28 @@ public class LoginActivity extends BaseActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public void onLoginSuccess() {
+    public void onServiceLoginSuccess(AuthCredential credential) {
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "firebase login success");
+                            onFirebaseLoginSuccess();
+                        } else {
+                            Log.w(TAG, "firebase login failed", task.getException());
+                            Toast.makeText(getActivity(), "firebase login failed", Toast.LENGTH_SHORT).show();
+                            ((LoginFragnent) fragment).onLoginFailure();
+                        }
+                    }
+                });
+    }
+
+    public void onServiceLoginFailed(String serviceName) {
+        Toast.makeText(this, serviceName + " login failed", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onFirebaseLoginSuccess() {
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -123,5 +150,41 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
+    }
+
+    public void onUserCreation(final String name, String email, String password) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user != null) {
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(name)
+                                        .build();
+                                user.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, "User profile updated");
+                                                } else {
+                                                    Log.d(TAG, "User profile update failed");
+                                                }
+                                            }
+                                        });
+                                onFirebaseLoginSuccess();
+                            } else {
+                                Log.d(TAG, "user creation failed");
+                            }
+                        } else {
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(getActivity(), "User creation failed.", Toast.LENGTH_SHORT).show();
+                            ((LoginFragnent) fragment).onLoginFailure();
+                        }
+                    }
+                });
     }
 }

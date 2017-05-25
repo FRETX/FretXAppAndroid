@@ -88,12 +88,6 @@ public class BluetoothLE {
 
     private BluetoothGattCharacteristic rx;
     private final byte[] clear = new byte[]{0};
-    private final byte[] all = new byte[]{
-            1, 2, 3, 4, 5, 6,
-            11, 12, 13, 14, 15, 16,
-            21, 22, 23, 24, 25, 26,
-            31, 32, 33, 34, 35, 36,
-            41, 42, 43, 44, 45, 46, 0}; //Hardware limitations prevent all lights from lighting up
     private final byte[] correctIndicator = new byte[]{
             1,11,21,31,41,
             6,16,26,36,46, 0};
@@ -336,6 +330,7 @@ public class BluetoothLE {
 
     /* = = = = = = = = = = = = = = = = = = = = = MATRIX = = = = = = = = = = = = = = = = = = = = = */
     public void setMatrix(Chord chord) {
+        BluetoothAnimator.getInstance().stopAnimation();
         if (gatt == null || rx == null)
             return;
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chord.toString(), chordFingerings);
@@ -344,6 +339,7 @@ public class BluetoothLE {
     }
 
     public void setMatrix(byte[] fingerings) {
+        BluetoothAnimator.getInstance().stopAnimation();
         if (gatt == null || rx == null)
             return;
         rx.setValue(fingerings);
@@ -351,6 +347,7 @@ public class BluetoothLE {
     }
 
     public void setMatrix(Scale scale) {
+        BluetoothAnimator.getInstance().stopAnimation();
         if (gatt == null || rx == null)
             return;
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(scale.toString(), chordFingerings);
@@ -359,6 +356,7 @@ public class BluetoothLE {
     }
 
     public void clearMatrix() {
+        BluetoothAnimator.getInstance().stopAnimation();
         if (gatt == null || rx == null)
             return;
         rx.setValue(clear);
@@ -366,6 +364,7 @@ public class BluetoothLE {
     }
 
     public void lightMatrix() {
+        BluetoothAnimator.getInstance().stopAnimation();
         if (gatt == null || rx == null)
             return;
         rx.setValue(correctIndicator);

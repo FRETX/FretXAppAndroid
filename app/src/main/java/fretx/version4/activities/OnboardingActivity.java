@@ -86,6 +86,7 @@ public class OnboardingActivity extends BaseActivity {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         break;
+
                     case 1:
                         group = (RadioGroup) findViewById(R.id.radioGroup);
                         switch (group.getCheckedRadioButtonId()) {
@@ -98,7 +99,6 @@ public class OnboardingActivity extends BaseActivity {
                             default:
                                 return;
                         }
-
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragment = new Level();
@@ -106,6 +106,7 @@ public class OnboardingActivity extends BaseActivity {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         break;
+
                     case 2:
                         group = (RadioGroup) findViewById(R.id.radioGroup);
                         switch (group.getCheckedRadioButtonId()) {

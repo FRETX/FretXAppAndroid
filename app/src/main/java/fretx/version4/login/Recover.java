@@ -17,7 +17,7 @@ import fretx.version4.activities.LoginActivity;
  * Created by pandor on 17/05/17 14:53.
  */
 
-public class Recover extends Fragment{
+public class Recover extends Fragment implements LoginFragnent {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,5 +42,9 @@ public class Recover extends Fragment{
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onLoginFailure() {
     }
 }

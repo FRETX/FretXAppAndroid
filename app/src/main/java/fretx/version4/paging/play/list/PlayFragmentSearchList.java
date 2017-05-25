@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -139,6 +140,8 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
     public void onResume() {
         super.onResume();
         BluetoothLE.getInstance().clearMatrix();
+        ImageButton preview = (ImageButton) getActivity().findViewById(R.id.previewButton);
+        preview.setVisibility(View.VISIBLE);
     }
 
     private void refreshData() {
