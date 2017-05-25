@@ -1,123 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/header_cover_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/background_guitar_01" />
-
-        <ImageButton
-            android:id="@+id/user_profile_photo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_below="@+id/header_cover_image"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="-60dp"
-            android:background="@drawable/profile_circular_border_imageview"
-            android:elevation="5dp"
-            android:padding="20dp"
-            android:scaleType="centerCrop"/>
-
-        <RelativeLayout
-            android:id="@+id/profile_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/header_cover_image"
-            android:background="@color/primary"
-            android:elevation="4dp"
-            android:paddingBottom="24dp">
-
-
-            <ImageView
-                android:visibility="gone"
-                android:id="@+id/add_friend"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_toLeftOf="@+id/drop_down_option_menu" />
-
-            <ImageView
-                android:visibility="gone"
-                android:id="@+id/drop_down_option_menu"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
-
-            <TextView
-                android:id="@+id/name_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="76dp"
-                android:text="Anonymous"
-                android:textColor="#fff"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/email_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/name_textview"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:textColor="#fff"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_layout"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/disconnect_button"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="#fff"
-                android:clickable="true"
-                android:elevation="4dp"
-                android:padding="20dp"
-                android:textColor="@color/primaryText"
-                android:text="Sign Out" />
-
-            <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="0dp"
+            android:layout_weight="0.45"
+            android:background="@color/primary"
+            >
+            <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="match_parent">
+                <FrameLayout
+                    android:id="@+id/user_profile_frame"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_centerHorizontal="true"
+                    app:layout_widthPercent="25%"
+                    app:layout_aspectRatio="100%">
+                    <ImageView
+                        android:id="@+id/user_profile_photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+                    <ImageView
+                        android:id="@+id/user_profile_photo_border"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/circular_border"
+                        android:elevation="5dp"
+                        />
+                </FrameLayout>
 
                 <TextView
-                    android:id="@+id/left_hand_textview"
-                    android:layout_width="0dp"
+                    android:id="@+id/name_textview"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:text="left handed mode" />
+                    android:layout_gravity="center_vertical"
+                    android:text="Anonymous"
+                    android:layout_below="@id/user_profile_frame"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="#fff"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </android.support.percent.PercentRelativeLayout>
 
-                <Switch
-                    android:id="@+id/left_handed_switch"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3" />
-
-            </LinearLayout>
 
         </LinearLayout>
-    </RelativeLayout>
-</ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.55"
+            >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/email_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#fff"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/left_hand_textview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:textColor="@color/primaryText"
+                        android:text="Left-handed" />
+
+                    <Switch
+                        android:id="@+id/left_handed_switch"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/disconnect_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="20dp"
+                    android:textColor="@color/primaryText"
+                    android:text="Sign Out" />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
