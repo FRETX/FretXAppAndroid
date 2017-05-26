@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -19,10 +20,12 @@ import rocks.fretx.audioprocessing.FretboardPosition;
  */
 
 public class FretboardView extends View {
+    private static final int TIME_STEP_MS = 100;
+    private static final int TIME_MS = 1000;
 
 	private ArrayList<FretboardPosition> fretboardPositions;
 
-	private float width, height, nStrings, nFrets, xPadding, yPadding, yPaddingTop, yPaddingBottom, stringStep, fretStep;
+	private float width, height, nStrings, nFrets, xPadding, yPaddingTop, yPaddingBottom, stringStep, fretStep;
 
 	private final Rect imageBounds = new Rect();
 
@@ -30,6 +33,7 @@ public class FretboardView extends View {
 	private final Drawable fretboardImage;
     private final Drawable redLed;
     private final Drawable blueLed;
+    private final Drawable strumer;
 
 	public FretboardView(Context context, AttributeSet attrs){
 		super(context,attrs);
@@ -38,13 +42,13 @@ public class FretboardView extends View {
 		nFrets = 4;
 		nFrets++; //increment to include the nut, and the bottom-most line and keep the "fret" semantics understandable
 		xPadding = 0.045f;
-		yPadding = 0.15f;
 		yPaddingTop = 0.137f;
 		yPaddingBottom = 0.1159f;
 
 		fretboardImage = getContext().getResources().getDrawable(R.drawable.fretboard, null);
 		redLed = getContext().getResources().getDrawable(R.drawable.fretboard_red_led, null);
-		blueLed = getContext().getResources().getDrawable(R.drawable.fretboard_blue_led, null);
+        blueLed = getContext().getResources().getDrawable(R.drawable.fretboard_blue_led, null);
+        strumer = getContext().getResources().getDrawable(R.drawable.fretboard_blue_led, null);
 	}
 
 	public void setFretboardPositions(ArrayList<FretboardPosition> fp){

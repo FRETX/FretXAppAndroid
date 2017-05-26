@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -32,6 +35,8 @@ import fretx.version4.utils.audio.SoundPoolPlayer;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import rocks.fretx.audioprocessing.Chord;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 /**
  * FretXAppAndroid for FretX
  * Created by pandor on 09/05/17 10:22.
@@ -45,15 +50,17 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     private SoundPoolPlayer sound;
 
     //view
-    private FretboardView fretboardView;
     private TextView chordText;
     private TextView chordNextText;
     private TextView timeText;
     private ImageButton playButton;
     private ProgressBar chordProgress;
     private ImageView thresholdImage;
-    private ImageView greenTick;
     private ProgressBar exerciseProgress;
+    private ImageView greenTick;
+
+    //childFragment
+    private final FretboardFragment fretboardFragment = new FretboardFragment();
 
     //chords
     private int chordIndex;
@@ -82,19 +89,18 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //setup view
         RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.exercise_fragment, container, false);
-        fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
         timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
         chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);
         playButton = (ImageButton) rootView.findViewById(R.id.playChordButton);
         chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
-        greenTick = (ImageView) rootView.findViewById(R.id.green_tick);
         exerciseProgress = (ProgressBar) rootView.findViewById(R.id.exercise_progress);
+        greenTick = (ImageView) rootView.findViewById(R.id.green_tick);
 
-        if (Preference.getInstance().isLeftHanded()) {
-            fretboardView.setScaleX(-1.0f);
-        }
+        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fretboard_fragment_container, fretboardFragment);
+        fragmentTransaction.commit();
 
         exerciseProgress.setMax(exerciseChords.size());
 
@@ -278,7 +284,8 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         else
             chordNextText.setText("");
         //update finger position
-        fretboardView.setFretboardPositions(actualChord.getFingerPositions());
+        fretboardFragment.setChord(actualChord);
+        fretboardFragment.strum();
         //update chord listener
         Audio.getInstance().setTargetChord(actualChord);
         Audio.getInstance().startListening();
@@ -291,7 +298,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
 
     //create a audio helper dialog
     private AlertDialog audioHelperDialog(Context context) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         //todo change text of dialog
         alertDialogBuilder.setTitle("Audio Detector")
                 .setMessage("Low sound detected. Please try bringing your guitar closer or playing louder.")

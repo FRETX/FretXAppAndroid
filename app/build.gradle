@@ -91,6 +91,10 @@ dependencies {
         transitive = true;
     }
 
+    //intercom
+    compile 'io.intercom.android:intercom-sdk-base:3.+'
+    compile 'io.intercom.android:intercom-sdk-fcm:3.+'
+
     //unit test
     testCompile 'junit:junit:4.12'
 }

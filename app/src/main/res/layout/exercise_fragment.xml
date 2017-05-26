@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -41,23 +40,23 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <fretx.version4.FretboardView
-                android:id="@+id/fretboardView"
+            <FrameLayout
+                android:id="@+id/fretboard_fragment_container"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/fretboardHeight"
-                android:layout_margin="@dimen/fretboardMargin" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/green_tick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/fretboardView"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/fretboardView"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/green_tick" />
+
         </RelativeLayout>
 
         <ProgressBar
