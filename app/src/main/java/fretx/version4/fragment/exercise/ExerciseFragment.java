@@ -271,6 +271,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         }
     }
 
+
     //setup everything according actual chord
     private void setChord() {
         if(chordIndex >= exerciseChords.size()) return;
