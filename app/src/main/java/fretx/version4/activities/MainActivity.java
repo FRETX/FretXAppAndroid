@@ -62,9 +62,8 @@ public class MainActivity extends BaseActivity {
 
 	private static int INDEX_PLAY = FragNavController.TAB1;
 	private static int INDEX_LEARN = FragNavController.TAB2;
-	private static int INDEX_CHORDS = FragNavController.TAB3;
-	private static int INDEX_TUNER = FragNavController.TAB4;
-	private static int INDEX_PROFILE = FragNavController.TAB5;
+	private static int INDEX_TUNER = FragNavController.TAB3;
+	private static int INDEX_PROFILE = FragNavController.TAB4;
 
 	private final Runnable setConnected = new Runnable() {
 		@Override
@@ -125,7 +124,6 @@ public class MainActivity extends BaseActivity {
 
 		fragments.add(new PlayFragmentSearchList());
 		fragments.add(new LearnFragment());
-		fragments.add(new ChordFragment());
 		fragments.add(new TunerFragment());
 		fragments.add(new Profile());
 		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
@@ -200,9 +198,6 @@ public class MainActivity extends BaseActivity {
 						break;
 					case R.id.bottomtab_learn:
 						fragNavController.switchTab(INDEX_LEARN);
-						break;
-					case R.id.bottomtab_chords:
-						fragNavController.switchTab(INDEX_CHORDS);
 						break;
 					case R.id.bottomtab_tuner:
 						fragNavController.switchTab(INDEX_TUNER);

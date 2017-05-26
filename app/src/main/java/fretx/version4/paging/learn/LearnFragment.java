@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.custom.LearnCustomBuilderFragment;
 import fretx.version4.paging.learn.guided.LearnGuidedListFragment;
 import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;
@@ -19,7 +20,8 @@ import fretx.version4.utils.firebase.Analytics;
 public class LearnFragment extends Fragment {
     CardView btCustomChordExercise;
 	CardView btScaleChordExercise;
-	CardView btGuidedChordExercise;
+    CardView btGuidedChordExercise;
+    CardView btChord;
 
     public LearnFragment(){}
 
@@ -37,6 +39,7 @@ public class LearnFragment extends Fragment {
         btGuidedChordExercise = (CardView)rootView.findViewById(R.id.btGuidedChordExercises);
         btCustomChordExercise = (CardView)rootView.findViewById(R.id.btCustomChordExercise);
         btScaleChordExercise = (CardView)rootView.findViewById(R.id.btScaleChordExercise);
+        btChord = (CardView)rootView.findViewById(R.id.btChord);
 
         return rootView;
     }
@@ -58,6 +61,12 @@ public class LearnFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).fragNavController.pushFragment(new LearnScaleExerciseFragment());
+            }
+        });
+        btChord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).fragNavController.pushFragment(new ChordFragment());
             }
         });
     }

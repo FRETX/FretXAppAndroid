@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
@@ -207,29 +208,31 @@ public class BluetoothLE {
     private Runnable endOfScan = new Runnable() {
         @Override
         public void run() {
-            if(adapter.getBluetoothLeScanner() == null) {
+            final BluetoothLeScanner scanner = adapter.getBluetoothLeScanner();
+            if(scanner == null) {
                 Log.d(TAG, "Bluetooth off");
                 progress.dismiss();
                 if (listener != null) {
                     listener.onScanFailure();
                 }
-            }
-            adapter.getBluetoothLeScanner().stopScan(scanCallback);
-            scanning = false;
-            if (devices.size() == 1) {
-                handler.removeCallbacksAndMessages(null);
-                connect(devices.valueAt(0));
-            } else if (devices.size() > 1) {
-                Log.d(TAG, "Too many devices found");
-                progress.dismiss();
-                if (listener != null) {
-                    listener.onScanFailure();
-                }
             } else {
-                Log.d(TAG, "No device found");
-                progress.dismiss();
-                if (listener != null) {
-                    listener.onScanFailure();
+                scanner.stopScan(scanCallback);
+                scanning = false;
+                if (devices.size() == 1) {
+                    handler.removeCallbacksAndMessages(null);
+                    connect(devices.valueAt(0));
+                } else if (devices.size() > 1) {
+                    Log.d(TAG, "Too many devices found");
+                    progress.dismiss();
+                    if (listener != null) {
+                        listener.onScanFailure();
+                    }
+                } else {
+                    Log.d(TAG, "No device found");
+                    progress.dismiss();
+                    if (listener != null) {
+                        listener.onScanFailure();
+                    }
                 }
             }
         }

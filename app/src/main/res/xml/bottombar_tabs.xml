@@ -13,12 +13,6 @@
         barColorWhenSelected="@color/primary"
         />
     <tab
-        id="@+id/bottomtab_chords"
-        icon="@drawable/ic_chords"
-        title="CHORDS"
-        barColorWhenSelected="@color/primary"
-        />
-    <tab
         id="@+id/bottomtab_tuner"
         icon="@drawable/ic_tuner"
         title="TUNER"

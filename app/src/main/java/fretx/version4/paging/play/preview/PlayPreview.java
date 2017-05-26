@@ -68,7 +68,7 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
             public void onClick(View v) {
                 PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
                 youtubeFragment.setSong(song);
-                mActivity.fragNavController.replaceFragment(youtubeFragment);
+                mActivity.fragNavController.pushFragment(youtubeFragment);
             }
         });
 

@@ -1,5 +1,6 @@
 package fretx.version4.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -107,9 +109,9 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getActivity(), "Invalid input", Toast.LENGTH_SHORT).show();
                 } else if (!((LoginActivity)getActivity()).isInternetAvailable()) {
@@ -125,6 +127,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         recoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Recover fragment = new Recover();
@@ -139,6 +142,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         forgotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Register fragment = new Register();
@@ -154,6 +158,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         googleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
                     onLoginStart();
                     Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -188,6 +193,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         twitterOverlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 if (((LoginActivity)getActivity()).isInternetAvailable()) {
                     onLoginStart();
                     twitterButton.performClick();
@@ -251,5 +257,10 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         forgotButton.setClickable(clickable);
         googleButton.setClickable(clickable);
         twitterOverlay.setClickable(clickable);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow((null == getActivity().getCurrentFocus()) ? null : getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

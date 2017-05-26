@@ -51,28 +51,35 @@ public class Profile extends Fragment {
             nameTextView.setText(user.getDisplayName());
             emailTextView.setText(user.getEmail());
             mDatabase = FirebaseDatabase.getInstance().getReference();
+            final Uri url = user.getPhotoUrl();
+            if (url != null)
+                Picasso.with(getActivity()).load(url).placeholder(R.drawable.defaultthumb).into(photo);
+            disconnectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
         } else {
             Log.d(TAG, "anonymously connected");
-            disconnectButton.setVisibility(View.GONE);
+            disconnectButton.setText("Login");
+            disconnectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
-
-        final Uri url = user.getPhotoUrl();
-        if (url != null)
-            Picasso.with(getActivity()).load(url).placeholder(R.drawable.defaultthumb).into(photo);
 
         if (Preference.getInstance().isLeftHanded())
             leftHandedSwitch.setChecked(true);
         else
             leftHandedSwitch.setChecked(false);
 
-        disconnectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         leftHandedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

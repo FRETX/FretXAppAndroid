@@ -101,6 +101,8 @@ public class Audio {
     }
 
     public void startListening() {
+        if (!enabled)
+            return;
         Log.d(TAG, "start listening");
         correctlyPlayedAccumulator = 0;
         timeoutCounter = 0;
