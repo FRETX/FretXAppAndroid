@@ -1,7 +1,6 @@
 package fretx.version4.fragment.exercise;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,6 +26,8 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class FretboardFragment extends Fragment {
     private FretboardView fretboardView;
     private ImageView strummer;
+    private ImageView green_bar;
+    private RelativeLayout strummer_container;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,27 +35,60 @@ public class FretboardFragment extends Fragment {
 
         fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
         strummer = (ImageView) rootView.findViewById(R.id.strummer);
+        green_bar = (ImageView) rootView.findViewById(R.id.green_bar);
+        strummer_container = (RelativeLayout) rootView.findViewById(R.id.strummer_container);
 
         if (Preference.getInstance().isLeftHanded()) {
             fretboardView.setScaleX(-1.0f);
-
-            final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)strummer.getLayoutParams();
+            final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)strummer_container.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            strummer.setLayoutParams(params);
+            strummer_container.setLayoutParams(params);
         } else {
-            final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)strummer.getLayoutParams();
+            final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)strummer_container.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            strummer.setLayoutParams(params);
+            strummer_container.setLayoutParams(params);
         }
 
         return rootView;
     }
 
     public void strum() {
-        Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_move);
-        strummer.startAnimation(animation1);
+        final Animation fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_in);
+        final Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_out);
+        final Animation move = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_move);
+
+        fadeIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                strummer.startAnimation(move);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        move.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                green_bar.startAnimation(fadeOut);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        green_bar.startAnimation(fadeIn);
     }
 
     public void setChord(@Nullable Chord chord) {

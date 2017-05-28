@@ -10,6 +10,31 @@
         android:layout_height="@dimen/fretboardHeight"
         android:layout_margin="@dimen/fretboardMargin" />
 
+    <RelativeLayout
+        android:id="@+id/strummer_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fretboardView"
+        android:layout_alignTop="@+id/fretboardView">
+
+        <ImageView
+            android:id="@+id/green_bar"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="@dimen/pad_3dp"
+            android:paddingRight="@dimen/pad_3dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/green_bar" />
+
+        <ImageView
+            android:id="@+id/strummer"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/fred_emoji" />
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/green_tick"
         android:layout_width="wrap_content"
@@ -19,11 +44,5 @@
         android:layout_alignTop="@+id/fretboardView"
         android:visibility="invisible"
         app:srcCompat="@drawable/green_tick" />
-
-    <ImageView
-        android:id="@+id/strummer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/com_facebook_close" />
 
 </RelativeLayout>
