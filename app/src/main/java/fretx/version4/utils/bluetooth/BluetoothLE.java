@@ -200,9 +200,18 @@ public class BluetoothLE {
         ScanFilter filter = new ScanFilter.Builder().setDeviceName(DEVICE_NAME).build();
         List<ScanFilter> filters = new ArrayList<>();
         filters.add(filter);
-        scanning = true;
-        adapter.getBluetoothLeScanner().startScan(filters, settings, scanCallback);
-        handler.postDelayed(endOfScan, SCAN_DELAY);
+        final BluetoothLeScanner scanner = adapter.getBluetoothLeScanner();
+        if(scanner == null) {
+            Log.d(TAG, "Bluetooth off");
+            progress.dismiss();
+            if (listener != null) {
+                listener.onScanFailure();
+            }
+        } else {
+            scanning = true;
+            scanner.startScan(filters, settings, scanCallback);
+            handler.postDelayed(endOfScan, SCAN_DELAY);
+        }
     }
 
     private Runnable endOfScan = new Runnable() {

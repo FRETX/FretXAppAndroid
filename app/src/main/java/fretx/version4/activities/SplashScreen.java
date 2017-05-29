@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 import com.greysonparrelli.permiso.IOnComplete;
 import com.greysonparrelli.permiso.IOnPermissionResult;
@@ -23,6 +24,9 @@ import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 import fretx.version4.utils.audio.Midi;
 import fretx.version4.utils.firebase.Analytics;
+import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.UserAttributes;
+import io.intercom.android.sdk.identity.Registration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class SplashScreen extends BaseActivity {
@@ -122,13 +126,26 @@ public class SplashScreen extends BaseActivity {
             Analytics.getInstance().init();
             Analytics.getInstance().start();
         }
+
+        //initialize intercom
+        Intercom.initialize(getApplication(), "android_sdk-073d0705faff270ed9274399ebff4d4c55c58d67", "p1olv87a");
     }
 
     private void onInitComplete() {
         BluetoothLE.getInstance().setListener(null);
         BluetoothLE.getInstance().clearMatrix();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fUser != null) {
+            //intercom
+            Registration registration = Registration.create().withUserId(fUser.getUid());
+            Intercom.client().registerIdentifiedUser(registration);
+            UserAttributes userAttributes = new UserAttributes.Builder()
+                    .withName(fUser.getDisplayName())
+                    .withEmail(fUser.getEmail())
+                    .build();
+            Intercom.client().updateUser(userAttributes);
+
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         } else {

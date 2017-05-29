@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -23,6 +24,8 @@ import com.squareup.picasso.Picasso;
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
 import fretx.version4.utils.Preference;
+import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.UnreadConversationCountListener;
 
 /**
  * FretXAppAndroid for FretX
@@ -33,6 +36,7 @@ public class Profile extends Fragment {
     private final static String TAG = "KJKP6_PROFILE";
     private FirebaseUser user;
     private DatabaseReference mDatabase;
+    private TextView feedbackButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +48,22 @@ public class Profile extends Fragment {
         final TextView nameTextView = (TextView) rootView.findViewById(R.id.name_textview);
         final TextView emailTextView = (TextView) rootView.findViewById(R.id.email_textview);
         final Switch leftHandedSwitch = (Switch) rootView.findViewById(R.id.left_handed_switch);
+        feedbackButton = (TextView) rootView.findViewById(R.id.feedback_button);
+
+        final int nbUnread = Intercom.client().getUnreadConversationCount();
+        updateUnreadButton(nbUnread);
+        Intercom.client().addUnreadConversationCountListener(new UnreadConversationCountListener() {
+            @Override
+            public void onCountUpdate(int nbUnread) {
+                updateUnreadButton(nbUnread);
+            }
+        });
+        feedbackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intercom.client().displayMessenger();
+            }
+        });
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -58,6 +78,7 @@ public class Profile extends Fragment {
                 @Override
                 public void onClick(View v) {
                     FirebaseAuth.getInstance().signOut();
+                    Intercom.client().reset();
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
                 }
@@ -79,8 +100,6 @@ public class Profile extends Fragment {
         else
             leftHandedSwitch.setChecked(false);
 
-
-
         leftHandedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -96,5 +115,13 @@ public class Profile extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void updateUnreadButton(int nbUnread) {
+        if (nbUnread > 0) {
+            feedbackButton.setText("Leave a feedback (" + nbUnread + ")");
+        } else {
+            feedbackButton.setText("Leave a message");
+        }
     }
 }

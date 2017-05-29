@@ -36,6 +36,9 @@ import fretx.version4.login.Facebook;
 import fretx.version4.login.LoginFragnent;
 import fretx.version4.login.User;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
+import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.UserAttributes;
+import io.intercom.android.sdk.identity.Registration;
 
 public class LoginActivity extends BaseActivity {
     private final static String TAG = "KJKP6_LOGIN_ACT";
@@ -136,6 +139,16 @@ public class LoginActivity extends BaseActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
 
+                //intercom
+                Registration registration = Registration.create().withUserId(fUser.getUid());
+                Intercom.client().registerIdentifiedUser(registration);
+                UserAttributes userAttributes = new UserAttributes.Builder()
+                        .withName(fUser.getDisplayName())
+                        .withEmail(fUser.getEmail())
+                        .build();
+                Intercom.client().updateUser(userAttributes);
+
+                //preferences
                 if (dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class) == null) {
                     Intent intent = new Intent(getActivity(), OnboardingActivity.class);
                     startActivity(intent);
