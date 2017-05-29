@@ -20,6 +20,7 @@ import com.greysonparrelli.permiso.ResultSet;
 
 import fretx.version4.R;
 import fretx.version4.utils.audio.Audio;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 import fretx.version4.utils.audio.Midi;
@@ -134,6 +135,7 @@ public class SplashScreen extends BaseActivity {
     private void onInitComplete() {
         BluetoothLE.getInstance().setListener(null);
         BluetoothLE.getInstance().clearMatrix();
+        BluetoothAnimator.getInstance().stringFall();
 
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {

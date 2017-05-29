@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
 import fretx.version4.utils.Preference;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UnreadConversationCountListener;
 
@@ -37,6 +38,12 @@ public class Profile extends Fragment {
     private FirebaseUser user;
     private DatabaseReference mDatabase;
     private TextView feedbackButton;
+    private UnreadConversationCountListener unreadListener = new UnreadConversationCountListener() {
+        @Override
+        public void onCountUpdate(int nbUnread) {
+            updateUnreadButton(nbUnread);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,12 +59,6 @@ public class Profile extends Fragment {
 
         final int nbUnread = Intercom.client().getUnreadConversationCount();
         updateUnreadButton(nbUnread);
-        Intercom.client().addUnreadConversationCountListener(new UnreadConversationCountListener() {
-            @Override
-            public void onCountUpdate(int nbUnread) {
-                updateUnreadButton(nbUnread);
-            }
-        });
         feedbackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,6 +116,19 @@ public class Profile extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Intercom.client().addUnreadConversationCountListener(unreadListener);
+        BluetoothAnimator.getInstance().stringFall();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Intercom.client().removeUnreadConversationCountListener(unreadListener);
     }
 
     private void updateUnreadButton(int nbUnread) {

@@ -35,7 +35,6 @@ import fretx.version4.R;
 import fretx.version4.login.Facebook;
 import fretx.version4.login.LoginFragnent;
 import fretx.version4.login.User;
-import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UserAttributes;
 import io.intercom.android.sdk.identity.Registration;

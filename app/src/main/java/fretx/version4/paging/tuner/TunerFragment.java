@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.firebase.Analytics;
 
@@ -41,7 +42,7 @@ public class TunerFragment extends Fragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-        BluetoothLE.getInstance().clearMatrix();
+		BluetoothAnimator.getInstance().stringFall();
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 
 public class LearnGuidedListFragment extends Fragment {
@@ -34,17 +35,18 @@ public class LearnGuidedListFragment extends Fragment {
 		rootView = (LinearLayout) inflater.inflate(R.layout.paging_learn_guided_list, container, false);
 		return  rootView;
 	}
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState){
-		super.onActivityCreated(savedInstanceState);
-		BluetoothLE.getInstance().clearMatrix();
-	}
 
 	@Override
 	public void onViewCreated(View v, Bundle b){
 		gridView = (GridView) mActivity.findViewById(R.id.guidedChordExerciseList);
 		initExercises();
 		gridView.setAdapter(new LearnGuidedListAdapter(mActivity, R.layout.paging_learn_guided_list_item, exercises));
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		BluetoothAnimator.getInstance().stringFall();
 	}
 
 	private void initExercises(){

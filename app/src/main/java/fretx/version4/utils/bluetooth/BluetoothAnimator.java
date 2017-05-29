@@ -87,6 +87,8 @@ public class BluetoothAnimator {
     public void fretFall() {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();
@@ -104,6 +106,8 @@ public class BluetoothAnimator {
     public void fretFall(int delayMs) {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();
@@ -121,6 +125,8 @@ public class BluetoothAnimator {
     public void stringFall() {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();
@@ -139,6 +145,8 @@ public class BluetoothAnimator {
     public void stringFall(int delayMs) {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();
@@ -157,6 +165,8 @@ public class BluetoothAnimator {
     public void stringFallNoF0() {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();
@@ -175,6 +185,8 @@ public class BluetoothAnimator {
     public void stringFallNoF0(int delayMs) {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();
@@ -193,6 +205,8 @@ public class BluetoothAnimator {
     public void blinkF0() {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();
@@ -207,6 +221,8 @@ public class BluetoothAnimator {
     public void blinkF0(int delayMs) {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();
@@ -221,6 +237,8 @@ public class BluetoothAnimator {
     public void blink(byte[] bluetoothArray, int delayMs) {
         //stop playing animation
         handler.removeCallbacksAndMessages(null);
+        if (!BluetoothLE.getInstance().isEnabled())
+            return;
         BluetoothLE.getInstance().clearMatrix();
         //build new animation
         animations.clear();

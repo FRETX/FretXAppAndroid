@@ -14,6 +14,7 @@ import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.custom.LearnCustomBuilderFragment;
 import fretx.version4.paging.learn.guided.LearnGuidedListFragment;
 import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.firebase.Analytics;
 
@@ -29,7 +30,6 @@ public class LearnFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Analytics.getInstance().logSelectEvent("TAB", "Learn");
-        BluetoothLE.getInstance().clearMatrix();
 	}
 
 	@Override
@@ -69,5 +69,11 @@ public class LearnFragment extends Fragment {
                 ((MainActivity)getActivity()).fragNavController.pushFragment(new ChordFragment());
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        BluetoothAnimator.getInstance().stringFall();
     }
 }

@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -45,6 +46,8 @@ import fretx.version4.paging.tuner.TunerFragment;
 import fretx.version4.utils.Preference;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
+import io.intercom.android.sdk.Intercom;
+import io.intercom.android.sdk.UnreadConversationCountListener;
 
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "KJKP6_MAINACTIVITY";
@@ -78,6 +81,13 @@ public class MainActivity extends BaseActivity {
 		public void run() {
             setGreyed(connectButton);
             invalidateOptionsMenu();
+		}
+	};
+
+	private UnreadConversationCountListener unreadListener = new UnreadConversationCountListener() {
+		@Override
+		public void onCountUpdate(int nbUnread) {
+			updateSettingTab(nbUnread);
 		}
 	};
 
@@ -182,9 +192,17 @@ public class MainActivity extends BaseActivity {
         } else {
             setGreyed(connectButton);
         }
+
+		Intercom.client().addUnreadConversationCountListener(unreadListener);
     }
 
-    public void setGuiEventListeners() {
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Intercom.client().removeUnreadConversationCountListener(unreadListener);
+	}
+
+	public void setGuiEventListeners() {
 		bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
 			@Override
 			public void onTabSelected(@IdRes int tabId) {
@@ -280,5 +298,14 @@ public class MainActivity extends BaseActivity {
 	public static void setNonGreyed(ImageView v) {
 		v.setColorFilter(null);
 		v.setAlpha(255);
+	}
+
+	private void updateSettingTab(int nbUnread) {
+		final BottomBarTab tab = bottomBar.getTabAtPosition(INDEX_PROFILE);
+		if (nbUnread > 0) {
+			tab.setBadgeCount(nbUnread);
+		} else {
+			tab.removeBadge();
+		}
 	}
 }

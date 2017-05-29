@@ -20,6 +20,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.activities.MainActivity;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
@@ -75,6 +76,12 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 	public void onViewCreated(View v, Bundle b){
 		populateChordPicker();
 		setOnClickListeners();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		BluetoothAnimator.getInstance().stringFall();
 	}
 
 	private void updateCurrentChord(String root , String type){
