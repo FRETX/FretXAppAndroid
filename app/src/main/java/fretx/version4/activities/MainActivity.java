@@ -50,12 +50,10 @@ public class MainActivity extends BaseActivity {
 
 	//VIEWS
 	private BottomBar bottomBar;
-
 	private ImageView previewButton;
 	private ImageButton connectButton;
 	public boolean previewEnabled = true;
 
-	private List<Fragment> fragments = new ArrayList<>(4);
 	public FragNavController fragNavController;
 
 	private static int INDEX_PLAY = FragNavController.TAB1;
@@ -118,8 +116,11 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+        connectButton = (ImageButton) findViewById(R.id.connectButton);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        previewButton = (ImageView) findViewById(R.id.previewButton);
 
-		String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+		final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 		Log.d(TAG, "Refreshed token: " + refreshedToken);
 
         //// TODO: 24/04/17 move this to splashscreen
@@ -128,19 +129,17 @@ public class MainActivity extends BaseActivity {
 		AppCache.initialize(ctx);
 		SongList.initialize();
 
+        final List<Fragment> fragments = new ArrayList<>();
 		fragments.add(new PlayFragmentSearchList());
 		fragments.add(new LearnFragment());
 		fragments.add(new TunerFragment());
 		fragments.add(new Profile());
 		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
-
-		connectButton = (ImageButton) findViewById(R.id.connectButton);
-        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        previewButton = (ImageView) findViewById(R.id.previewButton);
+        bottomBar.selectTabAtPosition(INDEX_PLAY);
 
 		setGuiEventListeners();
 
-		bottomBar.selectTabAtPosition(INDEX_PLAY);
+
 
         BluetoothLE.getInstance().setListener(bluetoothListener);
 

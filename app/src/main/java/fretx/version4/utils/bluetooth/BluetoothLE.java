@@ -336,7 +336,6 @@ public class BluetoothLE {
             super.onServicesDiscovered(gatt, status);
             BluetoothGattService RxService = BluetoothLE.this.gatt.getService(RX_SERVICE_UUID);
             rx = RxService.getCharacteristic(RX_CHAR_UUID);
-            clearMatrix();
         }
     };
 
