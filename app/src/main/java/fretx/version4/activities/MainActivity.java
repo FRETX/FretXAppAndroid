@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity {
 	private final BluetoothListener bluetoothListener = new BluetoothListener() {
 		@Override
 		public void onConnect() {
-			Log.d(TAG, "Connected!");
+            Log.d(TAG, "Connected!");
 			BluetoothAnimator.getInstance().stringFall();
 			runOnUiThread(setConnected);
 		}
@@ -232,9 +232,13 @@ public class MainActivity extends BaseActivity {
 			public void onClick(View view) {
                 setGreyed(connectButton);
 				if (BluetoothLE.getInstance().isEnabled()) {
-					BluetoothLE.getInstance().disconnect();
-					BluetoothLE.getInstance().scan();
-				}
+                    if (BluetoothLE.getInstance().isConnected()) {
+                        BluetoothLE.getInstance().disconnect();
+                        Log.d(TAG, "Disconnected!");
+                    } else {
+                        BluetoothLE.getInstance().scan();
+                    }
+                }
 			}
 		});
 
