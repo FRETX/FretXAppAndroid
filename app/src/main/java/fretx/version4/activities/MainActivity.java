@@ -2,7 +2,6 @@ package fretx.version4.activities;
 
 import android.content.Context;
 
-import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
@@ -10,10 +9,8 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,18 +29,17 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.mobiwise.materialintro.prefs.PreferencesManager;
 import fretx.version4.R;
 import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.login.User;
-import fretx.version4.paging.chords.ChordFragment;
 import fretx.version4.paging.learn.LearnFragment;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.profile.Profile;
 import fretx.version4.paging.tuner.TunerFragment;
 import fretx.version4.utils.Preference;
+import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 import io.intercom.android.sdk.Intercom;
@@ -53,7 +49,6 @@ public class MainActivity extends BaseActivity {
 	private static final String TAG = "KJKP6_MAINACTIVITY";
 
 	//VIEWS
-	private ImageView bluetoothButton;
 	private BottomBar bottomBar;
 
 	private ImageView previewButton;
@@ -95,6 +90,7 @@ public class MainActivity extends BaseActivity {
 		@Override
 		public void onConnect() {
 			Log.d(TAG, "Connected!");
+			BluetoothAnimator.getInstance().stringFall();
 			runOnUiThread(setConnected);
 		}
 
@@ -138,8 +134,7 @@ public class MainActivity extends BaseActivity {
 		fragments.add(new Profile());
 		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
 
-        bluetoothButton = (ImageView) findViewById(R.id.bluetoothLogo);
-        connectButton = (ImageButton) findViewById(R.id.connectButton);
+		connectButton = (ImageButton) findViewById(R.id.connectButton);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         previewButton = (ImageView) findViewById(R.id.previewButton);
 
@@ -206,7 +201,6 @@ public class MainActivity extends BaseActivity {
 		bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
 			@Override
 			public void onTabSelected(@IdRes int tabId) {
-				BluetoothLE.getInstance().clearMatrix();
 				previewButton.setVisibility(View.INVISIBLE);
 
 				switch(tabId){

@@ -116,6 +116,9 @@ public class SplashScreen extends BaseActivity {
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.ACCESS_COARSE_LOCATION);
 
+        BluetoothLE.getInstance();
+        BluetoothAnimator.getInstance();
+
         //initialize midi
         if (!Midi.getInstance().isEnabled()) {
             Midi.getInstance().init();

@@ -28,7 +28,6 @@ import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
 import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import fretx.version4.paging.play.preview.PlayPreview;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
-import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 
@@ -49,7 +48,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
         super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
         Analytics.getInstance().logSelectEvent("TAB", "Play");
-        BluetoothLE.getInstance().clearMatrix();
     }
 
     @Override
