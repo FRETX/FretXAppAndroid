@@ -40,4 +40,10 @@ public class TunerFragment extends Fragment {
 
         return rootView;
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		BluetoothAnimator.getInstance().stringFall();
+	}
 }
