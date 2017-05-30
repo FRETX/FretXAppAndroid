@@ -3,11 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/radioGroup" >
+        android:orientation="vertical">
 
         <RadioButton
             android:id="@+id/leftRadio"
@@ -22,4 +22,11 @@
             android:text="Right" />
 
     </RadioGroup>
+
+    <Button
+        android:id="@+id/not_sure_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="not sure?" />
+
 </LinearLayout>

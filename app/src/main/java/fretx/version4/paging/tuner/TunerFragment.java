@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
-import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.firebase.Analytics;
 
 
@@ -22,21 +21,6 @@ public class TunerFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Analytics.getInstance().logSelectEvent("TAB", "Tuner");
-	}
-
-	private void showTutorial(){
-//		new MaterialIntroView.Builder(mActivity)
-//				.enableDotAnimation(false)
-//				.enableIcon(false)
-//				.setFocusGravity(FocusGravity.CENTER)
-//				.setFocusType(Focus.NORMAL)
-//				.setDelayMillis(300)
-//				.enableFadeAnimation(true)
-//				.performClick(true)
-//				.setInfoText("Play strings one by one. Adjust until needle is green for each string. It's that simple to tune your guitar!")
-//				.setTarget((TunerView) mActivity.findViewById(R.id.tunerView))
-//				.setUsageId("tutorialTuner") //THIS SHOULD BE UNIQUE ID
-//				.show();
 	}
 
 	@Override
