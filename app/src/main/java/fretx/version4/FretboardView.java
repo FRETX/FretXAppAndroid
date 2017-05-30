@@ -20,10 +20,7 @@ import rocks.fretx.audioprocessing.FretboardPosition;
  */
 
 public class FretboardView extends View {
-    private static final int TIME_STEP_MS = 100;
-    private static final int TIME_MS = 1000;
-
-	private ArrayList<FretboardPosition> fretboardPositions;
+    private ArrayList<FretboardPosition> fretboardPositions;
 
 	private float width, height, nStrings, nFrets, xPadding, yPaddingTop, yPaddingBottom, stringStep, fretStep;
 

@@ -1,5 +1,7 @@
 package fretx.version4.fragment.exercise;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -54,32 +56,41 @@ public class FretboardFragment extends Fragment {
         return rootView;
     }
 
+        /*
     public void strum() {
-        final Animation fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_in);
-        final Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_out);
-        final Animation move = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_move);
 
-        fadeIn.setAnimationListener(new Animation.AnimationListener() {
+        final Animation fadeInBar = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_in);
+        final Animation fadeInStrummer = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_in);
+        final Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_out);
+        final Animation strum;
+        if (Preference.getInstance().isLeftHanded()) {
+            strum = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_left_handed);
+        } else {
+            strum = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_right_handed);
+        }
+
+        fadeInStrummer.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                strummer.startAnimation(move);
+                strummer.startAnimation(strum);
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
             }
         });
-        move.setAnimationListener(new Animation.AnimationListener() {
+        strum.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                strummer.startAnimation(fadeOut);
                 green_bar.startAnimation(fadeOut);
             }
 
@@ -88,7 +99,57 @@ public class FretboardFragment extends Fragment {
             }
         });
 
-        green_bar.startAnimation(fadeIn);
+        green_bar.startAnimation(fadeInBar);
+        strummer.startAnimation(fadeInStrummer);
+
+    }
+      */
+
+    public void strum() {
+        float pos;
+        if (Preference.getInstance().isLeftHanded()) {
+            //bottom to top
+            strummer.setY(strummer_container.getHeight() - strummer.getHeight());
+            pos = 0;
+        } else {
+            //top to bottom
+            strummer.setY(0);
+            pos = strummer_container.getHeight() - strummer.getHeight();
+        }
+
+        strumFadeIn(pos);
+    }
+
+    private void strumFadeIn(final float pos) {
+        strummer_container.setAlpha(0f);
+        strummer_container.animate().alpha(1f).setDuration(500).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                strummer_container.setAlpha(1f);
+                strumMove(pos);
+            }
+        });
+    }
+
+    private void strumMove(float pos) {
+        strummer.animate().translationY(pos).setDuration(500).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                strumFadeOut();
+            }
+        });
+    }
+
+    private void strumFadeOut() {
+        strummer_container.animate().alpha(0f).setDuration(500).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                strummer_container.setAlpha(0f);
+            }
+        });
     }
 
     public void setChord(@Nullable Chord chord) {

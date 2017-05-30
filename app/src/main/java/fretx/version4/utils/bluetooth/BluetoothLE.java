@@ -303,7 +303,7 @@ public class BluetoothLE {
 
     private BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
-        //TODO: strum_move all strings to @strings and use Resources.getSystem().getString()
+        //TODO: strum_right_handed all strings to @strings and use Resources.getSystem().getString()
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
                 handler.obtainMessage(PROGRESS_DISMISS, null).sendToTarget();
