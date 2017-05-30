@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity {
 				}
 			});
 		} else {
-			Log.v(TAG, "fUser is null");
+			Log.v(TAG, "fUser is null!");
 			//// TODO: 24/05/17 use a local save instead of default
 			Preference.getInstance().init(Preference.CLASSICAL_GUITAR, Preference.RIGHT_HANDED, Preference.LEVEL_BEGINNER);
 		}
