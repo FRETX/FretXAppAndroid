@@ -55,10 +55,20 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name=".activities.OnboardingActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".activities.HardwareActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"></activity>
+
+
+        <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".activities.OnboardingActivity"></activity>
     </application>
 
 </manifest>

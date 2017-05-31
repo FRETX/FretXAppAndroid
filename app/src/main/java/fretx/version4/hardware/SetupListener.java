@@ -1,0 +1,11 @@
+package fretx.version4.hardware;
+
+/**
+ * FretXAppAndroid for FretX
+ * Created by pandor on 31/05/17 19:27.
+ */
+
+public interface SetupListener {
+    void onReplay();
+    void onNext();
+}

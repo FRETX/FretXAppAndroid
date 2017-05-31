@@ -154,8 +154,10 @@ public class SplashScreen extends BaseActivity {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            Intent intent = new Intent(getActivity(), HardwareActivity.class);
             startActivity(intent);
+            //Intent intent = new Intent(getActivity(), LoginActivity.class);
+            //startActivity(intent);
         }
     }
 

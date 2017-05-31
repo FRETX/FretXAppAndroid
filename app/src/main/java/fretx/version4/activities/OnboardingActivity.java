@@ -14,11 +14,8 @@ import android.widget.SeekBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import fretx.version4.R;
 import fretx.version4.login.User;
@@ -122,7 +119,7 @@ public class OnboardingActivity extends BaseActivity {
 
                         saveData();
 
-                        final Intent intent = new Intent(getActivity(), MainActivity.class);
+                        final Intent intent = new Intent(getActivity(), HardwareActivity.class);
                         startActivity(intent);
                         break;
                 }

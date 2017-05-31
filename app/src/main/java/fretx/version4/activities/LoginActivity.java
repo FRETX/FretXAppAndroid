@@ -149,11 +149,11 @@ public class LoginActivity extends BaseActivity {
 
                 //preferences
                 if (dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class) == null) {
-                    Intent intent = new Intent(getActivity(), OnboardingActivity.class);
-                    startActivity(intent);
+                Intent intent = new Intent(getActivity(), OnboardingActivity.class);
+                startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(intent);
+                   startActivity(intent);
                 }
             }
 
