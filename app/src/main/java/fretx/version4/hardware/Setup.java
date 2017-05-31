@@ -15,6 +15,7 @@ import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 
 import fretx.version4.R;
+import fretx.version4.activities.HardwareActivity;
 
 /**
  * FretXAppAndroid for FretX
@@ -151,6 +152,7 @@ public class Setup extends Fragment implements EasyVideoCallback, SetupListener,
                 final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 final Fragment fragment = new Check();
+                ((HardwareActivity) getActivity()).setFragment(fragment);
                 fragmentTransaction.replace(R.id.hardware_container, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
