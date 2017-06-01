@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.login.Facebook;
 import fretx.version4.login.LoginFragnent;
@@ -148,9 +149,9 @@ public class LoginActivity extends BaseActivity {
                 Intercom.client().updateUser(userAttributes);
 
                 //preferences
-                if (dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class) == null) {
-                Intent intent = new Intent(getActivity(), OnboardingActivity.class);
-                startActivity(intent);
+                if (Config.onboarding && dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class) == null) {
+                    Intent intent = new Intent(getActivity(), OnboardingActivity.class);
+                    startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                    startActivity(intent);

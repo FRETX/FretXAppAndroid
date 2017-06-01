@@ -16,6 +16,7 @@ import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 
 import fretx.version4.R;
 import fretx.version4.activities.HardwareActivity;
+import io.intercom.android.sdk.Intercom;
 
 /**
  * FretXAppAndroid for FretX
@@ -27,7 +28,7 @@ public class Setup extends Fragment implements EasyVideoCallback, SetupListener,
 
     private EasyVideoPlayer player;
     private static final String TEST_URL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
-    private int state = 3;
+    private int state = 0;
 
     @Nullable
     @Override
@@ -126,6 +127,10 @@ public class Setup extends Fragment implements EasyVideoCallback, SetupListener,
     public void onNext(){
         ++state;
         updateState();
+    }
+
+    public void onAssist() {
+        Intercom.client().displayMessageComposer("[Step " + (state + 1) + "]: need help!");
     }
 
     private void updateState() {

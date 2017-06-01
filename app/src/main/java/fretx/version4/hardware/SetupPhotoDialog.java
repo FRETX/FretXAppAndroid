@@ -49,12 +49,20 @@ public class SetupPhotoDialog extends DialogFragment{
             }
         });
 
-        final Button next = (Button) dialog.findViewById(R.id.assistance_button);
-        next.setOnClickListener(new View.OnClickListener() {
+        final Button assistance = (Button) dialog.findViewById(R.id.assistance_button);
+        assistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((SetupListener) getTargetFragment()).onNext();
+                ((SetupListener) getTargetFragment()).onAssist();
+            }
+        });
+
+        final Button ready = (Button) dialog.findViewById(R.id.ready);
+        ready.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dialog.dismiss();
+                ((SetupListener) getTargetFragment()).onNext();
             }
         });
 

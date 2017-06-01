@@ -13,6 +13,12 @@
         android:textSize="35dp" />
 
 
+    <Button
+        android:id="@+id/assistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="need assistance?" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

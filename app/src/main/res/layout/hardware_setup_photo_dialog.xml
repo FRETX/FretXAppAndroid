@@ -20,20 +20,26 @@
         android:layout_height="200dp"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
+    <Button
+        android:id="@+id/assistance_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="need assistance?" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
         <Button
-            android:id="@+id/assistance_button"
+            android:id="@+id/ready"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="25dp"
             android:background="@color/primary"
-            android:text="ASSISTANCE"
+            android:text="ready!"
             android:textColor="@color/background" />
 
         <Button

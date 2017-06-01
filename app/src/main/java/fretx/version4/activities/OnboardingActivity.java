@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.login.User;
 import fretx.version4.onboarding.Guitar;
@@ -119,8 +120,13 @@ public class OnboardingActivity extends BaseActivity {
 
                         saveData();
 
-                        final Intent intent = new Intent(getActivity(), HardwareActivity.class);
-                        startActivity(intent);
+                        if (Config.setup) {
+                            final Intent intent = new Intent(getActivity(), HardwareActivity.class);
+                            startActivity(intent);
+                        } else {
+                            final Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+                        }
                         break;
                 }
                 ++state;

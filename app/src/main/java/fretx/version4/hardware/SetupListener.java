@@ -8,4 +8,5 @@ package fretx.version4.hardware;
 public interface SetupListener {
     void onReplay();
     void onNext();
+    void onAssist();
 }

@@ -15,4 +15,6 @@ public final class Config {
     public static MainActivity mActivity = null;
     public static final String apiBase = "http://player.fretx.rocks/api/v1/";
     public static final boolean useOfflinePlayer = false;
+    public static final boolean onboarding = true;
+    public static final boolean setup = true;
 }

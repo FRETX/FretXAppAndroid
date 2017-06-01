@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import fretx.version4.R;
+import io.intercom.android.sdk.Intercom;
 
 /**
  * Created by pandor on 3/7/17.
@@ -43,11 +44,19 @@ public class SetupDialog extends DialogFragment
 
         final Button next = (Button) dialog.findViewById(R.id.nextButton);
         next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((SetupListener) getTargetFragment()).onNext();
-                    dialog.dismiss();
-                }
+            @Override
+            public void onClick(View v) {
+                ((SetupListener) getTargetFragment()).onNext();
+                dialog.dismiss();
+            }
+        });
+
+        final Button assistance = (Button) dialog.findViewById(R.id.assistance);
+        assistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SetupListener) getTargetFragment()).onAssist();
+            }
         });
 
         return dialog;

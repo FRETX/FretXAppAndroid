@@ -18,6 +18,7 @@ import com.greysonparrelli.permiso.IOnRationaleProvided;
 import com.greysonparrelli.permiso.Permiso;
 import com.greysonparrelli.permiso.ResultSet;
 
+import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
@@ -154,10 +155,8 @@ public class SplashScreen extends BaseActivity {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(getActivity(), HardwareActivity.class);
+            final Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
-            //Intent intent = new Intent(getActivity(), LoginActivity.class);
-            //startActivity(intent);
         }
     }
 
