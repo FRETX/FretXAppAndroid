@@ -28,7 +28,7 @@ public class Setup extends Fragment implements EasyVideoCallback, SetupListener,
 
     private EasyVideoPlayer player;
     private static final String TEST_URL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
-    private int state = 0;
+    private int state = 3;
 
     @Nullable
     @Override
