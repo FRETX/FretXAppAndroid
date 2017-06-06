@@ -1,4 +1,4 @@
-package fretx.version4.Firebase;
+package fretx.version4.utils.firebase;
 
 import android.util.Log;
 

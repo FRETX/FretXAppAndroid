@@ -1,4 +1,4 @@
-package fretx.version4.login;
+package fretx.version4.onboarding.login;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

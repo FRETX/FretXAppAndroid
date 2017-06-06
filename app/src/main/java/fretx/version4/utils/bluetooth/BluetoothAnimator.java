@@ -3,11 +3,7 @@ package fretx.version4.utils.bluetooth;
 import android.os.Handler;
 import android.util.Log;
 
-import com.nostra13.universalimageloader.utils.L;
-
 import java.util.ArrayList;
-
-import fretx.version4.onboarding.Hand;
 
 /**
  * FretXAppAndroid for FretX

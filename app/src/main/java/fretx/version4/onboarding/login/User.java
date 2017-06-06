@@ -1,4 +1,4 @@
-package fretx.version4.login;
+package fretx.version4.onboarding.login;
 
 /**
  * FretXAppAndroid for FretX

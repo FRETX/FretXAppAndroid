@@ -1,19 +1,14 @@
-package fretx.version4.onboarding;
+package fretx.version4.onboarding.userInfo;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-
-import java.util.Locale;
 
 import fretx.version4.R;
-import fretx.version4.paging.learn.guided.LearnGuidedExerciseDialog;
 
 /**
  * Created by pandor on 3/7/17.

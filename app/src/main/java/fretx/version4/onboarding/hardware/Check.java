@@ -1,4 +1,4 @@
-package fretx.version4.hardware;
+package fretx.version4.onboarding.hardware;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +36,14 @@ public class Check extends Fragment implements HardwareFragment{
             public void onClick(View v) {
                 errorLayout.setVisibility(View.INVISIBLE);
                 BluetoothLE.getInstance().scan();
+            }
+        });
+        final Button skip = (Button) rootView.findViewById(R.id.skip);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                errorLayout.setVisibility(View.INVISIBLE);
+                onCheckSuccess();
             }
         });
         return rootView;

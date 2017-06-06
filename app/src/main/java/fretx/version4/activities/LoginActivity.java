@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -33,9 +32,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import fretx.version4.Config;
 import fretx.version4.R;
-import fretx.version4.login.Facebook;
-import fretx.version4.login.LoginFragnent;
-import fretx.version4.login.User;
+import fretx.version4.onboarding.login.Facebook;
+import fretx.version4.onboarding.login.LoginFragnent;
+import fretx.version4.onboarding.login.User;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UserAttributes;
 import io.intercom.android.sdk.identity.Registration;

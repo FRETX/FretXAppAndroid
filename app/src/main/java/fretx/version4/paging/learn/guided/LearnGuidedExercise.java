@@ -8,6 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
 import fretx.version4.R;
@@ -55,10 +63,31 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
 
     //when the exercise fragment report the end of current exercise
     @Override
-    public void onFinish(int min, int sec) {
-        LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this, min, sec,
-                exerciseList == null || listIndex == exerciseList.size() - 1);
-        dialog.show(fragmentManager, "dialog");
+    public void onFinish(final int min, final int sec) {
+        final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fUser != null) {
+            final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final String exerciseName = exerciseList.get(listIndex).getName();
+                    final Score prevScore = dataSnapshot.child("users").child(fUser.getUid()).child("score").child(exerciseName).getValue(Score.class);
+                    if (prevScore == null) {
+                        mDatabase.child("users").child(fUser.getUid()).child("score").child(exerciseName).setValue(new Score(min * 60 + sec));
+                    } else {
+                        prevScore.add(min * 60 + sec);
+                        mDatabase.child("users").child(fUser.getUid()).child("score").child(exerciseName).setValue(prevScore);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+            LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this, min, sec,
+                    exerciseList == null || listIndex == exerciseList.size() - 1);
+            dialog.show(fragmentManager, "dialog");
+        }
     }
 
     //retrieve result of the finished exercise dialog

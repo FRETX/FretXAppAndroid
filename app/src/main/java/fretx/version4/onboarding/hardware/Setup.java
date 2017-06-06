@@ -1,4 +1,4 @@
-package fretx.version4.hardware;
+package fretx.version4.onboarding.hardware;
 
 import android.net.Uri;
 import android.os.Bundle;

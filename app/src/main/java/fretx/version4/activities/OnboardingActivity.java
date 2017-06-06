@@ -19,10 +19,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import fretx.version4.Config;
 import fretx.version4.R;
-import fretx.version4.login.User;
-import fretx.version4.onboarding.Guitar;
-import fretx.version4.onboarding.Hand;
-import fretx.version4.onboarding.Level;
+import fretx.version4.onboarding.login.User;
+import fretx.version4.onboarding.userInfo.Guitar;
+import fretx.version4.onboarding.userInfo.Hand;
+import fretx.version4.onboarding.userInfo.Level;
 
 public class OnboardingActivity extends BaseActivity {
     private Fragment fragment;

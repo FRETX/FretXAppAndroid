@@ -146,7 +146,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         });
 
         //setup the first chord
-        chordIndex = 0;
+        chordIndex = exerciseChords.size() - 2;
     }
 
     @Override

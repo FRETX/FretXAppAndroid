@@ -1,4 +1,4 @@
-package fretx.version4.onboarding;
+package fretx.version4.onboarding.userInfo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

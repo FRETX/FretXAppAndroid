@@ -1,4 +1,4 @@
-package fretx.version4.hardware;
+package fretx.version4.onboarding.hardware;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 
 import fretx.version4.R;
-import io.intercom.android.sdk.Intercom;
 
 /**
  * Created by pandor on 3/7/17.

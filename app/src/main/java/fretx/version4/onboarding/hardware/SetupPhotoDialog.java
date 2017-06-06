@@ -1,9 +1,8 @@
-package fretx.version4.hardware;
+package fretx.version4.onboarding.hardware;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -26,7 +25,6 @@ import java.io.ByteArrayOutputStream;
 
 import fretx.version4.R;
 
-import static android.R.attr.bitmap;
 import static android.app.Activity.RESULT_OK;
 
 /**

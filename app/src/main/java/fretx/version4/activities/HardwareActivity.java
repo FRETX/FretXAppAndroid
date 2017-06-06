@@ -7,9 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import fretx.version4.R;
-import fretx.version4.hardware.Check;
-import fretx.version4.hardware.HardwareFragment;
-import fretx.version4.hardware.Setup;
+import fretx.version4.onboarding.hardware.HardwareFragment;
+import fretx.version4.onboarding.hardware.Setup;
 
 /**
  * FretXAppAndroid for FretX
