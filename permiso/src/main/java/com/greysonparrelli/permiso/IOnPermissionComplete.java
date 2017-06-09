@@ -5,6 +5,6 @@ package com.greysonparrelli.permiso;
  * Created by pandor on 21/04/17 02:19.
  */
 
-public interface IOnComplete {
+public interface IOnPermissionComplete {
     void onComplete();
 }

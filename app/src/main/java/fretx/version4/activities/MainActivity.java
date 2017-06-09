@@ -39,8 +39,8 @@ import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.profile.Profile;
 import fretx.version4.paging.tuner.TunerFragment;
 import fretx.version4.utils.Preference;
+import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
-import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UnreadConversationCountListener;
@@ -139,10 +139,6 @@ public class MainActivity extends BaseActivity {
 
 		setGuiEventListeners();
 
-
-
-        BluetoothLE.getInstance().setListener(bluetoothListener);
-
 		//// TODO: 23/05/17 replacce with a try/catch block to get internet failure
 		final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 		final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -181,19 +177,27 @@ public class MainActivity extends BaseActivity {
 			setGreyed(previewButton);
         }
 
-        if (BluetoothLE.getInstance().isConnected()) {
+        if (Bluetooth.getInstance().isConnected()) {
             setNonGreyed(connectButton);
         } else {
             setGreyed(connectButton);
         }
 
-		Intercom.client().addUnreadConversationCountListener(unreadListener);
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+			Intercom.client().addUnreadConversationCountListener(unreadListener);
+		}
+
+        Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
     }
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Intercom.client().removeUnreadConversationCountListener(unreadListener);
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+			Intercom.client().removeUnreadConversationCountListener(unreadListener);
+		}
+
+        Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
 	}
 
 	public void setGuiEventListeners() {
@@ -231,13 +235,11 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View view) {
                 setGreyed(connectButton);
-				if (BluetoothLE.getInstance().isEnabled()) {
-                    if (BluetoothLE.getInstance().isConnected()) {
-                        BluetoothLE.getInstance().disconnect();
-                        Log.d(TAG, "Disconnected!");
-                    } else {
-                        BluetoothLE.getInstance().scan();
-                    }
+                if (Bluetooth.getInstance().isConnected()) {
+                    Bluetooth.getInstance().disconnect();
+                    Log.d(TAG, "Disconnected!");
+                } else {
+                    Bluetooth.getInstance().connect();
                 }
 			}
 		});

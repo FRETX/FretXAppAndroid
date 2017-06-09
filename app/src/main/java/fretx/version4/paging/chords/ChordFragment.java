@@ -15,7 +15,7 @@ import fretx.version4.FretboardView;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.R;
 import fretx.version4.utils.Preference;
-import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.audio.Midi;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
@@ -37,7 +37,7 @@ public class ChordFragment extends Fragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Analytics.getInstance().logSelectEvent("TAB", "Chords");
-        BluetoothLE.getInstance().clearMatrix();
+        Bluetooth.getInstance().clearMatrix();
     }
 
     @Override
@@ -140,7 +140,7 @@ public class ChordFragment extends Fragment
 		Log.d(TAG, currentChord.toString());
         fretboardView.setFretboardPositions(currentChord.getFingerPositions());
         textChord.setText(root + " " + type);
-        BluetoothLE.getInstance().setMatrix(currentChord);
+        Bluetooth.getInstance().setMatrix(currentChord);
 	}
 
 	private void showTutorial(){

@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +34,7 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
 import fretx.version4.utils.Preference;
-import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 
@@ -85,7 +84,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         super.onCreate(savedInstanceState);
         Analytics.getInstance().logSelectEvent("SONG", song.song_title);
         VIDEO_ID = song.youtube_id;
-        BluetoothLE.getInstance().clearMatrix();
+        Bluetooth.getInstance().clearMatrix();
     }
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -410,7 +409,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
                 if( arrayCallStatus[nIndex] )
                     return;
                 arrayCallStatus[nIndex] = true;
-                BluetoothLE.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[nIndex]));
+                Bluetooth.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[nIndex]));
                 Util.setDefaultValues(arrayCallStatus);
                 arrayCallStatus[nIndex] = true;
 	            SongPunch sp = punches.get(nIndex);
@@ -427,7 +426,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             if( arrayCallStatus[arrayKeys.length -1] )
                 return;
             arrayCallStatus[arrayKeys.length -1] = true;
-            BluetoothLE.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[arrayKeys.length - 1]));
+            Bluetooth.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[arrayKeys.length - 1]));
             Util.setDefaultValues(arrayCallStatus);
             arrayCallStatus[arrayKeys.length -1] = true;
 	        SongPunch sp = punches.get(arrayKeys.length - 1);

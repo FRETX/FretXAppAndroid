@@ -22,8 +22,9 @@
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
+    <!-- android:name="android.support.multidex.MultiDexApplication" -->
     <application
-        android:name="android.support.multidex.MultiDexApplication"
+        android:name=".FretxApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -52,23 +53,24 @@
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activities.OnboardingActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activities.HardwareActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
+
+        <service android:name=".utils.bluetooth.BluetoothLEService"/>
     </application>
 
 </manifest>

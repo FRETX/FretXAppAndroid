@@ -12,9 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -25,17 +22,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import fretx.version4.FretboardView;
 import fretx.version4.R;
-import fretx.version4.utils.Preference;
 import fretx.version4.utils.TimeUpdater;
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.audio.Midi;
 import fretx.version4.utils.audio.SoundPoolPlayer;
-import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.Bluetooth;
 import rocks.fretx.audioprocessing.Chord;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * FretXAppAndroid for FretX
@@ -174,7 +167,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
 
         //if the last chord has been played, display dialog
         if (chordIndex == exerciseChords.size() && !finished) {
-            BluetoothLE.getInstance().clearMatrix();
+            Bluetooth.getInstance().clearMatrix();
             finished = true;
             listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
         }
@@ -210,7 +203,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
 
             Audio.getInstance().stopListening();
             greenTick.setVisibility(View.VISIBLE);
-            BluetoothLE.getInstance().lightMatrix();
+            Bluetooth.getInstance().lightMatrix();
             sound.playShortResource(R.raw.chime_bell_ding);
 
             handler.postDelayed(hideSuccess, SUCCESS_DELAY_MS);
@@ -293,7 +286,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         chordProgress.setProgress(0);
         exerciseProgress.setProgress(chordIndex);
         //update led
-        BluetoothLE.getInstance().setMatrix(actualChord);
+        Bluetooth.getInstance().setMatrix(actualChord);
     }
 
     //create a audio helper dialog

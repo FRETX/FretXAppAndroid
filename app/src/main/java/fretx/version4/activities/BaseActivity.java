@@ -10,7 +10,6 @@ import android.util.Log;
 import java.lang.ref.WeakReference;
 
 import fretx.version4.utils.audio.Audio;
-import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.audio.Midi;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -51,7 +50,6 @@ public class BaseActivity extends AppCompatActivity {
 
         Midi.getInstance().start();
         Audio.getInstance().start();
-        BluetoothLE.getInstance().start();
     }
 
     @Override
@@ -61,8 +59,6 @@ public class BaseActivity extends AppCompatActivity {
 
         Midi.getInstance().stop();
         Audio.getInstance().stop();
-        BluetoothLE.getInstance().clearMatrix();
-        BluetoothLE.getInstance().stop();
     }
 
     @Override

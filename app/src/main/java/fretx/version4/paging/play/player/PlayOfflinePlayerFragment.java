@@ -24,13 +24,12 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
 
-import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
-import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.Bluetooth;
 
 public class PlayOfflinePlayerFragment extends Fragment {
 	private SongItem song;
@@ -391,7 +390,7 @@ public class PlayOfflinePlayerFragment extends Fragment {
 
 				arrayCallStatus[nIndex] = true;
 //                BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[nIndex])));
-				BluetoothLE.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[nIndex]));
+				Bluetooth.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[nIndex]));
 				Util.setDefaultValues(arrayCallStatus);
 				arrayCallStatus[nIndex] = true;
 
@@ -404,7 +403,7 @@ public class PlayOfflinePlayerFragment extends Fragment {
 
 			arrayCallStatus[arrayKeys.length - 1] = true;
 //            BluetoothClass.sendToFretX(Util.str2array((String) punch_list.get(arrayKeys[arrayKeys.length - 1])));
-			BluetoothLE.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[arrayKeys.length - 1]));
+			Bluetooth.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[arrayKeys.length - 1]));
 			Util.setDefaultValues(arrayCallStatus);
 			arrayCallStatus[arrayKeys.length - 1] = true;
 		}

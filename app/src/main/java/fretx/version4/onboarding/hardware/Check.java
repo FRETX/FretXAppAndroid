@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothListener;
 
 /**
@@ -24,6 +24,31 @@ import fretx.version4.utils.bluetooth.BluetoothListener;
 public class Check extends Fragment implements HardwareFragment{
     private final static String TAG = "KJKP6_CHECK";
     private LinearLayout errorLayout;
+    private BluetoothListener bluetoothListener = new BluetoothListener() {
+        @Override
+        public void onConnect() {
+            Log.d(TAG, "Success!");
+            onCheckSuccess();
+        }
+
+        @Override
+        public void onDisconnect() {
+            Log.d(TAG, "Failure!");
+            onCheckFailure();
+        }
+
+        @Override
+        public void onScanFailure() {
+            Log.d(TAG, "Failure!");
+            onCheckFailure();
+        }
+
+        @Override
+        public void onFailure() {
+            Log.d(TAG, "Failure!");
+            onCheckFailure();
+        }
+    };
 
     @Nullable
     @Override
@@ -35,7 +60,7 @@ public class Check extends Fragment implements HardwareFragment{
             @Override
             public void onClick(View v) {
                 errorLayout.setVisibility(View.INVISIBLE);
-                BluetoothLE.getInstance().scan();
+                Bluetooth.getInstance().connect();
             }
         });
         final Button skip = (Button) rootView.findViewById(R.id.skip);
@@ -50,39 +75,17 @@ public class Check extends Fragment implements HardwareFragment{
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        BluetoothLE.getInstance().setListener(new BluetoothListener() {
-            @Override
-            public void onConnect() {
-                Log.d(TAG, "Success!");
-                onCheckSuccess();
-            }
-
-            @Override
-            public void onDisconnect() {
-                Log.d(TAG, "Failure!");
-                onCheckFailure();
-            }
-
-            @Override
-            public void onScanFailure() {
-                Log.d(TAG, "Failure!");
-                onCheckFailure();
-            }
-
-            public void onFailure() {
-                Log.d(TAG, "Failure!");
-                onCheckFailure();
-            }
-        });
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         errorLayout.setVisibility(View.INVISIBLE);
-        BluetoothLE.getInstance().scan();
+        Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
+        Bluetooth.getInstance().connect();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
     }
 
     @Override

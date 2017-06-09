@@ -21,7 +21,7 @@ public class Permiso {
     private WeakReference<Activity> mActivity;
     private int mActiveRequestCode = 1;
     private static Permiso sInstance = new Permiso();
-    private IOnComplete onComplete;
+    private IOnPermissionComplete onComplete;
 
     public static Permiso getInstance() {
         return sInstance;
@@ -32,7 +32,7 @@ public class Permiso {
         mActivity = new WeakReference<>(activity);
     }
 
-    public void setOnComplete(IOnComplete onComplete) {
+    public void setOnComplete(IOnPermissionComplete onComplete) {
         this.onComplete = onComplete;
     }
 

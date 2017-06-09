@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
-import fretx.version4.utils.bluetooth.BluetoothLE;
 
 public class LearnGuidedListFragment extends Fragment {
 	MainActivity mActivity;

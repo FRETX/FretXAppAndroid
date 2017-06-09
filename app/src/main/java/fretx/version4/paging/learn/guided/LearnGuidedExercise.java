@@ -22,7 +22,7 @@ import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fragment.exercise.ExerciseFragment;
 import fretx.version4.fragment.exercise.ExerciseListener;
-import fretx.version4.utils.bluetooth.BluetoothLE;
+import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.firebase.Analytics;
 
 public class LearnGuidedExercise extends Fragment implements ExerciseListener,
@@ -39,7 +39,7 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Analytics.getInstance().logSelectEvent("EXERCISE", "Guided Chord");
-        BluetoothLE.getInstance().clearMatrix();
+        Bluetooth.getInstance().clearMatrix();
     }
 
     @Nullable

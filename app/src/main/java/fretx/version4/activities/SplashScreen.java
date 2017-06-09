@@ -11,20 +11,17 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.crash.FirebaseCrash;
-import com.greysonparrelli.permiso.IOnComplete;
+import com.greysonparrelli.permiso.IOnPermissionComplete;
 import com.greysonparrelli.permiso.IOnPermissionResult;
 import com.greysonparrelli.permiso.IOnRationaleProvided;
 import com.greysonparrelli.permiso.Permiso;
 import com.greysonparrelli.permiso.ResultSet;
 
-import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.utils.audio.Audio;
-import fretx.version4.utils.bluetooth.BluetoothAnimator;
-import fretx.version4.utils.bluetooth.BluetoothLE;
-import fretx.version4.utils.bluetooth.BluetoothListener;
+import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.audio.Midi;
+import fretx.version4.utils.bluetooth.ServiceListener;
 import fretx.version4.utils.firebase.Analytics;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UserAttributes;
@@ -33,10 +30,56 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class SplashScreen extends BaseActivity {
     private static final String TAG = "KJKP6_PERMISO";
+    private boolean initialized;
+    private boolean permission;
+    private boolean binded;
+
+    private IOnPermissionComplete onCompleteListener = new IOnPermissionComplete() {
+        @Override
+        public void onComplete(){
+            Log.d(TAG, "Complete!");
+            permission = true;
+            complete();
+        }
+    };
+    private ServiceListener serviceListener = new ServiceListener() {
+        @Override
+        public void onBind() {
+            binded = true;
+            Bluetooth.getInstance().unregisterServiceListener(serviceListener);
+            complete();
+        }
+    };
+    private IOnPermissionResult onPermissionResult = new IOnPermissionResult() {
+        @Override
+        public void onPermissionResult(ResultSet resultSet) {
+            if (resultSet.isPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
+                Log.d(TAG,"Record Audio permissions granted");
+                // Audio permission granted!
+                initAudio();
+            }
+            if (resultSet.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)) {
+                Log.d(TAG,"Phone permissions granted");
+                // Phone permission granted!
+                initAudio();
+            }
+            if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                // Location permission granted!
+                initBluetooth();
+                Log.d(TAG,"Location permissions granted");
+            }
+        }
+        @Override
+        public void onRationaleRequested(IOnRationaleProvided callback, String... permissions) {
+            Permiso.getInstance().showRationaleInDialog("FretX Permissions",
+                    "These permissions are requested to connect to the FretX, to detect your chords and play sounds", null, callback);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash_screen);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/GothamRoundedBook.ttf")
@@ -44,102 +87,67 @@ public class SplashScreen extends BaseActivity {
                 .build()
         );
 
-        setContentView(R.layout.activity_splash_screen);
+        //ask permissions at runtime
         Permiso.getInstance().setActivity(this);
-
-        //Permiso callback called when the permission process is done
-        Permiso.getInstance().setOnComplete(new IOnComplete() {
-            public void onComplete(){
-                Log.d(TAG, "Complete!");
-                if (BluetoothLE.getInstance().isEnabled()) {
-                    BluetoothLE.getInstance().scan();
-                } else {
-                    onInitComplete();
-                }
-            }
-        });
-
-        //bluetooth callback called when the scan is done
-
-        BluetoothLE.getInstance().setListener(new BluetoothListener() {
-            @Override
-            public void onConnect() {
-                Log.d(TAG, "Success!");
-                onInitComplete();
-            }
-
-            @Override
-            public void onDisconnect() {
-                Log.d(TAG, "Failure!");
-                onInitComplete();
-            }
-
-            @Override
-            public void onScanFailure() {
-                Log.d(TAG, "Failure!");
-                onInitComplete();
-            }
-
-            public void onFailure() {
-                Log.d(TAG, "Failure!");
-                onInitComplete();
-            }
-        });
-
-        //ask for permissions
-        Permiso.getInstance().requestPermissions(
-                new IOnPermissionResult() {
-                    @Override
-                    public void onPermissionResult(ResultSet resultSet) {
-                        if (resultSet.isPermissionGranted(Manifest.permission.RECORD_AUDIO)) {
-                            Log.d(TAG,"Record Audio permissions granted");
-                            // Audio permission granted!
-                            initAudio();
-                        }
-                        if (resultSet.isPermissionGranted(Manifest.permission.READ_PHONE_STATE)) {
-                            Log.d(TAG,"Phone permissions granted");
-                            // Phone permission granted!
-                            initAudio();
-                        }
-                        if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                            // Location permission granted!
-                            Log.d(TAG,"Location permissions granted");
-                            initBluetooth();
-                        }
-                    }
-                    @Override
-                    public void onRationaleRequested(IOnRationaleProvided callback, String... permissions) {
-                        Permiso.getInstance().showRationaleInDialog("FretX Permissions",
-                                "These permissions are requested to connect to the FretX, to detect your chords and play sounds", null, callback);
-                    }
-                },
+        Permiso.getInstance().setOnComplete(onCompleteListener);
+        Permiso.getInstance().requestPermissions(onPermissionResult,
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        BluetoothLE.getInstance();
-        BluetoothAnimator.getInstance();
 
         //initialize midi
         if (!Midi.getInstance().isEnabled()) {
             Midi.getInstance().init();
             Midi.getInstance().start();
         }
-
-        //initialize firebase
+        //initialize Firebase
         if (!Analytics.getInstance().isEnabled()) {
             Analytics.getInstance().init();
             Analytics.getInstance().start();
         }
-
         //initialize intercom
         Intercom.initialize(getApplication(), "android_sdk-073d0705faff270ed9274399ebff4d4c55c58d67", "p1olv87a");
+
+        initialized = true;
+        complete();
     }
 
-    private void onInitComplete() {
-        BluetoothLE.getInstance().setListener(null);
-        BluetoothLE.getInstance().clearMatrix();
-        BluetoothAnimator.getInstance().stringFall();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Permiso.getInstance().setActivity(this);
+    }
+
+    //redirect callback to Permiso
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Permiso.getInstance().onRequestPermissionResult(requestCode, permissions, grantResults);
+        //Permiso.getInstance().setActivity(this);
+    }
+
+    //init audio
+    private void initAudio() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+                && !Audio.getInstance().isEnabled()) {
+            Audio.getInstance().init();
+            Audio.getInstance().start();
+        }
+    }
+
+    //init bluetooth
+    private void initBluetooth() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && !Bluetooth.getInstance().isEnabled()) {
+            Bluetooth.getInstance().registerServiceListener(serviceListener);
+            Bluetooth.getInstance().init();
+        }
+    }
+
+    private void complete() {
+        if (!initialized || !permission || !binded)
+            return;
 
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {
@@ -157,39 +165,6 @@ public class SplashScreen extends BaseActivity {
         } else {
             final Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Permiso.getInstance().setActivity(this);
-    }
-
-    //redirect callback to Permiso
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Permiso.getInstance().onRequestPermissionResult(requestCode, permissions, grantResults);
-        Permiso.getInstance().setActivity(this);
-    }
-
-    //init audio
-    private void initAudio() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
-                && !Audio.getInstance().isEnabled()) {
-            Audio.getInstance().init();
-            Audio.getInstance().start();
-        }
-    }
-
-    //init bluetooth
-    private void initBluetooth() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && !BluetoothLE.getInstance().isEnabled()) {
-            BluetoothLE.getInstance().init();
-            BluetoothLE.getInstance().start();
         }
     }
 }

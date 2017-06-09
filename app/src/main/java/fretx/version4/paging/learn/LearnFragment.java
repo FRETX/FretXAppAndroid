@@ -15,7 +15,6 @@ import fretx.version4.paging.learn.custom.LearnCustomBuilderFragment;
 import fretx.version4.paging.learn.guided.LearnGuidedListFragment;
 import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
-import fretx.version4.utils.bluetooth.BluetoothLE;
 import fretx.version4.utils.firebase.Analytics;
 
 public class LearnFragment extends Fragment {
