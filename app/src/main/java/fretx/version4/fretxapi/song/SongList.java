@@ -16,7 +16,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import cz.msebera.android.httpclient.Header;
-import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.fretxapi.AppCache;
@@ -24,7 +23,7 @@ import fretx.version4.fretxapi.Network;
 
 public class SongList {
     private static final String TAG = "KJKP6_API_SONGLIST";
-    private static final String API_BASE = Config.apiBase;
+    private static final String API_BASE = "http://player.fretx.rocks/api/v1/";
 
     private static JSONArray index;
     private static AlertDialog dialog;

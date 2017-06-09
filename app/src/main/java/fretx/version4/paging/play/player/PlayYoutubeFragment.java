@@ -26,7 +26,6 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import fretx.version4.Config;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.Util;
@@ -41,7 +40,7 @@ import rocks.fretx.audioprocessing.Chord;
 public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.PlayedEndDialogListener {
     private final static String TAG = "KJKP6_YOUTUBE";
     //Youtube
-    private static final String API_KEY = Config.YOUTUBE_API_KEY;
+    private static final String API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
     private SongItem song;
     private ArrayList<SongPunch> punches;
     private int          preroll  = 0;

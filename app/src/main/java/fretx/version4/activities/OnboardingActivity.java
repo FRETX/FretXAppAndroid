@@ -17,12 +17,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.onboarding.login.User;
 import fretx.version4.onboarding.userInfo.Guitar;
 import fretx.version4.onboarding.userInfo.Hand;
 import fretx.version4.onboarding.userInfo.Level;
+import fretx.version4.utils.firebase.FirebaseConfig;
 
 public class OnboardingActivity extends BaseActivity {
     private Fragment fragment;
@@ -120,7 +120,7 @@ public class OnboardingActivity extends BaseActivity {
 
                         saveData();
 
-                        if (Config.setup) {
+                        if (!FirebaseConfig.getInstance().isHardwareSetupSkipable()) {
                             final Intent intent = new Intent(getActivity(), HardwareActivity.class);
                             startActivity(intent);
                         } else {

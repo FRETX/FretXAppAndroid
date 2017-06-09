@@ -18,7 +18,6 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
-import fretx.version4.Config;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.fretxapi.song.SongCallback;
@@ -191,13 +190,13 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
 
     private void startSong(SongItem item) {
         boolean loadOfflinePlayer = false;
-        if (Config.useOfflinePlayer) {
+        /* if (false) {
             String fileName = "fretx" + item.youtube_id.toLowerCase().replace("-", "_");
             int resourceIdentifier = getContext().getResources().getIdentifier(fileName, "raw", getContext().getPackageName());
             if(resourceIdentifier != 0){
                 loadOfflinePlayer = true;
             }
-        }
+        } */
         if (loadOfflinePlayer) {
             PlayOfflinePlayerFragment offlinePlayerFragment = new PlayOfflinePlayerFragment();
             offlinePlayerFragment.setSong(item);

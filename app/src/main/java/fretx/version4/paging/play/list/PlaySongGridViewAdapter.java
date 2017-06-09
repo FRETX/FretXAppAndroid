@@ -1,31 +1,20 @@
 package fretx.version4.paging.play.list;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.song.SongItem;
-import fretx.version4.fretxapi.song.SongPunch;
-import fretx.version4.paging.play.preview.PlayPreview;
-import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
-import fretx.version4.paging.play.player.PlayYoutubeFragment;
-import rocks.fretx.audioprocessing.Chord;
 
 /**
  * 

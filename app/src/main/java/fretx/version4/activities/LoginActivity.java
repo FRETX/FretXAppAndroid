@@ -30,11 +30,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import fretx.version4.Config;
 import fretx.version4.R;
 import fretx.version4.onboarding.login.Facebook;
 import fretx.version4.onboarding.login.LoginFragnent;
 import fretx.version4.onboarding.login.User;
+import fretx.version4.utils.firebase.FirebaseConfig;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UserAttributes;
 import io.intercom.android.sdk.identity.Registration;
@@ -148,7 +148,7 @@ public class LoginActivity extends BaseActivity {
                 Intercom.client().updateUser(userAttributes);
 
                 //preferences
-                if (Config.onboarding && dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class) == null) {
+                if (!FirebaseConfig.getInstance().isUserInfoSkipable() && dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class) == null) {
                     Intent intent = new Intent(getActivity(), OnboardingActivity.class);
                     startActivity(intent);
                 } else {
