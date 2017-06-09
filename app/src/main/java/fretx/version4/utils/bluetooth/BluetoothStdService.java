@@ -3,37 +3,32 @@ package fretx.version4.utils.bluetooth;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
+import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.util.SparseArray;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
  * FretXAppAndroid for FretX
- * Created by pandor on 06/06/17 17:20.
+ * Created by pandor on 09/06/17 02:11.
  */
 
-public class BluetoothLEService extends Service {
-    private final static String TAG = "KJKP6_BLE_SERVICE";
-    private static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-    private static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+public class BluetoothStdService extends Service {
+    private final static String TAG = "KJKP6_BLUETOOTH";
+
+    private static final UUID HC05_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
     private enum State {IDLE, ENABLING, SCANNING, CONNECTING, CONNECTED}
     private State state = State.IDLE;
     private final static int SCAN_DELAY_MS = 3000;
@@ -45,18 +40,15 @@ public class BluetoothLEService extends Service {
 
     private final SparseArray<BluetoothDevice> devices = new SparseArray<>();
     private BluetoothAdapter adapter;
-    private BluetoothGatt gatt;
-    private BluetoothGattCharacteristic rx;
-
+    private BluetoothSocket btSocket;
 
     @Override
     public void onCreate() {
+        super.onCreate();
         Log.d(TAG, "Service started");
         adapter = ((BluetoothManager) getSystemService(BLUETOOTH_SERVICE)).getAdapter();
         if (adapter == null) {
             Log.d(TAG, "No bluetooth adapter");
-        } else if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Log.d(TAG, "No BluetoothLE low energy");
         } else {
             Log.d(TAG, "Bluetooth adapter ok!");
         }
@@ -69,35 +61,43 @@ public class BluetoothLEService extends Service {
             return BluetoothLEService.this;
         } */
 
+        @Override
         public void connectDevice(String deviceName) {
             iDisconnect();
             iConnectDeviceNamed(deviceName);
         }
 
+        @Override
         public void onTurnedOn() {
             iOnTurnedOn();
         }
 
+        @Override
         public void onTurnedOff() {
             iOnTurnedOff();
         }
 
+        @Override
         public void send(byte data[]) {
             iSend(data);
         }
 
+        @Override
         public void registerBluetoothListener(BluetoothListener listener) {
             iRegisterBluetoothListener(listener);
         }
 
+        @Override
         public void unregisterBluetoothListener(BluetoothListener listener) {
             iUnregisterBluetoothListener(listener);
         }
 
+        @Override
         public boolean isConnected() {
-            return gatt != null;
+            return btSocket != null;
         }
 
+        @Override
         public void disconnect(){
             iDisconnect();
         }
@@ -122,10 +122,13 @@ public class BluetoothLEService extends Service {
 
     private void iSend(byte data[]) {
         //BluetoothAnimator.getInstance().stopAnimation();
-        if (gatt == null || rx == null)
+        if (btSocket == null)
             return;
-        rx.setValue(data);
-        gatt.writeCharacteristic(rx);
+        try {
+            btSocket.getOutputStream().write(data);
+        } catch (IOException e) {
+            Log.d(TAG, "setMatrix failed");
+        }
     }
 
     private void iRegisterBluetoothListener(BluetoothListener listener) {
@@ -162,63 +165,40 @@ public class BluetoothLEService extends Service {
         }
     }
 
-    /* = = = = = = = = = = = = = = = = = = = = SCANNING = = = = = = = = = = = = = = = = = = = = = */
-    private void scan() {
+    /* = = = = = = = = = = = = = = = = = = = SCANNING = = = = = = = = = = = = = = = = = = = = = */
+    public void scan() {
+        Log.d(TAG, "scanning...");
         if (deviceName == null) {
             Log.d(TAG, "device name not set before scanning!");
         } else {
-            Log.d(TAG, "scanning...");
             state = State.SCANNING;
             devices.clear();
-            final ScanSettings settings = new ScanSettings.Builder().build();
-            final ScanFilter filter = new ScanFilter.Builder().setDeviceName(deviceName).build();
-            final List<ScanFilter> filters = new ArrayList<>();
-            filters.add(filter);
-            adapter.getBluetoothLeScanner().startScan(filters, settings, scanCallback);
+            registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+            adapter.startDiscovery();
             handler.postDelayed(endOfScan, SCAN_DELAY_MS);
         }
     }
 
-    private ScanCallback scanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            super.onScanResult(callbackType, result);
-            final BluetoothDevice device = result.getDevice();
-            Log.d(TAG, "New BLE Device: " + device.getName());
-            devices.put(device.hashCode(), device);
-        }
-
-        @Override
-        public void onBatchScanResults(List<ScanResult> results) {
-            super.onBatchScanResults(results);
-            Log.d(TAG, "New BLE Devices");
-        }
-
-        @Override
-        public void onScanFailed(int errorCode) {
-            super.onScanFailed(errorCode);
-
-            if (errorCode == SCAN_FAILED_ALREADY_STARTED)
-                Log.d(TAG, "Scan failed: SCAN_FAILED_ALREADY_STARTED");
-            else if (errorCode == SCAN_FAILED_APPLICATION_REGISTRATION_FAILED)
-                Log.d(TAG, "Scan failed: SCAN_FAILED_APPLICATION_REGISTRATION_FAILED");
-            else if (errorCode == SCAN_FAILED_FEATURE_UNSUPPORTED)
-                Log.d(TAG, "Scan failed: SCAN_FAILED_FEATURE_UNSUPPORTED");
-            else if (errorCode == SCAN_FAILED_INTERNAL_ERROR)
-                Log.d(TAG, "Scan failed: SCAN_FAILED_INTERNAL_ERROR");
-
-            notifyScanFailure();
-            state = State.IDLE;
-            /* if (listener != null) {
-                listener.onScanFailure();
-            } */
+    private final BroadcastReceiver bReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                String name = device.getName();
+                if (name != null && name.equals(deviceName)
+                        && device.getBondState() == BluetoothDevice.BOND_BONDED) {
+                    Log.d(TAG, "new device: " + name);
+                    devices.append(device.hashCode(), device);
+                }
+            }
         }
     };
 
     private Runnable endOfScan = new Runnable() {
         @Override
         public void run() {
-            adapter.getBluetoothLeScanner().stopScan(scanCallback);
+            adapter.cancelDiscovery();
+            unregisterReceiver(bReceiver);
             if (devices.size() == 1) {
                 handler.removeCallbacksAndMessages(null);
                 connect(devices.valueAt(0));
@@ -226,71 +206,45 @@ public class BluetoothLEService extends Service {
                 Log.d(TAG, "Too many devices found");
                 notifyScanFailure();
                 state = State.IDLE;
-                /* if (listener != null) {
-                    listener.onScanFailure();
-                } */
             } else {
                 Log.d(TAG, "No device found");
                 notifyScanFailure();
                 state = State.IDLE;
-                /* if (listener != null) {
-                    listener.onScanFailure();
-                } */
             }
         }
     };
 
     /* = = = = = = = = = = = = = = = = = = = CONNECTING = = = = = = = = = = = = = = = = = = = = = */
     private void connect(BluetoothDevice device) {
-        Log.d(TAG, "connecting...");
+        Log.d(TAG, "connecting");
         state = State.CONNECTING;
-        gatt = device.connectGatt(this, false, gattCallback);
-    }
-
-    private void iDisconnect() {
-        if (gatt != null) {
-            Log.d(TAG, "disconnecting");
-            gatt.close();
-            gatt = null;
+        try {
+            BluetoothDevice remoteDevice = adapter.getRemoteDevice(device.getAddress());
+            btSocket = remoteDevice.createInsecureRfcommSocketToServiceRecord(HC05_UUID);
+            btSocket.connect();
+        } catch (IOException e) {
+            notifyFailure();
             state = State.IDLE;
         }
+        state = State.CONNECTED;
+        notifyConnection();
     }
 
-    private BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
-        @Override
-        //TODO: strum_right_handed all strings to @strings and use Resources.getSystem().getString()
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
-                Log.d(TAG, "discovering...");
-                notifyConnection();
-                /* if (listener != null)
-                    listener.onConnect(); */
-                gatt.discoverServices();
-            } else if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_DISCONNECTED) {
-                Log.d(TAG, "disconnected");
-                BluetoothLEService.this.gatt = null;
+    public void iDisconnect() {
+        if (btSocket != null) {
+            try {
+                btSocket.close();
+                btSocket = null;
                 notifyDisconnection();
-                /* if (listener != null)
-                    listener.onDisconnect(); */
-                } else if (status != BluetoothGatt.GATT_SUCCESS) {
-                Log.d(TAG, "failure, disconnecting");
-                gatt.close();
-                BluetoothLEService.this.gatt = null;
+                state = State.IDLE;
+            } catch (IOException e) {
+                Log.d(TAG, "Socket disconnection failed");
                 notifyFailure();
-                /* if (listener != null)
-                    listener.onFailure(); */
+                state = State.IDLE;
+                btSocket = null;
             }
         }
-
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            super.onServicesDiscovered(gatt, status);
-            final BluetoothGattService RxService = BluetoothLEService.this.gatt.getService(RX_SERVICE_UUID);
-            rx = RxService.getCharacteristic(RX_CHAR_UUID);
-            state = State.CONNECTED;
-            BluetoothAnimator.getInstance().stringFall();
-        }
-    };
+    }
 
     /* = = = = = = = = = = = = = = = = = = = LISTENERS = = = = = = = = = = = = = = = = = = = = = */
     private void notifyScanFailure() {

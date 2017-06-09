@@ -29,7 +29,7 @@ public class Bluetooth {
     private final static String TAG = "KJKP6_BLUETOOTH";
     private HashMap<String,FingerPositions> chordFingerings;
     private static final String DEVICE_NAME = "FretX";
-    private BluetoothLEService.BluetoothBinder service;
+    private BluetoothInterface service;
     private boolean enabled;
     private final byte[] clear = new byte[]{0};
     private final byte[] correctIndicator = new byte[]{
@@ -89,7 +89,7 @@ public class Bluetooth {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder serviceBinder) {
-            service = (BluetoothLEService.BluetoothBinder) serviceBinder;
+            service = (BluetoothInterface) serviceBinder;
             for (ServiceListener listener: serviceListeners) {
                 listener.onBind();
             }
