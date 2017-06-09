@@ -77,7 +77,20 @@ public class Bluetooth {
 
     /* = = = = = = = = = = = = = = = = = = = BLUETOOTH = = = = = = = = = = = = = = = = = = = = = */
     public void init() {
-        Log.d(TAG, "init");
+        initBluetoothLE();
+    }
+
+    public void initBluetoothStd(){
+        Log.d(TAG, "init bluetooth Standard");
+        final Intent intent = new Intent(getActivity(), BluetoothStdService.class);
+        getActivity().getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        //// TODO: 08/06/17 find a place to unregister this
+        getActivity().getApplicationContext().registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        chordFingerings = MusicUtils.parseChordDb();
+    }
+
+    public void initBluetoothLE(){
+        Log.d(TAG, "init bluetooth LE");
         final Intent intent = new Intent(getActivity(), BluetoothLEService.class);
         getActivity().getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         //// TODO: 08/06/17 find a place to unregister this
@@ -86,7 +99,6 @@ public class Bluetooth {
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className, IBinder serviceBinder) {
             service = (BluetoothInterface) serviceBinder;
@@ -99,6 +111,7 @@ public class Bluetooth {
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
+            getActivity().getApplicationContext().unregisterReceiver(mReceiver);
         }
     };
 
