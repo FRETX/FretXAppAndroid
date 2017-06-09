@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.utils.mail;
 import java.security.AccessController;
 import java.security.Provider;
 

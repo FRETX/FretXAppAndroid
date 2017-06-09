@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.utils.mail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

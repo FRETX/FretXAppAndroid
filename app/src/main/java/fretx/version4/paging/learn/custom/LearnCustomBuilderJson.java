@@ -66,11 +66,11 @@ class LearnCustomBuilderJson {
     }
 
     static void save(Context context, ArrayList<Sequence> sequences) {
-        StringBuffer sb = new StringBuffer("{\"sequences\":");
+        final StringBuffer sb = new StringBuffer("{\"sequences\":");
         sequenceArrayToJson(sb, sequences);
         sb.append("}");
 
-        FileOutputStream outputStream;
+        final FileOutputStream outputStream;
         try {
             outputStream = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
             outputStream.write(sb.toString().getBytes());
@@ -81,14 +81,14 @@ class LearnCustomBuilderJson {
     }
 
     static ArrayList<Sequence> load(Context context) {
-        String jsonSave;
-        ArrayList<Sequence> sequences = new ArrayList<>();
+        final String jsonSave;
+        final ArrayList<Sequence> sequences = new ArrayList<>();
 
         try {
-            FileInputStream fis = context.openFileInput(FILENAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
+            final FileInputStream fis = context.openFileInput(FILENAME);
+            final InputStreamReader isr = new InputStreamReader(fis);
+            final BufferedReader bufferedReader = new BufferedReader(isr);
+            final StringBuilder sb = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
@@ -102,21 +102,21 @@ class LearnCustomBuilderJson {
         }
 
         try {
-            JSONObject jsonRoot = new JSONObject(jsonSave);
-            JSONArray jsonSequences = jsonRoot.getJSONArray("sequences");
+            final JSONObject jsonRoot = new JSONObject(jsonSave);
+            final JSONArray jsonSequences = jsonRoot.getJSONArray("sequences");
             for (int sequenceIndex = 0; sequenceIndex < jsonSequences.length(); sequenceIndex++) {
-                JSONObject jsonSequence = jsonSequences.getJSONObject(sequenceIndex);
-                JSONArray jsonChords = jsonSequence.getJSONArray("chords");
-                String sequenceName = jsonSequence.getString("name");
-                ArrayList<Chord> sequenceChords = new ArrayList<>();
+                final JSONObject jsonSequence = jsonSequences.getJSONObject(sequenceIndex);
+                final JSONArray jsonChords = jsonSequence.getJSONArray("chords");
+                final String sequenceName = jsonSequence.getString("name");
+                final ArrayList<Chord> sequenceChords = new ArrayList<>();
                 for (int chordIndex = 0; chordIndex < jsonChords.length(); chordIndex++) {
-                    JSONObject jsonChord = jsonChords.getJSONObject(chordIndex);
-                    String chordRoot = jsonChord.getString("root");
-                    String chordType = jsonChord.getString("type");
-                    Chord chord = new Chord(chordRoot, chordType);
+                    final JSONObject jsonChord = jsonChords.getJSONObject(chordIndex);
+                    final String chordRoot = jsonChord.getString("root");
+                    final String chordType = jsonChord.getString("type");
+                    final Chord chord = new Chord(chordRoot, chordType);
                     sequenceChords.add(chord);
                 }
-                Sequence sequence = new Sequence(sequenceName, sequenceChords);
+                final Sequence sequence = new Sequence(sequenceName, sequenceChords);
                 sequences.add(sequence);
             }
         } catch (JSONException e) {

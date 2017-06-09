@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
 import fretx.version4.utils.Preference;
+import fretx.version4.utils.Prefs;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UnreadConversationCountListener;
@@ -71,7 +72,6 @@ public class Profile extends Fragment {
             Log.d(TAG, "user connected");
             nameTextView.setText(user.getDisplayName());
             emailTextView.setText(user.getEmail());
-            mDatabase = FirebaseDatabase.getInstance().getReference();
             final Uri url = user.getPhotoUrl();
             if (url != null)
                 Picasso.with(getActivity()).load(url).placeholder(R.drawable.defaultthumb).into(photo);
@@ -104,13 +104,13 @@ public class Profile extends Fragment {
         leftHandedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (mDatabase != null)
-                        mDatabase.child("users").child(user.getUid()).child("hand").setValue("left");
-                    Preference.getInstance().setHand(Preference.LEFT_HANDED);
+                    final Prefs.Builder builder = new Prefs.Builder();
+                    builder.setHand(Prefs.LEFT_HANDED);
+                    Preference.getInstance().save(builder.build());
                 } else {
-                    if (mDatabase != null)
-                        mDatabase.child("users").child(user.getUid()).child("hand").setValue("right");
-                    Preference.getInstance().setHand(Preference.RIGHT_HANDED);
+                    final Prefs.Builder builder = new Prefs.Builder();
+                    builder.setHand(Prefs.RIGHT_HANDED);
+                    Preference.getInstance().save(builder.build());
                 }
             }
         });

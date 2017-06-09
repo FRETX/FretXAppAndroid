@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import fretx.version4.Util;
+import fretx.version4.utils.Util;
 import fretx.version4.fretxapi.AppCache;
 import rocks.fretx.audioprocessing.Chord;
 

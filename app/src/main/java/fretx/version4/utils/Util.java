@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Map;
+
+import fretx.version4.Constants;
 
 /**
  * Created by Misho on 2/21/2016.

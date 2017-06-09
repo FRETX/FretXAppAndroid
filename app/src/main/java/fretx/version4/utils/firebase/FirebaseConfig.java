@@ -13,7 +13,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
-import fretx.version4.activities.MainActivity;
 
 /**
  * FretXAppAndroid for FretX

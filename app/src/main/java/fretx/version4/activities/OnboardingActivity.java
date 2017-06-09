@@ -22,6 +22,8 @@ import fretx.version4.onboarding.login.User;
 import fretx.version4.onboarding.userInfo.Guitar;
 import fretx.version4.onboarding.userInfo.Hand;
 import fretx.version4.onboarding.userInfo.Level;
+import fretx.version4.utils.Preference;
+import fretx.version4.utils.Prefs;
 import fretx.version4.utils.firebase.FirebaseConfig;
 
 public class OnboardingActivity extends BaseActivity {
@@ -136,10 +138,9 @@ public class OnboardingActivity extends BaseActivity {
     }
 
     private void saveData() {
-        final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mDatabase.child("users").child(fUser.getUid()).setValue(new User(guitar, hand, level));
+        Prefs.Builder builder = new Prefs.Builder();
+        builder.setGuitar(guitar).setHand(hand).setLevel(level);
+        Preference.getInstance().save(builder.build());
     }
 
     @Override

@@ -139,32 +139,7 @@ public class MainActivity extends BaseActivity {
 
 		setGuiEventListeners();
 
-		//// TODO: 23/05/17 replacce with a try/catch block to get internet failure
-		final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-		final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-		Preference.getInstance().init("classic", "right", "beginner");
-		if (fUser != null) {
-			Log.v(TAG, "fUser is not null");
-			mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					Log.v(TAG, "can get data");
-					User user = dataSnapshot.child("users").child(fUser.getUid()).getValue(User.class);
-					//// TODO: 24/05/17 use nested class to get directly the useful part
-					Preference.getInstance().init(user.guitar, user.hand, user.level);
-				}
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					//failure, use local save instead...
-					Log.v(TAG, "cant get data");
-					Preference.getInstance().init(Preference.CLASSICAL_GUITAR, Preference.RIGHT_HANDED, Preference.LEVEL_BEGINNER);
-				}
-			});
-		} else {
-			Log.v(TAG, "fUser is null!");
-			//// TODO: 24/05/17 use a local save instead of default
-			Preference.getInstance().init(Preference.CLASSICAL_GUITAR, Preference.RIGHT_HANDED, Preference.LEVEL_BEGINNER);
-		}
+		Preference.getInstance().init();
 	}
 
     @Override

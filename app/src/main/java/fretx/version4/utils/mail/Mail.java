@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.utils.mail;
 
 import java.util.Date;
 import java.util.Properties;
