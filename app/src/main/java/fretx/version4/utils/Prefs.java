@@ -69,9 +69,6 @@ public class Prefs {
 
         public Builder() {
             prefs = Preference.getInstance().getPrefsCopy();
-            if (prefs == null) {
-                prefs = new Prefs();
-            }
         }
 
         public Builder setGuitar(String guitar) {

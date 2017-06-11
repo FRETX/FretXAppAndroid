@@ -18,6 +18,7 @@ import com.greysonparrelli.permiso.Permiso;
 import com.greysonparrelli.permiso.ResultSet;
 
 import fretx.version4.R;
+import fretx.version4.utils.Network;
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.audio.Midi;
@@ -110,6 +111,8 @@ public class SplashScreen extends BaseActivity {
         Intercom.initialize(getApplication(), "android_sdk-073d0705faff270ed9274399ebff4d4c55c58d67", "p1olv87a");
         //initialize Firebase remote config
         FirebaseConfig.getInstance().init();
+        //initialize network
+        Network.getInstance().init();
 
         initialized = true;
         complete();

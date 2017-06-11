@@ -125,6 +125,8 @@ public class Preference {
     }
 
     public Prefs getPrefsCopy() {
+        if (prefs == null)
+            return new Prefs();
         return new Prefs(prefs);
     }
 
