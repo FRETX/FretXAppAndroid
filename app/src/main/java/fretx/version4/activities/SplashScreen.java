@@ -23,6 +23,7 @@ import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.audio.Midi;
 import fretx.version4.utils.bluetooth.ServiceListener;
 import fretx.version4.utils.firebase.Analytics;
+import fretx.version4.utils.firebase.FirebaseConfig;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UserAttributes;
 import io.intercom.android.sdk.identity.Registration;
@@ -100,13 +101,15 @@ public class SplashScreen extends BaseActivity {
             Midi.getInstance().init();
             Midi.getInstance().start();
         }
-        //initialize Firebase
+        //initialize Firebase analytics
         if (!Analytics.getInstance().isEnabled()) {
             Analytics.getInstance().init();
             Analytics.getInstance().start();
         }
         //initialize intercom
         Intercom.initialize(getApplication(), "android_sdk-073d0705faff270ed9274399ebff4d4c55c58d67", "p1olv87a");
+        //initialize Firebase remote config
+        FirebaseConfig.getInstance().init();
 
         initialized = true;
         complete();

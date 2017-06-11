@@ -219,18 +219,6 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 
-		//Hidden setting for us to use during testing
-//		bluetoothButton.setOnLongClickListener(new View.OnLongClickListener() {
-//			@Override
-//			public boolean onLongClick(View v) {
-//				PreferencesManager tutorialPrefs = new PreferencesManager(getApplicationContext());
-//				tutorialPrefs.resetAll();
-//				SongList.getIndexFromServer();
-//				Toast.makeText(mActivity,"All tutorials reset, cache refreshed",Toast.LENGTH_SHORT).show( );
-//				return true;
-//			}
-//		});
-
 		previewButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

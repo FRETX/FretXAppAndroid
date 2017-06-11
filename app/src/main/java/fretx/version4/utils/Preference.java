@@ -25,7 +25,7 @@ import fretx.version4.activities.BaseActivity;
  */
 
 public class Preference {
-    private final static String TAG = "KJKP6_ANALYTICS";
+    private final static String TAG = "KJKP6_PREFERENCE";
     private final static String FILENAME = "preferences.json";
     private DatabaseReference mDatabasePrefs;
     private Prefs prefs;
@@ -47,36 +47,10 @@ public class Preference {
     public void init() {
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         mDatabasePrefs = FirebaseDatabase.getInstance().getReference().child("users").child(fUser.getUid()).child("prefs");
-
-        //retrieve local save
-        prefs = load();
-        if (prefs == null)
-            prefs = new Prefs();
-        //retrieve remote save
-        final ValueEventListener listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                prefs = dataSnapshot.getValue(Prefs.class);
-                save(prefs);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "prefs retrieval failed", databaseError.toException());
-            }
-        };
-        mDatabasePrefs.addListenerForSingleValueEvent(listener);
+        load();
     }
 
-    public void save(Prefs prefs) {
-        final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fUser == null)
-            return;
-
-        //remote save
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(fUser.getUid()).child("prefs").setValue(prefs);
-        //local save
+    private boolean localSave(Prefs prefs) {
         final FileOutputStream outputStream;
         try {
             outputStream = BaseActivity.getActivity().openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -84,12 +58,23 @@ public class Preference {
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    public Prefs load() {
-        final String jsonSave;
+    private void remoteSave(Prefs prefs) {
+        mDatabasePrefs.setValue(prefs);
+    }
 
+    public void save(Prefs prefs) {
+        this.prefs = prefs;
+        remoteSave(prefs);
+        localSave(prefs);
+    }
+
+    private Prefs localLoad() {
+        final String jsonSave;
         try {
             final FileInputStream fis = BaseActivity.getActivity().openFileInput(FILENAME);
             final InputStreamReader isr = new InputStreamReader(fis);
@@ -103,11 +88,40 @@ public class Preference {
             fis.close();
             jsonSave = sb.toString();
         } catch (IOException e) {
+            Log.v(TAG, "local save retrieval failed");
             e.printStackTrace();
             return null;
         }
-
+        Log.v(TAG, "local save retrieval succeeded: >" + jsonSave + "<");
         return Prefs.fromJson(jsonSave);
+    }
+
+    private void remoteLoad() {
+        final ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Prefs remotePrefs = dataSnapshot.getValue(Prefs.class);
+                if (remotePrefs != null) {
+                    prefs = remotePrefs;
+                    Log.w(TAG, "remote prefs retrieval succeeded");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "remote prefs retrieval failed", databaseError.toException());
+            }
+        };
+        mDatabasePrefs.addListenerForSingleValueEvent(listener);
+    }
+
+    public void load() {
+        prefs = localLoad();
+        if (prefs == null) {
+            Log.v(TAG, "using default prefs");
+            prefs = new Prefs();
+        }
+        remoteLoad();
     }
 
     public Prefs getPrefsCopy() {

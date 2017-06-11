@@ -1,5 +1,9 @@
 package fretx.version4.utils;
 
+import android.util.Log;
+
+import com.nostra13.universalimageloader.utils.L;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,6 +13,7 @@ import org.json.JSONObject;
  */
 
 public class Prefs {
+    private final static String TAG = "KJKP6_PREFS";
     public final static String LEFT_HANDED = "left";
     public final static String RIGHT_HANDED = "right";
     public final static String ACCOUSTIC_GUITAR = "acoustic";
@@ -53,13 +58,21 @@ public class Prefs {
             final Builder builder = new Builder().setHand(hand).setGuitar(guitar).setLevel(level);
             return builder.build();
         } catch (JSONException e) {
+            Log.v(TAG, "parsing from json failed");
             e.printStackTrace();
             return null;
         }
     }
 
     public static class Builder {
-        private final Prefs prefs = Preference.getInstance().getPrefsCopy();
+        private Prefs prefs;
+
+        public Builder() {
+            prefs = Preference.getInstance().getPrefsCopy();
+            if (prefs == null) {
+                prefs = new Prefs();
+            }
+        }
 
         public Builder setGuitar(String guitar) {
             prefs.guitar = guitar;

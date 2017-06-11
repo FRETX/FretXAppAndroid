@@ -71,7 +71,7 @@ public class BluetoothAnimator {
         public void run() {
             final AnimationStep anim = animations.get(index);
             Bluetooth.getInstance().setMatrix(anim.bluetoothArray);
-            Log.v(TAG, "set matrix");
+            //Log.v(TAG, "set matrix");
             handler.postDelayed(this, anim.delayMs);
             ++index;
             if (index == animationSize)
@@ -87,6 +87,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "fret fall");
         animations.clear();
         animations.add(new AnimationStep(F0));
         animations.add(new AnimationStep(F1));
@@ -106,6 +107,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "fret fall custom delay");
         animations.clear();
         animations.add(new AnimationStep(F0, delayMs));
         animations.add(new AnimationStep(F1, delayMs));
@@ -125,6 +127,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "string fall");
         animations.clear();
         animations.add(new AnimationStep(S1));
         animations.add(new AnimationStep(S2));
@@ -145,6 +148,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "string fall custom delay");
         animations.clear();
         animations.add(new AnimationStep(S1, delayMs));
         animations.add(new AnimationStep(S2, delayMs));
@@ -165,6 +169,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "string fall no F0");
         animations.clear();
         animations.add(new AnimationStep(S1_NO_F0));
         animations.add(new AnimationStep(S2_NO_F0));
@@ -185,6 +190,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "string fall no F0 custom delay");
         animations.clear();
         animations.add(new AnimationStep(S1_NO_F0, delayMs));
         animations.add(new AnimationStep(S2_NO_F0, delayMs));
@@ -205,6 +211,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "blink F0");
         animations.clear();
         animations.add(new AnimationStep(F0));
         animations.add(new AnimationStep(BLANK));
@@ -221,6 +228,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "blink F0 custom delay");
         animations.clear();
         animations.add(new AnimationStep(F0, delayMs));
         animations.add(new AnimationStep(BLANK, delayMs));
@@ -237,6 +245,7 @@ public class BluetoothAnimator {
             return;
         Bluetooth.getInstance().clearMatrix();
         //build new animation
+        Log.v(TAG, "blink F0 custom");
         animations.clear();
         animations.add(new AnimationStep(bluetoothArray, delayMs));
         animations.add(new AnimationStep(BLANK, delayMs));
@@ -247,6 +256,7 @@ public class BluetoothAnimator {
     }
 
     public void stopAnimation() {
+        Log.v(TAG, "stop animation");
         handler.removeCallbacksAndMessages(null);
     }
 
