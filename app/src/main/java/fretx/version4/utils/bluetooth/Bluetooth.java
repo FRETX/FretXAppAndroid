@@ -136,24 +136,29 @@ public class Bluetooth {
     }
 
     public void setMatrix(Chord chord) {
+        BluetoothAnimator.getInstance().stopAnimation();
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chord.toString(), chordFingerings);
         service.send(bluetoothArray);
     }
 
     public void setMatrix(byte[] fingerings) {
+        BluetoothAnimator.getInstance().stopAnimation();
         service.send(fingerings);
     }
 
     public void setMatrix(Scale scale) {
+        BluetoothAnimator.getInstance().stopAnimation();
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(scale.toString(), chordFingerings);
         service.send(bluetoothArray);
     }
 
     public void clearMatrix() {
+        BluetoothAnimator.getInstance().stopAnimation();
         service.send(clear);
     }
 
     public void lightMatrix() {
+        BluetoothAnimator.getInstance().stopAnimation();
         service.send(correctIndicator);
     }
 
