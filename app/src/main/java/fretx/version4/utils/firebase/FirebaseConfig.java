@@ -11,6 +11,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
 
@@ -25,6 +29,7 @@ public class FirebaseConfig {
 
     public final static String SKIP_USER_INFO = "skipUserInfo";
     public final static String SKIP_HARDWARE_SETUP = "skipHardwareSetup";
+    public final static String SETUP_URLS = "setup_urls";
 
     /* = = = = = = = = = = = = = = = = = SINGLETON PATTERN = = = = = = = = = = = = = = = = = = = */
     private static class Holder {
@@ -65,5 +70,13 @@ public class FirebaseConfig {
 
     public boolean isHardwareSetupSkipable() {
         return mFirebaseRemoteConfig.getBoolean(SKIP_HARDWARE_SETUP);
+    }
+
+    public ArrayList<String> getSetupUrls() {
+        final String urls = mFirebaseRemoteConfig.getString(SETUP_URLS);
+        Log.d(TAG, "urls: " + urls);
+        if (urls == null)
+            return null;
+        return new ArrayList<>(Arrays.asList(urls.split("\\s+")));
     }
 }

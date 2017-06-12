@@ -256,7 +256,6 @@ public class BluetoothAnimator {
     }
 
     public void stopAnimation() {
-        Log.v(TAG, "stop animation");
         handler.removeCallbacksAndMessages(null);
     }
 

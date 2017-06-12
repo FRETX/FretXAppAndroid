@@ -39,6 +39,7 @@ public class SetupPhotoDialog extends DialogFragment{
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Dialog dialog;
     private ImageView photo;
+    private SetupListener setupListener;
 
     public static SetupPhotoDialog newInstance(SetupListener listener) {
         final SetupPhotoDialog dialog = new SetupPhotoDialog();

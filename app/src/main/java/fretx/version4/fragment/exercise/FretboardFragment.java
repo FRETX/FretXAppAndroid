@@ -5,11 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -18,17 +17,15 @@ import fretx.version4.R;
 import fretx.version4.utils.Preference;
 import rocks.fretx.audioprocessing.Chord;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 /**
  * FretXAppAndroid for FretX
  * Created by pandor on 26/05/17 18:10.
  */
 
 public class FretboardFragment extends Fragment {
+    private final static String TAG = "KJKP6_FRETBOARD";
     private FretboardView fretboardView;
     private ImageView strummer;
-    private ImageView green_bar;
     private RelativeLayout strummer_container;
 
     @Override
@@ -37,7 +34,6 @@ public class FretboardFragment extends Fragment {
 
         fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
         strummer = (ImageView) rootView.findViewById(R.id.strummer);
-        green_bar = (ImageView) rootView.findViewById(R.id.green_bar);
         strummer_container = (RelativeLayout) rootView.findViewById(R.id.strummer_container);
 
         if (Preference.getInstance().isLeftHanded()) {
@@ -56,67 +52,18 @@ public class FretboardFragment extends Fragment {
         return rootView;
     }
 
-        /*
-    public void strum() {
-
-        final Animation fadeInBar = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_in);
-        final Animation fadeInStrummer = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_in);
-        final Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_fade_out);
-        final Animation strum;
-        if (Preference.getInstance().isLeftHanded()) {
-            strum = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_left_handed);
-        } else {
-            strum = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.strum_right_handed);
-        }
-
-        fadeInStrummer.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                strummer.startAnimation(strum);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        strum.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                strummer.startAnimation(fadeOut);
-                green_bar.startAnimation(fadeOut);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        green_bar.startAnimation(fadeInBar);
-        strummer.startAnimation(fadeInStrummer);
-
-    }
-      */
-
     public void strum() {
         float pos;
         if (Preference.getInstance().isLeftHanded()) {
-            //bottom to top
-            strummer.setY(strummer_container.getHeight() - strummer.getHeight());
-            pos = 0;
-        } else {
             //top to bottom
             strummer.setY(0);
             pos = strummer_container.getHeight() - strummer.getHeight();
+        } else {
+            //bottom to top
+            strummer.setY(strummer_container.getHeight() - strummer.getHeight());
+            pos = 0;
         }
-
+        Log.d(TAG, "strumming");
         strumFadeIn(pos);
     }
 

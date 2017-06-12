@@ -27,24 +27,24 @@ public class Guitar extends Fragment {
         electricRadio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((RadioButton) v).isChecked())
-                    Toast.makeText(getActivity(), "electric", Toast.LENGTH_SHORT).show();
+                //if (((RadioButton) v).isChecked())
+                //    Toast.makeText(getActivity(), "electric", Toast.LENGTH_SHORT).show();
             }
         });
         final RadioButton acousticRadio = (RadioButton) rootView.findViewById(R.id.acousticRadio);
         acousticRadio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((RadioButton) v).isChecked())
-                    Toast.makeText(getActivity(), "acoustic", Toast.LENGTH_SHORT).show();
+                //if (((RadioButton) v).isChecked())
+                //    Toast.makeText(getActivity(), "acoustic", Toast.LENGTH_SHORT).show();
             }
         });
         final RadioButton classicalRadio = (RadioButton) rootView.findViewById(R.id.classicalRadio);
         classicalRadio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((RadioButton) v).isChecked())
-                    Toast.makeText(getActivity(), "classical", Toast.LENGTH_SHORT).show();
+                //if (((RadioButton) v).isChecked())
+                //    Toast.makeText(getActivity(), "classical", Toast.LENGTH_SHORT).show();
             }
         });
         return rootView;
