@@ -21,6 +21,7 @@ public class SetupDialog extends DialogFragment
     public static SetupDialog newInstance(SetupListener listener) {
         final SetupDialog dialog = new SetupDialog();
         dialog.setTargetFragment((Fragment) listener, 4321);
+        dialog.setCancelable(false);
         return dialog;
     }
 

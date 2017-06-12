@@ -29,16 +29,16 @@ public class Hand extends Fragment implements HandDialog.HandDialogListener {
         electricRadio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((RadioButton) v).isChecked())
-                    Toast.makeText(getActivity(), "Left", Toast.LENGTH_SHORT).show();
+                //if (((RadioButton) v).isChecked())
+                //    Toast.makeText(getActivity(), "Left", Toast.LENGTH_SHORT).show();
             }
         });
         final RadioButton acousticRadio = (RadioButton) rootView.findViewById(R.id.rightRadio);
         acousticRadio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((RadioButton) v).isChecked())
-                    Toast.makeText(getActivity(), "Right", Toast.LENGTH_SHORT).show();
+                //if (((RadioButton) v).isChecked())
+                //    Toast.makeText(getActivity(), "Right", Toast.LENGTH_SHORT).show();
             }
         });
         final Button notSure = (Button) rootView.findViewById(R.id.not_sure_button);

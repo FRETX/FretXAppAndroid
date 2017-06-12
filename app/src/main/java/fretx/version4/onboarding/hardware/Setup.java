@@ -34,12 +34,13 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
     private YouTubePlayer player;
     private SetupListener setupListener = this;
     private static final String API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
-    private int state = 3;
+    private int state = 0;
     private boolean videoEnded;
 
     @Override
     //Setup dialog implementation
     public void onReplay(){
+        videoEnded = false;
         player.seekToMillis(0);
         player.play();
     }
