@@ -96,8 +96,6 @@ public class SetupPhotoDialog extends DialogFragment{
             photo.setVisibility(View.GONE);
         }
 
-
-
         return dialog;
     }
 
@@ -119,12 +117,10 @@ public class SetupPhotoDialog extends DialogFragment{
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(getActivity(), "upload failed", Toast.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(getActivity(), "upload succeeded", Toast.LENGTH_SHORT).show();
                 }
             });
         }
