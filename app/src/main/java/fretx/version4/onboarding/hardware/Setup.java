@@ -35,6 +35,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
     private SetupListener setupListener = this;
     private static final String API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
     private int state = 3;
+    private boolean videoEnded;
 
     @Override
     //Setup dialog implementation
@@ -77,7 +78,10 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
 
         @Override
         public void onVideoEnded() {
+            if (videoEnded)
+                return;
             Log.d(TAG, "onVideoEnded");
+            videoEnded = true;
             if (state == urls.size() - 1) {
                 final SetupPhotoDialog photoDialog = SetupPhotoDialog.newInstance(setupListener);
                 photoDialog.show(getActivity().getSupportFragmentManager(), null);
@@ -130,6 +134,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
         Log.d(TAG, "state: " + state);
         if (state != urls.size()) {
             player.loadVideo(urls.get(state));
+            videoEnded = false;
         } else {
             final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
