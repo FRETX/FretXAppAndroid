@@ -30,6 +30,7 @@ import io.intercom.android.sdk.Intercom;
 public class Setup extends Fragment implements HardwareFragment, SetupListener {
     private final static String TAG = "KJKP6_SETUP";
 
+    private YouTubePlayerSupportFragment youTubePlayerSupportFragment;
     private ArrayList<String> urls;
     private YouTubePlayer player;
     private SetupListener setupListener = this;
@@ -94,28 +95,51 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
 
         @Override
         public void onError(YouTubePlayer.ErrorReason errorReason) {
-
+            Log.v(TAG, "error reason: " + errorReason.toString());
         }
     };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        urls = FirebaseConfig.getInstance().getSetupUrls();
+        Log.d(TAG, "urls(" + urls.size() + "):" + urls.toString());
+        youTubePlayerSupportFragment = new YouTubePlayerSupportFragment();
+        initializePlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            if (player != null)
+                player.setShowFullscreenButton(false);
+        } catch (IllegalStateException e) {
+            Log.v(TAG, "exception catched");
+            initializePlayer();
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.hardware_setup, container, false);
 
-        urls = FirebaseConfig.getInstance().getSetupUrls();
-        Log.d(TAG, "urls(" + urls.size() + "):" + urls.toString());
-
-        final YouTubePlayerSupportFragment youTubePlayerSupportFragment = new YouTubePlayerSupportFragment();
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.youtube_player_container, youTubePlayerSupportFragment);
         fragmentTransaction.commit();
 
+        return rootView;
+    }
+
+    private void initializePlayer() {
         youTubePlayerSupportFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {
                 if (!wasRestored) {
                     player = youTubePlayer;
+                    player.setShowFullscreenButton(false);
                     youTubePlayer.setPlayerStateChangeListener(stateListener);
                     updateState();
                 }
@@ -126,10 +150,13 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                 Toast.makeText(getActivity(), "Fail", Toast.LENGTH_SHORT).show();
             }
         });
-
-        return rootView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        player.release();
+    }
 
     private void updateState() {
         Log.d(TAG, "state: " + state);
