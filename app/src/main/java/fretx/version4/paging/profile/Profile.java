@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
+import fretx.version4.activities.OnboardingActivity;
 import fretx.version4.utils.Preference;
 import fretx.version4.utils.Prefs;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
@@ -36,8 +37,6 @@ import io.intercom.android.sdk.UnreadConversationCountListener;
 
 public class Profile extends Fragment {
     private final static String TAG = "KJKP6_PROFILE";
-    private FirebaseUser user;
-    private DatabaseReference mDatabase;
     private TextView feedbackButton;
     private UnreadConversationCountListener unreadListener = new UnreadConversationCountListener() {
         @Override
@@ -53,6 +52,7 @@ public class Profile extends Fragment {
 
         final ImageView photo = (ImageView) rootView.findViewById(R.id.user_profile_photo);
         final TextView disconnectButton = (TextView) rootView.findViewById(R.id.disconnect_button);
+        final TextView onboardingButton = (TextView) rootView.findViewById(R.id.onboarding_button);
         final TextView nameTextView = (TextView) rootView.findViewById(R.id.name_textview);
         final TextView emailTextView = (TextView) rootView.findViewById(R.id.email_textview);
         final Switch leftHandedSwitch = (Switch) rootView.findViewById(R.id.left_handed_switch);
@@ -67,14 +67,15 @@ public class Profile extends Fragment {
             }
         });
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             Log.d(TAG, "user connected");
             nameTextView.setText(user.getDisplayName());
             emailTextView.setText(user.getEmail());
             final Uri url = user.getPhotoUrl();
-            if (url != null)
+            if (url != null) {
                 Picasso.with(getActivity()).load(url).placeholder(R.drawable.defaultthumb).into(photo);
+            }
             disconnectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -84,8 +85,18 @@ public class Profile extends Fragment {
                     startActivity(intent);
                 }
             });
+            onboardingButton.setVisibility(View.VISIBLE);
+            onboardingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), OnboardingActivity.class);
+                    startActivity(intent);
+                }
+            });
+
         } else {
             Log.d(TAG, "anonymously connected");
+            onboardingButton.setVisibility(View.GONE);
             disconnectButton.setText("Login");
             disconnectButton.setOnClickListener(new View.OnClickListener() {
                 @Override

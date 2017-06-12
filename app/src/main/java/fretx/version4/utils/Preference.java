@@ -29,6 +29,7 @@ public class Preference {
     private final static String FILENAME = "preferences.json";
     private DatabaseReference mDatabasePrefs;
     private Prefs prefs;
+    private FirebaseUser user;
 
     /* = = = = = = = = = = = = = = = = = SINGLETON PATTERN = = = = = = = = = = = = = = = = = = = */
     private static class Holder {
@@ -45,8 +46,10 @@ public class Preference {
     /* = = = = = = = = = = = = = = = = = FIELDS = = = = = = = = = = = = = = = = = = = */
 
     public void init() {
-        final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabasePrefs = FirebaseDatabase.getInstance().getReference().child("users").child(fUser.getUid()).child("prefs");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            mDatabasePrefs = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).child("prefs");
+        }
         load();
     }
 
@@ -69,7 +72,9 @@ public class Preference {
 
     public void save(Prefs prefs) {
         this.prefs = prefs;
-        remoteSave(prefs);
+        if (user != null) {
+            remoteSave(prefs);
+        }
         localSave(prefs);
     }
 
@@ -121,7 +126,9 @@ public class Preference {
             Log.v(TAG, "using default prefs");
             prefs = new Prefs();
         }
-        remoteLoad();
+        if (user != null) {
+            remoteLoad();
+        }
     }
 
     public Prefs getPrefsCopy() {

@@ -139,7 +139,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         });
 
         //setup the first chord
-        chordIndex = exerciseChords.size() - 2;
+        chordIndex = 0;
     }
 
     @Override
