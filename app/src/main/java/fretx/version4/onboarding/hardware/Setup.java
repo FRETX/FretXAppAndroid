@@ -53,8 +53,8 @@ public class Setup extends Fragment implements EasyVideoCallback, SetupListener,
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         player.release();
     }
 
