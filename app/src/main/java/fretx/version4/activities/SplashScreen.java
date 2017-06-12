@@ -67,8 +67,12 @@ public class SplashScreen extends BaseActivity {
             }
             if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 // Location permission granted!
-                initBluetooth();
                 Log.d(TAG,"Location permissions granted");
+                initBluetooth();
+            }
+            if (resultSet.isPermissionGranted(Manifest.permission.CAMERA)) {
+                // Camera permission granted!
+                Log.d(TAG,"Camera permissions granted");
             }
         }
         @Override
@@ -95,7 +99,8 @@ public class SplashScreen extends BaseActivity {
         Permiso.getInstance().requestPermissions(onPermissionResult,
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.CAMERA);
 
         //initialize midi
         if (!Midi.getInstance().isEnabled()) {
