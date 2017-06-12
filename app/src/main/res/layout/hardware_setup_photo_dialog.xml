@@ -18,6 +18,7 @@
         android:id="@+id/photo"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:visibility="gone"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <Button
