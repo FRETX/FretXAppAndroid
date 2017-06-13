@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginTop="10dp"
                 app:srcCompat="@drawable/fred_emoji" />
 
             <TextView
@@ -31,9 +32,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="Connectivity test"
+                android:text="Connecting to FretX"
                 android:textAlignment="center"
-                android:textSize="24dp"/>
+                android:textColor="@color/primaryText"
+                android:textSize="24sp"/>
 
         </LinearLayout>
 
@@ -55,23 +57,35 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="Connection failed!"
+                android:text="Connection failed! Make sure the FretX device is on."
                 android:textAlignment="center"
-                android:textSize="24dp" />
+                android:textSize="24sp"
+                android:textColor="@color/primaryText"
+                />
 
             <Button
                 android:id="@+id/retry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="retry" />
+                android:text="Retry"
+                android:textAllCaps="false"
+                android:background="@color/primary"
+                android:textColor="@color/tertiaryText"
+                android:layout_margin="10dp"
+                />
 
             <Button
                 android:id="@+id/skip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="skip" />
+                android:text="Skip"
+                android:textAllCaps="false"
+                android:background="@color/primary"
+                android:textColor="@color/tertiaryText"
+                android:layout_margin="10dp"
+                />
 
         </LinearLayout>
 
@@ -79,8 +93,13 @@
             android:id="@+id/assistance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="need assistance?"
-            android:visibility="visible" />
+            android:text="Need Assistance?"
+            android:textAllCaps="false"
+            android:visibility="visible"
+            android:background="@color/primary"
+            android:textColor="@color/tertiaryText"
+            android:layout_margin="10dp"
+            />
 
     </LinearLayout>
 </LinearLayout>

@@ -10,16 +10,18 @@
         android:orientation="vertical">
 
         <RadioButton
+            android:id="@+id/rightRadio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Right" />
+
+        <RadioButton
             android:id="@+id/leftRadio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Left" />
 
-        <RadioButton
-            android:id="@+id/rightRadio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Right" />
+
 
     </RadioGroup>
 
@@ -27,6 +29,13 @@
         android:id="@+id/not_sure_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="not sure?" />
+        android:text="Not sure?"
+        android:textAllCaps="false"
+        android:background="@color/primary"
+        android:textColor="@color/tertiaryText"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        />
 
 </LinearLayout>
