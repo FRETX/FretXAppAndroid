@@ -22,17 +22,21 @@ import fretx.version4.fretxapi.song.SongPunch;
 
 public class ChordTimeline extends Fragment {
     private static final String TAG = "KJKP6_CHORD_TIMELINE";
-    private static final int DEFAULT_HALF_SPAN_MS = 500;
+    private static final int DEFAULT_LEFT_SPAN_MS = 100;
+    private static final int DEFAULT_RIGHT_SPAN_MS = 900;
+
     private ArrayList<SongPunch> punches;
+    private ArrayList<SongPunch> playingPunches = new ArrayList<>();
     private int punchesIndex;
-    private final ArrayList<SongPunch> playingPunches = new ArrayList<>();
-    private int spanMs;
+    private int leftSpanMs;
+    private int rightSpanMs;
+
     private ChordTimelineView chordTimelineView;
 
     public static ChordTimeline newInstance(ArrayList<SongPunch> punches) {
         final ChordTimeline timeline = new ChordTimeline();
         timeline.setPunches(punches);
-        timeline.setSpanMs(DEFAULT_HALF_SPAN_MS);
+        timeline.setSpanMs(DEFAULT_LEFT_SPAN_MS, DEFAULT_RIGHT_SPAN_MS);
         return timeline;
     }
 
@@ -40,15 +44,16 @@ public class ChordTimeline extends Fragment {
         this.punches = punches;
     }
 
-    public void setSpanMs(int spanMs) {
-        this.spanMs = spanMs;
+    public void setSpanMs(int leftSpanMs, int rightSpanMs) {
+        this.leftSpanMs = leftSpanMs;
+        this.rightSpanMs = rightSpanMs;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.chord_timeline_fragment, container, false);
         chordTimelineView = (ChordTimelineView) rootView.findViewById(R.id.chordTimelineView);
-        chordTimelineView.setSpan(spanMs);
+        chordTimelineView.setSpan(leftSpanMs, rightSpanMs);
         return rootView;
     }
 
@@ -58,14 +63,14 @@ public class ChordTimeline extends Fragment {
     }
 
     public void init(long startTimeMs) {
-        Log.v(TAG, "-- update: " + startTimeMs + " --");
+        Log.v(TAG, "-- init: " + startTimeMs + " --");
         playingPunches.clear();
         boolean started = false;
         for (punchesIndex = 0; punchesIndex < punches.size(); punchesIndex++) {
             final SongPunch songPunch = punches.get(punchesIndex);
-            if (songPunch.timeMs < startTimeMs - spanMs)
+            if (songPunch.timeMs < startTimeMs - leftSpanMs)
                 continue;
-            if (songPunch.timeMs >= startTimeMs + spanMs)
+            if (songPunch.timeMs >= startTimeMs + rightSpanMs)
                 break;
             if (!started) {
                 started = true;
@@ -84,7 +89,7 @@ public class ChordTimeline extends Fragment {
         boolean playingPunchesChanged = false;
         //remove finished chords
         for (int index = 0; index < playingPunches.size() - 1; index++) {
-            if (playingPunches.get(index + 1).timeMs > currentTimeMs - spanMs)
+            if (playingPunches.get(index + 1).timeMs > currentTimeMs - leftSpanMs)
                 break;
             playingPunches.remove(index);
             playingPunchesChanged = true;
@@ -92,7 +97,7 @@ public class ChordTimeline extends Fragment {
         //add started chords
         for (; punchesIndex < punches.size(); punchesIndex++) {
             final SongPunch songPunch = punches.get(punchesIndex);
-            if (songPunch.timeMs > currentTimeMs + spanMs)
+            if (songPunch.timeMs > currentTimeMs + rightSpanMs)
                 break;
             playingPunches.add(songPunch);
             playingPunchesChanged = true;
