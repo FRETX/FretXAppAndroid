@@ -228,6 +228,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
 		    public void onStopTrackingTouch(SeekBar seekBar) {
 				seeking = false;
 			    if(seekToTarget > 0){
+                    timelineFragment.init(seekToTarget);
 				    m_player.seekToMillis(seekToTarget);
 				    seekToTarget = -1;
 			    }
@@ -492,6 +493,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     public void onReplay() {
         initTxt();
         initYoutubePlayer();
+        timelineFragment.init(0);
     }
     public void onCancel() {
         ((MainActivity)getActivity()).fragNavController.popFragment();
