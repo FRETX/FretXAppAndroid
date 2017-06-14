@@ -45,20 +45,21 @@ public class SongItem {
     }
 
     public ArrayList<SongPunch> punches() {
-        String songJsonString = AppCache.getFromCache(songFile());
-        JSONObject songJson = new JSONObject();
-        String punchesJsonString = "";
+        final JSONObject songJson;
         try{
-            songJson = new JSONObject(songJsonString);
+            songJson = new JSONObject(AppCache.getFromCache(songFile()));
         } catch (JSONException e){
             Log.e("SongItem","Error reading song json into JSONObject - " + e);
+            return null;
         }
-        ArrayList<SongPunch> punches = new ArrayList<>();
+        String punchesJsonString;
         try{
             punchesJsonString = songJson.getString("punches");
         } catch (JSONException e){
             Log.e("SongItem","Error reading punches array string into JSONArray - " + e);
+            return null;
         }
+        final ArrayList<SongPunch> punches = new ArrayList<>();
         try{
             JSONArray punchesJson = new JSONArray(punchesJsonString);
             JSONObject punchJson, chordJson;
@@ -76,8 +77,8 @@ public class SongItem {
     }
 
     public ArrayList<Chord> getChords() {
-        ArrayList<SongPunch> punches = punches();
-        ArrayList<Chord> chords = new ArrayList<>();
+        final ArrayList<SongPunch> punches = punches();
+        final ArrayList<Chord> chords = new ArrayList<>();
 
         for (int i = 0; i < punches.size(); i++) {
             final SongPunch tmpSp = punches.get(i);

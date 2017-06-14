@@ -37,35 +37,21 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':fretx-audio')
     compile project(':permiso')
-
-    //google services
+    compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
+        transitive = true;
+    }
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:percent:25.3.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    //FFT
     compile 'com.github.wendykierp:JTransforms:3.1'
-
-    //asynchronous http requests
     compile 'com.loopj.android:android-async-http:1.4.9'
-
-    //load image asynchronously
     compile 'com.squareup.picasso:picasso:2.5.2'
-
     compile 'com.github.iammert:MaterialIntroView:1.5.2'
-
-    //multiple back stack in tab layout
     compile 'com.ncapdevi:frag-nav:1.4.0'
-
-    //bottom bar
     compile 'com.roughike:bottom-bar:2.1.1'
-
-    //offline video player for non-official expo builds
     compile 'com.afollestad:easyvideoplayer:0.3.0'
-
-    //firebase
     compile 'com.google.firebase:firebase-messaging:10.2.6'
     compile 'com.google.firebase:firebase-appindexing:10.2.6'
     compile 'com.google.firebase:firebase-core:10.2.6'
@@ -75,29 +61,12 @@ dependencies {
     compile 'com.google.firebase:firebase-database:10.2.6'
     compile 'com.google.firebase:firebase-storage:10.2.6'
     compile 'com.google.firebase:firebase-config:10.2.6'
-
-    //play midi
     compile 'com.github.billthefarmer:mididriver:v1.11'
-
-    //use custom fonts
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
-
-    //facebook auth
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-
-    //google auth
     compile 'com.google.android.gms:play-services-auth:10.2.6'
-
-    //twitter
-    compile('com.twitter.sdk.android:twitter:2.3.2@aar') {
-        transitive = true;
-    }
-
-    //intercom
     compile 'io.intercom.android:intercom-sdk-base:3.+'
     compile 'io.intercom.android:intercom-sdk-fcm:3.+'
-
-    //unit test
     testCompile 'junit:junit:4.12'
 }
 

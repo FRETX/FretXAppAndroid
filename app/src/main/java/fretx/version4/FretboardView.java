@@ -24,13 +24,12 @@ public class FretboardView extends View {
 
 	private float width, height, nStrings, nFrets, xPadding, yPaddingTop, yPaddingBottom, stringStep, fretStep;
 
-	private final Rect imageBounds = new Rect();
-
     //drawables
 	private final Drawable fretboardImage;
     private final Drawable redLed;
     private final Drawable blueLed;
-    private final Drawable strumer;
+
+	private final Rect imageBounds = new Rect();
 
 	public FretboardView(Context context, AttributeSet attrs){
 		super(context,attrs);
@@ -45,7 +44,6 @@ public class FretboardView extends View {
 		fretboardImage = getContext().getResources().getDrawable(R.drawable.fretboard, null);
 		redLed = getContext().getResources().getDrawable(R.drawable.fretboard_red_led, null);
         blueLed = getContext().getResources().getDrawable(R.drawable.fretboard_blue_led, null);
-        strumer = getContext().getResources().getDrawable(R.drawable.fretboard_blue_led, null);
 	}
 
 	public void setFretboardPositions(ArrayList<FretboardPosition> fp){

@@ -12,4 +12,9 @@ public class SongPunch {
 		this.type = type;
 		this.fingering = fingering;
 	}
+
+	@Override
+	public String toString() {
+		return root + type + "@" + timeMs;
+	}
 }

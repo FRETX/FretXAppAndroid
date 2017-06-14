@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import fretx.version4.FretboardView;
 import fretx.version4.R;
+import fretx.version4.fragment.exercise.ChordTimeline;
 import fretx.version4.utils.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.song.SongItem;
@@ -77,6 +78,8 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     static private Handler mCurTimeShowHandler = new Handler();
     private PlayerEndDialog.PlayedEndDialogListener listener = this;
 
+    private ChordTimeline timelineFragment;
+
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +112,11 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         timeElapsedText = (TextView) rootView.findViewById(R.id.elapsedTimeText);
         timeTotalText = (TextView) rootView.findViewById(R.id.totalTimeText);
 
+        timelineFragment = ChordTimeline.newInstance(song.punches());
+        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.timeline_container, timelineFragment);
+        fragmentTransaction.commit();
+
         //set Fretview hand
         if (Preference.getInstance().isLeftHanded()) {
             fretboardCurrent.setScaleX(-1.0f);
@@ -123,6 +131,8 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     public void onResume() {
         super.onResume();
         initTxt();
+        //timelineFragment.setPunches(punches);
+        timelineFragment.init(0);
         initYoutubePlayer();
     }
 
@@ -386,6 +396,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
                 if ( m_player == null      ) return;
                 if ( !m_player.isPlaying() ) return;
                 setCurrentTime();
+                timelineFragment.update(m_currentTime);
                 changeText( (int) m_currentTime );
 	            if( (startButtonPressed && endButtonPressed) && (m_currentTime < startPos || m_currentTime > endPos) && looping){
 		            m_player.seekToMillis((int) startPos);
