@@ -68,10 +68,16 @@ public class ChordTimeline extends Fragment {
         boolean started = false;
         for (punchesIndex = 0; punchesIndex < punches.size(); punchesIndex++) {
             final SongPunch songPunch = punches.get(punchesIndex);
-            if (songPunch.timeMs < startTimeMs - leftSpanMs)
+            //skip already played song punch
+            if (songPunch.timeMs < startTimeMs - leftSpanMs) {
                 continue;
-            if (songPunch.timeMs >= startTimeMs + rightSpanMs)
+            }
+            //add the not visible terminating song punch
+            if (songPunch.timeMs >= startTimeMs + rightSpanMs) {
+                playingPunches.add(songPunch);
                 break;
+            }
+            //add started and not yet finished punch
             if (!started) {
                 started = true;
                 if (punchesIndex > 0)
@@ -95,11 +101,10 @@ public class ChordTimeline extends Fragment {
             playingPunchesChanged = true;
         }
         //add started chords
-        for (; punchesIndex < punches.size(); punchesIndex++) {
-            final SongPunch songPunch = punches.get(punchesIndex);
-            if (songPunch.timeMs > currentTimeMs + rightSpanMs)
+        for (; punchesIndex < punches.size() - 1; punchesIndex++) {
+            if (punches.get(punchesIndex).timeMs > currentTimeMs + rightSpanMs)
                 break;
-            playingPunches.add(songPunch);
+            playingPunches.add(punches.get(punchesIndex + 1));
             playingPunchesChanged = true;
         }
         Log.v(TAG, "playing punches: " + playingPunches.toString());

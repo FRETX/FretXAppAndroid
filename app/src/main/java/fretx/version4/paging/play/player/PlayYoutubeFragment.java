@@ -56,7 +56,6 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     private Button preRollButton0, preRollButton025, preRollButton05, preRollButton1;
 	private ArrayList<Button> preRollButtons;
 	private Button playPauseButton;
-	private FretboardView fretboardCurrent, fretboardNext;
 	private TextView timeTotalText, timeElapsedText;
     private YouTubePlayer m_player;
 
@@ -78,6 +77,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     static private Handler mCurTimeShowHandler = new Handler();
     private PlayerEndDialog.PlayedEndDialogListener listener = this;
 
+    private FretboardView fretboardCurrent;
     private ChordTimeline timelineFragment;
 
     ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
@@ -94,7 +94,6 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
 
         //get UI
         fretboardCurrent = (FretboardView) rootView.findViewById(R.id.fretboardCurrent);
-        fretboardNext = (FretboardView) rootView.findViewById(R.id.fretboardNext);
         loopStartButton = (Button) rootView.findViewById(R.id.buttonA);
         loopEndButton = (Button) rootView.findViewById(R.id.buttonB);
         loopButton = (Button) rootView.findViewById(R.id.buttonLoop);
@@ -120,7 +119,6 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         //set Fretview hand
         if (Preference.getInstance().isLeftHanded()) {
             fretboardCurrent.setScaleX(-1.0f);
-            fretboardNext.setScaleX(-1.0f);
         }
 
         setEventListeners();
@@ -428,7 +426,6 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
 	            fretboardCurrent.setFretboardPositions(c.getFingerPositions());
 	            sp = punches.get(nIndex+1);
 	            c = new Chord(sp.root, sp.type);
-	            fretboardNext.setFretboardPositions(c.getFingerPositions());
             }
         }
 
@@ -444,7 +441,6 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
 	        Chord c = new Chord(sp.root, sp.type);
 	        fretboardCurrent.setFretboardPositions(c.getFingerPositions());
 	        c = new Chord("A","X");
-	        fretboardNext.setFretboardPositions(c.getFingerPositions());
         }
     }
 

@@ -1,68 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.MainActivity"
-        android:id="@+id/youtubemain_container"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:weightSum="1">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.00"
+        android:orientation="horizontal">
 
-        <Space
+        <FrameLayout
+            android:id="@+id/youtube_view"
+            android:layout_width="200dp"
+            android:layout_height="110dp">
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/song_tittle"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.02"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Next Chord"
+            android:textAlignment="center"
+            android:textColor="@color/primaryText"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.01"
         />
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--android:layout_marginRight="8dp"-->
-            <!--&gt;-->
-
-
-        <!--</RelativeLayout>-->
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <FrameLayout
-                android:id="@+id/youtube_view"
-                android:layout_width="200dp"
-                android:layout_height="110dp">
-
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Next Chord"
-                android:textColor="@color/primaryText"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.01"
-            />
-        <fretx.version4.FretboardView
+    <fretx.version4.FretboardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.45"
@@ -87,15 +64,11 @@
             >
 
             <Button
+                android:id="@+id/playPauseButton"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="3dp"
-                android:layout_centerHorizontal="true"
                 android:background="@drawable/ic_pausebutton"
-                android:textColor="@color/tertiaryText"
-                android:id="@+id/playPauseButton"
-
+                android:layout_gravity="center_vertical"
                 />
 
             <TextView
@@ -259,40 +232,4 @@
                 android:textStyle="normal" />
         </LinearLayout>
 
-
-
-
-
-
-        </LinearLayout>
-
-
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/textView10"-->
-            <!--android:layout_marginBottom="5dp"-->
-            <!--android:textColor="@color/primaryText"-->
-            <!--android:layout_gravity="center"-->
-
-            <!--tools:text="Early Lights" />-->
-
-        <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:id="@+id/prerollValView"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:textColor="@color/primaryText"-->
-                <!--tools:text="0ms" />-->
-
-
-
-        <!--<SeekBar-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/prerollSlider"-->
-            <!--android:layout_weight="0.05"/>-->
-
-</RelativeLayout>
+</LinearLayout>

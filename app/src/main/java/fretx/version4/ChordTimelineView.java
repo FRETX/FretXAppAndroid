@@ -37,6 +37,7 @@ public class ChordTimelineView extends View {
     private long currentTimeMs;
     private int width = 1000;
     private int height = 200;
+    private int radius = 100;
     private float ratio = 0;
     private float verticalBarX = 0;
     private Bitmap precomputedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -101,6 +102,7 @@ public class ChordTimelineView extends View {
         precomputedCanvas = new Canvas(precomputedBitmap);
 
         ratio = (float) width / (leftSpanMs + rightSpanMs);
+        radius = height / 2;
         preCompute();
     }
 
@@ -153,19 +155,18 @@ public class ChordTimelineView extends View {
             final SongPunch punch = punches.get(index);
             int width = (int)((punches.get(index + 1).timeMs - punch.timeMs) * ratio);
             Log.d(TAG, "x1: " + x + ", x2: " + (x + width));
+
+            //draw block
             setPainter(punch.root);
-            precomputedCanvas.drawRect(x, 0, x + width, height, paint);
+            precomputedCanvas.drawCircle(x + radius, radius, radius, paint);
+            precomputedCanvas.drawCircle(x + width - radius, radius, radius, paint);
+            precomputedCanvas.drawRect(x + radius, 0, x + width - radius, height, paint);
+
+            //draw text
             paint.setColor(Color.BLACK);
-            paint.setTextSize(20);
-            precomputedCanvas.drawText(punch.root + punch.type, x + 5, height / 2, paint);
+            paint.setTextSize(radius / 2);
+            precomputedCanvas.drawText(punch.root + punch.type, x + radius / 2, 2 * height / 3, paint);
             x += width;
         }
-        final SongPunch punch = punches.get(punches.size() - 1);
-        Log.d(TAG, "x1: " + x + ", x2: " + (x + 1000));
-        setPainter(punch.root);
-        precomputedCanvas.drawRect(x, 0, x + 3000, height, paint);
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(height / 2);
-        precomputedCanvas.drawText(punch.root + punch.type, x + 5, 3 * height / 4, paint);
     }
 }

@@ -160,10 +160,6 @@ public class SplashScreen extends BaseActivity {
         if (!initialized || !permission || !binded)
             return;
 
-        //DEBUG == <> ==
-        //Intent i = new Intent(getActivity(), ChordTimelineActivity.class);
-        //startActivity(i);
-
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {
             //intercom
