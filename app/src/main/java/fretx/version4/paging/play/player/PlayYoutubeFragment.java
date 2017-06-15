@@ -37,7 +37,7 @@ import rocks.fretx.audioprocessing.Chord;
 public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.PlayedEndDialogListener {
     private final static String TAG = "KJKP6_PLAY_YOUTUBE";
     //Youtube
-    private final YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+    private YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
     private YouTubePlayer youTubePlayer;
     private static final String API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
     private SongItem song;
@@ -180,6 +180,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             public void onStopTrackingTouch(SeekBar seekBar) {
                 seeking = false;
                 if(seekToTarget > 0){
+                    stopUpdateLoop();
                     punchesIndex = 0;
                     timelineFragment.init(seekToTarget);
                     youTubePlayer.seekToMillis(seekToTarget);
@@ -258,15 +259,21 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
 
     @Override
     public void onResume() {
+        Log.d(TAG,"onResume");
         super.onResume();
         punchesIndex = 0;
+
+        youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+        final FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.youtube_view, youTubePlayerFragment).commit();
+
         timelineFragment.init(0);
         initYoutubePlayer();
     }
 
-    @Override public void onStop(){
-        super.onStop();
-        Log.d(TAG,"onStop");
+    @Override public void onPause(){
+        super.onPause();
+        Log.d(TAG,"onPause");
             if(youTubePlayer != null){
                 try {
                     if (youTubePlayer.isPlaying()) {
