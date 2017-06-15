@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 import fretx.version4.FretboardView;
 import fretx.version4.R;
 import fretx.version4.fragment.exercise.ChordTimeline;
-import fretx.version4.utils.Util;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
@@ -45,7 +44,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     private ArrayList<SongPunch> punches;
     private int punchesIndex;
     private long youtubeDuration;
-    private boolean mbPlaying = true;
+    private boolean playing = true;
     private boolean youtubePlayerLoaded;
     private PlayerEndDialog.PlayedEndDialogListener listener = this;
 
@@ -145,16 +144,19 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!youtubePlayerLoaded) return;
-                Button b = (Button) view;
-                if(mbPlaying){
+                if(!youtubePlayerLoaded)
+                    return;
+                final Button b = (Button) view;
+                if(playing){
                     b.setBackground(getResources().getDrawable(R.drawable.ic_playbutton));
                     youTubePlayer.pause();
-                    mbPlaying = false;
+                    stopUpdateLoop();
+                    playing = false;
                 } else {
                     b.setBackground(getResources().getDrawable(R.drawable.ic_pausebutton));
                     youTubePlayer.play();
-                    mbPlaying = true;
+                    startUpdateLoop();
+                    playing = true;
                 }
             }
         });
@@ -268,6 +270,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             if(youTubePlayer != null){
                 try {
                     if (youTubePlayer.isPlaying()) {
+                        stopUpdateLoop();
                         youTubePlayer.pause();
                     }
                 } catch (Exception e){
@@ -305,14 +308,18 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener {
         @Override public void onPlaying() {
             Log.v(TAG, "Playing");
-            mbPlaying = true;
-            startTimingLoop();
+            playing = true;
+            startUpdateLoop();
         }
         @Override public void onPaused() {
             Log.d(TAG, "Paused");
-            mbPlaying = false;
+            playing = false;
+            stopUpdateLoop();
         }
-        @Override public void onStopped() {mbPlaying = false;}
+        @Override public void onStopped() {
+            playing = false;
+            stopUpdateLoop();
+        }
         @Override public void onSeekTo(int currentTime) {}
         @Override public void onBuffering(boolean b)    {}
     }
@@ -338,7 +345,9 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     }
 
     ////////////////////////////////////// TIMING LOOP /////////////////////////////////////////////
-    private void startTimingLoop() {mCurTimeShowHandler.post(playerTimingLoop);}
+    private void startUpdateLoop() {mCurTimeShowHandler.post(playerTimingLoop);}
+
+    private void stopUpdateLoop() {mCurTimeShowHandler.removeCallbacksAndMessages(null);}
 
     private void setCurrentTime() {
         long youtubeElapsedTime = youTubePlayer.getCurrentTimeMillis();
@@ -403,7 +412,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
                 mCurTimeShowHandler.postDelayed(this, 50);
             }
             catch (IllegalStateException e) {
-                mCurTimeShowHandler.removeCallbacks(this);
+                stopUpdateLoop();
             }
         }
     };

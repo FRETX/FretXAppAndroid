@@ -53,8 +53,8 @@ public class ChordTimelineView extends View {
     private static final int COLOR_E = Color.CYAN;
     private static final int COLOR_F = Color.BLUE;
     private static final int COLOR_G = Color.GRAY;
-    private static final int COLOR_BACKGROUND = Color.WHITE;
-    private static final int COLOR_STROKE = Color.BLACK;
+    private static final int COLOR_BACKGROUND = Color.DKGRAY;
+    private static final int COLOR_STROKE = Color.WHITE;
 
     //precomputing
     private long currentTimeMs;
@@ -73,7 +73,6 @@ public class ChordTimelineView extends View {
         blockStrokePainter.setColor(COLOR_STROKE);
         blockStrokePainter.setStyle(Paint.Style.STROKE);
         blockFillPainter.setStyle(Paint.Style.FILL);
-        paintBackground();
         barPainter.setColor(Color.WHITE);
     }
 
@@ -106,6 +105,8 @@ public class ChordTimelineView extends View {
     protected void onDraw(Canvas canvas) {
         //Log.v(TAG, "draw @ " + currentTimeMs);
 
+        canvas.drawPaint(backgroundPainter);
+
         //draw moving blocks
         long deltaT = precomputedStart - (currentTimeMs - leftSpanMs);
         canvas.drawBitmap(precomputedBitmap, deltaT * ratio, 0, blockFillPainter);
@@ -129,7 +130,7 @@ public class ChordTimelineView extends View {
     }
 
     //drawing utils
-    private void paintBackground() {
+    private void paintPrecomputedBackground() {
         precomputedCanvas.drawPaint(backgroundPainter);
     }
 
@@ -176,7 +177,7 @@ public class ChordTimelineView extends View {
             precomputedCanvas.setBitmap(precomputedBitmap);
         }
 
-        paintBackground();
+        paintPrecomputedBackground();
 
         int x = 0;
         int index;
