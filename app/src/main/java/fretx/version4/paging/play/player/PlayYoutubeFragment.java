@@ -62,7 +62,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     //time sync
     private int preroll = 0;
     private long lastSysClockTime = 0;
-    private long lastYoutubeElapsedTime = 0;
+    private long lastYoutubeElapsedTime = -1;
     private long currentTime = 0;
     private final Handler mCurTimeShowHandler = new Handler();
     private Chord currentChord;

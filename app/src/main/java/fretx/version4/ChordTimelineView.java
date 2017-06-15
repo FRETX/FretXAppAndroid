@@ -5,9 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -25,19 +25,23 @@ public class ChordTimelineView extends View {
     //view
     private int width = 1000;
     private int height = 200;
+    private int halfHeight = height / 2;
     private float ratio = 0;
 
     //blocks
     private ArrayList<SongPunch> punches;
     private int radius = height / 2;
+    private final static int STROKE_WIDTH = 10;
 
     //vertical bar
     private int leftSpanMs;
     private int rightSpanMs;
     private float verticalBarX = 0;
+    private int verticalBarWidth = 10;
 
     //painters
-    private final Paint blockPainter = new Paint();
+    private final Paint blockFillPainter = new Paint();
+    private final Paint blockStrokePainter = new Paint();
     private final Paint backgroundPainter = new Paint();
     private final Paint barPainter = new Paint();
 
@@ -50,6 +54,7 @@ public class ChordTimelineView extends View {
     private static final int COLOR_F = Color.BLUE;
     private static final int COLOR_G = Color.GRAY;
     private static final int COLOR_BACKGROUND = Color.WHITE;
+    private static final int COLOR_STROKE = Color.BLACK;
 
     //precomputing
     private long currentTimeMs;
@@ -64,8 +69,12 @@ public class ChordTimelineView extends View {
         super(context,attrs);
         backgroundPainter.setColor(COLOR_BACKGROUND);
         backgroundPainter.setStyle(Paint.Style.FILL);
+        blockStrokePainter.setStrokeWidth(STROKE_WIDTH);
+        blockStrokePainter.setColor(COLOR_STROKE);
+        blockStrokePainter.setStyle(Paint.Style.STROKE);
+        blockFillPainter.setStyle(Paint.Style.FILL);
         paintBackground();
-        barPainter.setColor(Color.BLACK);
+        barPainter.setColor(Color.WHITE);
     }
 
     //public methods
@@ -99,10 +108,10 @@ public class ChordTimelineView extends View {
 
         //draw moving blocks
         long deltaT = precomputedStart - (currentTimeMs - leftSpanMs);
-        canvas.drawBitmap(precomputedBitmap, deltaT * ratio, 0, blockPainter);
+        canvas.drawBitmap(precomputedBitmap, deltaT * ratio, 0, blockFillPainter);
 
         //draw static vertical bar
-        canvas.drawLine(verticalBarX, 0, verticalBarX, height, barPainter);
+        canvas.drawRect(verticalBarX, 0, verticalBarX + verticalBarWidth, height, barPainter);
     }
 
     @Override
@@ -112,8 +121,9 @@ public class ChordTimelineView extends View {
         //Log.v(TAG, "resized: " + w + " x " + h);
         width = w;
         height = h;
+        halfHeight = height / 2;
+        radius = halfHeight - STROKE_WIDTH;
         ratio = (float) width / (leftSpanMs + rightSpanMs);
-        radius = height / 2;
 
         preCompute();
     }
@@ -126,28 +136,28 @@ public class ChordTimelineView extends View {
     private void setPainter(@NonNull String root) {
         switch (root.charAt(0)) {
             case 'A':
-                blockPainter.setColor(COLOR_A);
+                blockFillPainter.setColor(COLOR_A);
                 break;
             case 'B':
-                blockPainter.setColor(COLOR_B);
+                blockFillPainter.setColor(COLOR_B);
                 break;
             case 'C':
-                blockPainter.setColor(COLOR_C);
+                blockFillPainter.setColor(COLOR_C);
                 break;
             case 'D':
-                blockPainter.setColor(COLOR_D);
+                blockFillPainter.setColor(COLOR_D);
                 break;
             case 'E':
-                blockPainter.setColor(COLOR_E);
+                blockFillPainter.setColor(COLOR_E);
                 break;
             case 'F':
-                blockPainter.setColor(COLOR_F);
+                blockFillPainter.setColor(COLOR_F);
                 break;
             case 'G':
-                blockPainter.setColor(COLOR_G);
+                blockFillPainter.setColor(COLOR_G);
                 break;
             default:
-                blockPainter.setColor(COLOR_BACKGROUND);
+                blockFillPainter.setColor(COLOR_BACKGROUND);
                 break;
         }
     }
@@ -174,16 +184,26 @@ public class ChordTimelineView extends View {
             final SongPunch punch = punches.get(index);
             int width = (int)((punches.get(index + 1).timeMs - punch.timeMs) * ratio);
 
-            //draw block
             setPainter(punch.root == null || punch.root.length() == 0 ? "X" : punch.root);
-            precomputedCanvas.drawCircle(x + radius, radius, radius, blockPainter);
-            precomputedCanvas.drawCircle(x + width - radius, radius, radius, blockPainter);
-            precomputedCanvas.drawRect(x + radius, 0, x + width - radius, height, blockPainter);
+            if (blockFillPainter.getColor() != COLOR_BACKGROUND) {
+                //draw stroke
+                precomputedCanvas.drawCircle(x + radius + STROKE_WIDTH, halfHeight, radius, blockStrokePainter);
+                precomputedCanvas.drawCircle(x + width - radius - STROKE_WIDTH, halfHeight, radius, blockStrokePainter);
+                precomputedCanvas.drawRect(x + radius + STROKE_WIDTH, STROKE_WIDTH, x + width - radius - STROKE_WIDTH, height - STROKE_WIDTH, blockStrokePainter);
+                blockFillPainter.setStrokeWidth(0);
 
-            //draw text
-            blockPainter.setColor(Color.BLACK);
-            blockPainter.setTextSize(radius / 2);
-            precomputedCanvas.drawText(punch.root + punch.type, x + radius / 2, 2 * height / 3, blockPainter);
+                //draw the fill
+                precomputedCanvas.drawCircle(x + radius + STROKE_WIDTH, halfHeight, radius, blockFillPainter);
+                precomputedCanvas.drawCircle(x + width - radius - STROKE_WIDTH, halfHeight, radius, blockFillPainter);
+                precomputedCanvas.drawRect(x + radius + STROKE_WIDTH, STROKE_WIDTH, x + width - radius - STROKE_WIDTH, height - STROKE_WIDTH, blockFillPainter);
+
+                //draw text
+                blockFillPainter.setColor(Color.WHITE);
+                blockFillPainter.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                blockFillPainter.setTextSize(radius / 2);
+                precomputedCanvas.drawText(punch.root + punch.type, x + radius / 2, 5 * height / 8, blockFillPainter);
+            }
+
             x += width;
         }
     }
