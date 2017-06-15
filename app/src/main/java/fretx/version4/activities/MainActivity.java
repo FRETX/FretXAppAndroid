@@ -87,26 +87,26 @@ public class MainActivity extends BaseActivity {
 	private final BluetoothListener bluetoothListener = new BluetoothListener() {
 		@Override
 		public void onConnect() {
-            Log.d(TAG, "Connected!");
+            Log.d(TAG, "Bluetooth device connected!");
 			BluetoothAnimator.getInstance().stringFall();
 			runOnUiThread(setConnected);
 		}
 
 		@Override
 		public void onScanFailure() {
-			Log.d(TAG, "Failed!");
+			Log.d(TAG, "Bluetooth scan Failed!");
 			runOnUiThread(setDisconnected);
 		}
 
 		@Override
 		public void onDisconnect() {
-			Log.d(TAG, "Failed!");
+			Log.d(TAG, "Bluetooth device disconnected!");
 			runOnUiThread(setDisconnected);
 		}
 
 		@Override
 		public void onFailure(){
-			Log.d(TAG, "Failed!");
+			Log.d(TAG, "Bluetooth connection failed!");
 			runOnUiThread(setDisconnected);
 		}
 	};

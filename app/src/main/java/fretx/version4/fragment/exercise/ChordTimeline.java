@@ -23,7 +23,7 @@ import fretx.version4.fretxapi.song.SongPunch;
 public class ChordTimeline extends Fragment {
     private static final String TAG = "KJKP6_CHORD_TIMELINE";
     private static final int DEFAULT_LEFT_SPAN_MS = 100;
-    private static final int DEFAULT_RIGHT_SPAN_MS = 900;
+    private static final int DEFAULT_RIGHT_SPAN_MS = 2900;
 
     private ArrayList<SongPunch> punches;
     private ArrayList<SongPunch> playingPunches = new ArrayList<>();
@@ -63,7 +63,6 @@ public class ChordTimeline extends Fragment {
     }
 
     public void init(long startTimeMs) {
-        Log.v(TAG, "-- init: " + startTimeMs + " --");
         playingPunches.clear();
         boolean started = false;
         for (punchesIndex = 0; punchesIndex < punches.size(); punchesIndex++) {
@@ -85,13 +84,11 @@ public class ChordTimeline extends Fragment {
             }
             playingPunches.add(songPunch);
         }
-        Log.v(TAG, "playing punches: " + playingPunches.toString());
         chordTimelineView.setPunches(playingPunches);
         chordTimelineView.update(startTimeMs);
     }
 
     public void update(long currentTimeMs) {
-        Log.v(TAG, "-- update: " + currentTimeMs + " --");
         boolean playingPunchesChanged = false;
         //remove finished chords
         for (int index = 0; index < playingPunches.size() - 1; index++) {
@@ -107,7 +104,6 @@ public class ChordTimeline extends Fragment {
             playingPunches.add(punches.get(punchesIndex + 1));
             playingPunchesChanged = true;
         }
-        Log.v(TAG, "playing punches: " + playingPunches.toString());
         if (playingPunchesChanged)
             chordTimelineView.setPunches(playingPunches);
         chordTimelineView.update(currentTimeMs);

@@ -20,9 +20,6 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -39,16 +36,18 @@ import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 
 public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.PlayedEndDialogListener {
-    private final static String TAG = "KJKP6_YOUTUBE";
+    private final static String TAG = "KJKP6_PLAY_YOUTUBE";
     //Youtube
+    private final YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+    private YouTubePlayer youTubePlayer;
     private static final String API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
     private SongItem song;
     private ArrayList<SongPunch> punches;
-    private int          preroll  = 0;
-    private String       VIDEO_ID = "";
-    static  Hashtable    punch_list;
-    static  int[]        arrayKeys;
-    static  Boolean[]    arrayCallStatus;
+    private int punchesIndex;
+    private long youtubeDuration;
+    private boolean mbPlaying = true;
+    private boolean youtubePlayerLoaded;
+    private PlayerEndDialog.PlayedEndDialogListener listener = this;
 
     //UI
     private SeekBar timeSeekBar;
@@ -57,36 +56,48 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
 	private ArrayList<Button> preRollButtons;
 	private Button playPauseButton;
 	private TextView timeTotalText, timeElapsedText;
-    private YouTubePlayer m_player;
-
-    private boolean startButtonPressed;
-    private boolean endButtonPressed;
-
-    static long    lastSysClockTime = 0;
-    static long    lastYoutubeElapsedTime = 0;
-    static long    m_currentTime = 0;          // Now playing time.
-
-    private long    startPos = 0;               // start point of loop
-    private long    endPos = 0;                 // end point of loop
-
-    static boolean mbPlaying = true;           // Flag of now playing.
-    private boolean youtubePlayerLoaded = false;
-	private boolean looping = false;
-	private boolean seeking = false;
-	private int seekToTarget = -1;
-    static private Handler mCurTimeShowHandler = new Handler();
-    private PlayerEndDialog.PlayedEndDialogListener listener = this;
-
     private FretboardView fretboardCurrent;
     private ChordTimeline timelineFragment;
 
-    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
+    //time sync
+    private int preroll = 0;
+    private long lastSysClockTime = 0;
+    private long lastYoutubeElapsedTime = 0;
+    private long currentTime = 0;
+    private final Handler mCurTimeShowHandler = new Handler();
+    private Chord currentChord;
+
+    //Looper
+    private boolean startButtonPressed;
+    private boolean endButtonPressed;
+    private boolean looping;
+    private long startLoopTime = 0;
+    private long endLoopTime = 0;
+
+	private boolean seeking;
+	private int seekToTarget = -1;
+
+
+    ///////////////////////////////////// FRAGMENT CREATOR /////////////////////////////////////////
+    static public PlayYoutubeFragment newInstance(SongItem song) {
+        final PlayYoutubeFragment fragment = new PlayYoutubeFragment();
+        fragment.setSong(song);
+        return fragment;
+    }
+
+    public void setSong(SongItem song){
+        this.song = song;
+    }
+
+    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Analytics.getInstance().logSelectEvent("SONG", song.song_title);
-        VIDEO_ID = song.youtube_id;
         Bluetooth.getInstance().clearMatrix();
+        punches = song.punches();
+        timelineFragment = ChordTimeline.newInstance(punches);
+        punchesIndex = 0;
     }
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,25 +122,142 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         timeElapsedText = (TextView) rootView.findViewById(R.id.elapsedTimeText);
         timeTotalText = (TextView) rootView.findViewById(R.id.totalTimeText);
 
-        timelineFragment = ChordTimeline.newInstance(song.punches());
+        //load chord timeline fragment
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.timeline_container, timelineFragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.replace(R.id.timeline_container, timelineFragment).commit();
+
+        //load youtube player fragment
+        final FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.youtube_view, youTubePlayerFragment).commit();
 
         //set Fretview hand
         if (Preference.getInstance().isLeftHanded()) {
             fretboardCurrent.setScaleX(-1.0f);
         }
 
-        setEventListeners();
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        playPauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!youtubePlayerLoaded) return;
+                Button b = (Button) view;
+                if(mbPlaying){
+                    b.setBackground(getResources().getDrawable(R.drawable.ic_playbutton));
+                    youTubePlayer.pause();
+                    mbPlaying = false;
+                } else {
+                    b.setBackground(getResources().getDrawable(R.drawable.ic_pausebutton));
+                    youTubePlayer.play();
+                    mbPlaying = true;
+                }
+            }
+        });
+
+        timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    seekToTarget = Math.round((float) progress / 100f * (float) youTubePlayer.getDurationMillis());
+                    timeElapsedText.setText(String.format(Locale.ENGLISH,"%02d : %02d",
+                            TimeUnit.MILLISECONDS.toMinutes(seekToTarget),
+                            TimeUnit.MILLISECONDS.toSeconds(seekToTarget) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(seekToTarget))
+                    ));
+                }
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                seeking = true;
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                seeking = false;
+                if(seekToTarget > 0){
+                    punchesIndex = 0;
+                    timelineFragment.init(seekToTarget);
+                    youTubePlayer.seekToMillis(seekToTarget);
+                    seekToTarget = -1;
+                }
+            }
+        });
+
+        //loop buttons
+        loopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Button b = (Button) view;
+                if(looping){
+                    b.setBackground(getResources().getDrawable(R.drawable.ic_loop_inactive));
+                    looping = false;
+                } else {
+                    b.setBackground(getResources().getDrawable(R.drawable.ic_loop_active));
+                    looping = true;
+                }
+            }
+        });
+
+        loopStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                toggleStartButton();
+                if(!startButtonPressed && endButtonPressed) {
+                    toggleEndButton();
+                }
+            }
+        });
+
+        loopEndButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                toggleEndButton();
+                if(!endButtonPressed && startButtonPressed){
+                    toggleStartButton();
+                }
+            }
+        });
+
+        //pre roll buttons
+        preRollButton0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetPrerollButtons();
+                activateButton((Button) view);
+                preroll = 0;
+            }
+        });
+        preRollButton025.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetPrerollButtons();
+                activateButton((Button) view);
+                preroll = 250;
+            }
+        });
+        preRollButton05.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetPrerollButtons();
+                activateButton((Button) view);
+                preroll = 500;
+            }
+        });
+        preRollButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetPrerollButtons();
+                activateButton((Button) view);
+                preroll = 1000;
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initTxt();
-        //timelineFragment.setPunches(punches);
+        punchesIndex = 0;
         timelineFragment.init(0);
         initYoutubePlayer();
     }
@@ -137,10 +265,10 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     @Override public void onStop(){
         super.onStop();
         Log.d(TAG,"onStop");
-            if(m_player != null){
+            if(youTubePlayer != null){
                 try {
-                    if (m_player.isPlaying()) {
-                        m_player.pause();
+                    if (youTubePlayer.isPlaying()) {
+                        youTubePlayer.pause();
                     }
                 } catch (Exception e){
                     Log.e(TAG,e.toString());
@@ -148,174 +276,23 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             }
     }
 
-    ///////////////////////////////////// LIFECYCLE EVENTS /////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////// SETUP ///////////////////////////////////////////////////////////////////////
-
-    public void setSong(SongItem song){
-        this.song = song;
-    }
-
-    private void setEventListeners() {
-
-	    playPauseButton.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-			    if(!youtubePlayerLoaded) return;
-			    Button b = (Button) view;
-				if(mbPlaying){
-					b.setBackground(getResources().getDrawable(R.drawable.ic_playbutton));
-					m_player.pause();
-					mbPlaying = false;
-				} else {
-					b.setBackground(getResources().getDrawable(R.drawable.ic_pausebutton));
-					m_player.play();
-					mbPlaying = true;
-				}
-		    }
-	    });
-
-	    loopButton.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-				Button b = (Button) view;
-			    if(looping){
-				    b.setBackground(getResources().getDrawable(R.drawable.ic_loop_inactive));
-				    looping = false;
-			    } else {
-				    b.setBackground(getResources().getDrawable(R.drawable.ic_loop_active));
-				    looping = true;
-			    }
-		    }
-	    });
-
-        loopStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-	            toggleStartButton(v);
-	            if(!startButtonPressed && endButtonPressed) {
-		            toggleEndButton(v);
-	            }
-            }
-        });
-
-        loopEndButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-	            toggleEndButton(v);
-	            if(!endButtonPressed && startButtonPressed){
-		            toggleStartButton(v);
-	            }
-            }
-        });
-
-	    timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-		    @Override
-		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-			    if(fromUser){
-				    seekToTarget = Math.round((float) progress / 100f * (float) m_player.getDurationMillis());
-				    timeElapsedText.setText(String.format(Locale.ENGLISH,"%02d : %02d",
-						    TimeUnit.MILLISECONDS.toMinutes(seekToTarget),
-						    TimeUnit.MILLISECONDS.toSeconds(seekToTarget) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(seekToTarget))
-				    ));
-			    }
-		    }
-		    @Override
-		    public void onStartTrackingTouch(SeekBar seekBar) {
-				seeking = true;
-		    }
-		    @Override
-		    public void onStopTrackingTouch(SeekBar seekBar) {
-				seeking = false;
-			    if(seekToTarget > 0){
-                    timelineFragment.init(seekToTarget);
-				    m_player.seekToMillis(seekToTarget);
-				    seekToTarget = -1;
-			    }
-		    }
-	    });
-
-
-	    preRollButton0.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-				resetPrerollButtons();
-			    activateButton((Button) view);
-			    preroll = 0;
-		    }
-	    });
-	    preRollButton025.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-			    resetPrerollButtons();
-			    activateButton((Button) view);
-			    preroll = 250;
-		    }
-	    });
-	    preRollButton05.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-			    resetPrerollButtons();
-			    activateButton((Button) view);
-			    preroll = 500;
-		    }
-	    });
-	    preRollButton1.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-			    resetPrerollButtons();
-			    activateButton((Button) view);
-			    preroll = 1000;
-		    }
-	    });
-    }
-
-	private void toggleStartButton(View v){
-		if(!startButtonPressed){
-			if(m_currentTime >= endPos) return;
-			startPos = m_currentTime;
-            loopStartButton.setBackgroundColor(getResources().getColor(R.color.activeButton));
-			startButtonPressed = true;
-		} else {
-			startPos = 0;
-			loopStartButton.setBackgroundColor(getResources().getColor(R.color.inactiveButton));
-			startButtonPressed = false;
-		}
-	}
-
-	private void toggleEndButton(View v){
-		if(!endButtonPressed){
-			if(m_currentTime <= startPos) return;
-			endPos = m_currentTime;
-			loopEndButton.setBackgroundColor(getResources().getColor(R.color.activeButton));
-			endButtonPressed = true;
-		} else {
-			endPos = m_player.getDurationMillis();
-			loopEndButton.setBackgroundColor(getResources().getColor(R.color.inactiveButton));
-			endButtonPressed = false;
-		}
-	}
-
     //////////////////////////////////////// YOUTUBE ///////////////////////////////////////////////
     private void initYoutubePlayer() {
-        final YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-        final FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.youtube_view, youTubePlayerFragment).commit();
-
         youTubePlayerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
             @Override public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
                 if (wasRestored) return;
-                m_player = player;
-
+                youTubePlayer = player;
                 //set youtube props
-                m_player.setFullscreen(false);
-                m_player.setShowFullscreenButton(false);
-                m_player.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
-                m_player.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
+                youTubePlayer.setFullscreen(false);
+                youTubePlayer.setShowFullscreenButton(false);
+                youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
+                youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
                 //set youtube listeners
-                m_player.setPlaybackEventListener( new MyPlaybackEventListener() );
-                m_player.setPlayerStateChangeListener( new MyPlayerStateChangeListener() );
+                youTubePlayer.setPlaybackEventListener( new MyPlaybackEventListener() );
+                youTubePlayer.setPlayerStateChangeListener( new MyPlayerStateChangeListener() );
                 //play
-                m_player.loadVideo(VIDEO_ID);
-                m_player.play();
+                youTubePlayer.loadVideo(song.youtube_id);
+                youTubePlayer.play();
             }
             @Override public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
                 final String errorMessage = error.toString();
@@ -344,9 +321,10 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         @Override public void onLoading() {Log.d(TAG, "YOUTUBE Loading!");}
         @Override public void onLoaded(String s) {
             Log.d(TAG, "YOUTUBE loaded!");
-            endPos = m_player.getDurationMillis();
-            timeTotalText.setText(String.format("%02d : %02d", TimeUnit.MILLISECONDS.toMinutes(endPos),
-                    TimeUnit.MILLISECONDS.toSeconds(endPos) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endPos))));
+            youtubeDuration = youTubePlayer.getDurationMillis();
+            endLoopTime = youtubeDuration;
+            timeTotalText.setText(String.format(Locale.US, "%02d : %02d", TimeUnit.MILLISECONDS.toMinutes(endLoopTime),
+                    TimeUnit.MILLISECONDS.toSeconds(endLoopTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endLoopTime))));
             youtubePlayerLoaded = true;
         }
         @Override public void onAdStarted() {Log.d(TAG, "YOUTUBE Ad Started");}
@@ -359,121 +337,108 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         @Override public void onError(YouTubePlayer.ErrorReason err) { Log.d(TAG, "YOUTUBE Error");}
     }
 
-    ////////////////////////////////////// TIMING LOOP /////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////// TIMING LOOP /////////////////////////////////////////////
     private void startTimingLoop() {mCurTimeShowHandler.post(playerTimingLoop);}
 
     private void setCurrentTime() {
-        long youtubeDuration    = m_player.getDurationMillis();
-        long youtubeElapsedTime = m_player.getCurrentTimeMillis();
+        long youtubeElapsedTime = youTubePlayer.getCurrentTimeMillis();
 
+        //update seeking bar
 	    if(!seeking){
 		    timeElapsedText.setText(String.format(Locale.ENGLISH,"%02d : %02d",
 				    TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime),
-				    TimeUnit.MILLISECONDS.toSeconds(youtubeElapsedTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime))));
-
-		    int progressPercentage = Math.round((float) youtubeElapsedTime / (float) youtubeDuration * 100);
-		    timeSeekBar.setProgress(progressPercentage);
+				    TimeUnit.MILLISECONDS.toSeconds(youtubeElapsedTime)
+                            - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(youtubeElapsedTime))));
+		    timeSeekBar.setProgress(Math.round((float) youtubeElapsedTime / (float) youtubeDuration * 100));
 	    }
 
-        if( preroll > 0 ) {
-            youtubeElapsedTime += preroll;
-            youtubeElapsedTime = youtubeElapsedTime > youtubeDuration ? youtubeDuration : youtubeElapsedTime;
+	    //compute preroll time
+        youtubeElapsedTime += preroll;
+        youtubeElapsedTime = youtubeElapsedTime > youtubeDuration ? youtubeDuration : youtubeElapsedTime;
+
+        //handle youtube elapsed time being the same
+        final long sysClockTime = SystemClock.uptimeMillis();
+        if (youtubeElapsedTime == lastYoutubeElapsedTime) {
+            final long sysClockDelta = lastSysClockTime == 0 ? 0 : sysClockTime - lastSysClockTime;
+            currentTime = youtubeElapsedTime + sysClockDelta;
+        } else {
+            lastYoutubeElapsedTime = youtubeElapsedTime;
+            lastSysClockTime = sysClockTime;
+            currentTime = youtubeElapsedTime;
         }
 
-        long    sysClockTime       = SystemClock.uptimeMillis();
-        boolean repeatedTime       = youtubeElapsedTime == lastYoutubeElapsedTime;
-        long    sysClockDelta      = lastSysClockTime == 0 ? 0 : sysClockTime - lastSysClockTime;
-        lastYoutubeElapsedTime     = youtubeElapsedTime;
+        Log.d(TAG, "youtube duration: " + youtubeDuration);
+        Log.d(TAG, "current time: " + currentTime);
 
-        if ( repeatedTime ) { m_currentTime = youtubeElapsedTime + sysClockDelta;                  }
-        else                { lastSysClockTime = sysClockTime; m_currentTime = youtubeElapsedTime; }
+        //update current chord
+        while (punchesIndex < punches.size() && punches.get(punchesIndex).timeMs < currentTime) {
+            punchesIndex++;
+        }
+        if (punchesIndex == 0) {
+            currentChord = null;
+        } else {
+            final SongPunch punch = punches.get(punchesIndex - 1);
+            currentChord = new Chord(punch.root, punch.type);
+        }
+
+        //update the chord timeline
+        timelineFragment.update(currentTime);
+
+        //update the fretview
+        if (currentChord != null)
+            fretboardCurrent.setFretboardPositions(currentChord.getFingerPositions());
     }
 
-    Runnable playerTimingLoop = new Runnable() {
+    private final Runnable playerTimingLoop = new Runnable() {
         @Override public void run() {
             try {
-                if ( m_player == null      ) return;
-                if ( !m_player.isPlaying() ) return;
+                if (youTubePlayer == null || !youTubePlayer.isPlaying())
+                    return;
+
                 setCurrentTime();
-                timelineFragment.update(m_currentTime);
-                changeText( (int) m_currentTime );
-	            if( (startButtonPressed && endButtonPressed) && (m_currentTime < startPos || m_currentTime > endPos) && looping){
-		            m_player.seekToMillis((int) startPos);
+
+	            if(startButtonPressed && endButtonPressed && looping && (currentTime < startLoopTime || currentTime > endLoopTime) ){
+		            youTubePlayer.seekToMillis((int) startLoopTime);
 	            }
-                mCurTimeShowHandler.postDelayed(this, 100);
+                mCurTimeShowHandler.postDelayed(this, 50);
             }
-            catch (IllegalStateException e) { mCurTimeShowHandler.removeCallbacks(this); }
+            catch (IllegalStateException e) {
+                mCurTimeShowHandler.removeCallbacks(this);
+            }
         }
     };
 
-    ///////////////////////////////// TEXT FILE PROCESSING /////////////////////////////////////////////////////////////////
-    //From the first to number of hashtable keys, Search index that its value is bigger than
-    // current time. Then sets the text that was finded in hashtable keys.
-    public  void changeText(int currentTime) {
-	    if(arrayKeys.length < 1) return;
-        for ( int nIndex = 0; nIndex < arrayKeys.length -1; nIndex++ )
-        {
-            if ( arrayKeys[nIndex] <= currentTime && arrayKeys[nIndex + 1] > currentTime )
-            {
-                if( arrayCallStatus[nIndex] )
-                    return;
-                arrayCallStatus[nIndex] = true;
-                Bluetooth.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[nIndex]));
-                Util.setDefaultValues(arrayCallStatus);
-                arrayCallStatus[nIndex] = true;
-	            SongPunch sp = punches.get(nIndex);
-	            Chord c = new Chord(sp.root,sp.type);
-	            fretboardCurrent.setFretboardPositions(c.getFingerPositions());
-	            sp = punches.get(nIndex+1);
-	            c = new Chord(sp.root, sp.type);
-            }
-        }
-
-        if ( arrayKeys[arrayKeys.length -1] <= currentTime )
-        {
-            if( arrayCallStatus[arrayKeys.length -1] )
-                return;
-            arrayCallStatus[arrayKeys.length -1] = true;
-            Bluetooth.getInstance().setMatrix((byte[]) punch_list.get(arrayKeys[arrayKeys.length - 1]));
-            Util.setDefaultValues(arrayCallStatus);
-            arrayCallStatus[arrayKeys.length -1] = true;
-	        SongPunch sp = punches.get(arrayKeys.length - 1);
-	        Chord c = new Chord(sp.root, sp.type);
-	        fretboardCurrent.setFretboardPositions(c.getFingerPositions());
-	        c = new Chord("A","X");
+    ////////////////////////////////////////////// LOOP ////////////////////////////////////////////
+    private void toggleStartButton(){
+        if(!startButtonPressed){
+            if(currentTime >= endLoopTime) return;
+            startLoopTime = currentTime;
+            activateButton(loopStartButton);
+            startButtonPressed = true;
+        } else {
+            startLoopTime = 0;
+            deactivateButton(loopStartButton);
+            startButtonPressed = false;
         }
     }
 
-    public Hashtable songtxtToHashtable() {
-        punch_list = new Hashtable();
-        punches = song.punches();
-        for (SongPunch sp : punches)
-            punch_list.put(sp.timeMs,sp.fingering);
-        return punch_list;
-    }
-
-    public void initTxt() {
-        final long timeStart = System.currentTimeMillis();
-        punch_list = songtxtToHashtable();
-        arrayKeys = new int[punch_list.size()];
-        arrayCallStatus = new Boolean[punch_list.size()];
-
-        int i = 0;
-        for ( Enumeration e = punch_list.keys(); e.hasMoreElements(); ) {
-            arrayKeys[i] = (int) e.nextElement();
-            arrayCallStatus[i] = false;
-            i++;
+    private void toggleEndButton(){
+        if(!endButtonPressed){
+            if(currentTime <= startLoopTime) return;
+            endLoopTime = currentTime;
+            activateButton(loopEndButton);
+            endButtonPressed = true;
+        } else {
+            endLoopTime = youTubePlayer.getDurationMillis();
+            deactivateButton(loopEndButton);
+            endButtonPressed = false;
         }
-        Arrays.sort(arrayKeys);
-        Log.v( TAG, "initTxt" + Long.toString((System.currentTimeMillis()-timeStart)));
     }
 
-    /////////////////////////////////////////// UTILITIES //////////////////////////////////////////
+    //////////////////////////////////////////// PREROLL ///////////////////////////////////////////
 	private void resetPrerollButtons(){
-		if(preRollButtons.size() > 0){
-			for (Button b:preRollButtons) {
-				deactivateButton(b);
-			}
+        for (Button b: preRollButtons) {
+            deactivateButton(b);
 		}
 	}
 
@@ -485,19 +450,23 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
 		b.setBackgroundColor(getResources().getColor(R.color.activeButton));
 	}
 
-    //////////////////////////////////////////// LISTENER //////////////////////////////////////////
+    ///////////////////////////////////////// DIALOG LISTENER //////////////////////////////////////
+    @Override
     public void onReplay() {
-        initTxt();
+        punchesIndex = 0;
         initYoutubePlayer();
         timelineFragment.init(0);
     }
+
+    @Override
     public void onCancel() {
         ((MainActivity)getActivity()).fragNavController.popFragment();
     }
+
+    @Override
     public void onRandom(SongItem item) {
         final PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
         youtubeFragment.setSong(item);
         ((MainActivity)getActivity()).fragNavController.replaceFragment(youtubeFragment);
     }
-
 }
