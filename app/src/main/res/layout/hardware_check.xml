@@ -23,8 +23,9 @@
             android:id="@+id/fred_logo"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1.00"
-            app:srcCompat="@drawable/fred_emoji" />
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/fred_emoji"
+            android:minWidth="100dp"/>
 
         <TextView
             android:id="@+id/action_text"
@@ -35,7 +36,8 @@
             android:text="We are loading..."
             android:textAlignment="center"
             android:textColor="@color/primaryText"
-            android:textSize="30dp" />
+            android:textSize="30dp"
+            android:weight = "1"/>
 
     </LinearLayout>
 
