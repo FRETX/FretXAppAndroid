@@ -58,15 +58,6 @@ public class Profile extends Fragment {
         final Switch leftHandedSwitch = (Switch) rootView.findViewById(R.id.left_handed_switch);
         feedbackButton = (TextView) rootView.findViewById(R.id.feedback_button);
 
-        final int nbUnread = Intercom.client().getUnreadConversationCount();
-        updateUnreadButton(nbUnread);
-        feedbackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intercom.client().displayMessenger();
-            }
-        });
-
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             Log.d(TAG, "user connected");
@@ -93,10 +84,19 @@ public class Profile extends Fragment {
                     startActivity(intent);
                 }
             });
-
+            final int nbUnread = Intercom.client().getUnreadConversationCount();
+            updateUnreadButton(nbUnread);
+            feedbackButton.setVisibility(View.VISIBLE);
+            feedbackButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intercom.client().displayMessenger();
+                }
+            });
         } else {
             Log.d(TAG, "anonymously connected");
             onboardingButton.setVisibility(View.GONE);
+            feedbackButton.setVisibility(View.GONE);
             disconnectButton.setText("Login");
             disconnectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
