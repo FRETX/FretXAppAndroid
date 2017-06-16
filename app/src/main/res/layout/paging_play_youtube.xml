@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,18 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.02"
-        />
-
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--android:layout_marginRight="8dp"-->
-            <!--&gt;-->
-
-
-        <!--</RelativeLayout>-->
-
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,6 +135,19 @@
             android:layout_height="100dp">
 
         </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            sothree:srcCompat="@drawable/background_profile" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -150,7 +157,7 @@
             android:layout_marginRight="8dp"
             android:layout_weight="0.08"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <Button
                 android:id="@+id/buttonA"
@@ -181,15 +188,13 @@
                 android:text="B"
                 android:textColor="@color/tertiaryText"
                 android:textSize="12dp" />
-
-
         </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.01"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -199,7 +204,7 @@
             android:layout_marginRight="8dp"
             android:layout_weight="0.08"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="40dp"
@@ -259,40 +264,7 @@
                 android:textStyle="normal" />
         </LinearLayout>
 
+    </LinearLayout>
 
 
-
-
-
-        </LinearLayout>
-
-
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/textView10"-->
-            <!--android:layout_marginBottom="5dp"-->
-            <!--android:textColor="@color/primaryText"-->
-            <!--android:layout_gravity="center"-->
-
-            <!--tools:text="Early Lights" />-->
-
-        <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:id="@+id/prerollValView"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:textColor="@color/primaryText"-->
-                <!--tools:text="0ms" />-->
-
-
-
-        <!--<SeekBar-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/prerollSlider"-->
-            <!--android:layout_weight="0.05"/>-->
-
-</RelativeLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
