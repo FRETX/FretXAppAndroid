@@ -26,8 +26,7 @@ public class HardwareActivity extends BaseActivity{
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragment = new Setup();
-        fragment = new Check();
+        fragment = new Setup();
         fragmentTransaction.add(R.id.hardware_container, fragment);
         fragmentTransaction.commit();
     }

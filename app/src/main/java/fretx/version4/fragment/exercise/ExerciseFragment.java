@@ -10,12 +10,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,8 +90,16 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         playButton = (ImageButton) rootView.findViewById(R.id.playChordButton);
         chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
-        exerciseProgress = (ProgressBar) rootView.findViewById(R.id.exercise_progress);
+        exerciseProgress = (SeekBar) rootView.findViewById(R.id.exercise_progress);
         greenTick = (ImageView) rootView.findViewById(R.id.green_tick);
+
+        //avoid interaction with seekbar
+        exerciseProgress.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
 
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fretboard_fragment_container, fretboardFragment);

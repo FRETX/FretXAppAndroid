@@ -36,8 +36,7 @@
             android:text="We are loading..."
             android:textAlignment="center"
             android:textColor="@color/primaryText"
-            android:textSize="30dp"
-            android:weight = "1"/>
+            android:textSize="30dp" />
 
     </LinearLayout>
 

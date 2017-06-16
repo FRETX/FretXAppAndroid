@@ -160,10 +160,6 @@ public class SplashScreen extends BaseActivity {
         if (!initialized || !permission || !binded)
             return;
 
-        Intent intent = new Intent(getActivity(), HardwareActivity.class);
-        startActivity(intent);
-
-        /*
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {
             //intercom
@@ -181,6 +177,5 @@ public class SplashScreen extends BaseActivity {
             final Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
         }
-        */
     }
 }
