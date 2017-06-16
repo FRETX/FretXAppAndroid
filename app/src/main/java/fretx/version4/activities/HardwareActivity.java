@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import fretx.version4.R;
+import fretx.version4.onboarding.hardware.Check;
 import fretx.version4.onboarding.hardware.HardwareFragment;
 import fretx.version4.onboarding.hardware.Setup;
 
@@ -25,7 +26,8 @@ public class HardwareActivity extends BaseActivity{
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = new Setup();
+        //fragment = new Setup();
+        fragment = new Check();
         fragmentTransaction.add(R.id.hardware_container, fragment);
         fragmentTransaction.commit();
     }

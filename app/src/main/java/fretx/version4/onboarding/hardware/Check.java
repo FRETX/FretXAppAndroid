@@ -9,12 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.bumptech.glide.Glide;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothListener;
+import io.intercom.android.sdk.Intercom;
+import io.intercom.com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 
 /**
  * FretXAppAndroid for FretX
@@ -24,6 +30,8 @@ import fretx.version4.utils.bluetooth.BluetoothListener;
 public class Check extends Fragment implements HardwareFragment{
     private final static String TAG = "KJKP6_CHECK";
     private LinearLayout errorLayout;
+    private FrameLayout progressLayout;
+    private ImageView gifView;
     private BluetoothListener bluetoothListener = new BluetoothListener() {
         @Override
         public void onConnect() {
@@ -54,12 +62,19 @@ public class Check extends Fragment implements HardwareFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.hardware_check, container, false);
+
         errorLayout = (LinearLayout) rootView.findViewById(R.id.error_layout);
+        progressLayout = (FrameLayout) rootView.findViewById(R.id.progress_layout);
+        gifView = (ImageView) rootView.findViewById(R.id.gif);
+
+        Glide.with(getActivity()).load(R.raw.on_light).into(gifView);
+
         final Button retry = (Button) rootView.findViewById(R.id.retry);
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                errorLayout.setVisibility(View.INVISIBLE);
+                errorLayout.setVisibility(View.GONE);
+                progressLayout.setVisibility(View.VISIBLE);
                 Bluetooth.getInstance().connect();
             }
         });
@@ -67,8 +82,14 @@ public class Check extends Fragment implements HardwareFragment{
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                errorLayout.setVisibility(View.INVISIBLE);
                 onCheckSuccess();
+            }
+        });
+        final Button assist = (Button) rootView.findViewById(R.id.assistance);
+        assist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intercom.client().displayMessageComposer("[Connectivity check]: need help!");
             }
         });
         return rootView;
@@ -77,7 +98,8 @@ public class Check extends Fragment implements HardwareFragment{
     @Override
     public void onResume() {
         super.onResume();
-        errorLayout.setVisibility(View.INVISIBLE);
+        errorLayout.setVisibility(View.GONE);
+        progressLayout.setVisibility(View.VISIBLE);
         Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
         Bluetooth.getInstance().connect();
     }
@@ -99,5 +121,7 @@ public class Check extends Fragment implements HardwareFragment{
 
     private void onCheckFailure(){
         errorLayout.setVisibility(View.VISIBLE);
+        Glide.with(getActivity()).load(R.raw.on_light).into(gifView);
+        progressLayout.setVisibility(View.GONE);
     }
 }
