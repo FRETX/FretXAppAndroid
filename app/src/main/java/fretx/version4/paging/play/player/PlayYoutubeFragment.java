@@ -19,6 +19,8 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +56,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
     private Button preRollButton0, preRollButton025, preRollButton05, preRollButton1;
 	private ArrayList<Button> preRollButtons;
 	private Button playPauseButton;
-	private TextView timeTotalText, timeElapsedText;
+	private TextView timeTotalText, timeElapsedText, titleText;
     private FretboardView fretboardCurrent;
     private ChordTimeline timelineFragment;
 
@@ -120,6 +122,9 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         timeSeekBar = (SeekBar) rootView.findViewById(R.id.timeSeekbar);
         timeElapsedText = (TextView) rootView.findViewById(R.id.elapsedTimeText);
         timeTotalText = (TextView) rootView.findViewById(R.id.totalTimeText);
+        titleText = (TextView) rootView.findViewById(R.id.title_textview);
+
+        titleText.setText(song.song_title);
 
         //load chord timeline fragment
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
