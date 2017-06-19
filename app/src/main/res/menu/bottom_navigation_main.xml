@@ -2,28 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_play"
-        android:enabled="true"
+        android:id="@+id/action_bluetooth"
         android:checked="true"
-        android:icon="@drawable/ic_play"
-        android:title="PLAY"
+        android:enabled="true"
+        android:icon="@drawable/ic_connect"
+        android:title="Bluetooth"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_learn"
+        android:id="@+id/action_preview"
+        android:checked="true"
         android:enabled="true"
-        android:icon="@drawable/ic_learn"
-        android:title="LEARN"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_chords"
-        android:enabled="true"
-        android:icon="@drawable/ic_chords"
-        android:title="CHORDS"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/action_tuner"
-        android:enabled="true"
-        android:icon="@drawable/ic_tuner"
-        android:title="TUNER"
+        android:icon="@drawable/ic_preview"
+        android:title="Preview"
         app:showAsAction="ifRoom" />
 </menu>

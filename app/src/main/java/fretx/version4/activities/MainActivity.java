@@ -7,6 +7,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -116,7 +117,10 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        connectButton = (ImageButton) findViewById(R.id.connectButton);
+		Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+		setSupportActionBar(myToolbar);
+
+		connectButton = (ImageButton) findViewById(R.id.connectButton);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         previewButton = (ImageView) findViewById(R.id.previewButton);
 
