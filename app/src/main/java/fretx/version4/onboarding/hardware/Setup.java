@@ -140,7 +140,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                 if (!wasRestored) {
                     player = youTubePlayer;
                     player.setShowFullscreenButton(false);
-                    player.setFullscreen(true);
+                    player.setFullscreen(false);
                     youTubePlayer.setPlayerStateChangeListener(stateListener);
                     updateState();
                 }
