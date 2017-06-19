@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import fretx.version4.R;
@@ -80,6 +81,9 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
             }
         });
 
+        final TextView title = (TextView) rootView.findViewById(R.id.songTitleText);
+        title.setText(song.song_title);
+
         return rootView;
     }
 
@@ -109,12 +113,8 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void setChords(ArrayList<Chord> chords) {
-        this.exerciseChords = (ArrayList<Chord>) chords.clone();
-    }
-
     public void setSong(SongItem song) {
         this.song = song;
+        this.exerciseChords = song.getChords();
     }
 }

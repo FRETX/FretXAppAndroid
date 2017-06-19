@@ -122,6 +122,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         timeTotalText = (TextView) rootView.findViewById(R.id.totalTimeText);
         songTitleText = (TextView) rootView.findViewById(R.id.songTitleText);
 
+
         //load chord timeline fragment
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.timeline_container, timelineFragment).commit();

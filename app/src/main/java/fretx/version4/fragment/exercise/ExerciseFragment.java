@@ -43,6 +43,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     private ExerciseListener listener;
     private final Handler handler = new Handler();
     private SoundPoolPlayer sound;
+    private String title;
 
     //view
     private TextView chordText;

@@ -183,7 +183,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
         }
 
         PlayPreview fragmentChordExercise = new PlayPreview();
-        fragmentChordExercise.setChords(chords);
+        //fragmentChordExercise.setChords(chords);
         fragmentChordExercise.setSong(item);
         mActivity.fragNavController.pushFragment(fragmentChordExercise);
     }
