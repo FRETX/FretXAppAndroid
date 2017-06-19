@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sliding_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="bottom"
-    sothree:umanoPanelHeight="35dp"
-    sothree:umanoShadowHeight="4dp">
+
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -26,44 +20,46 @@
             android:layout_weight="0.02"
             />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.22"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="0.22"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:orientation="horizontal">-->
 
             <FrameLayout
                 android:id="@+id/youtube_view"
-                android:layout_width="200dp"
-                android:layout_height="110dp">
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.25"
+                android:layout_gravity="center"
+                >
 
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Next Chord"
-                android:textColor="@color/primaryText"
-                android:textSize="12sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/textView2"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:gravity="center"-->
+                <!--android:text="Next Chord"-->
+                <!--android:textColor="@color/primaryText"-->
+                <!--android:textSize="12sp" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.02"
-            />
+
+
+
         <fretx.version4.FretboardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.45"
             android:id="@+id/fretboardCurrent"
+            android:layout_marginTop="2dp"
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
             />
@@ -71,7 +67,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.02"
+            android:layout_weight="0.015"
             />
 
         <LinearLayout
@@ -88,7 +84,6 @@
                 android:layout_height="36dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="3dp"
-                android:layout_centerHorizontal="true"
                 android:background="@drawable/ic_pausebutton"
                 android:textColor="@color/tertiaryText"
                 android:id="@+id/playPauseButton"
@@ -129,159 +124,173 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.03"
+            android:layout_weight="0.01"
             />
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.185"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="20dp"
+        sothree:umanoShadowHeight="6dp">
+
 
         <FrameLayout
             android:id="@+id/timeline_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.15"
+            android:layout_height="match_parent"
             >
 
         </FrameLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            sothree:srcCompat="@drawable/up_arrow" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="15dp"
-            android:text="Slide up for more options"
-            android:textAllCaps="false"
-            android:textColor="@color/primaryText"
-            android:textSize="10dp"
-            android:textAlignment="center"
-            />
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="0.08"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-            <Button
-                android:id="@+id/buttonA"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center_vertical"
-                android:background="@color/inactiveButton"
-                android:text="A"
-                android:textColor="@color/tertiaryText"
-                android:textSize="12dp" />
-
-            <Button
-                android:id="@+id/buttonLoop"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/ic_loop_inactive"
-                android:textColor="@color/tertiaryText" />
-
-            <Button
-                android:id="@+id/buttonB"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_gravity="center_vertical"
-                android:background="@color/inactiveButton"
-                android:text="B"
-                android:textColor="@color/tertiaryText"
-                android:textSize="12dp" />
-        </LinearLayout>
-
-        <Space
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.01"
-            android:visibility="visible" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_weight="0.08"
-            android:orientation="horizontal"
-            android:visibility="visible">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_clock" />
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                sothree:srcCompat="@drawable/up_arrow" />
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="15dp"-->
+                <!--android:text="Slide up for more options"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="@color/primaryText"-->
+                <!--android:textSize="10dp"-->
+                <!--android:textAlignment="center"-->
+                <!--/>-->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
 
-            <Button
-                android:id="@+id/buttonEarly1"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
-                android:background="@color/inactiveButton"
-                android:text="-1s"
-                android:textAllCaps="false"
-                android:textColor="@color/tertiaryText"
-                android:textSize="12dp"
-                android:textStyle="normal" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
-            <Button
-                android:id="@+id/buttonEarly05"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
-                android:background="@color/inactiveButton"
-                android:text="-0.5s"
-                android:textAllCaps="false"
-                android:textColor="@color/tertiaryText"
-                android:textSize="12dp"
-                android:textStyle="normal" />
+                    <Button
+                        android:id="@+id/buttonA"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/inactiveButton"
+                        android:text="A"
+                        android:textColor="@color/tertiaryText"
+                        android:textSize="12dp" />
 
-            <Button
-                android:id="@+id/buttonEarly025"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
-                android:background="@color/inactiveButton"
-                android:text="-0.25s"
-                android:textAllCaps="false"
-                android:textColor="@color/tertiaryText"
-                android:textSize="12dp"
-                android:textStyle="normal" />
+                    <Button
+                        android:id="@+id/buttonLoop"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:background="@drawable/ic_loop_inactive"
+                        android:textColor="@color/tertiaryText" />
 
-            <Button
-                android:id="@+id/buttonEarly0"
-                android:layout_width="40dp"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="2dp"
-                android:background="@color/primary"
-                android:text="0s"
-                android:textAllCaps="false"
-                android:textColor="@color/tertiaryText"
-                android:textSize="12dp"
-                android:textStyle="normal" />
+                    <Button
+                        android:id="@+id/buttonB"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/inactiveButton"
+                        android:text="B"
+                        android:textColor="@color/tertiaryText"
+                        android:textSize="12dp" />
+                </LinearLayout>
+                <Space
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_clock" />
+
+                    <Button
+                        android:id="@+id/buttonEarly1"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="2dp"
+                        android:background="@color/inactiveButton"
+                        android:text="-1s"
+                        android:textAllCaps="false"
+                        android:textColor="@color/tertiaryText"
+                        android:textSize="12dp"
+                        android:textStyle="normal" />
+
+                    <Button
+                        android:id="@+id/buttonEarly05"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="2dp"
+                        android:background="@color/inactiveButton"
+                        android:text="-0.5s"
+                        android:textAllCaps="false"
+                        android:textColor="@color/tertiaryText"
+                        android:textSize="12dp"
+                        android:textStyle="normal" />
+
+                    <Button
+                        android:id="@+id/buttonEarly025"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="2dp"
+                        android:background="@color/inactiveButton"
+                        android:text="-0.25s"
+                        android:textAllCaps="false"
+                        android:textColor="@color/tertiaryText"
+                        android:textSize="12dp"
+                        android:textStyle="normal" />
+
+                    <Button
+                        android:id="@+id/buttonEarly0"
+                        android:layout_width="40dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="2dp"
+                        android:background="@color/primary"
+                        android:text="0s"
+                        android:textAllCaps="false"
+                        android:textColor="@color/tertiaryText"
+                        android:textSize="12dp"
+                        android:textStyle="normal" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
+
 
     </LinearLayout>
 
-
-</com.sothree.slidinguppanel.SlidingUpPanelLayout>
