@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoPanelHeight="68dp"
+    sothree:umanoPanelHeight="35dp"
     sothree:umanoShadowHeight="4dp">
 
     <LinearLayout
@@ -28,7 +28,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.22"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_gravity="center"
             android:orientation="horizontal">
 
@@ -54,7 +57,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.01"
+            android:layout_weight="0.02"
             />
         <fretx.version4.FretboardView
             android:layout_width="match_parent"
@@ -68,13 +71,13 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.01"
+            android:layout_weight="0.02"
             />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.09"
+            android:layout_weight="0.07"
             android:orientation="horizontal"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
@@ -126,13 +129,15 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.01"
+            android:layout_weight="0.03"
             />
 
         <FrameLayout
             android:id="@+id/timeline_container"
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="0dp"
+            android:layout_weight="0.15"
+            >
 
         </FrameLayout>
     </LinearLayout>
@@ -144,10 +149,22 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
             android:layout_gravity="center"
-            sothree:srcCompat="@drawable/background_profile" />
+            sothree:srcCompat="@drawable/up_arrow" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:text="Slide up for more options"
+            android:textAllCaps="false"
+            android:textColor="@color/primaryText"
+            android:textSize="10dp"
+            android:textAlignment="center"
+            />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
