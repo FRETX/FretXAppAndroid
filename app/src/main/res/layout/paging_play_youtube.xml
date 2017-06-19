@@ -20,6 +20,19 @@
             android:layout_weight="0.02"
             />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            android:textColor="@color/primaryText"
+            android:id="@+id/songTitleText"
+            android:text="Song Title"
+            android:textAlignment="center"
+            android:layout_marginBottom="5dp"
+
+            />
         <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="0dp"-->
@@ -33,7 +46,7 @@
                 android:id="@+id/youtube_view"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="0.25"
+                android:layout_weight="0.23"
                 android:layout_gravity="center"
                 >
 
@@ -124,7 +137,7 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.01"
+            android:layout_weight="0.02"
             />
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -132,7 +145,7 @@
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.185"
+        android:layout_weight="0.145"
         android:gravity="bottom"
         sothree:umanoPanelHeight="20dp"
         sothree:umanoShadowHeight="6dp">
