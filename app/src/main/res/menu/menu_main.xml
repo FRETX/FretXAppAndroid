@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_bluetooth"
-        android:checked="true"
-        android:enabled="true"
-        android:icon="@drawable/ic_connect"
-        android:title="Bluetooth"
-        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_preview"
         android:checked="true"
         android:enabled="true"
         android:icon="@drawable/ic_preview"
         android:title="Preview"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_bluetooth"
+        android:checked="true"
+        android:enabled="true"
+        android:icon="@drawable/ic_connect"
+        android:title="Bluetooth"
         app:showAsAction="ifRoom" />
 </menu>
