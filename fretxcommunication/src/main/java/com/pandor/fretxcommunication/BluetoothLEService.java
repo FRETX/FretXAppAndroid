@@ -45,7 +45,6 @@ public class BluetoothLEService extends Service {
 
     private final Handler handler = new Handler();
     private final ArrayList<BluetoothListener> bluetoothListeners = new ArrayList<>();
-    private String deviceName;
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -183,19 +182,15 @@ public class BluetoothLEService extends Service {
 
     /* = = = = = = = = = = = = = = = = = = = = SCANNING = = = = = = = = = = = = = = = = = = = = = */
     private void scan() {
-        if (deviceName == null) {
-            Log.d(TAG, "device name not set before scanning!");
-        } else {
-            Log.d(TAG, "scanning...");
-            state = State.SCANNING;
-            devices.clear();
-            final ScanSettings settings = new ScanSettings.Builder().build();
-            final ScanFilter filter = new ScanFilter.Builder().setDeviceName(deviceName).build();
-            final List<ScanFilter> filters = new ArrayList<>();
-            filters.add(filter);
-            adapter.getBluetoothLeScanner().startScan(filters, settings, scanCallback);
-            handler.postDelayed(endOfScan, SCAN_DELAY_MS);
-        }
+        Log.d(TAG, "scanning...");
+        state = State.SCANNING;
+        devices.clear();
+        final ScanSettings settings = new ScanSettings.Builder().build();
+        final ScanFilter filter = new ScanFilter.Builder().setDeviceName(DEVICE_NAME).build();
+        final List<ScanFilter> filters = new ArrayList<>();
+        filters.add(filter);
+        adapter.getBluetoothLeScanner().startScan(filters, settings, scanCallback);
+        handler.postDelayed(endOfScan, SCAN_DELAY_MS);
     }
 
     private ScanCallback scanCallback = new ScanCallback() {
