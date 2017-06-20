@@ -48,7 +48,6 @@ public class MainActivity extends BaseActivity {
     private Toolbar toolbar;
     private BottomBar bottomBar;
 	private MenuItem bluetoothItem;
-	public static boolean previewEnabled = true;
 	public FragNavController fragNavController;
 	private static int INDEX_PLAY = FragNavController.TAB1;
 	private static int INDEX_LEARN = FragNavController.TAB2;

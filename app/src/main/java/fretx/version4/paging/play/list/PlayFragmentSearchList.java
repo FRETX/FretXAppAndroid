@@ -30,7 +30,6 @@ import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
 import fretx.version4.paging.play.preview.PlayPreview;
-import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
@@ -47,6 +46,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
     private PlaySongGridViewAdapter adapter;
     private MenuItem searchItem;
     private MenuItem previewItem;
+    private boolean previewEnabled = true;
 
     //private SearchView searchBox;
     private GridView listView;
@@ -93,7 +93,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
                 //searchItem.
 
 
-                if(MainActivity.previewEnabled){
+                if(previewEnabled){
                     startSongPreview(item);
                 } else {
                     startSong(item);
@@ -141,12 +141,12 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_preview:
-                if(MainActivity.previewEnabled){
+                if(previewEnabled){
                     setGreyed(item);
-                    MainActivity.previewEnabled = false;
+                    previewEnabled = false;
                 } else {
                     setNonGreyed(item);
-                    MainActivity.previewEnabled = true;
+                    previewEnabled = true;
                 }
             default:
                 return super.onOptionsItemSelected(item);
@@ -239,7 +239,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
 
     private void updateMenu() {
         if (previewItem != null) {
-            if (MainActivity.previewEnabled) {
+            if (previewEnabled) {
                 setNonGreyed(previewItem);
             } else {
                 setGreyed(previewItem);
