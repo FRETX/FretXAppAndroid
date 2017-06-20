@@ -1,4 +1,4 @@
-package fretx.version4.utils.bluetooth;
+package com.pandor.fretxcommunication;
 
 /**
  * FretXAppAndroid for FretX
@@ -7,9 +7,9 @@ package fretx.version4.utils.bluetooth;
 
 interface BluetoothInterface {
     void connect();
+    void disconnect();
+    boolean isConnected();
     void send(byte data[]);
     void registerBluetoothListener(BluetoothListener listener);
     void unregisterBluetoothListener(BluetoothListener listener);
-    boolean isConnected();
-    void disconnect();
 }
