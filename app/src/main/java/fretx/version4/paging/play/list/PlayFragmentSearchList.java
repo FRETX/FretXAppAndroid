@@ -47,8 +47,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
     private MenuItem searchItem;
     private MenuItem previewItem;
     private boolean previewEnabled = true;
-
-    //private SearchView searchBox;
     private GridView listView;
     private Button retry;
     private ProgressBar progressBar;
@@ -89,9 +87,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final SongItem item = filteredData.get(position);
-
-                //searchItem.
-
 
                 if(previewEnabled){
                     startSongPreview(item);
@@ -245,9 +240,5 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
                 setGreyed(previewItem);
             }
         }
-    }
-
-    private void clearSearchView() {
-
     }
 }
