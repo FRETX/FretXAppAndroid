@@ -6,27 +6,6 @@
               android:layout_height="match_parent"
               android:background="@color/background">
 
-    <LinearLayout
-        android:id="@+id/l1"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentStart="true"
-        android:background="@color/primary">
-
-        <SearchView
-            android:id="@+id/svSongs"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/deepBackground"
-            android:clickable="true"
-            android:iconifiedByDefault="true"
-            android:queryHint="@string/searchhidenText" />
-
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

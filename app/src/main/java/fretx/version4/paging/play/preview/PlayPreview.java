@@ -86,8 +86,6 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
     @Override
     public void onResume() {
         super.onResume();
-        ImageButton preview = (ImageButton) getActivity().findViewById(R.id.previewButton);
-        preview.setVisibility(View.INVISIBLE);
     }
 
     //when the exercise fragment report the end of current exercise

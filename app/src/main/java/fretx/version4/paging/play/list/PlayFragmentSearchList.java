@@ -1,17 +1,22 @@
 package fretx.version4.paging.play.list;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,35 +29,43 @@ import fretx.version4.fretxapi.song.SongCallback;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
-import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import fretx.version4.paging.play.preview.PlayPreview;
+import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
 
-public class PlayFragmentSearchList extends Fragment implements SongCallback {
+import static fretx.version4.activities.MainActivity.setGreyed;
+import static fretx.version4.activities.MainActivity.setNonGreyed;
+
+public class PlayFragmentSearchList extends Fragment implements SongCallback,
+        SearchView.OnQueryTextListener {
     private static final String TAG = "KJKP6_PLAYFRAGMENT_LIST";
     private MainActivity mActivity;
     private final ArrayList<SongItem> rawData = new ArrayList<>();
     private final ArrayList<SongItem> filteredData = new ArrayList<>();
     private PlaySongGridViewAdapter adapter;
+    private MenuItem searchItem;
+    private MenuItem previewItem;
 
-    private SearchView searchBox;
+    //private SearchView searchBox;
     private GridView listView;
     private Button retry;
     private ProgressBar progressBar;
+
+    /*----------------------------------- LIFECYCLE ----------------------------------------------*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
         Analytics.getInstance().logSelectEvent("TAB", "Play");
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
-        searchBox = (SearchView) rootView.findViewById(R.id.svSongs);
         listView = (GridView) rootView.findViewById(R.id.lvSongList);
         retry = (Button) rootView.findViewById(R.id.retry);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
@@ -77,33 +90,14 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final SongItem item = filteredData.get(position);
 
-                searchBox.setQuery("", true);
-                searchBox.clearFocus();
+                //searchItem.
 
-                if(mActivity.previewEnabled){
+
+                if(MainActivity.previewEnabled){
                     startSongPreview(item);
                 } else {
                     startSong(item);
                 }
-            }
-        });
-
-        searchBox.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                searchBox.setIconified(false);
-            }
-        });
-        searchBox.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterList(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String query) {
-                filterList(query);
-                return false;
             }
         });
 
@@ -120,6 +114,61 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        BluetoothAnimator.getInstance().stringFall();
+        updateMenu();
+    }
+
+    /*----------------------------------- OPTION MENU --------------------------------------------*/
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(TAG, "");
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_search, menu);
+        previewItem = menu.findItem(R.id.action_preview);
+        searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        final SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+        updateMenu();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_preview:
+                if(MainActivity.previewEnabled){
+                    setGreyed(item);
+                    MainActivity.previewEnabled = false;
+                } else {
+                    setNonGreyed(item);
+                    MainActivity.previewEnabled = true;
+                }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        filterList(query);
+        searchItem.getActionView().clearFocus();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filterList(newText);
+        return true;
+    }
+
+    /*--------------------------------------- CALLBACKSS -----------------------------------------*/
+
+    @Override
     public void onUpdate(boolean requesting, JSONArray index) {
         if (requesting) {
             retry.setVisibility(View.INVISIBLE);
@@ -134,13 +183,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        BluetoothAnimator.getInstance().stringFall();
-        ImageButton preview = (ImageButton) getActivity().findViewById(R.id.previewButton);
-        preview.setVisibility(View.VISIBLE);
-    }
+    /*--------------------------------------- UTILS ----------------------------------------------*/
 
     private void refreshData() {
         rawData.clear();
@@ -189,22 +232,22 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback {
     }
 
     private void startSong(SongItem item) {
-        boolean loadOfflinePlayer = false;
-        /* if (false) {
-            String fileName = "fretx" + item.youtube_id.toLowerCase().replace("-", "_");
-            int resourceIdentifier = getContext().getResources().getIdentifier(fileName, "raw", getContext().getPackageName());
-            if(resourceIdentifier != 0){
-                loadOfflinePlayer = true;
+        PlayOfflinePlayerFragment offlinePlayerFragment = new PlayOfflinePlayerFragment();
+        offlinePlayerFragment.setSong(item);
+        mActivity.fragNavController.pushFragment(offlinePlayerFragment);
+    }
+
+    private void updateMenu() {
+        if (previewItem != null) {
+            if (MainActivity.previewEnabled) {
+                setNonGreyed(previewItem);
+            } else {
+                setGreyed(previewItem);
             }
-        } */
-        if (loadOfflinePlayer) {
-            PlayOfflinePlayerFragment offlinePlayerFragment = new PlayOfflinePlayerFragment();
-            offlinePlayerFragment.setSong(item);
-            mActivity.fragNavController.pushFragment(offlinePlayerFragment);
-        } else {
-            PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
-            youtubeFragment.setSong(item);
-            mActivity.fragNavController.pushFragment(youtubeFragment);
         }
+    }
+
+    private void clearSearchView() {
+
     }
 }

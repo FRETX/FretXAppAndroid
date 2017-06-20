@@ -1,26 +1,21 @@
 package fretx.version4.activities;
 
+import android.app.SearchManager;
 import android.content.Context;
 
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.view.MenuItem;
+import android.support.v7.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.ncapdevi.fragnav.FragNavController;
 import com.roughike.bottombar.BottomBar;
@@ -35,7 +30,6 @@ import fretx.version4.R;
 import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.song.SongList;
-import fretx.version4.onboarding.login.User;
 import fretx.version4.paging.learn.LearnFragment;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.profile.Profile;
@@ -51,33 +45,55 @@ public class MainActivity extends BaseActivity {
 	private static final String TAG = "KJKP6_MAINACTIVITY";
 
 	//VIEWS
-	private BottomBar bottomBar;
-	private ImageView previewButton;
-	private ImageButton connectButton;
-	public boolean previewEnabled = true;
-
+    private Toolbar toolbar;
+    private BottomBar bottomBar;
+	private MenuItem bluetoothItem;
+	public static boolean previewEnabled = true;
 	public FragNavController fragNavController;
-
 	private static int INDEX_PLAY = FragNavController.TAB1;
 	private static int INDEX_LEARN = FragNavController.TAB2;
 	private static int INDEX_TUNER = FragNavController.TAB3;
 	private static int INDEX_PROFILE = FragNavController.TAB4;
-
 	private final Runnable setConnected = new Runnable() {
 		@Override
 		public void run() {
-            setNonGreyed(connectButton);
+            setNonGreyed(bluetoothItem);
 			invalidateOptionsMenu();
 		}
 	};
-
 	private Runnable setDisconnected = new Runnable() {
 		@Override
 		public void run() {
-            setGreyed(connectButton);
+            setGreyed(bluetoothItem);
             invalidateOptionsMenu();
 		}
 	};
+    private final BluetoothListener bluetoothListener = new BluetoothListener() {
+        @Override
+        public void onConnect() {
+            Log.d(TAG, "Bluetooth device connected!");
+            BluetoothAnimator.getInstance().stringFall();
+            runOnUiThread(setConnected);
+        }
+
+        @Override
+        public void onScanFailure() {
+            Log.d(TAG, "Bluetooth scan Failed!");
+            runOnUiThread(setDisconnected);
+        }
+
+        @Override
+        public void onDisconnect() {
+            Log.d(TAG, "Bluetooth device disconnected!");
+            runOnUiThread(setDisconnected);
+        }
+
+        @Override
+        public void onFailure(){
+            Log.d(TAG, "Bluetooth connection failed!");
+            runOnUiThread(setDisconnected);
+        }
+    };
 
 	private UnreadConversationCountListener unreadListener = new UnreadConversationCountListener() {
 		@Override
@@ -86,44 +102,17 @@ public class MainActivity extends BaseActivity {
 		}
 	};
 
-	private final BluetoothListener bluetoothListener = new BluetoothListener() {
-		@Override
-		public void onConnect() {
-            Log.d(TAG, "Bluetooth device connected!");
-			BluetoothAnimator.getInstance().stringFall();
-			runOnUiThread(setConnected);
-		}
-
-		@Override
-		public void onScanFailure() {
-			Log.d(TAG, "Bluetooth scan Failed!");
-			runOnUiThread(setDisconnected);
-		}
-
-		@Override
-		public void onDisconnect() {
-			Log.d(TAG, "Bluetooth device disconnected!");
-			runOnUiThread(setDisconnected);
-		}
-
-		@Override
-		public void onFailure(){
-			Log.d(TAG, "Bluetooth connection failed!");
-			runOnUiThread(setDisconnected);
-		}
-	};
+    /*----------------------------------- LIFECYCLE ----------------------------------------------*/
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-		setSupportActionBar(myToolbar);
+		toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+		setSupportActionBar(toolbar);
 
-		connectButton = (ImageButton) findViewById(R.id.connectButton);
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        previewButton = (ImageView) findViewById(R.id.previewButton);
 
 		final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 		Log.d(TAG, "Refreshed token: " + refreshedToken);
@@ -151,17 +140,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        if (previewEnabled) {
-			setNonGreyed(previewButton);
-        } else {
-			setGreyed(previewButton);
-        }
-
-        if (Bluetooth.getInstance().isConnected()) {
-            setNonGreyed(connectButton);
-        } else {
-            setGreyed(connectButton);
-        }
+        updateMenu();
 
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			Intercom.client().addUnreadConversationCountListener(unreadListener);
@@ -180,72 +159,6 @@ public class MainActivity extends BaseActivity {
         Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
 	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-	public void setGuiEventListeners() {
-		bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-			@Override
-			public void onTabSelected(@IdRes int tabId) {
-				previewButton.setVisibility(View.INVISIBLE);
-
-				switch(tabId){
-					case R.id.bottomtab_play:
-						fragNavController.switchTab(INDEX_PLAY);
-						previewButton.setVisibility(View.VISIBLE);
-						break;
-					case R.id.bottomtab_learn:
-						fragNavController.switchTab(INDEX_LEARN);
-						break;
-					case R.id.bottomtab_tuner:
-						fragNavController.switchTab(INDEX_TUNER);
-						break;
-					case R.id.bottomtab_profile:
-						fragNavController.switchTab(INDEX_PROFILE);
-						break;
-				}
-			}
-		});
-
-		bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
-			@Override
-			public void onTabReSelected(@IdRes int tabId) {
-				fragNavController.clearStack();
-			}
-		});
-
-		connectButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-                setGreyed(connectButton);
-                if (Bluetooth.getInstance().isConnected()) {
-                    Bluetooth.getInstance().disconnect();
-                    Log.d(TAG, "Disconnected!");
-                } else {
-                    Bluetooth.getInstance().connect();
-                }
-			}
-		});
-
-		previewButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if(previewEnabled){
-					setGreyed((ImageView) view);
-					previewEnabled = false;
-				} else {
-					setNonGreyed( (ImageView) view );
-					previewEnabled = true;
-				}
-			}
-		});
-
-	}
-
 	@Override
 	public void onBackPressed(){
 		if (!fragNavController.isRootFragment()) {
@@ -261,25 +174,98 @@ public class MainActivity extends BaseActivity {
 		}
 	}
 
-	public static void setGreyed(ImageView v) {
-		ColorMatrix matrix = new ColorMatrix();
-		matrix.setSaturation(0);  //0 means grayscale
-		ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
-		v.setColorFilter(cf);
-		v.setAlpha(128);   // 128 = 0.5
+	/*----------------------------------- OPTION MENU --------------------------------------------*/
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "");
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_base, menu);
+        bluetoothItem = menu.findItem(R.id.action_bluetooth);
+        updateMenu();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_bluetooth:
+                setGreyed(item);
+                if (Bluetooth.getInstance().isConnected()) {
+                    Bluetooth.getInstance().disconnect();
+                    Log.d(TAG, "Disconnected!");
+                } else {
+                    Bluetooth.getInstance().connect();
+                }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+	/*--------------------------------------- UTILS ----------------------------------------------*/
+
+    public void setGuiEventListeners() {
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                switch(tabId){
+                    case R.id.bottomtab_play:
+                        fragNavController.switchTab(INDEX_PLAY);
+                        break;
+                    case R.id.bottomtab_learn:
+                        fragNavController.switchTab(INDEX_LEARN);
+                        break;
+                    case R.id.bottomtab_tuner:
+                        fragNavController.switchTab(INDEX_TUNER);
+                        break;
+                    case R.id.bottomtab_profile:
+                        fragNavController.switchTab(INDEX_PROFILE);
+                        break;
+                }
+            }
+        });
+
+        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            @Override
+            public void onTabReSelected(@IdRes int tabId) {
+                fragNavController.clearStack();
+            }
+        });
+    }
+
+    public static void setGreyed(MenuItem item) {
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);  //0 means grayscale
+        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
+        final Drawable icon = item.getIcon();
+        icon.setColorFilter(cf);
+        icon.setAlpha(128);
+        item.setIcon(icon);
+    }
+
+	public static void setNonGreyed(MenuItem item) {
+        final Drawable icon = item.getIcon();
+        icon.setColorFilter(null);
+        icon.setAlpha(255);
+        item.setIcon(icon);
 	}
 
-	public static void setNonGreyed(ImageView v) {
-		v.setColorFilter(null);
-		v.setAlpha(255);
-	}
+    public void updateMenu() {
+        if (bluetoothItem != null) {
+            if (Bluetooth.getInstance().isConnected()) {
+                setNonGreyed(bluetoothItem);
+            } else {
+                setGreyed(bluetoothItem);
+            }
+        }
+    }
 
-	private void updateSettingTab(int nbUnread) {
-		final BottomBarTab tab = bottomBar.getTabAtPosition(INDEX_PROFILE);
-		if (nbUnread > 0) {
-			tab.setBadgeCount(nbUnread);
-		} else {
-			tab.removeBadge();
-		}
-	}
+    private void updateSettingTab(int nbUnread) {
+        final BottomBarTab tab = bottomBar.getTabAtPosition(INDEX_PROFILE);
+        if (nbUnread > 0) {
+            tab.setBadgeCount(nbUnread);
+        } else {
+            tab.removeBadge();
+        }
+    }
 }
