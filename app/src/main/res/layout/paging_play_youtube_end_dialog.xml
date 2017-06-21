@@ -1,47 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-    android:weightSum="1"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/pad_10dp"
+        android:paddingTop="@dimen/pad_10dp"
         android:text="Song complete!"
         android:textAlignment="center"
         android:textColor="@color/primaryText"
         android:textSize="25sp" />
 
-
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.02"
-        />
-
     <TextView
         android:id="@+id/song_name_textview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.07"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView2"
+        android:paddingBottom="@dimen/pad_10dp"
         android:textAlignment="center"
         android:textColor="@color/secondaryText"
         android:textSize="20sp" />
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.02"
-        />
+
     <Button
         android:id="@+id/replay_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.07"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/song_name_textview"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="@color/primary"
@@ -49,53 +39,55 @@
         android:textAllCaps="false"
         android:textColor="@color/background" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.02"
-        />
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/replay_button"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/back_button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.07"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="@color/primary"
         android:text="Back"
         android:textAllCaps="false"
-        android:textColor="@color/background" />
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.02"
-        />
+        android:textColor="@color/background"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentStart="true" />
 
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.02"
-        />
 
     <TextView
+        android:id="@+id/textView3"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.07"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/back_button"
+        android:paddingBottom="@dimen/pad_10dp"
+        android:paddingTop="@dimen/pad_10dp"
         android:text="Or play another:"
-        android:textColor="@color/primaryText"
         android:textAlignment="center"
+        android:textColor="@color/primaryText"
         android:textSize="20sp"
-        />
+        android:layout_alignParentStart="true" />
+
     <ImageView
         android:id="@+id/random_imageview"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.35"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:srcCompat="@drawable/defaultthumb" />
+        app:srcCompat="@drawable/defaultthumb"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/random_imageview"
+        android:layout_centerHorizontal="true" />
 
 
-
-</LinearLayout>
+</RelativeLayout>
