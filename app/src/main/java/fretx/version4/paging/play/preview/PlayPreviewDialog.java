@@ -44,7 +44,7 @@ public class PlayPreviewDialog extends DialogFragment
     @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.paging_learn_custom_exercise_dialog);
+        dialog.setContentView(R.layout.paging_play_preview_dialog);
 
         //retrieve time from arguments
         int min = getArguments().getInt(ELAPSED_TIME_MIN);

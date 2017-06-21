@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/primaryText"
-        android:text="Exercise complete!"
+        android:text="Preview complete!"
         android:textAlignment="center"
         android:textSize="35dp"/>
 
@@ -40,10 +40,12 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="25dp"
+            android:padding="5dp"
             android:background="@color/primary"
-            android:text="Back"
+            android:text="Play song"
+            android:textColor="@color/background"
             android:textAllCaps="false"
-            android:textColor="@color/background" />
+            />
 
         <Button
             android:id="@+id/replayButton"
@@ -53,7 +55,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="25dp"
             android:background="@color/primary"
-            android:text="Replay"
+            android:text="Retry"
+            android:padding="5dp"
             android:textAllCaps="false"
             android:textColor="@color/background" />
 
