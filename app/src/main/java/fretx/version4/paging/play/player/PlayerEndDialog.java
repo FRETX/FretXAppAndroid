@@ -60,7 +60,7 @@ public class PlayerEndDialog extends DialogFragment
 
         //display elapsed time
         final TextView timeText = (TextView) dialog.findViewById(R.id.song_name_textview);
-        timeText.setText("you successfully played: " + songName);
+        timeText.setText("You successfully played: \n" + songName);
 
         //set button listeners
         final Button replay = (Button) dialog.findViewById(R.id.replay_button);
