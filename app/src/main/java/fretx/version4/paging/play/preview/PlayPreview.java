@@ -82,7 +82,7 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         });
 
         final TextView title = (TextView) rootView.findViewById(R.id.songTitleText);
-        title.setText(song.song_title);
+        title.setText(song.artist + " - " + song.song_title);
 
         return rootView;
     }
