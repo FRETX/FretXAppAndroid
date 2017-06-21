@@ -37,32 +37,6 @@ public class Bluetooth {
             6,16,26,36,46, 0};
     private final ArrayList<ServiceListener> serviceListeners = new ArrayList<>();
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                final int btState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                switch (btState) {
-                    case BluetoothAdapter.STATE_OFF:
-                        Log.d(TAG, "Bluetooth off");
-                        break;
-                    case BluetoothAdapter.STATE_TURNING_OFF:
-                        Log.d(TAG, "Turning Bluetooth off... (by external event)");
-                        service.onTurnedOff();
-                        break;
-                    case BluetoothAdapter.STATE_ON:
-                        Log.d(TAG, "Bluetooth on");
-                        service.onTurnedOn();
-                        break;
-                    case BluetoothAdapter.STATE_TURNING_ON:
-                        Log.d(TAG, "Turning Bluetooth on...");
-                        break;
-                }
-            }
-        }
-    };
-
     /* = = = = = = = = = = = = = = = = = SINGLETON PATTERN = = = = = = = = = = = = = = = = = = = */
     private static class Holder {
         private static final Bluetooth instance = new Bluetooth();
@@ -85,7 +59,6 @@ public class Bluetooth {
         final Intent intent = new Intent(getActivity(), BluetoothStdService.class);
         getActivity().getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         //// TODO: 08/06/17 find a place to unregister this
-        getActivity().getApplicationContext().registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         chordFingerings = MusicUtils.parseChordDb();
     }
 
@@ -94,7 +67,6 @@ public class Bluetooth {
         final Intent intent = new Intent(getActivity(), BluetoothLEService.class);
         getActivity().getApplicationContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         //// TODO: 08/06/17 find a place to unregister this
-        getActivity().getApplicationContext().registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         chordFingerings = MusicUtils.parseChordDb();
     }
 
@@ -111,7 +83,6 @@ public class Bluetooth {
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            getActivity().getApplicationContext().unregisterReceiver(mReceiver);
         }
     };
 
