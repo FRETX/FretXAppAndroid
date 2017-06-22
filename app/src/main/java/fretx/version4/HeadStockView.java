@@ -46,12 +46,19 @@ public class HeadStockView extends View{
     private final Matrix headStockMatrix = new Matrix();
     //hammers
     private class Hammer {
+        float rx = 0;
+        float ry = 0;
         float cx = 0;
         float cy = 0;
 
-        public void set(float cx, float cy) {
-            this.cx = cx;
-            this.cy = cy;
+        void set(float rx, float ry) {
+            this.rx = cx;
+            this.ry = cy;
+        }
+
+        void update(int x, int y) {
+            cx = rx * x;
+            cy = ry * y;
         }
     }
     private final Hammer hammers[] = new Hammer[NB_HAMMERS];
@@ -60,15 +67,19 @@ public class HeadStockView extends View{
     //listener
     private OnClickListener listener;
 
-
-    private final Paint circlePainter = new Paint();
-
     public HeadStockView(Context context, AttributeSet attrs){
         super(context, attrs);
 
         headStockBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.classical_headstock);
         headStockImageIntrinsicHeight = headStockBitmap.getHeight();
         headStockImageIntrinsicWidth = headStockBitmap.getWidth();
+
+        hammers[0].set(H1RX, H1RY);
+        hammers[1].set(H2RX, H2RY);
+        hammers[2].set(H3RX, H3RY);
+        hammers[3].set(H4RX, H4RY);
+        hammers[4].set(H5RX, H5RY);
+        hammers[5].set(H6RX, H6RY);
     }
 
     @Override
@@ -92,12 +103,9 @@ public class HeadStockView extends View{
         headStockMatrix.postScale(headStockImageRatio, headStockImageRatio);
         headStockMatrix.postTranslate(headStockImagePosX, headStockImagePosY);
 
-        hammers[0].set(headStockImagePosX + headStockImageWidth * H1RX, headStockImagePosY + headStockImageHeight * H1RY);
-        hammers[1].set(headStockImagePosX + headStockImageWidth * H2RX, headStockImagePosY + headStockImageHeight * H2RY);
-        hammers[2].set(headStockImagePosX + headStockImageWidth * H3RX, headStockImagePosY + headStockImageHeight * H3RY);
-        hammers[3].set(headStockImagePosX + headStockImageWidth * H4RX, headStockImagePosY + headStockImageHeight * H4RY);
-        hammers[4].set(headStockImagePosX + headStockImageWidth * H5RX, headStockImagePosY + headStockImageHeight * H5RY);
-        hammers[5].set(headStockImagePosX + headStockImageWidth * H6RX, headStockImagePosY + headStockImageHeight * H6RY);
+        for (Hammer hammer: hammers) {
+            hammer.update(headStockImageWidth, headStockImageHeight);
+        }
         hammerClickRadius = HAMMER_RADIUS * headStockImageHeight;
         hammerClickRadius *= hammerClickRadius;
     }
