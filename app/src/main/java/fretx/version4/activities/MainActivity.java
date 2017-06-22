@@ -209,9 +209,11 @@ public class MainActivity extends BaseActivity {
                 setGreyed(item);
                 if (Bluetooth.getInstance().isConnected()) {
                     Bluetooth.getInstance().disconnect();
+                    Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Disconnected!");
                 } else {
                     item.setActionView(new ProgressBar(this));
+                    Toast.makeText(getActivity(), "Connecting to FretX...", Toast.LENGTH_SHORT).show();
                     Bluetooth.getInstance().connect();
                 }
             default:
