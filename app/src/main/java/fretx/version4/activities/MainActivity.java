@@ -142,6 +142,8 @@ public class MainActivity extends BaseActivity {
 
 		setGuiEventListeners();
 
+        Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
+
 		Preference.getInstance().init();
 	}
 
@@ -154,8 +156,6 @@ public class MainActivity extends BaseActivity {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			Intercom.client().addUnreadConversationCountListener(unreadListener);
 		}
-
-        Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
     }
 
 	@Override
@@ -164,11 +164,15 @@ public class MainActivity extends BaseActivity {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			Intercom.client().removeUnreadConversationCountListener(unreadListener);
 		}
-
-        Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
 	}
 
-	@Override
+    @Override
+    protected void onDestroy() {
+        Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
+        super.onDestroy();
+    }
+
+    @Override
 	public void onBackPressed(){
 		if (!fragNavController.isRootFragment()) {
 			fragNavController.popFragment();
@@ -204,6 +208,7 @@ public class MainActivity extends BaseActivity {
                     Bluetooth.getInstance().disconnect();
                     Log.d(TAG, "Disconnected!");
                 } else {
+                    item.setActionView(new ProgressBar(this));
                     Bluetooth.getInstance().connect();
                 }
             default:
