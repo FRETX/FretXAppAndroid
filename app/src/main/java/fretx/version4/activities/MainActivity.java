@@ -1,6 +1,5 @@
 package fretx.version4.activities;
 
-import android.app.SearchManager;
 import android.content.Context;
 
 import android.graphics.ColorMatrix;
@@ -13,7 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v7.widget.SearchView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity {
 	private final Runnable setConnected = new Runnable() {
 		@Override
 		public void run() {
+            Toast.makeText(getActivity(), "FretX connected", Toast.LENGTH_SHORT).show();
             setNonGreyed(bluetoothItem);
 			invalidateOptionsMenu();
 		}
@@ -63,10 +64,19 @@ public class MainActivity extends BaseActivity {
 	private Runnable setDisconnected = new Runnable() {
 		@Override
 		public void run() {
+            Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
             setGreyed(bluetoothItem);
             invalidateOptionsMenu();
 		}
 	};
+    private Runnable setFailed = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(getActivity(), "FretX connection failed", Toast.LENGTH_SHORT).show();
+            setGreyed(bluetoothItem);
+            invalidateOptionsMenu();
+        }
+    };
     private final BluetoothListener bluetoothListener = new BluetoothListener() {
         @Override
         public void onConnect() {
@@ -78,7 +88,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onScanFailure() {
             Log.d(TAG, "Bluetooth scan Failed!");
-            runOnUiThread(setDisconnected);
+            runOnUiThread(setFailed);
         }
 
         @Override
@@ -90,7 +100,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onFailure(){
             Log.d(TAG, "Bluetooth connection failed!");
-            runOnUiThread(setDisconnected);
+            runOnUiThread(setFailed);
         }
     };
 
