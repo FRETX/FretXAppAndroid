@@ -9,8 +9,8 @@ android {
         applicationId 'fretx.app'
         minSdkVersion 23
         targetSdkVersion 25
-        versionCode 45
-        versionName "0.8.23"
+        versionCode 46
+        versionName "0.8.24"
         multiDexEnabled true
         sourceSets.main.jni.srcDirs = []
 
