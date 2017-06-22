@@ -22,4 +22,10 @@
     <style name="bottomBarText" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
     </style>
+    <!-- ToolBar -->
+    <style name="ToolBarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
 </resources>

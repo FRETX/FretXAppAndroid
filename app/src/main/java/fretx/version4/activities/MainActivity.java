@@ -119,7 +119,10 @@ public class MainActivity extends BaseActivity {
 
 		toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 		setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.fred_emoji));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_fretx_withtext));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
 
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
 
