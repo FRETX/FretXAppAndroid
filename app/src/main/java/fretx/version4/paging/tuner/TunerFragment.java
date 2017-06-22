@@ -34,11 +34,7 @@ public class TunerFragment extends Fragment {
 		Log.d(TAG, "created");
 
         View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
-		TunerView tunerView = (TunerView) rootView.findViewById(R.id.tunerView);
-		tunerView.setmActivity((MainActivity) getActivity());
-		tunerView.setRootView((RelativeLayout) rootView);
-
-        return rootView;
+		return rootView;
 	}
 
 	@Override

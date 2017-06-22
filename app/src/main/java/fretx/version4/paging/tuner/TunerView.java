@@ -15,7 +15,7 @@ import fretx.version4.utils.audio.Audio;
 import rocks.fretx.audioprocessing.AudioAnalyzer;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-
+/*
 public class TunerView extends View {
 
 	private MainActivity mActivity;
@@ -124,7 +124,6 @@ public class TunerView extends View {
 			centerPitch = (float) tuning[minIndex];
 			int centerMidiNote = tuningMidi[minIndex];
 
-			//TODO: add "note name without number" method to MusicUtils
 			String noteString;
 			noteString = MusicUtils.midiNoteToName(centerMidiNote);
 			noteString = noteString.substring(0, noteString.length() - 1); //remove the number
@@ -197,3 +196,4 @@ public class TunerView extends View {
 
 	}
 }
+*/
