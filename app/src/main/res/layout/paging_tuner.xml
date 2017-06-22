@@ -11,7 +11,8 @@
         android:layout_height="0dp"
         android:layout_weight="0.33" />
 
-    <Space
+    <fretx.version4.FretboardView
+        android:id="@+id/fretboardView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.33" />
