@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -38,11 +36,6 @@ public class HeadStockView extends View{
     private final Bitmap headStockBitmap;
     private final int headStockImageIntrinsicHeight;
     private final int headStockImageIntrinsicWidth;
-    private int headStockImagePosX;
-    private int headStockImagePosY;
-    private float headStockImageRatio = 1;
-    private int headStockImageHeight;
-    private int headStockImageWidth;
     private final Matrix headStockMatrix = new Matrix();
     //hammers
     private class Hammer {
@@ -90,15 +83,16 @@ public class HeadStockView extends View{
 
         final float ratioX = ((float) w) / headStockImageIntrinsicWidth;
         final float ratioY = ((float) h) / headStockImageIntrinsicHeight;
+        float headStockImageRatio;
         if (ratioX < ratioY) {
             headStockImageRatio = ratioX;
         } else {
             headStockImageRatio = ratioY;
         }
-        headStockImageWidth = (int) Math.floor(headStockImageIntrinsicWidth * headStockImageRatio);
-        headStockImageHeight = (int) Math.floor(headStockImageIntrinsicHeight * headStockImageRatio);
-        headStockImagePosX = (viewWidth - headStockImageWidth) / 2;
-        headStockImagePosY = (viewHeight - headStockImageHeight) / 2;
+        final int headStockImageWidth = (int) Math.floor(headStockImageIntrinsicWidth * headStockImageRatio);
+        final int headStockImageHeight = (int) Math.floor(headStockImageIntrinsicHeight * headStockImageRatio);
+        final int headStockImagePosX = (viewWidth - headStockImageWidth) / 2;
+        final int headStockImagePosY = (viewHeight - headStockImageHeight) / 2;
         headStockMatrix.reset();
         headStockMatrix.postScale(headStockImageRatio, headStockImageRatio);
         headStockMatrix.postTranslate(headStockImagePosX, headStockImagePosY);
