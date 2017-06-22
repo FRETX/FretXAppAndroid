@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -16,6 +18,7 @@ import android.view.View;
  */
 
 public class HeadStockView extends View{
+    private static final String TAG = "KJKP6_HSV";
     private static final int NB_HAMMERS = 6;
     private static final float HAMMER_RADIUS = 0.05f;
     private static final float H1RX = 0.08f;
@@ -44,21 +47,20 @@ public class HeadStockView extends View{
         float cx = 0;
         float cy = 0;
 
-        void set(float rx, float ry) {
-            this.rx = cx;
-            this.ry = cy;
+        public Hammer(float rx, float ry) {
+            this.rx = rx;
+            this.ry = ry;
         }
 
-        void update(int x, int y) {
-            cx = rx * x;
-            cy = ry * y;
+        void update(int x, int y, int px, int py) {
+            cx = px + rx * x;
+            cy = py + ry * y;
         }
     }
     private final Hammer hammers[] = new Hammer[NB_HAMMERS];
     private float hammerClickRadius;
     private int selectedHammerIndex = -1;
-    //listener
-    private OnClickListener listener;
+    private Paint circlePainter = new Paint();
 
     public HeadStockView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -67,16 +69,17 @@ public class HeadStockView extends View{
         headStockImageIntrinsicHeight = headStockBitmap.getHeight();
         headStockImageIntrinsicWidth = headStockBitmap.getWidth();
 
-        hammers[0].set(H1RX, H1RY);
-        hammers[1].set(H2RX, H2RY);
-        hammers[2].set(H3RX, H3RY);
-        hammers[3].set(H4RX, H4RY);
-        hammers[4].set(H5RX, H5RY);
-        hammers[5].set(H6RX, H6RY);
+        hammers[0] = new Hammer(H1RX, H1RY);
+        hammers[1] = new Hammer(H2RX, H2RY);
+        hammers[2] = new Hammer(H3RX, H3RY);
+        hammers[3] = new Hammer(H4RX, H4RY);
+        hammers[4] = new Hammer(H5RX, H5RY);
+        hammers[5] = new Hammer(H6RX, H6RY);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        Log.d(TAG, "onSizeChanged: " + w + ", " + h);
         super.onSizeChanged(w, h, oldw, oldh);
         viewHeight = h;
         viewWidth = w;
@@ -98,10 +101,9 @@ public class HeadStockView extends View{
         headStockMatrix.postTranslate(headStockImagePosX, headStockImagePosY);
 
         for (Hammer hammer: hammers) {
-            hammer.update(headStockImageWidth, headStockImageHeight);
+            hammer.update(headStockImageWidth, headStockImageHeight, headStockImagePosX, headStockImagePosY);
         }
         hammerClickRadius = HAMMER_RADIUS * headStockImageHeight;
-        hammerClickRadius *= hammerClickRadius;
     }
 
     @Override
@@ -110,17 +112,12 @@ public class HeadStockView extends View{
             final float x = event.getX();
             final float y = event.getY();
 
+            Log.d(TAG, "onTouchEvent: DOWN " + x+ ", " + y);
             for (int index = 0; index < hammers.length; ++index) {
                 final float dx = hammers[index].cx - x;
                 final float dy = hammers[index].cy - y;
-                if (dx * dx + dy * dy < hammerClickRadius) {
-                    if (selectedHammerIndex != index) {
-                        selectedHammerIndex = index;
-                        if (listener != null) {
-                            listener.notify();
-                        }
-                        break;
-                    }
+                if (dx * dx + dy * dy < hammerClickRadius * hammerClickRadius) {
+                    selectedHammerIndex = index;
                 }
             }
         }
@@ -130,11 +127,9 @@ public class HeadStockView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(headStockBitmap, headStockMatrix, null);
-        //canvas.drawCircle(headStockImagePosX + headStockImageWidth * H6RX, headStockImagePosY + headStockImageHeight * H6RY, 0.05f * headStockImageHeight, circlePainter);
-    }
-
-    public void setOnClickListener(@NonNull OnClickListener listener) {
-        this.listener = listener;
+        for (Hammer hammer: hammers) {
+            canvas.drawCircle(hammer.cx, hammer.cy, hammerClickRadius, circlePainter);
+        }
     }
 
     public int getSelectedHammerIndex() {
