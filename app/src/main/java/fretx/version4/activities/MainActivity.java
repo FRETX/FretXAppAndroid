@@ -1,5 +1,4 @@
 package fretx.version4.activities;
-
 import android.content.Context;
 
 import android.graphics.ColorMatrix;
