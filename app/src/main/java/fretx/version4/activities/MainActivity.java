@@ -120,6 +120,7 @@ public class MainActivity extends BaseActivity {
 
 		toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 		setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.fred_emoji));
 
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
 
