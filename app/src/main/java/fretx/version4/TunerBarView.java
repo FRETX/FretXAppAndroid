@@ -19,7 +19,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
 public class TunerBarView extends View {
 
     private static final String TAG = "KJKP6_TBV";
-    private static final int PITCH_RANGE_CTS = 200;
+    private static final int HALF_PITCH_RANGE_CTS = 200;
     private static final int BAR_WIDTH = 10;
     private static final double TUNING_THRESHOLD_CENTS = 5;
 
@@ -51,14 +51,14 @@ public class TunerBarView extends View {
         Log.d(TAG, "onSizeChanged: " + w + ", " + h);
         width = w;
         height = h;
-        ratioCtsPixel = width / PITCH_RANGE_CTS;
+        ratioCtsPixel = width / HALF_PITCH_RANGE_CTS;
     }
 
     public void setTuningIndex(int index) {
         tuningIndex = index;
         Log.v(TAG, "target pitch cts: " + centerPitchsCts[tuningIndex]);
-        leftMostPitchCts = centerPitchsCts[index] - PITCH_RANGE_CTS;
-        rightMostPitchCts = centerPitchsCts[index] + PITCH_RANGE_CTS;
+        leftMostPitchCts = centerPitchsCts[index] - HALF_PITCH_RANGE_CTS;
+        rightMostPitchCts = centerPitchsCts[index] + HALF_PITCH_RANGE_CTS;
     }
 
     @Override
@@ -67,11 +67,7 @@ public class TunerBarView extends View {
         barPainter.setColor(Color.WHITE);
         canvas.drawLine(width / 2, 0, width / 2 + 1, height, barPainter);
 
-        if (tuningIndex == -1) {
-            Log.v(TAG, "tuner not set");
-        } else {
-            drawPitchBar(canvas);
-        }
+        drawPitchBar(canvas);
         invalidate();
     }
 

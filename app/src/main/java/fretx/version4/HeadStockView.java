@@ -176,7 +176,7 @@ public class HeadStockView extends View{
                 painter.setColor(Color.BLACK);
 
             }
-            canvas.drawText(ear.name, ear.ex - TEXT_SIZE / 4, ear.ey, painter);
+            canvas.drawText(ear.name, ear.ex - TEXT_SIZE / 4, ear.ey + TEXT_SIZE / 4, painter);
         }
         //canvas.drawCircle(ear.ex, ear.ey, earClickRadius, painter);
     }
