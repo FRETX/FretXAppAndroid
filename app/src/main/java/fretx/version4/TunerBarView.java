@@ -73,7 +73,7 @@ public class TunerBarView extends View {
 
     private void drawPitchBar(Canvas canvas) {
         double currentPitch = Audio.getInstance().getPitch();
-        //if (currentPitch != -1) {
+        if (currentPitch != -1) {
             final double currentPitchInCents = 7600;//MusicUtils.hzToCent(currentPitch);
             Log.v(TAG, "current pitch cts: " + currentPitchInCents);
             if (currentPitchInCents < leftMostPitchCts) {
@@ -97,8 +97,8 @@ public class TunerBarView extends View {
                 else
                     canvas.drawRect((float) pos, 0, width / 2, height, barPainter);
             }
-        //} else {
-        //    Log.v(TAG, "get picth failed");
-        //}
+        } else {
+            Log.v(TAG, "get picth failed");
+        }
     }
 }
