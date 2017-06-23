@@ -1,62 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background"
-    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:weightSum="1"
+    android:orientation="vertical">
 
 
-    <Space
-        android:id="@+id/tunerSpacer"
+
+    <android.support.v4.widget.Space
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
+        android:layout_height="0dp"
+        android:layout_weight="0.07"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="@color/background"
-        android:id="@+id/textCurrentNote"
-        android:textSize="60dp"
-        android:textColor="@color/primaryText"
-        android:text="E"
-        android:textAlignment="center"
-        android:layout_below="@+id/tunerSpacer"
-        />
-
-    <TextView
-        android:id="@+id/textPreviousNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tunerSpacer"
-        android:textColor="@color/secondaryText"
-        android:textSize="40dp"
-        android:text="D#"
-        android:textAlignment="center"
-        />
-
-    <TextView
-        android:id="@+id/textNextNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/tunerSpacer"
-        android:textColor="@color/secondaryText"
-        android:textSize="40dp"
-        android:text="F"
-        android:textAlignment="center"
-        />
-
-    <fretx.version4.paging.tuner.TunerView
+    <fretx.version4.TunerBarView
+        android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tunerView"
-        android:layout_below="@id/textCurrentNote"
-        />f
+        android:layout_height="0dp"
+        android:layout_weight="0.08" />
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        />
+    <fretx.version4.HeadStockView
+        android:id="@+id/headStockView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8" />
 
-
-</RelativeLayout>
+</LinearLayout>

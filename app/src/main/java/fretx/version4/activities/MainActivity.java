@@ -34,6 +34,7 @@ import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.profile.Profile;
 import fretx.version4.paging.tuner.TunerFragment;
 import fretx.version4.utils.Preference;
+import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.bluetooth.BluetoothListener;
@@ -230,12 +231,15 @@ public class MainActivity extends BaseActivity {
                 switch(tabId){
                     case R.id.bottomtab_play:
                         fragNavController.switchTab(INDEX_PLAY);
+                        Audio.getInstance().setMode(Audio.modeOptimization.CHORD);
                         break;
                     case R.id.bottomtab_learn:
                         fragNavController.switchTab(INDEX_LEARN);
+                        Audio.getInstance().setMode(Audio.modeOptimization.CHORD);
                         break;
                     case R.id.bottomtab_tuner:
                         fragNavController.switchTab(INDEX_TUNER);
+                        Audio.getInstance().setMode(Audio.modeOptimization.TUNER);
                         break;
                     case R.id.bottomtab_profile:
                         fragNavController.switchTab(INDEX_PROFILE);

@@ -1,6 +1,8 @@
 package fretx.version4.paging.tuner;
 
 
+/*
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -14,7 +16,6 @@ import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.audio.Audio;
 import rocks.fretx.audioprocessing.AudioAnalyzer;
 import rocks.fretx.audioprocessing.MusicUtils;
-
 
 public class TunerView extends View {
 
@@ -106,7 +107,6 @@ public class TunerView extends View {
 		double centerPitchInCents = 0;
 		double difference = Double.POSITIVE_INFINITY;
 
-
 		if (currentPitch > -1) {
 			int[] tuningMidi = MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD);
 			double[] tuning = new double[tuningMidi.length];
@@ -124,7 +124,6 @@ public class TunerView extends View {
 			centerPitch = (float) tuning[minIndex];
 			int centerMidiNote = tuningMidi[minIndex];
 
-			//TODO: add "note name without number" method to MusicUtils
 			String noteString;
 			noteString = MusicUtils.midiNoteToName(centerMidiNote);
 			noteString = noteString.substring(0, noteString.length() - 1); //remove the number
@@ -197,3 +196,4 @@ public class TunerView extends View {
 
 	}
 }
+*/
