@@ -81,8 +81,6 @@ public class PlayOfflinePlayerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ImageButton preview = (ImageButton) getActivity().findViewById(R.id.previewButton);
-        preview.setVisibility(View.INVISIBLE);
     }
 
     @Override

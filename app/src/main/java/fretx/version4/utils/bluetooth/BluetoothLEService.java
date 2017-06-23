@@ -209,9 +209,6 @@ public class BluetoothLEService extends Service {
 
             notifyScanFailure();
             state = State.IDLE;
-            /* if (listener != null) {
-                listener.onScanFailure();
-            } */
         }
     };
 
@@ -226,16 +223,10 @@ public class BluetoothLEService extends Service {
                 Log.d(TAG, "Too many devices found");
                 notifyScanFailure();
                 state = State.IDLE;
-                /* if (listener != null) {
-                    listener.onScanFailure();
-                } */
             } else {
                 Log.d(TAG, "No device found");
                 notifyScanFailure();
                 state = State.IDLE;
-                /* if (listener != null) {
-                    listener.onScanFailure();
-                } */
             }
         }
     };
@@ -263,22 +254,18 @@ public class BluetoothLEService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.d(TAG, "discovering...");
                 notifyConnection();
-                /* if (listener != null)
-                    listener.onConnect(); */
                 gatt.discoverServices();
             } else if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.d(TAG, "disconnected");
                 BluetoothLEService.this.gatt = null;
                 notifyDisconnection();
-                /* if (listener != null)
-                    listener.onDisconnect(); */
+                state = State.IDLE;
                 } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "failure, disconnecting");
                 gatt.close();
                 BluetoothLEService.this.gatt = null;
                 notifyFailure();
-                /* if (listener != null)
-                    listener.onFailure(); */
+                state = State.IDLE;
             }
         }
 
@@ -294,24 +281,32 @@ public class BluetoothLEService extends Service {
 
     /* = = = = = = = = = = = = = = = = = = = LISTENERS = = = = = = = = = = = = = = = = = = = = = */
     private void notifyScanFailure() {
+        if (bluetoothListeners.size() == 0)
+            Log.d(TAG, "no listener registered");
         for (BluetoothListener listener: bluetoothListeners) {
             listener.onScanFailure();
         }
     }
 
     private void notifyFailure() {
+        if (bluetoothListeners.size() == 0)
+            Log.d(TAG, "no listener registered");
         for (BluetoothListener listener: bluetoothListeners) {
             listener.onFailure();
         }
     }
 
     private void notifyConnection() {
+        if (bluetoothListeners.size() == 0)
+            Log.d(TAG, "no listener registered");
         for (BluetoothListener listener: bluetoothListeners) {
             listener.onConnect();
         }
     }
 
     private void notifyDisconnection() {
+        if (bluetoothListeners.size() == 0)
+            Log.d(TAG, "no listener registered");
         for (BluetoothListener listener: bluetoothListeners) {
             listener.onDisconnect();
         }

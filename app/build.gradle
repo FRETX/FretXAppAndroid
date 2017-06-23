@@ -7,7 +7,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId 'fretx.app'
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 25
         versionCode 44
         versionName "0.8.23"
@@ -43,6 +43,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:percent:25.3.1'
+    compile 'com.android.support:support-core-utils:25.3.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.wendykierp:JTransforms:3.1'
