@@ -19,6 +19,15 @@ public class Audio {
     //audio settings
     static private final int FS = 16000;
     static private final double BUFFER_SIZE_S = 0.1;
+    static private final double BUFFER_SIZE_TUNER_S = 0.05;
+
+    static public enum modeOptimization {
+        TUNER,
+        CHORD
+    }
+
+    private modeOptimization mode = modeOptimization.CHORD;
+
     static private final long TIMER_TICK = 10;
     static private final long ONSET_IGNORE_DURATION_MS = 0;
     static private final long CHORD_LISTEN_DURATION_MS = 500;
@@ -63,13 +72,27 @@ public class Audio {
         return enabled;
     }
 
+    public modeOptimization getMode(){
+        return mode;
+    }
+
+    public void setMode(modeOptimization newMode){
+        mode = newMode;
+        audio.stop();
+        this.start();
+    }
+
     public void start() {
         if (!enabled)
             return;
         Log.d(TAG, "start");
         if (!audio.isInitialized())
             try {
-                audio.initialize(FS, BUFFER_SIZE_S);
+                if(mode == modeOptimization.CHORD){
+                    audio.initialize(FS, BUFFER_SIZE_S);
+                } else if(mode == modeOptimization.TUNER){
+                    audio.initialize(FS, BUFFER_SIZE_TUNER_S);
+                }
             } catch (IllegalArgumentException e) {
                 enabled = false;
                 return;
@@ -88,6 +111,8 @@ public class Audio {
             audio.stop();
         }
     }
+
+
 
     public void setTargetChord(Chord chord) {
         targetChord = chord;

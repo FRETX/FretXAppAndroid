@@ -42,7 +42,7 @@ public class TunerFragment extends Fragment {
 		headStockView.setOnEarSelectedListener(new HeadStockView.OnEarSelectedListener() {
 			@Override
 			public void onEarSelected(int selectedIndex) {
-				Toast.makeText(getActivity(), "click on " + selectedIndex, Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getActivity(), "click on " + selectedIndex, Toast.LENGTH_SHORT).show();
                 tunerBarView.setTuningIndex(selectedIndex);
 			}
 		});

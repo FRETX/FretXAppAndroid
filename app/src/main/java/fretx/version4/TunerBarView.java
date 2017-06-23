@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,10 @@ public class TunerBarView extends View {
     private int width = 1000;
     private int height = 200;
     private int center = width / 2;
+    private int verticalCenter = height / 2;
+
+    private Drawable greenTick = getResources().getDrawable(R.drawable.green_tick);
+    private int greenTickRadius = Math.round( ((float) height * 0.95f) / 2f );
 
     public TunerBarView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -54,6 +59,7 @@ public class TunerBarView extends View {
         width = w;
         height = h;
         center = Math.round( (float) width / 2f );
+        verticalCenter = Math.round( (float) height / 2f );
         ratioCtsPixel = width / HALF_PITCH_RANGE_CTS;
     }
 
@@ -80,7 +86,7 @@ public class TunerBarView extends View {
         if (currentPitch != -1) {
 //            final double currentPitchInCents = 7600;//MusicUtils.hzToCent(currentPitch);
             final double currentPitchInCents = MusicUtils.hzToCent(currentPitch);
-            Log.v(TAG, "current pitch cts: " + currentPitchInCents);
+            Log.v(TAG, "current pitch: " + currentPitch);
             if (currentPitchInCents < leftMostPitchCts) {
                 Log.v(TAG, "left most");
                 barPainter.setColor(Color.RED);
@@ -93,17 +99,21 @@ public class TunerBarView extends View {
                 double difference = centerPitchsCts[tuningIndex] - currentPitchInCents;
                 if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
                     barPainter.setColor(Color.GREEN);
+                    //Draw the green tick over center
+                    greenTick.setBounds(center-greenTickRadius, verticalCenter-greenTickRadius, center+greenTickRadius, verticalCenter+greenTickRadius);
+                    greenTick.draw(canvas);
+
                 } else {
                     barPainter.setColor(Color.WHITE);
                 }
-                final double pos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
-                if (pos > width / 2 )
-                    canvas.drawRect((float) (width / 2), BAR_MARGIN, (float) pos, height-BAR_MARGIN, barPainter);
+                final double pos = center - (difference / HALF_PITCH_RANGE_CTS * center); //Think "HALF_PITCH_RANGE_PIXELS" instead of center
+                if (pos > center )
+                    canvas.drawRect(center, BAR_MARGIN, (float) pos, height-BAR_MARGIN, barPainter);
                 else
-                    canvas.drawRect((float) pos, BAR_MARGIN, width / 2, height-BAR_MARGIN, barPainter);
+                    canvas.drawRect((float) pos, BAR_MARGIN, center, height-BAR_MARGIN, barPainter);
             }
         } else {
-            Log.v(TAG, "get picth failed");
+            Log.v(TAG, "get pitch failed");
         }
     }
 }
