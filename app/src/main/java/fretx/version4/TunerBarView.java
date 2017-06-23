@@ -19,7 +19,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
 public class TunerBarView extends View {
 
     private static final String TAG = "KJKP6_TBV";
-    private static final int HALF_PITCH_RANGE_CTS = 200;
+    private static final int HALF_PITCH_RANGE_CTS = 100;
     private static final int BAR_WIDTH = 10;
     private static final double TUNING_THRESHOLD_CENTS = 5;
 
@@ -33,6 +33,7 @@ public class TunerBarView extends View {
 
     private int width = 1000;
     private int height = 200;
+    private int center = width / 2;
 
     public TunerBarView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -51,6 +52,7 @@ public class TunerBarView extends View {
         Log.d(TAG, "onSizeChanged: " + w + ", " + h);
         width = w;
         height = h;
+        center = Math.round( (float) width / 2f );
         ratioCtsPixel = width / HALF_PITCH_RANGE_CTS;
     }
 
@@ -74,16 +76,17 @@ public class TunerBarView extends View {
     private void drawPitchBar(Canvas canvas) {
         double currentPitch = Audio.getInstance().getPitch();
         if (currentPitch != -1) {
-            final double currentPitchInCents = 7600;//MusicUtils.hzToCent(currentPitch);
+//            final double currentPitchInCents = 7600;//MusicUtils.hzToCent(currentPitch);
+            final double currentPitchInCents = MusicUtils.hzToCent(currentPitch);
             Log.v(TAG, "current pitch cts: " + currentPitchInCents);
             if (currentPitchInCents < leftMostPitchCts) {
                 Log.v(TAG, "left most");
                 barPainter.setColor(Color.RED);
-                canvas.drawRect(0, 0, BAR_WIDTH, height, barPainter);
+                canvas.drawRect(0, 0, center, height, barPainter);
             } else if (currentPitchInCents > rightMostPitchCts) {
                 Log.v(TAG, "right most");
                 barPainter.setColor(Color.RED);
-                canvas.drawRect(width - BAR_WIDTH, 0, width, height, barPainter);
+                canvas.drawRect(0, 0, width, height, barPainter);
             } else {
                 double difference = centerPitchsCts[tuningIndex] - currentPitchInCents;
                 if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
