@@ -27,17 +27,17 @@ public class HeadStockView extends View{
     private static final int TEXT_SIZE = 40;
     private static final float EAR_RADIUS = 0.05f;
     private static final float E1RX = 0.09f;
-    private static final float E1RY = 0.50f;
+    private static final float E1RY = 0.51f;
     private static final float E2RX = 0.09f;
     private static final float E2RY = 0.36f;
     private static final float E3RX = 0.09f;
-    private static final float E3RY = 0.21f;
+    private static final float E3RY = 0.215f;
     private static final float E4RX = 0.88f;
-    private static final float E4RY = 0.21f;
+    private static final float E4RY = 0.215f;
     private static final float E5RX = 0.88f;
     private static final float E5RY = 0.36f;
     private static final float E6RX = 0.88f;
-    private static final float E6RY = 0.50f;
+    private static final float E6RY = 0.51f;
     //strings
     private static final float STRING_WIDTH = 0.02f;
     private static final float S1RX = 0.32f;
