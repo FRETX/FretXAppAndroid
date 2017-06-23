@@ -7,13 +7,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import fretx.version4.HeadStockView;
 import fretx.version4.R;
 import fretx.version4.TunerBarView;
-import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
 
@@ -39,15 +37,15 @@ public class TunerFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
 		final HeadStockView headStockView = (HeadStockView) rootView.findViewById(R.id.headStockView);
-        headStockView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Toast.makeText(getActivity(), "click on " + headStockView.getSelectedHammerIndex(), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-		final TunerBarView tunerBarView = (TunerBarView) rootView.findViewById(R.id.tuner_bar);
-		tunerBarView.setTuningIndex(0);
+        final TunerBarView tunerBarView = (TunerBarView) rootView.findViewById(R.id.tuner_bar);
+
+		headStockView.setOnEarSelectedListener(new HeadStockView.OnEarSelectedListener() {
+			@Override
+			public void onEarSelected(int selectedIndex) {
+				Toast.makeText(getActivity(), "click on " + selectedIndex, Toast.LENGTH_SHORT).show();
+                tunerBarView.setTuningIndex(selectedIndex);
+			}
+		});
 		return rootView;
 	}
 

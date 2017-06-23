@@ -107,7 +107,6 @@ public class TunerView extends View {
 		double centerPitchInCents = 0;
 		double difference = Double.POSITIVE_INFINITY;
 
-
 		if (currentPitch > -1) {
 			int[] tuningMidi = MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD);
 			double[] tuning = new double[tuningMidi.length];

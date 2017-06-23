@@ -4,9 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,46 +21,73 @@ import android.view.View;
 public class HeadStockView extends View{
     private static final String TAG = "KJKP6_HSV";
     private static final int NB_HAMMERS = 6;
-    private static final float HAMMER_RADIUS = 0.05f;
-    private static final float H1RX = 0.08f;
-    private static final float H1RY = 0.28f;
-    private static final float H2RX = 0.08f;
-    private static final float H2RY = 0.39f;
-    private static final float H3RX = 0.08f;
-    private static final float H3RY = 0.50f;
-    private static final float H4RX = 0.92f;
-    private static final float H4RY = 0.28f;
-    private static final float H5RX = 0.92f;
-    private static final float H5RY = 0.39f;
-    private static final float H6RX = 0.92f;
-    private static final float H6RY = 0.50f;
-
+    //ears
+    private static final float EAR_RADIUS = 0.05f;
+    private static final float E1RX = 0.08f;
+    private static final float E1RY = 0.28f;
+    private static final float E2RX = 0.08f;
+    private static final float E2RY = 0.39f;
+    private static final float E3RX = 0.08f;
+    private static final float E3RY = 0.50f;
+    private static final float E4RX = 0.92f;
+    private static final float E4RY = 0.28f;
+    private static final float E5RX = 0.92f;
+    private static final float E5RY = 0.39f;
+    private static final float E6RX = 0.92f;
+    private static final float E6RY = 0.50f;
+    //strings
+    private static final float STRING_WIDTH = 0.02f;
+    private static final float S1RX = 0.33f;
+    private static final float S1RY = 0.26f;
+    private static final float S2RX = 0.39f;
+    private static final float S2RY = 0.37f;
+    private static final float S3RX = 0.46f;
+    private static final float S3RY = 0.48f;
+    private static final float S4RX = 0.52f;
+    private static final float S4RY = 0.26f;
+    private static final float S5RX = 0.59f;
+    private static final float S5RY = 0.37f;
+    private static final float S6RX = 0.65f;
+    private static final float S6RY = 0.48f;
     //headstock
     private final Bitmap headStockBitmap;
     private final int headStockImageIntrinsicHeight;
     private final int headStockImageIntrinsicWidth;
     private final Matrix headStockMatrix = new Matrix();
-    //hammers
-    private final Hammer hammers[] = new Hammer[NB_HAMMERS];
-    private float hammerClickRadius;
-    private int selectedHammerIndex = -1;
+    private final Ear ears[] = new Ear[NB_HAMMERS];
+    private float earClickRadius;
+    private float stringWidth;
+    private float stringBottom;
+    private int selectedEarIndex;
     private Paint circlePainter = new Paint(); //FOR DEBUG ONLY
-    private class Hammer {
-        float rx = 0;
-        float ry = 0;
-        float cx = 0;
-        float cy = 0;
+    private class Ear {
+        float erx = 0;
+        float ery = 0;
+        float srx = 0;
+        float sry = 0;
+        float ex = 0;
+        float ey = 0;
+        float sx = 0;
+        float sy = 0;
 
-        Hammer(float rx, float ry) {
-            this.rx = rx;
-            this.ry = ry;
+        Ear(float erx, float ery, float srx, float sry) {
+            this.erx = erx;
+            this.ery = ery;
+            this.srx = srx;
+            this.sry = sry;
         }
 
         void update(int x, int y, int px, int py) {
-            cx = px + rx * x;
-            cy = py + ry * y;
+            ex = px + erx * x;
+            ey = py + ery * y;
+            sx = px + srx * x;
+            sy = py + sry * y;
         }
     }
+    public interface OnEarSelectedListener {
+        void onEarSelected(int selectedIndex);
+    }
+    private OnEarSelectedListener listener;
 
     public HeadStockView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -68,12 +96,16 @@ public class HeadStockView extends View{
         headStockImageIntrinsicHeight = headStockBitmap.getHeight();
         headStockImageIntrinsicWidth = headStockBitmap.getWidth();
 
-        hammers[0] = new Hammer(H1RX, H1RY);
-        hammers[1] = new Hammer(H2RX, H2RY);
-        hammers[2] = new Hammer(H3RX, H3RY);
-        hammers[3] = new Hammer(H4RX, H4RY);
-        hammers[4] = new Hammer(H5RX, H5RY);
-        hammers[5] = new Hammer(H6RX, H6RY);
+        ears[0] = new Ear(E1RX, E1RY, S1RX, S1RY);
+        ears[1] = new Ear(E2RX, E2RY, S2RX, S2RY);
+        ears[2] = new Ear(E3RX, E3RY, S3RX, S3RY);
+        ears[3] = new Ear(E4RX, E4RY, S4RX, S4RY);
+        ears[4] = new Ear(E5RX, E5RY, S5RX, S5RY);
+        ears[5] = new Ear(E6RX, E6RY, S6RX, S6RY);
+
+        selectedEarIndex = 0;
+
+        circlePainter.setColor(Color.GREEN);
     }
 
     @Override
@@ -97,10 +129,12 @@ public class HeadStockView extends View{
         headStockMatrix.postScale(headStockImageRatio, headStockImageRatio);
         headStockMatrix.postTranslate(headStockImagePosX, headStockImagePosY);
 
-        for (Hammer hammer: hammers) {
+        for (Ear hammer: ears) {
             hammer.update(headStockImageWidth, headStockImageHeight, headStockImagePosX, headStockImagePosY);
         }
-        hammerClickRadius = HAMMER_RADIUS * headStockImageHeight;
+        earClickRadius = EAR_RADIUS * headStockImageHeight;
+        stringWidth = STRING_WIDTH * headStockImageWidth;
+        stringBottom = headStockImagePosY + headStockImageHeight;
     }
 
     @Override
@@ -110,11 +144,17 @@ public class HeadStockView extends View{
             final float y = event.getY();
 
             Log.d(TAG, "onTouchEvent: DOWN " + x+ ", " + y);
-            for (int index = 0; index < hammers.length; ++index) {
-                final float dx = hammers[index].cx - x;
-                final float dy = hammers[index].cy - y;
-                if (dx * dx + dy * dy < hammerClickRadius * hammerClickRadius) {
-                    selectedHammerIndex = index;
+            for (int index = 0; index < ears.length; ++index) {
+                final float dx = ears[index].ex - x;
+                final float dy = ears[index].ey - y;
+                if (dx * dx + dy * dy < earClickRadius * earClickRadius) {
+                    if (selectedEarIndex != index) {
+                        selectedEarIndex = index;
+                        if (listener != null) {
+                            listener.onEarSelected(selectedEarIndex);
+                        }
+                        invalidate();
+                    }
                 }
             }
         }
@@ -124,13 +164,12 @@ public class HeadStockView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(headStockBitmap, headStockMatrix, null);
-        //FOR DEBUG ONLY
-        for (Hammer hammer: hammers) {
-            canvas.drawCircle(hammer.cx, hammer.cy, hammerClickRadius, circlePainter);
-        }
+        final Ear ear = ears[selectedEarIndex];
+        canvas.drawCircle(ear.ex, ear.ey, earClickRadius, circlePainter);
+        canvas.drawRect(ear.sx, ear.sy, ear.sx + stringWidth, stringBottom, circlePainter);
     }
 
-    public int getSelectedHammerIndex() {
-        return selectedHammerIndex;
+    public void setOnEarSelectedListener(@Nullable OnEarSelectedListener listener) {
+        this.listener = listener;
     }
 }

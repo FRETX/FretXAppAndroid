@@ -10,18 +10,12 @@
         android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.33" />
-
-    <fretx.version4.FretboardView
-        android:id="@+id/fretboardView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.33" />
+        android:layout_weight="0.2" />
 
     <fretx.version4.HeadStockView
         android:id="@+id/headStockView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.33" />
+        android:layout_weight="0.8" />
 
 </LinearLayout>

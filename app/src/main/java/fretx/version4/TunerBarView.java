@@ -43,6 +43,7 @@ public class TunerBarView extends View {
             final double hz = MusicUtils.midiNoteToHz(tuningMidiNote[index]);
             centerPitchsCts[index] = MusicUtils.hzToCent(hz);
         }
+        tuningIndex = 0;
     }
 
     @Override
@@ -80,11 +81,13 @@ public class TunerBarView extends View {
             final double currentPitchInCents = MusicUtils.hzToCent(currentPitch);
             Log.v(TAG, "current pitch cts: " + currentPitchInCents);
             if (currentPitchInCents < leftMostPitchCts) {
+                Log.v(TAG, "left most");
                 barPainter.setColor(Color.RED);
-                canvas.drawLine(0, 0, BAR_WIDTH, height, barPainter);
+                canvas.drawRect(0, 0, BAR_WIDTH, height, barPainter);
             } else if (currentPitchInCents > rightMostPitchCts) {
+                Log.v(TAG, "right most");
                 barPainter.setColor(Color.RED);
-                canvas.drawLine(width - BAR_WIDTH, 0, width, height, barPainter);
+                canvas.drawRect(width - BAR_WIDTH, 0, width, height, barPainter);
             } else {
                 double difference = centerPitchsCts[tuningIndex] - currentPitchInCents;
                 difference = (difference < 0) ? -difference : difference;
@@ -94,10 +97,10 @@ public class TunerBarView extends View {
                     barPainter.setColor(Color.GREEN);
                 }
                 final double pos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
-                canvas.drawLine((float) (pos - BAR_WIDTH / 2), 0, (float) (pos - BAR_WIDTH / 2), height, barPainter);
+                canvas.drawRect((float) (pos - BAR_WIDTH / 2), 0, (float) (pos - BAR_WIDTH / 2), height, barPainter);
             }
         } else {
-            Log.v(TAG, "get picth failed:");
+            Log.v(TAG, "get picth failed");
         }
     }
 }
