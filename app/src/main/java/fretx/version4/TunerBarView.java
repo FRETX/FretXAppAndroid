@@ -73,7 +73,7 @@ public class TunerBarView extends View {
 
     private void drawPitchBar(Canvas canvas) {
         double currentPitch = Audio.getInstance().getPitch();
-        if (currentPitch != -1) {
+        //if (currentPitch != -1) {
             final double currentPitchInCents = 7600;//MusicUtils.hzToCent(currentPitch);
             Log.v(TAG, "current pitch cts: " + currentPitchInCents);
             if (currentPitchInCents < leftMostPitchCts) {
@@ -86,17 +86,19 @@ public class TunerBarView extends View {
                 canvas.drawRect(width - BAR_WIDTH, 0, width, height, barPainter);
             } else {
                 double difference = centerPitchsCts[tuningIndex] - currentPitchInCents;
-                difference = (difference < 0) ? -difference : difference;
-                if (difference < TUNING_THRESHOLD_CENTS) {
+                if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
                     barPainter.setColor(Color.GREEN);
                 } else {
                     barPainter.setColor(Color.WHITE);
                 }
                 final double pos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
-                canvas.drawRect((float) (pos - BAR_WIDTH / 2), 0, (float) (pos + BAR_WIDTH / 2), height, barPainter);
+                if (pos > width / 2 )
+                    canvas.drawRect((float) (width / 2), 0, (float) pos, height, barPainter);
+                else
+                    canvas.drawRect((float) pos, 0, width / 2, height, barPainter);
             }
-        } else {
-            Log.v(TAG, "get picth failed");
-        }
+        //} else {
+        //    Log.v(TAG, "get picth failed");
+        //}
     }
 }
