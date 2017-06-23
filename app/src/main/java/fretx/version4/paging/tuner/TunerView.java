@@ -1,6 +1,8 @@
 package fretx.version4.paging.tuner;
 
 
+/*
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -15,7 +17,6 @@ import fretx.version4.utils.audio.Audio;
 import rocks.fretx.audioprocessing.AudioAnalyzer;
 import rocks.fretx.audioprocessing.MusicUtils;
 
-/*
 public class TunerView extends View {
 
 	private MainActivity mActivity;

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import fretx.version4.HeadStockView;
 import fretx.version4.R;
+import fretx.version4.TunerBarView;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
@@ -45,6 +46,8 @@ public class TunerFragment extends Fragment {
                 return false;
             }
         });
+		final TunerBarView tunerBarView = (TunerBarView) rootView.findViewById(R.id.tuner_bar);
+		tunerBarView.setTuningIndex(0);
 		return rootView;
 	}
 

@@ -34,20 +34,23 @@ public class HeadStockView extends View{
     private static final float H6RX = 0.92f;
     private static final float H6RY = 0.50f;
 
-    private int viewHeight, viewWidth;
     //headstock
     private final Bitmap headStockBitmap;
     private final int headStockImageIntrinsicHeight;
     private final int headStockImageIntrinsicWidth;
     private final Matrix headStockMatrix = new Matrix();
     //hammers
+    private final Hammer hammers[] = new Hammer[NB_HAMMERS];
+    private float hammerClickRadius;
+    private int selectedHammerIndex = -1;
+    private Paint circlePainter = new Paint(); //FOR DEBUG ONLY
     private class Hammer {
         float rx = 0;
         float ry = 0;
         float cx = 0;
         float cy = 0;
 
-        public Hammer(float rx, float ry) {
+        Hammer(float rx, float ry) {
             this.rx = rx;
             this.ry = ry;
         }
@@ -57,10 +60,6 @@ public class HeadStockView extends View{
             cy = py + ry * y;
         }
     }
-    private final Hammer hammers[] = new Hammer[NB_HAMMERS];
-    private float hammerClickRadius;
-    private int selectedHammerIndex = -1;
-    private Paint circlePainter = new Paint();
 
     public HeadStockView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -81,8 +80,6 @@ public class HeadStockView extends View{
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         Log.d(TAG, "onSizeChanged: " + w + ", " + h);
         super.onSizeChanged(w, h, oldw, oldh);
-        viewHeight = h;
-        viewWidth = w;
 
         final float ratioX = ((float) w) / headStockImageIntrinsicWidth;
         final float ratioY = ((float) h) / headStockImageIntrinsicHeight;
@@ -94,8 +91,8 @@ public class HeadStockView extends View{
         }
         final int headStockImageWidth = (int) Math.floor(headStockImageIntrinsicWidth * headStockImageRatio);
         final int headStockImageHeight = (int) Math.floor(headStockImageIntrinsicHeight * headStockImageRatio);
-        final int headStockImagePosX = (viewWidth - headStockImageWidth) / 2;
-        final int headStockImagePosY = (viewHeight - headStockImageHeight) / 2;
+        final int headStockImagePosX = (w - headStockImageWidth) / 2;
+        final int headStockImagePosY = (h - headStockImageHeight) / 2;
         headStockMatrix.reset();
         headStockMatrix.postScale(headStockImageRatio, headStockImageRatio);
         headStockMatrix.postTranslate(headStockImagePosX, headStockImagePosY);
@@ -127,6 +124,7 @@ public class HeadStockView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(headStockBitmap, headStockMatrix, null);
+        //FOR DEBUG ONLY
         for (Hammer hammer: hammers) {
             canvas.drawCircle(hammer.cx, hammer.cy, hammerClickRadius, circlePainter);
         }
