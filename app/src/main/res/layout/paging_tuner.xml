@@ -3,15 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    android:weightSum="1"
     android:orientation="vertical">
 
+
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.07"
+        />
 
     <fretx.version4.TunerBarView
         android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.2" />
-
+        android:layout_weight="0.08" />
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"
+        />
     <fretx.version4.HeadStockView
         android:id="@+id/headStockView"
         android:layout_width="match_parent"

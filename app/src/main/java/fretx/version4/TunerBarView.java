@@ -22,6 +22,7 @@ public class TunerBarView extends View {
     private static final int HALF_PITCH_RANGE_CTS = 100;
     private static final int BAR_WIDTH = 10;
     private static final double TUNING_THRESHOLD_CENTS = 5;
+    private static final int BAR_MARGIN = 5;
 
     private final Paint barPainter = new Paint();
     private final Paint backgroundPainter = new Paint();
@@ -67,6 +68,7 @@ public class TunerBarView extends View {
     protected void onDraw(Canvas canvas) {
         canvas.drawRect(0,0,width,height,backgroundPainter);
         barPainter.setColor(Color.WHITE);
+        barPainter.setStrokeWidth(3);
         canvas.drawLine(width / 2, 0, width / 2 + 1, height, barPainter);
 
         drawPitchBar(canvas);
@@ -82,11 +84,11 @@ public class TunerBarView extends View {
             if (currentPitchInCents < leftMostPitchCts) {
                 Log.v(TAG, "left most");
                 barPainter.setColor(Color.RED);
-                canvas.drawRect(0, 0, center, height, barPainter);
+                canvas.drawRect(0, BAR_MARGIN, center, height-BAR_MARGIN, barPainter);
             } else if (currentPitchInCents > rightMostPitchCts) {
                 Log.v(TAG, "right most");
                 barPainter.setColor(Color.RED);
-                canvas.drawRect(center, 0, width, height, barPainter);
+                canvas.drawRect(center, BAR_MARGIN, width, height-BAR_MARGIN, barPainter);
             } else {
                 double difference = centerPitchsCts[tuningIndex] - currentPitchInCents;
                 if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
@@ -96,9 +98,9 @@ public class TunerBarView extends View {
                 }
                 final double pos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
                 if (pos > width / 2 )
-                    canvas.drawRect((float) (width / 2), 0, (float) pos, height, barPainter);
+                    canvas.drawRect((float) (width / 2), BAR_MARGIN, (float) pos, height-BAR_MARGIN, barPainter);
                 else
-                    canvas.drawRect((float) pos, 0, width / 2, height, barPainter);
+                    canvas.drawRect((float) pos, BAR_MARGIN, width / 2, height-BAR_MARGIN, barPainter);
             }
         } else {
             Log.v(TAG, "get picth failed");
