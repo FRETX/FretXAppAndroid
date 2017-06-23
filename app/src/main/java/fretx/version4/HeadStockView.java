@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import rocks.fretx.audioprocessing.MusicUtils;
+
 /**
  * FretXAppAndroid for FretX
  * Created by pandor on 22/06/17 12:37.
@@ -22,7 +24,7 @@ public class HeadStockView extends View{
     private static final String TAG = "KJKP6_HSV";
     private static final int NB_HAMMERS = 6;
     //ears
-    private static final int TEXT_SIZE = 20;
+    private static final int TEXT_SIZE = 40;
     private static final float EAR_RADIUS = 0.05f;
     private static final float E1RX = 0.09f;
     private static final float E1RY = 0.50f;
@@ -99,12 +101,12 @@ public class HeadStockView extends View{
         headStockImageIntrinsicHeight = headStockBitmap.getHeight();
         headStockImageIntrinsicWidth = headStockBitmap.getWidth();
 
-        ears[0] = new Ear(E1RX, E1RY, S1RX, S1RY, "0");
-        ears[1] = new Ear(E2RX, E2RY, S2RX, S2RY, "1");
-        ears[2] = new Ear(E3RX, E3RY, S3RX, S3RY, "2");
-        ears[3] = new Ear(E4RX, E4RY, S4RX, S4RY, "3");
-        ears[4] = new Ear(E5RX, E5RY, S5RX, S5RY, "4");
-        ears[5] = new Ear(E6RX, E6RY, S6RX, S6RY, "5");
+        ears[0] = new Ear(E1RX, E1RY, S1RX, S1RY, MusicUtils.midiNoteToName(MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD)[0]).substring(0,1));
+        ears[1] = new Ear(E2RX, E2RY, S2RX, S2RY, MusicUtils.midiNoteToName(MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD)[1]).substring(0,1));
+        ears[2] = new Ear(E3RX, E3RY, S3RX, S3RY, MusicUtils.midiNoteToName(MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD)[2]).substring(0,1));
+        ears[3] = new Ear(E4RX, E4RY, S4RX, S4RY, MusicUtils.midiNoteToName(MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD)[3]).substring(0,1));
+        ears[4] = new Ear(E5RX, E5RY, S5RX, S5RY, MusicUtils.midiNoteToName(MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD)[4]).substring(0,1));
+        ears[5] = new Ear(E6RX, E6RY, S6RX, S6RY, MusicUtils.midiNoteToName(MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD)[5]).substring(0,1));
 
         selectedEarIndex = 0;
 
@@ -175,6 +177,7 @@ public class HeadStockView extends View{
             } else {
                 painter.setColor(Color.BLACK);
             }
+            painter.setStrokeWidth(5);
             canvas.drawText(ear.name, ear.ex - TEXT_SIZE / 4, ear.ey + TEXT_SIZE / 4, painter);
         }
         //canvas.drawCircle(ear.ex, ear.ey, earClickRadius, painter);

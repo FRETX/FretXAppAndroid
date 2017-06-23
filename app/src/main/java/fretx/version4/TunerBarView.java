@@ -86,7 +86,7 @@ public class TunerBarView extends View {
             } else if (currentPitchInCents > rightMostPitchCts) {
                 Log.v(TAG, "right most");
                 barPainter.setColor(Color.RED);
-                canvas.drawRect(0, 0, width, height, barPainter);
+                canvas.drawRect(center, 0, width, height, barPainter);
             } else {
                 double difference = centerPitchsCts[tuningIndex] - currentPitchInCents;
                 if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
