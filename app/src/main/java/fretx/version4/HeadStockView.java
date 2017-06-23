@@ -22,6 +22,7 @@ public class HeadStockView extends View{
     private static final String TAG = "KJKP6_HSV";
     private static final int NB_HAMMERS = 6;
     //ears
+    private static final int TEXT_SIZE = 20;
     private static final float EAR_RADIUS = 0.05f;
     private static final float E1RX = 0.08f;
     private static final float E1RY = 0.28f;
@@ -59,7 +60,7 @@ public class HeadStockView extends View{
     private float stringWidth;
     private float stringBottom;
     private int selectedEarIndex;
-    private Paint circlePainter = new Paint(); //FOR DEBUG ONLY
+    private Paint painter = new Paint(); //FOR DEBUG ONLY
     private class Ear {
         float erx = 0;
         float ery = 0;
@@ -69,12 +70,14 @@ public class HeadStockView extends View{
         float ey = 0;
         float sx = 0;
         float sy = 0;
+        String name;
 
-        Ear(float erx, float ery, float srx, float sry) {
+        Ear(float erx, float ery, float srx, float sry, String name) {
             this.erx = erx;
             this.ery = ery;
             this.srx = srx;
             this.sry = sry;
+            this.name = name;
         }
 
         void update(int x, int y, int px, int py) {
@@ -96,16 +99,16 @@ public class HeadStockView extends View{
         headStockImageIntrinsicHeight = headStockBitmap.getHeight();
         headStockImageIntrinsicWidth = headStockBitmap.getWidth();
 
-        ears[0] = new Ear(E1RX, E1RY, S1RX, S1RY);
-        ears[1] = new Ear(E2RX, E2RY, S2RX, S2RY);
-        ears[2] = new Ear(E3RX, E3RY, S3RX, S3RY);
-        ears[3] = new Ear(E4RX, E4RY, S4RX, S4RY);
-        ears[4] = new Ear(E5RX, E5RY, S5RX, S5RY);
-        ears[5] = new Ear(E6RX, E6RY, S6RX, S6RY);
+        ears[0] = new Ear(E1RX, E1RY, S1RX, S1RY, "0");
+        ears[1] = new Ear(E2RX, E2RY, S2RX, S2RY, "1");
+        ears[2] = new Ear(E3RX, E3RY, S3RX, S3RY, "2");
+        ears[3] = new Ear(E4RX, E4RY, S4RX, S4RY, "3");
+        ears[4] = new Ear(E5RX, E5RY, S5RX, S5RY, "4");
+        ears[5] = new Ear(E6RX, E6RY, S6RX, S6RY, "5");
 
         selectedEarIndex = 0;
 
-        circlePainter.setColor(Color.GREEN);
+        painter.setTextSize(TEXT_SIZE);
     }
 
     @Override
@@ -164,9 +167,18 @@ public class HeadStockView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(headStockBitmap, headStockMatrix, null);
-        final Ear ear = ears[selectedEarIndex];
-        canvas.drawCircle(ear.ex, ear.ey, earClickRadius, circlePainter);
-        canvas.drawRect(ear.sx, ear.sy, ear.sx + stringWidth, stringBottom, circlePainter);
+        for (int index = 0; index < ears.length; ++index) {
+            final Ear ear = ears[index];
+            if (index == selectedEarIndex) {
+                painter.setColor(Color.GREEN);
+                canvas.drawRect(ear.sx, ear.sy, ear.sx + stringWidth, stringBottom, painter);
+            } else {
+                painter.setColor(Color.BLACK);
+
+            }
+            canvas.drawText(ear.name, ear.ex - TEXT_SIZE / 4, ear.ey, painter);
+        }
+        //canvas.drawCircle(ear.ex, ear.ey, earClickRadius, painter);
     }
 
     public void setOnEarSelectedListener(@Nullable OnEarSelectedListener listener) {
