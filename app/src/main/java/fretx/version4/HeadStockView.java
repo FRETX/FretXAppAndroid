@@ -62,6 +62,7 @@ public class HeadStockView extends View{
     private float stringWidth;
     private float stringBottom;
     private int selectedEarIndex;
+    private boolean clickable = true;
     private Paint painter = new Paint(); //FOR DEBUG ONLY
     private class Ear {
         float erx = 0;
@@ -108,8 +109,6 @@ public class HeadStockView extends View{
         ears[4] = new Ear(E5RX, E5RY, S5RX, S5RY, MusicUtils.midiNoteToName(MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD)[4]).substring(0,1));
         ears[5] = new Ear(E6RX, E6RY, S6RX, S6RY, MusicUtils.midiNoteToName(MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD)[5]).substring(0,1));
 
-        selectedEarIndex = 0;
-
         painter.setTextSize(TEXT_SIZE);
     }
 
@@ -144,7 +143,7 @@ public class HeadStockView extends View{
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (clickable && event.getAction() == MotionEvent.ACTION_DOWN) {
             final float x = event.getX();
             final float y = event.getY();
 
@@ -185,5 +184,14 @@ public class HeadStockView extends View{
 
     public void setOnEarSelectedListener(@Nullable OnEarSelectedListener listener) {
         this.listener = listener;
+    }
+
+    public void setSelectedEar(int selectedEarIndex) {
+        this.selectedEarIndex = selectedEarIndex;
+        invalidate();
+    }
+
+    public void setClickable(boolean clickable) {
+        this.clickable = clickable;
     }
 }

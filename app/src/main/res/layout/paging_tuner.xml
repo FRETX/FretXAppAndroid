@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical">
 
 
+    <Switch
+        android:id="@+id/tuner_mode_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:text="standard tuning"
+        />
+
+    <TextView
+        android:id="@+id/tuner_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_below="@+id/tuner_mode_switch"
+        android:layout_alignParentStart="true" />
+
     <fretx.version4.TunerBarView
         android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2" />
+        android:layout_height="100dp"
+        android:layout_below="@id/tuner_text"
+        />
 
     <fretx.version4.HeadStockView
         android:id="@+id/headStockView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8" />
+        android:layout_below="@id/tuner_bar"
+        android:layout_alignParentBottom="true" />
 
-</LinearLayout>
+</RelativeLayout>
