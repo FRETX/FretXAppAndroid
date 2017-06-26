@@ -21,18 +21,22 @@ public class TunerBarView extends View {
     private static final String TAG = "KJKP6_TBV";
     private static final int HALF_PITCH_RANGE_CTS = 100;
     private static final double TUNING_THRESHOLD_CENTS = 5;
+    private static final double ACCELERATION = 5;
 
     private final Paint barPainter = new Paint();
     private final Paint backgroundPainter = new Paint();
+
+    private int width = 1000;
+    private int height = 200;
+    private int center = width / 2;
+
     private int tuningIndex;
     private double centerPitchsCts[] = new double[6];
     private double leftMostPitchCts;
     private double rightMostPitchCts;
     private double ratioCtsPixel;
-
-    private int width = 1000;
-    private int height = 200;
-    private int center = width / 2;
+    private double currentPos = center;
+    private long prevTime = -1;
 
     public TunerBarView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -73,19 +77,23 @@ public class TunerBarView extends View {
     }
 
     private void drawPitchBar(Canvas canvas) {
+        if (prevTime == -1)
+            prevTime = System.currentTimeMillis();
+        final long deltaTime = System.currentTimeMillis() - prevTime;
+
         double currentPitch = Audio.getInstance().getPitch();
         if (currentPitch != -1) {
             //final double currentPitchInCents = 7600;
             final double currentPitchInCents = MusicUtils.hzToCent(currentPitch);
             Log.v(TAG, "current pitch cts: " + currentPitchInCents);
+
+            final double targetPos;
             if (currentPitchInCents < leftMostPitchCts) {
                 Log.v(TAG, "left most");
-                barPainter.setColor(Color.RED);
-                canvas.drawRect(0, 0, center, height, barPainter);
+                targetPos = 0;
             } else if (currentPitchInCents > rightMostPitchCts) {
                 Log.v(TAG, "right most");
-                barPainter.setColor(Color.RED);
-                canvas.drawRect(center, 0, width, height, barPainter);
+                targetPos = width;
             } else {
                 double difference = centerPitchsCts[tuningIndex] - currentPitchInCents;
                 if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
@@ -93,12 +101,25 @@ public class TunerBarView extends View {
                 } else {
                     barPainter.setColor(Color.WHITE);
                 }
-                final double pos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
-                if (pos > width / 2 )
-                    canvas.drawRect(center, 0, (float) pos, height, barPainter);
-                else
-                    canvas.drawRect((float) pos, 0, center, height, barPainter);
+                targetPos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
             }
+
+            final double deltaPos = targetPos - currentPos;
+            final double velocity = ACCELERATION * deltaPos;
+            currentPos += ((double) deltaTime / 1000) * velocity;
+
+            if (currentPos > width / 2) {
+                if (currentPos > width) {
+                    currentPos = width;
+                }
+                canvas.drawRect(center, 0, (float) currentPos, height, barPainter);
+            } else {
+                if (currentPos < 0) {
+                    currentPos = 0;
+                }
+                canvas.drawRect((float) currentPos, 0, center, height, barPainter);
+            }
+
         } else {
             Log.v(TAG, "get picth failed");
         }
