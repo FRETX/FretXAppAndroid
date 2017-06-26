@@ -38,11 +38,18 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
     //exercises
     private ArrayList<Chord> exerciseChords;
 
+    static public PlayPreview newInstance(SongItem song) {
+        final PlayPreview fragment = new PlayPreview();
+        fragment.song = song;
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Analytics.getInstance().logSelectEvent("PREVIEW", song.song_title);
         Bluetooth.getInstance().clearMatrix();
+        exerciseChords = song.getChords();
     }
 
     @Nullable
@@ -105,14 +112,5 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
             youtubeFragment.setSong(song);
             mActivity.fragNavController.pushFragment(youtubeFragment);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public void setChords(ArrayList<Chord> chords) {
-        this.exerciseChords = (ArrayList<Chord>) chords.clone();
-    }
-
-    public void setSong(SongItem song) {
-        this.song = song;
     }
 }
