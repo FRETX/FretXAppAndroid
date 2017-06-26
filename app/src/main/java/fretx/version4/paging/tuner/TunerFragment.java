@@ -38,7 +38,8 @@ public class TunerFragment extends Fragment {
 
     private HeadStockView headStockView;
     private TunerBarView tunerBarView;
-    private TextView tunerText;
+    private TextView tunerLowText;
+    private TextView tunerHighText;
     private Switch tunerSwitch;
 
     private final TunerDialog dialog = new TunerDialog();
@@ -63,11 +64,11 @@ public class TunerFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
 		headStockView = (HeadStockView) rootView.findViewById(R.id.headStockView);
         tunerBarView = (TunerBarView) rootView.findViewById(R.id.tuner_bar);
-        tunerText = (TextView) rootView.findViewById(R.id.tuner_text);
+        tunerLowText = (TextView) rootView.findViewById(R.id.tuner_low_text);
+        tunerHighText = (TextView) rootView.findViewById(R.id.tuner_high_text);
         tunerSwitch = (Switch) rootView.findViewById(R.id.tuner_mode_switch);
 
         setNote(0);
-
 
 		return rootView;
 	}
@@ -103,25 +104,33 @@ public class TunerFragment extends Fragment {
 		super.onResume();
 		BluetoothAnimator.getInstance().stringFall();
 
-        shown = false;
+        lastNote = System.currentTimeMillis();
 	}
 
 	private final Runnable update = new Runnable() {
 		@Override
 		public void run() {
             final double currentPitch = Audio.getInstance().getPitch();
+
             if (currentPitch == -1) {
                 //handle no note played for predefined time
-                if (System.currentTimeMillis() - lastNote > NO_NOTE_DELAY_MS && shown == false) {
+                if (!shown && System.currentTimeMillis() - lastNote > NO_NOTE_DELAY_MS) {
                     Log.d(TAG, "no note");
-                    tunerText.setText("");
+                    tunerLowText.setVisibility(View.INVISIBLE);
+                    tunerHighText.setVisibility(View.INVISIBLE);
+                    tunerBarView.setPitch(-1);
                     shown = true;
                     dialog.show(getActivity().getSupportFragmentManager(), null);
                 }
             } else {
+                Log.d(TAG, "current pitch: " + currentPitch);
                 lastNote = System.currentTimeMillis();
 
-                dialog.dismiss();
+                //dismiss dialog
+                if (shown) {
+                    shown = false;
+                    dialog.dismiss();
+                }
 
                 //auto set the played note
                 if (tunerSwitch.isChecked()) {
@@ -130,12 +139,19 @@ public class TunerFragment extends Fragment {
 
                 //update text and tuner bar
                 if (currentPitch < leftMostPitchCts) {
-                    tunerText.setText("Too low");
+                    Log.d(TAG, "too low");
+                    tunerLowText.setVisibility(View.VISIBLE);
+                    tunerHighText.setVisibility(View.INVISIBLE);
                     tunerBarView.setPitch(leftMostPitchCts);
                 } else if (currentPitch > rightMostPitchCts) {
-                    tunerText.setText("Too high");
+                    Log.d(TAG, "too high");
+                    tunerLowText.setVisibility(View.INVISIBLE);
+                    tunerHighText.setVisibility(View.VISIBLE);
                     tunerBarView.setPitch(rightMostPitchCts);
                 } else {
+                    Log.d(TAG, "in the range");
+                    tunerLowText.setVisibility(View.INVISIBLE);
+                    tunerHighText.setVisibility(View.INVISIBLE);
                     tunerBarView.setPitch(currentPitch);
                 }
             }
@@ -147,10 +163,16 @@ public class TunerFragment extends Fragment {
 	//update the tuner bar for a specified note
 	private void setNote(int index) {
         currentPitchIndex = index;
-        final double centerPitch = centerPitchesCts[index];
-        leftMostPitchCts = centerPitch - HALF_PITCH_RANGE_CTS;
-        rightMostPitchCts = centerPitch + HALF_PITCH_RANGE_CTS;
-        tunerBarView.setTargetPitch(leftMostPitchCts, centerPitch, rightMostPitchCts);
+        final double centerPitchCts = centerPitchesCts[index];
+        leftMostPitchCts = centerPitchCts - HALF_PITCH_RANGE_CTS;
+        rightMostPitchCts = centerPitchCts + HALF_PITCH_RANGE_CTS;
+
+        Log.d(TAG, "==== SET PITCHES ====");
+        Log.d(TAG, "left: " + leftMostPitchCts);
+        Log.d(TAG, "center: " + centerPitchCts);
+        Log.d(TAG, "right: " + rightMostPitchCts);
+
+        tunerBarView.setTargetPitch(leftMostPitchCts, centerPitchCts, rightMostPitchCts);
         headStockView.setSelectedEar(index);
     }
 

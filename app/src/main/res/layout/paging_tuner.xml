@@ -11,29 +11,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:text="standard tuning"
-        />
+        android:text="STANDARD TUNING"
+        android:textSize="30sp" />
 
-    <TextView
-        android:id="@+id/tuner_text"
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/tuner_mode_switch"
+        android:layout_alignParentStart="true"
+        android:id="@+id/space" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_below="@+id/tuner_mode_switch"
-        android:layout_alignParentStart="true" />
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/space"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/tuner_low_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="too low!"
+            android:textAlignment="center"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tuner_high_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="too high!"
+            android:textAlignment="center"
+            android:visibility="invisible" />
+
+    </LinearLayout>
 
     <fretx.version4.TunerBarView
         android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@id/tuner_text"
-        />
+        android:layout_below="@+id/linearLayout" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@+id/tuner_bar"
+        android:layout_alignParentStart="true"
+        android:id="@+id/space2" />
 
     <fretx.version4.HeadStockView
         android:id="@+id/headStockView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/tuner_bar"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/space2" />
 
 </RelativeLayout>

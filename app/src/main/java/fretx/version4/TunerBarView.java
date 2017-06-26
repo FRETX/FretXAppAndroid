@@ -31,9 +31,9 @@ public class TunerBarView extends View {
     private double centerPitchCts;
 
     private double ratioCtsPixel;
-    private double currentPos = center;
+    private double currentPos;
     private long prevTime = -1;
-    private double currentPitchInCents;
+    private double currentPitchInCents = -1;
 
     public TunerBarView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -49,7 +49,7 @@ public class TunerBarView extends View {
         ratioCtsPixel = width / (rightMostPitchCts - leftMostPitchCts);
     }
 
-    public void setTargetPitch(double left, double right, double center) {
+    public void setTargetPitch(double left, double center, double right) {
         if (left >= right || center <= left || center >= right) {
             Log.d(TAG, "setPitchs failed");
         } else {
@@ -57,6 +57,7 @@ public class TunerBarView extends View {
             rightMostPitchCts = right;
             centerPitchCts = center;
         }
+        invalidate();
     }
 
     @Override
@@ -65,20 +66,21 @@ public class TunerBarView extends View {
         barPainter.setColor(Color.WHITE);
         canvas.drawLine(width / 2, 0, width / 2 + 1, height, barPainter);
 
+        if (currentPitchInCents < 0 || prevTime < 0)
+            return;
+
         drawPitchBar(canvas);
     }
 
     private void drawPitchBar(Canvas canvas) {
-
+        Log.d(TAG, "current pitch: " + currentPitchInCents);
         final long deltaTime = System.currentTimeMillis() - prevTime;
 
         final double targetPos;
-        if (currentPitchInCents < leftMostPitchCts) {
-            Log.v(TAG, "left most");
+        if (currentPitchInCents <= leftMostPitchCts) {
             barPainter.setColor(Color.YELLOW);
             targetPos = 0;
-        } else if (currentPitchInCents > rightMostPitchCts) {
-            Log.v(TAG, "right most");
+        } else if (currentPitchInCents >= rightMostPitchCts) {
             barPainter.setColor(Color.RED);
             targetPos = width;
         } else {
@@ -95,19 +97,19 @@ public class TunerBarView extends View {
         final double velocity = ACCELERATION * deltaPos;
         currentPos += ((double) deltaTime / 1000) * velocity;
 
-        if (currentPos > width / 2) {
+        if (currentPos > center) {
             canvas.drawRect(center, 0, (float) currentPos, height, barPainter);
         } else {
             canvas.drawRect((float) currentPos, 0, center, height, barPainter);
         }
     }
 
-
-
     public void setPitch(double currentPitchInCents) {
-        if (prevTime == -1)
+        if (prevTime < 0)
             prevTime = System.currentTimeMillis();
 
+        if (this.currentPitchInCents < 0)
+            currentPos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
         this.currentPitchInCents = currentPitchInCents;
         invalidate();
     }

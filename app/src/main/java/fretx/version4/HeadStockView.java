@@ -114,7 +114,6 @@ public class HeadStockView extends View{
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d(TAG, "onSizeChanged: " + w + ", " + h);
         super.onSizeChanged(w, h, oldw, oldh);
 
         final float ratioX = ((float) w) / headStockImageIntrinsicWidth;
@@ -147,7 +146,6 @@ public class HeadStockView extends View{
             final float x = event.getX();
             final float y = event.getY();
 
-            Log.d(TAG, "onTouchEvent: DOWN " + x+ ", " + y);
             for (int index = 0; index < ears.length; ++index) {
                 final float dx = ears[index].ex - x;
                 final float dy = ears[index].ey - y;
