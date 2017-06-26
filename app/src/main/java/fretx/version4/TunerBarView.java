@@ -20,12 +20,11 @@ public class TunerBarView extends View {
 
     private static final String TAG = "KJKP6_TBV";
     private static final int HALF_PITCH_RANGE_CTS = 100;
-    private static final int BAR_WIDTH = 10;
     private static final double TUNING_THRESHOLD_CENTS = 5;
 
     private final Paint barPainter = new Paint();
     private final Paint backgroundPainter = new Paint();
-    private int tuningIndex = -1;
+    private int tuningIndex;
     private double centerPitchsCts[] = new double[6];
     private double leftMostPitchCts;
     private double rightMostPitchCts;
@@ -76,7 +75,7 @@ public class TunerBarView extends View {
     private void drawPitchBar(Canvas canvas) {
         double currentPitch = Audio.getInstance().getPitch();
         if (currentPitch != -1) {
-//            final double currentPitchInCents = 7600;//MusicUtils.hzToCent(currentPitch);
+            //final double currentPitchInCents = 7600;
             final double currentPitchInCents = MusicUtils.hzToCent(currentPitch);
             Log.v(TAG, "current pitch cts: " + currentPitchInCents);
             if (currentPitchInCents < leftMostPitchCts) {
@@ -96,9 +95,9 @@ public class TunerBarView extends View {
                 }
                 final double pos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
                 if (pos > width / 2 )
-                    canvas.drawRect((float) (width / 2), 0, (float) pos, height, barPainter);
+                    canvas.drawRect(center, 0, (float) pos, height, barPainter);
                 else
-                    canvas.drawRect((float) pos, 0, width / 2, height, barPainter);
+                    canvas.drawRect((float) pos, 0, center, height, barPainter);
             }
         } else {
             Log.v(TAG, "get picth failed");
