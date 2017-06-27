@@ -391,8 +391,10 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
         Log.d(TAG, "current time: " + currentTime);
 
         //update current chord
+        boolean changed = false;
         while (punchesIndex < punches.size() && punches.get(punchesIndex).timeMs < currentTime) {
             punchesIndex++;
+            changed = true;
         }
         if (punchesIndex == 0) {
             currentChord = null;
@@ -400,6 +402,9 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             final SongPunch punch = punches.get(punchesIndex - 1);
             currentChord = new Chord(punch.root, punch.type);
         }
+
+        if (changed)
+            Bluetooth.getInstance().setMatrix(currentChord);
 
         //update the chord timeline
         timelineFragment.update(currentTime);
