@@ -88,13 +88,8 @@ public class TunerBarView extends View {
         final double currentPitchInHz = MusicUtils.centToHz(currentPitchInCents);
         final double targetPos;
 
-        Log.d(TAG, "==== TUNER PITCH ====");
-        Log.d(TAG, "current: " + currentPitchInHz);
-        Log.d(TAG, "left: " + leftMostPitchHz);
-        Log.d(TAG, "center: " + centerPitchInHz);
-        Log.d(TAG, "right: " + rightMostPitchHz);
         if (currentPitchInHz <= leftMostPitchHz) {
-            barPainter.setColor(Color.YELLOW);
+            barPainter.setColor(Color.parseColor("#FF6600"));
             targetPos = 0;
         } else if (currentPitchInHz >= rightMostPitchHz) {
             barPainter.setColor(Color.RED);
@@ -104,7 +99,7 @@ public class TunerBarView extends View {
             if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
                 barPainter.setColor(Color.GREEN);
             } else if (centerPitchCts < centerPitchCts){
-                barPainter.setColor(Color.YELLOW);
+                barPainter.setColor(Color.parseColor("#FF6600"));
             } else {
                 barPainter.setColor(Color.RED);
             }
