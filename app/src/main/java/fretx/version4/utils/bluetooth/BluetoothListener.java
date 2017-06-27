@@ -6,8 +6,8 @@ package fretx.version4.utils.bluetooth;
  */
 
 public interface BluetoothListener {
-    void onScanFailure();
+    void onScanFailure(String errorMessage);
     void onConnect();
     void onDisconnect();
-    void onFailure();
+    void onFailure(String errorMessage);
 }

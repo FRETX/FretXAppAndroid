@@ -44,6 +44,8 @@ import io.intercom.android.sdk.UnreadConversationCountListener;
 public class MainActivity extends BaseActivity {
 	private static final String TAG = "KJKP6_MAINACTIVITY";
 
+    private String errorMessage = "no data";
+
 	//VIEWS
     private Toolbar toolbar;
     private BottomBar bottomBar;
@@ -72,7 +74,7 @@ public class MainActivity extends BaseActivity {
     private Runnable setFailed = new Runnable() {
         @Override
         public void run() {
-            Toast.makeText(getActivity(), "FretX connection failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "FretX connection failed - " + errorMessage, Toast.LENGTH_SHORT).show();
             setGreyed(bluetoothItem);
             invalidateOptionsMenu();
         }
@@ -86,8 +88,9 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override
-        public void onScanFailure() {
-            Log.d(TAG, "Bluetooth scan Failed!");
+        public void onScanFailure(String errorMessage) {
+            MainActivity.this.errorMessage = errorMessage;
+            Log.d(TAG, "Bluetooth scan Failed - " + errorMessage);
             runOnUiThread(setFailed);
         }
 
@@ -98,8 +101,9 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override
-        public void onFailure(){
-            Log.d(TAG, "Bluetooth connection failed!");
+        public void onFailure(String errorMessage){
+            MainActivity.this.errorMessage = errorMessage;
+            Log.d(TAG, "Bluetooth connection failed - " + errorMessage);
             runOnUiThread(setFailed);
         }
     };

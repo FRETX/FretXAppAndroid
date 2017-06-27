@@ -171,7 +171,8 @@ public class BluetoothLEService extends Service {
             state = State.SCANNING;
             devices.clear();
             final ScanSettings settings = new ScanSettings.Builder().build();
-            final ScanFilter filter = new ScanFilter.Builder().setDeviceName(deviceName).build();
+            final ScanFilter filter = new ScanFilter.Builder().build();
+            //final ScanFilter filter = new ScanFilter.Builder().setDeviceName(deviceName).build();
             final List<ScanFilter> filters = new ArrayList<>();
             filters.add(filter);
             adapter.getBluetoothLeScanner().startScan(filters, settings, scanCallback);
@@ -184,8 +185,12 @@ public class BluetoothLEService extends Service {
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
             final BluetoothDevice device = result.getDevice();
-            Log.d(TAG, "New BLE Device: " + device.getName());
-            devices.put(device.hashCode(), device);
+            if (device.getName().equals(deviceName)) {
+                Log.d(TAG, "New FRETX: " + device.getName());
+                devices.put(device.hashCode(), device);
+            } else {
+                Log.d(TAG, "New OTHER: " + device.getName());
+            }
         }
 
         @Override
@@ -198,17 +203,20 @@ public class BluetoothLEService extends Service {
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
 
-            if (errorCode == SCAN_FAILED_ALREADY_STARTED)
-                Log.d(TAG, "Scan failed: SCAN_FAILED_ALREADY_STARTED");
-            else if (errorCode == SCAN_FAILED_APPLICATION_REGISTRATION_FAILED)
-                Log.d(TAG, "Scan failed: SCAN_FAILED_APPLICATION_REGISTRATION_FAILED");
-            else if (errorCode == SCAN_FAILED_FEATURE_UNSUPPORTED)
-                Log.d(TAG, "Scan failed: SCAN_FAILED_FEATURE_UNSUPPORTED");
-            else if (errorCode == SCAN_FAILED_INTERNAL_ERROR)
-                Log.d(TAG, "Scan failed: SCAN_FAILED_INTERNAL_ERROR");
-
-            notifyScanFailure();
             state = State.IDLE;
+            if (errorCode == SCAN_FAILED_ALREADY_STARTED) {
+                Log.d(TAG, "Scan failed: SCAN_FAILED_ALREADY_STARTED");
+                notifyScanFailure("SCAN_FAILED_ALREADY_STARTED");
+            } else if (errorCode == SCAN_FAILED_APPLICATION_REGISTRATION_FAILED) {
+                Log.d(TAG, "Scan failed: SCAN_FAILED_APPLICATION_REGISTRATION_FAILED");
+                notifyScanFailure("SCAN_FAILED_APPLICATION_REGISTRATION_FAILED");
+            } else if (errorCode == SCAN_FAILED_FEATURE_UNSUPPORTED) {
+                Log.d(TAG, "Scan failed: SCAN_FAILED_FEATURE_UNSUPPORTED");
+                notifyScanFailure("SCAN_FAILED_FEATURE_UNSUPPORTED");
+            } else if (errorCode == SCAN_FAILED_INTERNAL_ERROR) {
+                Log.d(TAG, "Scan failed: SCAN_FAILED_INTERNAL_ERROR");
+                notifyScanFailure("SCAN_FAILED_INTERNAL_ERROR");
+            }
         }
     };
 
@@ -220,12 +228,12 @@ public class BluetoothLEService extends Service {
                 handler.removeCallbacksAndMessages(null);
                 connect(devices.valueAt(0));
             } else if (devices.size() > 1) {
-                Log.d(TAG, "Too many devices found");
-                notifyScanFailure();
+                Log.d(TAG, "too many devices found");
+                notifyScanFailure("too many devices found");
                 state = State.IDLE;
             } else {
                 Log.d(TAG, "No device found");
-                notifyScanFailure();
+                notifyScanFailure("no device found");
                 state = State.IDLE;
             }
         }
@@ -241,6 +249,7 @@ public class BluetoothLEService extends Service {
     private void iDisconnect() {
         if (gatt != null) {
             Log.d(TAG, "disconnecting");
+            gatt.disconnect();
             gatt.close();
             gatt = null;
             state = State.IDLE;
@@ -253,19 +262,19 @@ public class BluetoothLEService extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.d(TAG, "discovering...");
-                notifyConnection();
                 gatt.discoverServices();
             } else if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.d(TAG, "disconnected");
+                gatt.close();
                 BluetoothLEService.this.gatt = null;
-                notifyDisconnection();
                 state = State.IDLE;
-                } else if (status != BluetoothGatt.GATT_SUCCESS) {
+                notifyDisconnection();
+            } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "failure, disconnecting");
                 gatt.close();
                 BluetoothLEService.this.gatt = null;
-                notifyFailure();
                 state = State.IDLE;
+                notifyFailure("mysterious failure");
             }
         }
 
@@ -276,23 +285,24 @@ public class BluetoothLEService extends Service {
             rx = RxService.getCharacteristic(RX_CHAR_UUID);
             state = State.CONNECTED;
             BluetoothAnimator.getInstance().stringFall();
+            notifyConnection();
         }
     };
 
     /* = = = = = = = = = = = = = = = = = = = LISTENERS = = = = = = = = = = = = = = = = = = = = = */
-    private void notifyScanFailure() {
+    private void notifyScanFailure(String errorMessage) {
         if (bluetoothListeners.size() == 0)
             Log.d(TAG, "no listener registered");
         for (BluetoothListener listener: bluetoothListeners) {
-            listener.onScanFailure();
+            listener.onScanFailure(errorMessage);
         }
     }
 
-    private void notifyFailure() {
+    private void notifyFailure(String errorMessage) {
         if (bluetoothListeners.size() == 0)
             Log.d(TAG, "no listener registered");
         for (BluetoothListener listener: bluetoothListeners) {
-            listener.onFailure();
+            listener.onFailure(errorMessage);
         }
     }
 

@@ -204,11 +204,11 @@ public class BluetoothStdService extends Service {
                 connect(devices.valueAt(0));
             } else if (devices.size() > 1) {
                 Log.d(TAG, "Too many devices found");
-                notifyScanFailure();
+                notifyScanFailure("too many devices");
                 state = State.IDLE;
             } else {
                 Log.d(TAG, "No device found");
-                notifyScanFailure();
+                notifyScanFailure("no device");
                 state = State.IDLE;
             }
         }
@@ -223,7 +223,7 @@ public class BluetoothStdService extends Service {
             btSocket = remoteDevice.createInsecureRfcommSocketToServiceRecord(HC05_UUID);
             btSocket.connect();
         } catch (IOException e) {
-            notifyFailure();
+            notifyFailure("IOException");
             state = State.IDLE;
         }
         state = State.CONNECTED;
@@ -239,7 +239,7 @@ public class BluetoothStdService extends Service {
                 state = State.IDLE;
             } catch (IOException e) {
                 Log.d(TAG, "Socket disconnection failed");
-                notifyFailure();
+                notifyFailure("IOException");
                 state = State.IDLE;
                 btSocket = null;
             }
@@ -247,15 +247,15 @@ public class BluetoothStdService extends Service {
     }
 
     /* = = = = = = = = = = = = = = = = = = = LISTENERS = = = = = = = = = = = = = = = = = = = = = */
-    private void notifyScanFailure() {
+    private void notifyScanFailure(String errorMessage) {
         for (BluetoothListener listener: bluetoothListeners) {
-            listener.onScanFailure();
+            listener.onScanFailure(errorMessage);
         }
     }
 
-    private void notifyFailure() {
+    private void notifyFailure(String errorMessage) {
         for (BluetoothListener listener: bluetoothListeners) {
-            listener.onFailure();
+            listener.onFailure(errorMessage);
         }
     }
 

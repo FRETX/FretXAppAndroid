@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -45,19 +46,19 @@ public class Check extends Fragment implements HardwareFragment{
         @Override
         public void onDisconnect() {
             Log.d(TAG, "Failure!");
-            onCheckFailure();
+            onCheckFailure("disconnected");
         }
 
         @Override
-        public void onScanFailure() {
+        public void onScanFailure(String errorMessage) {
             Log.d(TAG, "Failure!");
-            onCheckFailure();
+            onCheckFailure(errorMessage);
         }
 
         @Override
-        public void onFailure() {
+        public void onFailure(String errorMessage) {
             Log.d(TAG, "Failure!");
-            onCheckFailure();
+            onCheckFailure(errorMessage);
         }
     };
 
@@ -135,7 +136,8 @@ public class Check extends Fragment implements HardwareFragment{
         startActivity(intent);
     }
 
-    private void onCheckFailure(){
+    private void onCheckFailure(String errorMessage){
         setErrorLayout();
+        Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 }
