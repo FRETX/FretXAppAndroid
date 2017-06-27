@@ -115,14 +115,14 @@ public class TunerFragment extends Fragment {
 
             if (currentPitchHz == -1) {
                 //handle no note played for predefined time
-                if (!shown && System.currentTimeMillis() - lastNote > NO_NOTE_DELAY_MS) {
-                    Log.d(TAG, "no note");
-                    tunerLowText.setVisibility(View.INVISIBLE);
-                    tunerHighText.setVisibility(View.INVISIBLE);
-                    tunerBarView.setPitch(-1, -1);
-                    shown = true;
-                    dialog.show(getActivity().getSupportFragmentManager(), null);
-                }
+                //if (!shown && System.currentTimeMillis() - lastNote > NO_NOTE_DELAY_MS) {
+                    //Log.d(TAG, "no note");
+                tunerLowText.setVisibility(View.INVISIBLE);
+                tunerHighText.setVisibility(View.INVISIBLE);
+                tunerBarView.setPitch(-1, -1);
+                    //shown = true;
+                    //dialog.show(getActivity().getSupportFragmentManager(), null);
+                //}
             } else {
                 final double currentPitchCts = MusicUtils.hzToCent(currentPitchHz);
 

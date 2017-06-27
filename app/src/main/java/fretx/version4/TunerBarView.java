@@ -50,6 +50,7 @@ public class TunerBarView extends View {
         width = w;
         height = h;
         center = Math.round( (float) width / 2f );
+        currentPos = center;
         ratioHzPixel = width / (rightMostPitchHz - leftMostPitchHz);
     }
 
@@ -74,10 +75,6 @@ public class TunerBarView extends View {
         canvas.drawRect(0,0,width,height,backgroundPainter);
         barPainter.setColor(Color.WHITE);
         canvas.drawLine(width / 2, 0, width / 2 + 1, height, barPainter);
-
-        if (currentPitchInCents < 0 || prevTime < 0)
-            return;
-
         drawPitchBar(canvas);
     }
 
@@ -88,8 +85,14 @@ public class TunerBarView extends View {
         final double currentPitchInHz = MusicUtils.centToHz(currentPitchInCents);
         final double targetPos;
 
-        if (currentPitchInHz <= leftMostPitchHz) {
-            barPainter.setColor(Color.parseColor("#FF6600"));
+        if (currentPitchInCents < 0) {
+            targetPos = center;
+            if (currentPos > center)
+                barPainter.setColor(Color.RED);
+            else
+                barPainter.setColor(Color.parseColor("#FF6600"));
+        } else if (currentPitchInHz <= leftMostPitchHz) {
+
             targetPos = 0;
         } else if (currentPitchInHz >= rightMostPitchHz) {
             barPainter.setColor(Color.RED);
@@ -128,10 +131,6 @@ public class TunerBarView extends View {
     public void setPitch(double currentPitchInCents, double currentPitchInHz) {
         if (prevTime < 0)
             prevTime = System.currentTimeMillis();
-
-        if (this.currentPitchInCents < 0 || this.currentPitchInHz < 0) {
-            currentPos = center;
-        }
 
         this.currentPitchInCents = currentPitchInCents;
         this.currentPitchInHz = currentPitchInHz;
