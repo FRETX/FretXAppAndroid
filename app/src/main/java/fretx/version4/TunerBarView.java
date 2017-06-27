@@ -17,12 +17,9 @@ import rocks.fretx.audioprocessing.MusicUtils;
  */
 
 public class TunerBarView extends View {
-
     private static final String TAG = "KJKP6_TBV";
     private static final double TUNING_THRESHOLD_CENTS = 5;
-    private static final int BAR_MARGIN = 5;
     private static final double ACCELERATION = 5;
-
 
     private final Paint barPainter = new Paint();
     private final Paint backgroundPainter = new Paint();
@@ -30,10 +27,6 @@ public class TunerBarView extends View {
     private int width = 1000;
     private int height = 200;
     private int center = width / 2;
-    private int verticalCenter = height / 2;
-
-    private Drawable greenTick = getResources().getDrawable(R.drawable.green_tick);
-    private int greenTickRadius = Math.round( ((float) height * 0.95f) / 2f );
 
     private double centerPitchCts;
     private double centerPitchInHz;
@@ -57,7 +50,6 @@ public class TunerBarView extends View {
         width = w;
         height = h;
         center = Math.round( (float) width / 2f );
-        verticalCenter = Math.round( (float) height / 2f );
         currentPos = center;
         ratioHzPixel = width / (rightMostPitchHz - leftMostPitchHz);
 
@@ -92,9 +84,8 @@ public class TunerBarView extends View {
         final long time = System.currentTimeMillis();
         final long deltaTime = time - prevTime;
         prevTime = time;
-        final double currentPitchInHz = MusicUtils.centToHz(currentPitchInCents);
-        final double targetPos;
 
+        final double targetPos;
         if (currentPitchInCents < 0) {
             targetPos = center;
             if (currentPos > center)
@@ -102,7 +93,7 @@ public class TunerBarView extends View {
             else
                 barPainter.setColor(Color.parseColor("#FF6600"));
         } else if (currentPitchInHz <= leftMostPitchHz) {
-
+            barPainter.setColor(Color.parseColor("#FF6600"));
             targetPos = 0;
         } else if (currentPitchInHz >= rightMostPitchHz) {
             barPainter.setColor(Color.RED);
@@ -119,17 +110,14 @@ public class TunerBarView extends View {
             targetPos = (currentPitchInHz - leftMostPitchHz) * ratioHzPixel;
         }
 
-        Log.d(TAG, "target pos: " + targetPos);
         final double deltaPos = targetPos - currentPos;
         final double velocity = ACCELERATION * deltaPos;
         currentPos += ((double) deltaTime / 1000) * velocity;
-        Log.d(TAG, "current pos: " + currentPos);
+
         if (currentPos > width)
             currentPos = width;
         else if (currentPos < 0)
             currentPos = 0;
-
-        //currentPos = targetPos;
 
         if (currentPos > center) {
             canvas.drawRect(center, 0, (float) currentPos, height, barPainter);

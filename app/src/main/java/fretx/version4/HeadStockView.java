@@ -9,12 +9,10 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import fretx.version4.utils.HeadstockViewDescriptor;
-import rocks.fretx.audioprocessing.MusicUtils;
+import fretx.version4.utils.Preference;
 
 /**
  * FretXAppAndroid for FretX
@@ -25,7 +23,7 @@ public class HeadStockView extends View{
     private static final String TAG = "KJKP6_HSV";
     private static final int TEXT_SIZE = 40;
     //headstock
-    private HeadstockViewDescriptor descriptor = new HeadstockViewDescriptor(HeadstockViewDescriptor.Headstock.ELECTRIC);
+    private HeadstockViewDescriptor descriptor;
     private final Bitmap headStockBitmap;
     private final int headStockImageIntrinsicHeight;
     private final int headStockImageIntrinsicWidth;
@@ -42,6 +40,10 @@ public class HeadStockView extends View{
     public HeadStockView(Context context, AttributeSet attrs){
         super(context, attrs);
 
+        if (Preference.getInstance().isElectricGuitar())
+            descriptor = new HeadstockViewDescriptor(HeadstockViewDescriptor.Headstock.ELECTRIC);
+        else
+            descriptor = new HeadstockViewDescriptor(HeadstockViewDescriptor.Headstock.CLASSIC);
         headStockBitmap = BitmapFactory.decodeResource(context.getResources(), descriptor.ressourceId);
         headStockImageIntrinsicHeight = headStockBitmap.getHeight();
         headStockImageIntrinsicWidth = headStockBitmap.getWidth();
@@ -104,7 +106,7 @@ public class HeadStockView extends View{
                 painter.setColor(Color.GREEN);
                 canvas.drawRect(ear.sx, ear.sy, ear.sx + descriptor.stringWidth, descriptor.stringBottom, painter);
             } else {
-                painter.setColor(Color.WHITE);
+                painter.setColor(Color.BLACK);
             }
             painter.setStrokeWidth(5);
             canvas.drawText(ear.name, ear.ex - TEXT_SIZE / 4, ear.ey + TEXT_SIZE / 4, painter);

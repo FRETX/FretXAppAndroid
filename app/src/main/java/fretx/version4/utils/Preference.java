@@ -140,4 +140,7 @@ public class Preference {
     public boolean isLeftHanded(){
         return prefs.hand.equals(Prefs.LEFT_HANDED);
     }
+    public boolean isElectricGuitar(){
+        return prefs.guitar.equals(Prefs.ELECTRIC_GUITAR);
+    }
 }

@@ -25,10 +25,8 @@ public class TunerFragment extends Fragment {
     private static final String TAG = "KJKP6_TUNER";
     private static final int UPDATE_DELAY_MS = 20;
     private static final int HALF_PITCH_RANGE_CTS = 100;
-    private static final int NO_NOTE_DELAY_MS = 10000;
 
 	private final Handler handler = new Handler();
-    private long lastNote = 0;
 
     private int currentPitchIndex;
     private final double centerPitchesHz[] = new double[6];
@@ -103,8 +101,6 @@ public class TunerFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		BluetoothAnimator.getInstance().stringFall();
-
-        lastNote = System.currentTimeMillis();
 	}
 
 	private final Runnable update = new Runnable() {
@@ -124,8 +120,6 @@ public class TunerFragment extends Fragment {
                 //}
             } else {
                 final double currentPitchCts = MusicUtils.hzToCent(currentPitchHz);
-
-                lastNote = System.currentTimeMillis();
 
                 //dismiss dialog
                 if (shown) {
