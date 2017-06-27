@@ -32,7 +32,7 @@ public class HeadStockView extends View{
     private final Matrix headStockMatrix = new Matrix();
     private int selectedEarIndex;
     private boolean clickable = true;
-    private Paint painter = new Paint(); //FOR DEBUG ONLY
+    private Paint painter = new Paint();
 
     public interface OnEarSelectedListener {
         void onEarSelected(int selectedIndex);
