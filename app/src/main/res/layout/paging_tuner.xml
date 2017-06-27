@@ -6,18 +6,34 @@
     android:weightSum="1"
     android:orientation="vertical">
 
-    <Switch
-        android:id="@+id/tuner_mode_switch"
+    <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:text="STANDARD TUNING"
-        android:textSize="25sp" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="STANDARD TUNING"
+            android:textColor="@color/primaryText"
+            android:gravity="center_vertical|left"/>
+
+        <Switch
+            android:id="@+id/tuner_mode_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Auto"
+            android:textSize="25sp" />
+    </LinearLayout>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:layout_below="@+id/tuner_mode_switch"
+        android:layout_below="@+id/linear"
         android:layout_alignParentStart="true"
         android:id="@+id/space" />
 
@@ -49,13 +65,11 @@
 
     </LinearLayout>
 
-
     <fretx.version4.TunerBarView
         android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@+id/linearLayout" />
-
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"
