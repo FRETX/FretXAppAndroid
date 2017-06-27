@@ -82,7 +82,9 @@ public class TunerBarView extends View {
     }
 
     private void drawPitchBar(Canvas canvas) {
-        final long deltaTime = System.currentTimeMillis() - prevTime;
+        final long time = System.currentTimeMillis();
+        final long deltaTime = time - prevTime;
+        prevTime = time;
         final double currentPitchInHz = MusicUtils.centToHz(currentPitchInCents);
         final double targetPos;
 
@@ -109,15 +111,17 @@ public class TunerBarView extends View {
             targetPos = (currentPitchInHz - leftMostPitchHz) * ratioHzPixel;
         }
 
-        /*
-        Log.d(TAG, "target pos: " + currentPos);
+        Log.d(TAG, "target pos: " + targetPos);
         final double deltaPos = targetPos - currentPos;
         final double velocity = ACCELERATION * deltaPos;
         currentPos += ((double) deltaTime / 1000) * velocity;
         Log.d(TAG, "current pos: " + currentPos);
-        */
+        if (currentPos > width)
+            currentPos = width;
+        else if (currentPos < 0)
+            currentPos = 0;
 
-        currentPos = targetPos;
+        //currentPos = targetPos;
 
         if (currentPos > center) {
             canvas.drawRect(center, 0, (float) currentPos, height, barPainter);
