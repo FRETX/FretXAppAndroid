@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import rocks.fretx.audioprocessing.MusicUtils;
+
 /**
  * FretXAppAndroid for FretX
  * Created by pandor on 23/06/17 10:11.
@@ -26,14 +28,16 @@ public class TunerBarView extends View {
     private int height = 200;
     private int center = width / 2;
 
-    private double leftMostPitchCts;
-    private double rightMostPitchCts;
     private double centerPitchCts;
+    private double centerPitchInHz;
+    private double leftMostPitchHz;
+    private double rightMostPitchHz;
 
-    private double ratioCtsPixel;
+    private double ratioHzPixel;
     private double currentPos;
     private long prevTime = -1;
     private double currentPitchInCents = -1;
+    private double currentPitchInHz = -1;
 
     public TunerBarView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -46,16 +50,21 @@ public class TunerBarView extends View {
         width = w;
         height = h;
         center = Math.round( (float) width / 2f );
-        ratioCtsPixel = width / (rightMostPitchCts - leftMostPitchCts);
+        ratioHzPixel = width / (rightMostPitchHz - leftMostPitchHz);
     }
 
-    public void setTargetPitch(double left, double center, double right) {
-        if (left >= right || center <= left || center >= right) {
+    public void setTargetPitch(double leftMostCts, double centerCts, double rightMostCts) {
+        if (leftMostCts >= rightMostCts || centerCts <= leftMostCts || center >= rightMostCts) {
             Log.d(TAG, "setPitchs failed");
         } else {
-            leftMostPitchCts = left;
-            rightMostPitchCts = right;
-            centerPitchCts = center;
+            leftMostPitchHz = MusicUtils.centToHz(leftMostCts);
+            rightMostPitchHz = MusicUtils.centToHz(rightMostCts);
+            centerPitchInHz = MusicUtils.centToHz(centerCts);
+            centerPitchCts = centerCts;
+            Log.d(TAG, "==== SET TUNER BAR TARGET PITCH ====");
+            Log.d(TAG, "left: " + leftMostPitchHz);
+            Log.d(TAG, "center: " + centerPitchInHz);
+            Log.d(TAG, "right: " + rightMostPitchHz);
         }
         invalidate();
     }
@@ -73,29 +82,42 @@ public class TunerBarView extends View {
     }
 
     private void drawPitchBar(Canvas canvas) {
-        Log.d(TAG, "current pitch: " + currentPitchInCents);
         final long deltaTime = System.currentTimeMillis() - prevTime;
-
+        final double currentPitchInHz = MusicUtils.centToHz(currentPitchInCents);
         final double targetPos;
-        if (currentPitchInCents <= leftMostPitchCts) {
+
+        Log.d(TAG, "==== TUNER PITCH ====");
+        Log.d(TAG, "current: " + currentPitchInHz);
+        Log.d(TAG, "left: " + leftMostPitchHz);
+        Log.d(TAG, "center: " + centerPitchInHz);
+        Log.d(TAG, "right: " + rightMostPitchHz);
+        if (currentPitchInHz <= leftMostPitchHz) {
             barPainter.setColor(Color.YELLOW);
             targetPos = 0;
-        } else if (currentPitchInCents >= rightMostPitchCts) {
+        } else if (currentPitchInHz >= rightMostPitchHz) {
             barPainter.setColor(Color.RED);
             targetPos = width;
         } else {
             double difference = centerPitchCts - currentPitchInCents;
             if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
                 barPainter.setColor(Color.GREEN);
+            } else if (centerPitchCts < centerPitchCts){
+                barPainter.setColor(Color.YELLOW);
             } else {
-                barPainter.setColor(Color.WHITE);
+                barPainter.setColor(Color.RED);
             }
-            targetPos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
+            targetPos = (currentPitchInHz - leftMostPitchHz) * ratioHzPixel;
         }
 
+        /*
+        Log.d(TAG, "target pos: " + currentPos);
         final double deltaPos = targetPos - currentPos;
         final double velocity = ACCELERATION * deltaPos;
         currentPos += ((double) deltaTime / 1000) * velocity;
+        Log.d(TAG, "current pos: " + currentPos);
+        */
+
+        currentPos = targetPos;
 
         if (currentPos > center) {
             canvas.drawRect(center, 0, (float) currentPos, height, barPainter);
@@ -104,13 +126,17 @@ public class TunerBarView extends View {
         }
     }
 
-    public void setPitch(double currentPitchInCents) {
+    public void setPitch(double currentPitchInCents, double currentPitchInHz) {
         if (prevTime < 0)
             prevTime = System.currentTimeMillis();
 
-        if (this.currentPitchInCents < 0)
-            currentPos = (currentPitchInCents - leftMostPitchCts) * ratioCtsPixel;
+        if (this.currentPitchInCents < 0 || this.currentPitchInHz < 0) {
+            currentPos = center;
+        }
+
         this.currentPitchInCents = currentPitchInCents;
+        this.currentPitchInHz = currentPitchInHz;
+
         invalidate();
     }
 }

@@ -31,10 +31,11 @@ public class TunerFragment extends Fragment {
     private long lastNote = 0;
 
     private int currentPitchIndex;
+    private final double centerPitchesHz[] = new double[6];
     private final double centerPitchesCts[] = new double[6];
-    private final double pitchDifference[] = new double[6];
-    private double leftMostPitchCts;
-    private double rightMostPitchCts;
+    private final double pitchDifferenceHz[] = new double[6];
+    private double leftMostPitchHz;
+    private double rightMostPitchHz;
 
     private HeadStockView headStockView;
     private TunerBarView tunerBarView;
@@ -52,8 +53,8 @@ public class TunerFragment extends Fragment {
 
         final int tuningMidiNote[] = MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD);
         for (int index = 0; index < tuningMidiNote.length; ++index) {
-            final double hz = MusicUtils.midiNoteToHz(tuningMidiNote[index]);
-            centerPitchesCts[index] = MusicUtils.hzToCent(hz);
+            centerPitchesHz[index] = MusicUtils.midiNoteToHz(tuningMidiNote[index]);
+            centerPitchesCts[index] = MusicUtils.hzToCent(centerPitchesHz[index]);
         }
 	}
 
@@ -61,7 +62,7 @@ public class TunerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "created");
 
-        View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
+        final View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
 		headStockView = (HeadStockView) rootView.findViewById(R.id.headStockView);
         tunerBarView = (TunerBarView) rootView.findViewById(R.id.tuner_bar);
         tunerLowText = (TextView) rootView.findViewById(R.id.tuner_low_text);
@@ -110,20 +111,21 @@ public class TunerFragment extends Fragment {
 	private final Runnable update = new Runnable() {
 		@Override
 		public void run() {
-            final double currentPitch = Audio.getInstance().getPitch();
+            final double currentPitchHz = Audio.getInstance().getPitch();
 
-            if (currentPitch == -1) {
+            if (currentPitchHz == -1) {
                 //handle no note played for predefined time
                 if (!shown && System.currentTimeMillis() - lastNote > NO_NOTE_DELAY_MS) {
                     Log.d(TAG, "no note");
                     tunerLowText.setVisibility(View.INVISIBLE);
                     tunerHighText.setVisibility(View.INVISIBLE);
-                    tunerBarView.setPitch(-1);
+                    tunerBarView.setPitch(-1, -1);
                     shown = true;
                     dialog.show(getActivity().getSupportFragmentManager(), null);
                 }
             } else {
-                Log.d(TAG, "current pitch: " + currentPitch);
+                final double currentPitchCts = MusicUtils.hzToCent(currentPitchHz);
+
                 lastNote = System.currentTimeMillis();
 
                 //dismiss dialog
@@ -134,26 +136,26 @@ public class TunerFragment extends Fragment {
 
                 //auto set the played note
                 if (tunerSwitch.isChecked()) {
-                    autoDetectNote(currentPitch);
+                    autoDetectNote(currentPitchHz);
                 }
 
-                //update text and tuner bar
-                if (currentPitch < leftMostPitchCts) {
-                    Log.d(TAG, "too low");
+                //update text
+                if (currentPitchHz < leftMostPitchHz) {
+                    //Log.d(TAG, "too low");
                     tunerLowText.setVisibility(View.VISIBLE);
                     tunerHighText.setVisibility(View.INVISIBLE);
-                    tunerBarView.setPitch(leftMostPitchCts);
-                } else if (currentPitch > rightMostPitchCts) {
-                    Log.d(TAG, "too high");
+                } else if (currentPitchHz > rightMostPitchHz) {
+                    //Log.d(TAG, "too high");
                     tunerLowText.setVisibility(View.INVISIBLE);
                     tunerHighText.setVisibility(View.VISIBLE);
-                    tunerBarView.setPitch(rightMostPitchCts);
                 } else {
-                    Log.d(TAG, "in the range");
+                    //Log.d(TAG, "in the range");
                     tunerLowText.setVisibility(View.INVISIBLE);
                     tunerHighText.setVisibility(View.INVISIBLE);
-                    tunerBarView.setPitch(currentPitch);
                 }
+
+                //update tuner bar
+                tunerBarView.setPitch(currentPitchCts, currentPitchHz);
             }
 
             handler.postDelayed(update, UPDATE_DELAY_MS);
@@ -164,26 +166,21 @@ public class TunerFragment extends Fragment {
 	private void setNote(int index) {
         currentPitchIndex = index;
         final double centerPitchCts = centerPitchesCts[index];
-        leftMostPitchCts = centerPitchCts - HALF_PITCH_RANGE_CTS;
-        rightMostPitchCts = centerPitchCts + HALF_PITCH_RANGE_CTS;
-
-        Log.d(TAG, "==== SET PITCHES ====");
-        Log.d(TAG, "left: " + leftMostPitchCts);
-        Log.d(TAG, "center: " + centerPitchCts);
-        Log.d(TAG, "right: " + rightMostPitchCts);
-
-        tunerBarView.setTargetPitch(leftMostPitchCts, centerPitchCts, rightMostPitchCts);
+        leftMostPitchHz = MusicUtils.centToHz(centerPitchCts - HALF_PITCH_RANGE_CTS);
+        rightMostPitchHz = MusicUtils.centToHz(centerPitchCts + HALF_PITCH_RANGE_CTS);
+        tunerBarView.setTargetPitch(centerPitchCts - HALF_PITCH_RANGE_CTS,
+                centerPitchCts, centerPitchCts + HALF_PITCH_RANGE_CTS);
         headStockView.setSelectedEar(index);
     }
 
     //find the closest note to the one played (auto mode)
-    private void autoDetectNote(double pitch) {
-        for (int index = 0; index < pitchDifference.length; index++) {
-            pitchDifference[index] = pitch - centerPitchesCts[index];
-            pitchDifference[index] = Math.abs(pitchDifference[index]);
+    private void autoDetectNote(double pitchHz) {
+        for (int index = 0; index < pitchDifferenceHz.length; index++) {
+            pitchDifferenceHz[index] = pitchHz - centerPitchesHz[index];
+            pitchDifferenceHz[index] = Math.abs(pitchDifferenceHz[index]);
         }
 
-        final int minIndex = AudioAnalyzer.findMinIndex(pitchDifference);
+        final int minIndex = AudioAnalyzer.findMinIndex(pitchDifferenceHz);
         if (currentPitchIndex != minIndex) {
             setNote(minIndex);
         }
