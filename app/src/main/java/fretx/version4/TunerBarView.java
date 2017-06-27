@@ -9,7 +9,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import fretx.version4.utils.audio.Audio;
 import rocks.fretx.audioprocessing.MusicUtils;
 
 /**
@@ -20,18 +19,13 @@ import rocks.fretx.audioprocessing.MusicUtils;
 public class TunerBarView extends View {
 
     private static final String TAG = "KJKP6_TBV";
-    private static final int HALF_PITCH_RANGE_CTS = 100;
-    private static final int BAR_WIDTH = 10;
     private static final double TUNING_THRESHOLD_CENTS = 5;
     private static final int BAR_MARGIN = 5;
+    private static final double ACCELERATION = 5;
+
 
     private final Paint barPainter = new Paint();
     private final Paint backgroundPainter = new Paint();
-    private int tuningIndex = -1;
-    private double centerPitchsCts[] = new double[6];
-    private double leftMostPitchCts;
-    private double rightMostPitchCts;
-    private double ratioCtsPixel;
 
     private int width = 1000;
     private int height = 200;
@@ -41,16 +35,20 @@ public class TunerBarView extends View {
     private Drawable greenTick = getResources().getDrawable(R.drawable.green_tick);
     private int greenTickRadius = Math.round( ((float) height * 0.95f) / 2f );
 
+    private double centerPitchCts;
+    private double centerPitchInHz;
+    private double leftMostPitchHz;
+    private double rightMostPitchHz;
+
+    private double ratioHzPixel;
+    private double currentPos;
+    private long prevTime = -1;
+    private double currentPitchInCents = -1;
+    private double currentPitchInHz = -1;
+
     public TunerBarView(Context context, AttributeSet attrs){
         super(context, attrs);
         backgroundPainter.setColor(Color.DKGRAY);
-
-        final int tuningMidiNote[] = MusicUtils.getTuningMidiNotes(MusicUtils.TuningName.STANDARD);
-        for (int index = 0; index < tuningMidiNote.length; ++index) {
-            final double hz = MusicUtils.midiNoteToHz(tuningMidiNote[index]);
-            centerPitchsCts[index] = MusicUtils.hzToCent(hz);
-        }
-        setTuningIndex(0);
     }
 
     @Override
@@ -60,14 +58,25 @@ public class TunerBarView extends View {
         height = h;
         center = Math.round( (float) width / 2f );
         verticalCenter = Math.round( (float) height / 2f );
-        ratioCtsPixel = width / HALF_PITCH_RANGE_CTS;
+        currentPos = center;
+        ratioHzPixel = width / (rightMostPitchHz - leftMostPitchHz);
+
     }
 
-    public void setTuningIndex(int index) {
-        tuningIndex = index;
-        Log.v(TAG, "target pitch cts: " + centerPitchsCts[tuningIndex]);
-        leftMostPitchCts = centerPitchsCts[index] - HALF_PITCH_RANGE_CTS;
-        rightMostPitchCts = centerPitchsCts[index] + HALF_PITCH_RANGE_CTS;
+    public void setTargetPitch(double leftMostCts, double centerCts, double rightMostCts) {
+        if (leftMostCts >= rightMostCts || centerCts <= leftMostCts || center >= rightMostCts) {
+            Log.d(TAG, "setPitchs failed");
+        } else {
+            leftMostPitchHz = MusicUtils.centToHz(leftMostCts);
+            rightMostPitchHz = MusicUtils.centToHz(rightMostCts);
+            centerPitchInHz = MusicUtils.centToHz(centerCts);
+            centerPitchCts = centerCts;
+            Log.d(TAG, "==== SET TUNER BAR TARGET PITCH ====");
+            Log.d(TAG, "left: " + leftMostPitchHz);
+            Log.d(TAG, "center: " + centerPitchInHz);
+            Log.d(TAG, "right: " + rightMostPitchHz);
+        }
+        invalidate();
     }
 
     @Override
@@ -76,44 +85,67 @@ public class TunerBarView extends View {
         barPainter.setColor(Color.WHITE);
         barPainter.setStrokeWidth(3);
         canvas.drawLine(width / 2, 0, width / 2 + 1, height, barPainter);
-
         drawPitchBar(canvas);
-        invalidate();
     }
 
     private void drawPitchBar(Canvas canvas) {
-        double currentPitch = Audio.getInstance().getPitch();
-        if (currentPitch != -1) {
-//            final double currentPitchInCents = 7600;//MusicUtils.hzToCent(currentPitch);
-            final double currentPitchInCents = MusicUtils.hzToCent(currentPitch);
-            Log.v(TAG, "current pitch: " + currentPitch);
-            if (currentPitchInCents < leftMostPitchCts) {
-                Log.v(TAG, "left most");
-                barPainter.setColor(Color.RED);
-                canvas.drawRect(0, BAR_MARGIN, center, height-BAR_MARGIN, barPainter);
-            } else if (currentPitchInCents > rightMostPitchCts) {
-                Log.v(TAG, "right most");
-                barPainter.setColor(Color.RED);
-                canvas.drawRect(center, BAR_MARGIN, width, height-BAR_MARGIN, barPainter);
-            } else {
-                double difference = centerPitchsCts[tuningIndex] - currentPitchInCents;
-                if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
-                    barPainter.setColor(Color.GREEN);
-                    //Draw the green tick over center
-                    greenTick.setBounds(center-greenTickRadius, verticalCenter-greenTickRadius, center+greenTickRadius, verticalCenter+greenTickRadius);
-                    greenTick.draw(canvas);
+        final long time = System.currentTimeMillis();
+        final long deltaTime = time - prevTime;
+        prevTime = time;
+        final double currentPitchInHz = MusicUtils.centToHz(currentPitchInCents);
+        final double targetPos;
 
-                } else {
-                    barPainter.setColor(Color.WHITE);
-                }
-                final double pos = center - (difference / HALF_PITCH_RANGE_CTS * center); //Think "HALF_PITCH_RANGE_PIXELS" instead of center
-                if (pos > center )
-                    canvas.drawRect(center, BAR_MARGIN, (float) pos, height-BAR_MARGIN, barPainter);
-                else
-                    canvas.drawRect((float) pos, BAR_MARGIN, center, height-BAR_MARGIN, barPainter);
-            }
+        if (currentPitchInCents < 0) {
+            targetPos = center;
+            if (currentPos > center)
+                barPainter.setColor(Color.RED);
+            else
+                barPainter.setColor(Color.parseColor("#FF6600"));
+        } else if (currentPitchInHz <= leftMostPitchHz) {
+
+            targetPos = 0;
+        } else if (currentPitchInHz >= rightMostPitchHz) {
+            barPainter.setColor(Color.RED);
+            targetPos = width;
         } else {
-            Log.v(TAG, "get pitch failed");
+            double difference = centerPitchCts - currentPitchInCents;
+            if (Math.abs(difference) < TUNING_THRESHOLD_CENTS) {
+                barPainter.setColor(Color.GREEN);
+            } else if (centerPitchCts < centerPitchCts){
+                barPainter.setColor(Color.parseColor("#FF6600"));
+            } else {
+                barPainter.setColor(Color.RED);
+            }
+            targetPos = (currentPitchInHz - leftMostPitchHz) * ratioHzPixel;
         }
+
+        Log.d(TAG, "target pos: " + targetPos);
+        final double deltaPos = targetPos - currentPos;
+        final double velocity = ACCELERATION * deltaPos;
+        currentPos += ((double) deltaTime / 1000) * velocity;
+        Log.d(TAG, "current pos: " + currentPos);
+        if (currentPos > width)
+            currentPos = width;
+        else if (currentPos < 0)
+            currentPos = 0;
+
+        //currentPos = targetPos;
+
+        if (currentPos > center) {
+            canvas.drawRect(center, 0, (float) currentPos, height, barPainter);
+        } else {
+            canvas.drawRect((float) currentPos, 0, center, height, barPainter);
+
+        }
+    }
+
+    public void setPitch(double currentPitchInCents, double currentPitchInHz) {
+        if (prevTime < 0)
+            prevTime = System.currentTimeMillis();
+
+        this.currentPitchInCents = currentPitchInCents;
+        this.currentPitchInHz = currentPitchInHz;
+
+        invalidate();
     }
 }

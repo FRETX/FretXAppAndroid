@@ -42,7 +42,6 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 
 	//chords
 	Chord currentChord;
-	HashMap<String,FingerPositions> chordDb;
 	ArrayList<Sequence> sequences;
 	int currentSequenceIndex;
 
@@ -68,6 +67,8 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 		addButton = (Button) rootView.findViewById(R.id.addChordButton);
 		addedButton = (Button) rootView.findViewById(R.id.addedChordButton);
 		startButton = (Button) rootView.findViewById(R.id.startExerciseButton);
+
+
 
 		return  rootView;
 	}

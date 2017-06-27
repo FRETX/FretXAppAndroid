@@ -29,6 +29,7 @@ import fretx.version4.fretxapi.song.SongCallback;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
+import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import fretx.version4.paging.play.preview.PlayPreview;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
@@ -213,23 +214,14 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
 
     private void startSongPreview(SongItem item) {
         //Launch exercise with sequence of chords
-        ArrayList<Chord> chords = item.getChords();
+        final PlayPreview fragmentChordExercise = PlayPreview.newInstance(item);
 
-        if (chords.size() < 1) {
-            Toast.makeText(mActivity, "No chord data found for this song", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        PlayPreview fragmentChordExercise = new PlayPreview();
-        //fragmentChordExercise.setChords(chords);
-        fragmentChordExercise.setSong(item);
         mActivity.fragNavController.pushFragment(fragmentChordExercise);
     }
 
     private void startSong(SongItem item) {
-        PlayOfflinePlayerFragment offlinePlayerFragment = new PlayOfflinePlayerFragment();
-        offlinePlayerFragment.setSong(item);
-        mActivity.fragNavController.pushFragment(offlinePlayerFragment);
+        final PlayYoutubeFragment fragment = PlayYoutubeFragment.newInstance(item);
+        mActivity.fragNavController.pushFragment(fragment);
     }
 
     private void updateMenu() {
