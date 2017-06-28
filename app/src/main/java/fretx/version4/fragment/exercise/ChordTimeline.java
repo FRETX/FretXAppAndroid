@@ -3,7 +3,6 @@ package fretx.version4.fragment.exercise;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class ChordTimeline extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.chord_timeline_fragment, container, false);
+        final RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.fragment_chord_timeline, container, false);
         chordTimelineView = (ChordTimelineView) rootView.findViewById(R.id.chordTimelineView);
         chordTimelineView.setSpan(leftSpanMs, rightSpanMs);
         return rootView;

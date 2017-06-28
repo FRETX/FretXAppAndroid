@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/eye_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/eye" />
+
+        <TextView
+                android:id="@+id/textChord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@color/background"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/textNextChord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@color/background"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText"
+                android:layout_marginRight="5dp"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="visible">
+
+        <FrameLayout
+            android:id="@+id/fretboard_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"></FrameLayout>
+
+        <ImageView
+            android:id="@+id/green_tick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/green_tick" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/exercise_progress"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/final_flag" />
+
+        <SeekBar
+            android:id="@+id/exercise_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/imageView4"
+            android:clickable="false"
+            android:progress="50"
+            android:progressDrawable="@drawable/custom_progress_bar"
+            android:thumb="@drawable/fred_emoji"
+            android:thumbOffset="0dip" />
+    </RelativeLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/playChordButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/speaker_on" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/next_chord_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Next Chord" />
+
+            <Button
+                android:id="@+id/play_song_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play song" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/audio_thresold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@android:drawable/presence_audio_busy" />
+    </LinearLayout>
+
+</LinearLayout>

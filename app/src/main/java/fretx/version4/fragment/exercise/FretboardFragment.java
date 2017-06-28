@@ -30,7 +30,7 @@ public class FretboardFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.fretboard_fragment, container, false);
+        RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.fragment_fretboard, container, false);
 
         fretboardView = (FretboardView) rootView.findViewById(R.id.fretboardView);
         strummer = (ImageView) rootView.findViewById(R.id.strummer);

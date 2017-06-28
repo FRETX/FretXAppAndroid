@@ -16,6 +16,7 @@ import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fragment.exercise.ExerciseListener;
 import fretx.version4.fragment.exercise.PreviewFragment;
+import fretx.version4.fragment.exercise.PreviewListener;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import fretx.version4.utils.bluetooth.Bluetooth;
@@ -26,7 +27,7 @@ import rocks.fretx.audioprocessing.Chord;
  * Created by Kickdrum on 05-Jan-17.
  */
 
-public class PlayPreview extends Fragment implements ExerciseListener, PlayPreviewDialog.PlayPreviewDialogListener {
+public class PlayPreview extends Fragment implements PreviewListener, PlayPreviewDialog.PlayPreviewDialogListener {
     private static final String TAG = "KJKP6_GUIDED_EXERCISE";
 
     private PreviewFragment previewFragment;
@@ -57,7 +58,7 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mActivity = (MainActivity) getActivity();
 
-        View rootView = inflater.inflate(R.layout.paging_play_preview, container, false);
+        final View rootView = inflater.inflate(R.layout.paging_play_preview, container, false);
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -104,6 +105,13 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         Log.d(TAG, "Exercise finished");
         PlayPreviewDialog dialog = PlayPreviewDialog.newInstance(this, min, sec);
         dialog.show(fragmentManager, "dialog");
+    }
+
+    //when the exercise fragment reports the end of current exercise
+    @Override
+    public void onPlaySong() {
+        Log.d(TAG, "Play song");
+        onUpdate(false);
     }
 
     @Override

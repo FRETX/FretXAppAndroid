@@ -84,7 +84,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //setup view
-        RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.exercise_fragment, container, false);
+        RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.fragment_exercise, container, false);
         timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
         chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);

@@ -6,70 +6,57 @@
     android:weightSum="1"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/linear"
-        android:layout_width="match_parent"
+    <Switch
+        android:id="@+id/tuner_mode_switch"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="Auto"
+        android:textSize="25sp" />
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="STANDARD TUNING"
-            android:textColor="@color/primaryText"
-            android:gravity="center_vertical|left"/>
-
-        <Switch
-            android:id="@+id/tuner_mode_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:text="Auto"
-            android:textSize="25sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/space"
+        android:layout_weight="1"
+        android:gravity="center_vertical|left"
+        android:text="STANDARD TUNING"
+        android:textColor="@color/primaryText"
+        android:layout_alignParentStart="true" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:layout_below="@+id/linear"
+        android:layout_below="@id/tuner_mode_switch"
         android:layout_alignParentStart="true"
         android:id="@+id/space" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tuner_low_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout"
-        android:layout_below="@+id/space"
-        android:layout_alignParentStart="true">
+        android:layout_below="@id/space"
+        android:text="too low!"
+        android:textAlignment="center"
+        android:visibility="invisible" />
 
-        <TextView
-            android:id="@+id/tuner_low_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="too low!"
-            android:textAlignment="center"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/tuner_high_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="too high!"
-            android:textAlignment="center"
-            android:visibility="invisible" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tuner_high_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/space"
+        android:text="too high!"
+        android:textAlignment="center"
+        android:visibility="invisible" />
 
     <fretx.version4.TunerBarView
         android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@+id/linearLayout" />
+        android:layout_below="@id/tuner_low_text" />
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"
