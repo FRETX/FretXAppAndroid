@@ -86,7 +86,7 @@
             android:clickable="false"
             android:progress="50"
             android:progressDrawable="@drawable/custom_progress_bar"
-            android:thumb="@drawable/fred_emoji"
+            android:thumb="@drawable/fred_emoji_thumb"
             android:thumbOffset="0dip" />
     </RelativeLayout>
 
