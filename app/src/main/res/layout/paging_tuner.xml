@@ -83,7 +83,7 @@
         android:layout_weight="0.01"
         android:id="@+id/space" />
 
-    <fretx.version4.TunerBarView
+    <fretx.version4.view.TunerBarView
         android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -95,7 +95,7 @@
         android:layout_weight="0.08"
         android:id="@+id/space2" />
 
-    <fretx.version4.HeadStockView
+    <fretx.version4.view.HeadStockView
         android:id="@+id/headStockView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

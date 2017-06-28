@@ -1,4 +1,4 @@
-package fretx.version4.fragment.exercise;
+package fretx.version4.fragment.preview;
 
 
 import android.content.Context;
@@ -15,21 +15,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.apache.commons.math3.geometry.euclidean.threed.Line;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import fretx.version4.R;
+import fretx.version4.fragment.FretboardFragment;
 import fretx.version4.utils.TimeUpdater;
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.audio.Midi;

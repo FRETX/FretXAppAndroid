@@ -1,4 +1,4 @@
-package fretx.version4.fragment.exercise;
+package fretx.version4.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import fretx.version4.FretboardView;
+import fretx.version4.view.FretboardView;
 import fretx.version4.R;
 import fretx.version4.utils.Preference;
 import rocks.fretx.audioprocessing.Chord;

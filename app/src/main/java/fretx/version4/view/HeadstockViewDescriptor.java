@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.view;
 
 import fretx.version4.R;
 import rocks.fretx.audioprocessing.MusicUtils;

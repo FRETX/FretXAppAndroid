@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import fretx.version4.R;
+import fretx.version4.fragment.FretboardFragment;
 import fretx.version4.utils.TimeUpdater;
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.audio.Midi;

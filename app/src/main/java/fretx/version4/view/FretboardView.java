@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,6 +13,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import fretx.version4.R;
 import rocks.fretx.audioprocessing.FretboardPosition;
 
 /**

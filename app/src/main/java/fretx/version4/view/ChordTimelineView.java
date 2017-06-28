@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -32,6 +32,7 @@ public class ChordTimelineView extends View {
     private ArrayList<SongPunch> punches;
     private int radius = height / 2;
     private final static int STROKE_WIDTH = 10;
+    private boolean firstPlaying = false;
 
     //vertical bar
     private int leftSpanMs;
@@ -46,13 +47,8 @@ public class ChordTimelineView extends View {
     private final Paint barPainter = new Paint();
 
     //colors
-    private static final int COLOR_A = Color.MAGENTA;
-    private static final int COLOR_B = Color.RED;
-    private static final int COLOR_C = Color.YELLOW;
-    private static final int COLOR_D = Color.GREEN;
-    private static final int COLOR_E = Color.CYAN;
-    private static final int COLOR_F = Color.BLUE;
-    private static final int COLOR_G = Color.GRAY;
+    private static final int PLAYING_COLOR = Color.parseColor("#03726f");
+    private static final int NOT_PLAYING_COLOR = Color.parseColor("#b43207");
     private static final int COLOR_BACKGROUND = Color.DKGRAY;
     private static final int COLOR_STROKE = Color.WHITE;
 
@@ -107,12 +103,15 @@ public class ChordTimelineView extends View {
 
         canvas.drawPaint(backgroundPainter);
 
+        if (!firstPlaying && punches.size() > 0 && punches.get(0).timeMs < currentTimeMs)
+            preCompute();
+
         //draw moving blocks
         long deltaT = precomputedStart - (currentTimeMs - leftSpanMs);
         canvas.drawBitmap(precomputedBitmap, deltaT * ratio, 0, blockFillPainter);
 
         //draw static vertical bar
-        canvas.drawRect(verticalBarX, 0, verticalBarX + verticalBarWidth, height, barPainter);
+        //canvas.drawRect(verticalBarX, 0, verticalBarX + verticalBarWidth, height, barPainter);
     }
 
     @Override
@@ -134,37 +133,18 @@ public class ChordTimelineView extends View {
         precomputedCanvas.drawPaint(backgroundPainter);
     }
 
-    private void setPainter(@NonNull String root) {
-        switch (root.charAt(0)) {
-            case 'A':
-                blockFillPainter.setColor(COLOR_A);
-                break;
-            case 'B':
-                blockFillPainter.setColor(COLOR_B);
-                break;
-            case 'C':
-                blockFillPainter.setColor(COLOR_C);
-                break;
-            case 'D':
-                blockFillPainter.setColor(COLOR_D);
-                break;
-            case 'E':
-                blockFillPainter.setColor(COLOR_E);
-                break;
-            case 'F':
-                blockFillPainter.setColor(COLOR_F);
-                break;
-            case 'G':
-                blockFillPainter.setColor(COLOR_G);
-                break;
-            default:
-                blockFillPainter.setColor(COLOR_BACKGROUND);
-                break;
+    private void setPainter(SongPunch punch) {
+        if (punch.timeMs < currentTimeMs) {
+            blockFillPainter.setColor(PLAYING_COLOR);
+            firstPlaying = true;
+        } else {
+            blockFillPainter.setColor(NOT_PLAYING_COLOR);
         }
     }
 
     private void preCompute() {
         //Log.v(TAG, "preCompute");
+        firstPlaying = false;
 
         if (punches.size() == 0)
             return;
@@ -185,7 +165,7 @@ public class ChordTimelineView extends View {
             final SongPunch punch = punches.get(index);
             int width = (int)((punches.get(index + 1).timeMs - punch.timeMs) * ratio);
 
-            setPainter(punch.root == null || punch.root.length() == 0 ? "X" : punch.root);
+            setPainter(punch);
             if (blockFillPainter.getColor() != COLOR_BACKGROUND) {
                 //draw stroke
                 precomputedCanvas.drawCircle(x + radius + STROKE_WIDTH, halfHeight, radius, blockStrokePainter);

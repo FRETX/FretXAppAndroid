@@ -67,7 +67,7 @@
 
 
 
-        <fretx.version4.FretboardView
+        <fretx.version4.view.FretboardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.45"

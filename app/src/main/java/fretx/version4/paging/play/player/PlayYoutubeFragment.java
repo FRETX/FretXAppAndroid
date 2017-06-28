@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import fretx.version4.FretboardView;
+import fretx.version4.view.FretboardView;
 import fretx.version4.R;
-import fretx.version4.fragment.exercise.ChordTimeline;
+import fretx.version4.fragment.ChordTimeline;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongPunch;
@@ -33,7 +33,6 @@ import fretx.version4.utils.Preference;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
-import rocks.fretx.audioprocessing.MusicUtils;
 
 public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.PlayedEndDialogListener {
     private final static String TAG = "KJKP6_PLAY_YOUTUBE";

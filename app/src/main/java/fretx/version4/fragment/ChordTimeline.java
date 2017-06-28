@@ -1,4 +1,4 @@
-package fretx.version4.fragment.exercise;
+package fretx.version4.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
-import fretx.version4.ChordTimelineView;
+import fretx.version4.view.ChordTimelineView;
 import fretx.version4.R;
 import fretx.version4.fretxapi.song.SongPunch;
 

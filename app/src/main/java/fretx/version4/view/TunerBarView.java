@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import fretx.version4.R;
 import rocks.fretx.audioprocessing.MusicUtils;
 
 /**
@@ -80,10 +81,10 @@ public class TunerBarView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawRect(0,0,width,height,backgroundPainter);
+        drawPitchBar(canvas);
         barPainter.setColor(Color.WHITE);
         barPainter.setStrokeWidth( (float)width*0.01f );
         canvas.drawLine(width / 2, 0, width / 2 + 1, height, barPainter);
-        drawPitchBar(canvas);
     }
 
     private void drawPitchBar(Canvas canvas) {
