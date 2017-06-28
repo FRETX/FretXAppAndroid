@@ -33,6 +33,7 @@ import fretx.version4.utils.Preference;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
+import rocks.fretx.audioprocessing.MusicUtils;
 
 public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.PlayedEndDialogListener {
     private final static String TAG = "KJKP6_PLAY_YOUTUBE";
@@ -407,13 +408,15 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             currentChord = null;
         } else {
             final SongPunch punch = punches.get(punchesIndex - 1);
+            Log.v(TAG, "punch root: " + punch.root + ", type: " + punch.type);
             currentChord = new Chord(punch.root, punch.type);
+            Log.v(TAG, "chord root: " + currentChord.getRoot() + ", type: " + currentChord.getType());
         }
 
         //update the chord timeline
         timelineFragment.update(currentTime);
 
-        if (changed && currentChord != null) {
+        if (changed && currentChord != null && !currentChord.toString().isEmpty()) {
             Bluetooth.getInstance().setMatrix(currentChord);
             fretboardCurrent.setFretboardPositions(currentChord.getFingerPositions());
         }
