@@ -351,7 +351,7 @@ public class PreviewFragment extends Fragment implements Audio.AudioListener {
 
         //stop listening
         playButton.setClickable(false);
-        //stopListeningRunnable.run();
+        Audio.getInstance().stopListening();
 
         //check if music volume is up
         AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
