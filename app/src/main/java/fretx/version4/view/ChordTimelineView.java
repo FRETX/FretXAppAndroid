@@ -186,7 +186,7 @@ public class ChordTimelineView extends View {
                 //draw text
                 blockFillPainter.setColor(Color.WHITE);
                 blockFillPainter.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-                blockFillPainter.setTextSize( (int)((float)radius * 0.75) );
+                blockFillPainter.setTextSize( (int)((float)radius * 0.95) );
                 blockFillPainter.setTypeface(gothamFontBold);
                 precomputedCanvas.drawText(punch.root + punch.type, x + radius / 2, 5 * height / 8, blockFillPainter);
             }
