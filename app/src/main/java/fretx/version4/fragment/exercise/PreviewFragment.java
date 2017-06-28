@@ -146,7 +146,7 @@ public class PreviewFragment extends Fragment implements Audio.AudioListener {
                 } else {
                     midiAutoPlay = true;
                     playButton.setImageResource(R.drawable.speaker_on);
-                    playMidi();
+                    //playMidi();
                 }
             }
         });
