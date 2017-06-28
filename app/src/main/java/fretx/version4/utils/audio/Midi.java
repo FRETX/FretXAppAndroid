@@ -123,8 +123,6 @@ public class Midi extends MidiDriver implements MidiDriver.OnMidiStartListener {
         event[1] =  Byte.parseByte(Integer.toString(note));
         event[2] = (byte) 0x7F;  // 0x7F = the maximum velocity (127)
         write(event);
-
-        Log.d(TAG, "playing note: " + Integer.toString(note));
     }
 
     private void stopNote(int note) {
@@ -134,7 +132,5 @@ public class Midi extends MidiDriver implements MidiDriver.OnMidiStartListener {
         event[1] = Byte.parseByte(Integer.toString(note));
         event[2] = (byte) 0x00;  // 0x00 = the minimum velocity (0)
         write(event);
-
-        Log.d(TAG, "stopping note: " + Integer.toString(note));
     }
 }
