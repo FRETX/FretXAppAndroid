@@ -9,14 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.fragment.exercise.ExerciseFragment;
 import fretx.version4.fragment.exercise.ExerciseListener;
+import fretx.version4.fragment.exercise.PreviewFragment;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import fretx.version4.utils.bluetooth.Bluetooth;
@@ -30,7 +29,7 @@ import rocks.fretx.audioprocessing.Chord;
 public class PlayPreview extends Fragment implements ExerciseListener, PlayPreviewDialog.PlayPreviewDialogListener {
     private static final String TAG = "KJKP6_GUIDED_EXERCISE";
 
-    private ExerciseFragment exerciseFragment;
+    private PreviewFragment previewFragment;
 
     private FragmentManager fragmentManager;
     private SongItem song;
@@ -63,11 +62,11 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         fragmentManager = getActivity().getSupportFragmentManager();
 
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        exerciseFragment = new ExerciseFragment();
-        exerciseFragment.setListener(this);
-        exerciseFragment.setTargetChords(exerciseChords);
-        exerciseFragment.setChords(exerciseChords);
-        fragmentTransaction.replace(R.id.exercise_fragment_container, exerciseFragment);
+        previewFragment = new PreviewFragment();
+        previewFragment.setListener(this);
+        previewFragment.setTargetChords(exerciseChords);
+        previewFragment.setChords(exerciseChords);
+        fragmentTransaction.replace(R.id.exercise_fragment_container, previewFragment);
         fragmentTransaction.commit();
 
         final Button play = (Button) rootView.findViewById(R.id.play);
@@ -84,7 +83,7 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         nextChord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exerciseFragment.nextChord();
+                previewFragment.nextChord();
             }
         });
 
@@ -99,7 +98,7 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
         super.onResume();
     }
 
-    //when the exercise fragment report the end of current exercise
+    //when the exercise fragment reports the end of current exercise
     @Override
     public void onFinish(int min, int sec) {
         Log.d(TAG, "Exercise finished");
@@ -110,7 +109,7 @@ public class PlayPreview extends Fragment implements ExerciseListener, PlayPrevi
     @Override
     public void onUpdate(boolean replay) {
         if (replay) {
-            exerciseFragment.reset();
+            previewFragment.reset();
         } else {
             PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
             youtubeFragment.setSong(song);
