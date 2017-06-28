@@ -47,8 +47,8 @@ public class ChordTimelineView extends View {
     private final Paint barPainter = new Paint();
 
     //colors
-    private static final int PLAYING_COLOR = Color.parseColor("#03726f");
-    private static final int NOT_PLAYING_COLOR = Color.parseColor("#b43207");
+    private static final int PLAYING_COLOR = Color.parseColor("#009688");
+    private static final int NOT_PLAYING_COLOR = Color.parseColor("#F29210");
     private static final int COLOR_BACKGROUND = Color.DKGRAY;
     private static final int COLOR_STROKE = Color.WHITE;
 
@@ -59,6 +59,8 @@ public class ChordTimelineView extends View {
     private int precomputedLengthMs = 0;
     private int precomputedStart;
     private int precomputedStop;
+
+    
 
 
     public ChordTimelineView(Context context, AttributeSet attrs){

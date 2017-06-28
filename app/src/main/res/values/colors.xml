@@ -16,6 +16,8 @@
     <color name="tunerCorrect">#64dd17</color>
     <color name="blueLed">#002fff</color>
     <color name="showcaseOverlay">#EED32F2F</color>
+    <color name="teal">#009688</color>
+    <color name="orange">#F29210</color>
 </resources>
 
 
