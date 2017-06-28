@@ -290,6 +290,13 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (youTubePlayer != null)
+            youTubePlayer.release();
+    }
+
     //////////////////////////////////////// YOUTUBE ///////////////////////////////////////////////
     private void initYoutubePlayer() {
         youTubePlayerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
@@ -403,15 +410,13 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             currentChord = new Chord(punch.root, punch.type);
         }
 
-        if (changed)
-            Bluetooth.getInstance().setMatrix(currentChord);
-
         //update the chord timeline
         timelineFragment.update(currentTime);
 
-        //update the fretview
-        if (currentChord != null)
+        if (changed && currentChord != null) {
+            Bluetooth.getInstance().setMatrix(currentChord);
             fretboardCurrent.setFretboardPositions(currentChord.getFingerPositions());
+        }
     }
 
     private final Runnable playerTimingLoop = new Runnable() {
