@@ -21,8 +21,8 @@ import fretx.version4.fretxapi.song.SongPunch;
 
 public class ChordTimeline extends Fragment {
     private static final String TAG = "KJKP6_CHORD_TIMELINE";
-    private static final int DEFAULT_LEFT_SPAN_MS = 100;
-    private static final int DEFAULT_RIGHT_SPAN_MS = 2900;
+    private static final int DEFAULT_LEFT_SPAN_MS = 0;
+    private static final int DEFAULT_RIGHT_SPAN_MS = 3000;
 
     private ArrayList<SongPunch> punches;
     private ArrayList<SongPunch> playingPunches = new ArrayList<>();

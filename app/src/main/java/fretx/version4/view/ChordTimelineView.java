@@ -111,7 +111,8 @@ public class ChordTimelineView extends View {
         canvas.drawBitmap(precomputedBitmap, deltaT * ratio, 0, blockFillPainter);
 
         //draw static vertical bar
-        //canvas.drawRect(verticalBarX, 0, verticalBarX + verticalBarWidth, height, barPainter);
+        if (leftSpanMs != 0 && rightSpanMs != 0)
+            canvas.drawRect(verticalBarX, 0, verticalBarX + verticalBarWidth, height, barPainter);
     }
 
     @Override
