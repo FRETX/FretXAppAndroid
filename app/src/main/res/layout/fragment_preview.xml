@@ -100,6 +100,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
             app:srcCompat="@drawable/speaker_on" />
 
         <Space
@@ -110,7 +111,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="2.2"
             android:orientation="vertical">
 
             <Button
@@ -147,6 +148,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:scaleType="fitCenter"
+            android:layout_marginRight="10dp"
             app:srcCompat="@android:drawable/presence_audio_busy" />
     </LinearLayout>
 

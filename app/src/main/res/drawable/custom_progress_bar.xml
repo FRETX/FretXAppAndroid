@@ -22,7 +22,7 @@
                 android:radius="0dip"
                 />
             <solid
-                android:color="#33ff00"
+                android:color="@color/teal"
                 />
             <stroke
                 android:width="3px"
