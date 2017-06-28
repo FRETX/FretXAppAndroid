@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
-import fretx.version4.ChordTimelineView;
+import fretx.version4.view.ChordTimelineView;
 import fretx.version4.R;
 import fretx.version4.fretxapi.song.SongPunch;
 

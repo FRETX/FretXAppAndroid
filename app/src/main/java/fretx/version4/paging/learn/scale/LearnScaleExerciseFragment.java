@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import fretx.version4.FretboardView;
+import fretx.version4.view.FretboardView;
 import fretx.version4.R;
 import fretx.version4.utils.Preference;
 import fretx.version4.utils.bluetooth.Bluetooth;

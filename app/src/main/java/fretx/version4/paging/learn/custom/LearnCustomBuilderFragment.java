@@ -14,16 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import fretx.version4.FretboardView;
+import fretx.version4.view.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
 import rocks.fretx.audioprocessing.Chord;
-import rocks.fretx.audioprocessing.FingerPositions;
 
 /**
  * Created by onurb_000 on 15/12/16.

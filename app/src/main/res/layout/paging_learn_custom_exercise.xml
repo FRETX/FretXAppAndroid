@@ -21,7 +21,7 @@
         android:layout_gravity="center_vertical"
         android:textSize="80sp" />
 
-    <fretx.version4.FretboardView
+    <fretx.version4.view.FretboardView
             android:id="@+id/fretboardView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/fretboardHeight"

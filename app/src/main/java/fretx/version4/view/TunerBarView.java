@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -74,10 +74,10 @@ public class TunerBarView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawRect(0,0,width,height,backgroundPainter);
+        drawPitchBar(canvas);
         barPainter.setColor(Color.WHITE);
         barPainter.setStrokeWidth(3);
         canvas.drawLine(width / 2, 0, width / 2 + 1, height, barPainter);
-        drawPitchBar(canvas);
     }
 
     private void drawPitchBar(Canvas canvas) {

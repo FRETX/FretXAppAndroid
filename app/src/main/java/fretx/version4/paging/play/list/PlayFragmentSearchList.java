@@ -64,7 +64,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
+        final View rootView = inflater.inflate(R.layout.paging_play_searchlist, container, false);
         listView = (GridView) rootView.findViewById(R.id.lvSongList);
         retry = (Button) rootView.findViewById(R.id.retry);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress);

@@ -1,4 +1,4 @@
-package fretx.version4;
+package fretx.version4.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import fretx.version4.FretboardView;
+import fretx.version4.view.FretboardView;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.R;
 import fretx.version4.utils.Preference;

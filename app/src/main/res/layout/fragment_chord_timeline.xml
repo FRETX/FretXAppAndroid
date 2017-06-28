@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fretx.version4.ChordTimelineView
+    <fretx.version4.view.ChordTimelineView
         android:id="@+id/chordTimelineView"
         android:layout_width="match_parent"
         android:layout_height="100dp" />

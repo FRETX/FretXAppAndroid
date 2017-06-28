@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import fretx.version4.FretboardView;
+import fretx.version4.view.FretboardView;
 import fretx.version4.R;
 import fretx.version4.fragment.ChordTimeline;
 import fretx.version4.activities.MainActivity;

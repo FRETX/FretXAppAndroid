@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import fretx.version4.HeadStockView;
+import fretx.version4.view.HeadStockView;
 import fretx.version4.R;
-import fretx.version4.TunerBarView;
+import fretx.version4.view.TunerBarView;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
 import fretx.version4.utils.audio.Audio;
