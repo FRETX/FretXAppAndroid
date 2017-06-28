@@ -55,7 +55,7 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         final GuidedExercise exercise = exerciseList.get(listIndex);
         exerciseFragment.setTargetChords(exercise.getChords());
         exerciseFragment.setChords(exercise.getChords(), exercise.getRepetition());
-        fragmentTransaction.replace(R.id.exercise_fragment_container, exerciseFragment);
+        fragmentTransaction.replace(R.id.preview_fragment_container, exerciseFragment);
         fragmentTransaction.commit();
 
         return rootView;

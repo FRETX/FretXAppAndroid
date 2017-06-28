@@ -394,9 +394,6 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             currentTime = youtubeElapsedTime;
         }
 
-        Log.d(TAG, "youtube duration: " + youtubeDuration);
-        Log.d(TAG, "current time: " + currentTime);
-
         //update current chord
         boolean changed = false;
         while (punchesIndex < punches.size() && punches.get(punchesIndex).timeMs < currentTime) {
@@ -407,9 +404,7 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
             currentChord = null;
         } else {
             final SongPunch punch = punches.get(punchesIndex - 1);
-            Log.v(TAG, "punch root: " + punch.root + ", type: " + punch.type);
             currentChord = new Chord(punch.root, punch.type);
-            Log.v(TAG, "chord root: " + currentChord.getRoot() + ", type: " + currentChord.getType());
         }
 
         //update the chord timeline

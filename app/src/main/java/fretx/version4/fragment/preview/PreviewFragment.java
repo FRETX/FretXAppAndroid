@@ -40,7 +40,7 @@ import rocks.fretx.audioprocessing.Chord;
  */
 
 public class PreviewFragment extends Fragment implements Audio.AudioListener {
-    private final static String TAG = "KJKP6_EXERCISE";
+    private final static String TAG = "KJKP6_PREVIEW";
     private final static int SUCCESS_DELAY_MS = 500;
     private PreviewListener listener;
     private final Handler handler = new Handler();
