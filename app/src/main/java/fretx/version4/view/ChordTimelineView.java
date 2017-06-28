@@ -60,7 +60,9 @@ public class ChordTimelineView extends View {
     private int precomputedStart;
     private int precomputedStop;
 
-    
+    //typefaces
+    private Typeface gothamFont = Typeface.createFromAsset(getContext().getAssets(),"fonts/GothamRoundedBook.ttf");
+    private Typeface gothamFontBold = Typeface.create(gothamFont, Typeface.BOLD);
 
 
     public ChordTimelineView(Context context, AttributeSet attrs){
@@ -72,6 +74,7 @@ public class ChordTimelineView extends View {
         blockStrokePainter.setStyle(Paint.Style.STROKE);
         blockFillPainter.setStyle(Paint.Style.FILL);
         barPainter.setColor(Color.WHITE);
+        blockFillPainter.setTypeface(gothamFontBold);
     }
 
     //public methods
@@ -183,7 +186,7 @@ public class ChordTimelineView extends View {
                 //draw text
                 blockFillPainter.setColor(Color.WHITE);
                 blockFillPainter.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-                blockFillPainter.setTextSize(radius / 2);
+                blockFillPainter.setTextSize( (int)((float)radius * 0.75) );
                 precomputedCanvas.drawText(punch.root + punch.type, x + radius / 2, 5 * height / 8, blockFillPainter);
             }
 
