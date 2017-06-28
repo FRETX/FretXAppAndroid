@@ -363,7 +363,7 @@ public class PreviewFragment extends Fragment implements Audio.AudioListener {
         Midi.getInstance().playChord(exerciseChords.get(chordIndex));
 
         //start listening after delay
-        Handler handler = new Handler();
+        //Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
