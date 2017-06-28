@@ -1,73 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:weightSum="1"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     android:orientation="vertical">
-
-    <Switch
-        android:id="@+id/tuner_mode_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:text="Auto"
-        android:textSize="25sp" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/space"
-        android:layout_weight="1"
-        android:gravity="center_vertical|left"
-        android:text="STANDARD TUNING"
-        android:textColor="@color/primaryText"
-        android:layout_alignParentStart="true" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_below="@id/tuner_mode_switch"
-        android:layout_alignParentStart="true"
+        android:layout_height="0dp"
+        android:layout_weight="0.03"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.07"
+        >
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|left"
+            android:text="STANDARD TUNING"
+            android:textColor="@color/primaryText"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_alignParentStart="true" />
+
+        <Switch
+            android:id="@+id/tuner_mode_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:text="Auto"
+            android:gravity="center_vertical"
+            android:textSize="25sp" />
+    </RelativeLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.01"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        >
+        <TextView
+            android:id="@+id/tuner_low_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="too low!"
+            android:textAlignment="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="invisible"
+            android:textSize="25sp"
+            />
+
+        <TextView
+            android:id="@+id/tuner_high_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text="too high!"
+            android:textSize="25sp"
+            android:textAlignment="center"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.01"
         android:id="@+id/space" />
-
-    <TextView
-        android:id="@+id/tuner_low_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/space"
-        android:text="too low!"
-        android:textAlignment="center"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/tuner_high_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/space"
-        android:text="too high!"
-        android:textAlignment="center"
-        android:visibility="invisible" />
 
     <fretx.version4.view.TunerBarView
         android:id="@+id/tuner_bar"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@id/tuner_low_text" />
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        />
     <Space
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_below="@+id/tuner_bar"
-        android:layout_alignParentStart="true"
+        android:layout_height="0dp"
+        android:layout_weight="0.08"
         android:id="@+id/space2" />
+
     <fretx.version4.view.HeadStockView
         android:id="@+id/headStockView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/space2" />
+        android:layout_weight="0.6"
+        />
 
-</RelativeLayout>
+</LinearLayout>

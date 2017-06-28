@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -21,7 +22,7 @@ import fretx.version4.utils.Preference;
 
 public class HeadStockView extends View{
     private static final String TAG = "KJKP6_HSV";
-    private static final int TEXT_SIZE = 40;
+    private int TEXT_SIZE = 40;
     //headstock
     private HeadstockViewDescriptor descriptor;
     private final Bitmap headStockBitmap;
@@ -30,7 +31,9 @@ public class HeadStockView extends View{
     private final Matrix headStockMatrix = new Matrix();
     private int selectedEarIndex;
     private boolean clickable = true;
-    private Paint painter = new Paint();
+    private Paint painter = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Typeface gothamFont = Typeface.createFromAsset(getContext().getAssets(),"fonts/GothamRoundedBook.ttf");
+    private Typeface gothamFontBold = Typeface.create(gothamFont, Typeface.BOLD);
 
     public interface OnEarSelectedListener {
         void onEarSelected(int selectedIndex);
@@ -49,6 +52,7 @@ public class HeadStockView extends View{
         headStockImageIntrinsicWidth = headStockBitmap.getWidth();
 
         painter.setTextSize(TEXT_SIZE);
+        painter.setTypeface(gothamFontBold);
     }
 
     @Override
@@ -70,6 +74,9 @@ public class HeadStockView extends View{
         headStockMatrix.reset();
         headStockMatrix.postScale(headStockImageRatio, headStockImageRatio);
         headStockMatrix.postTranslate(headStockImagePosX, headStockImagePosY);
+
+        TEXT_SIZE = (int)((float)headStockImageWidth * 0.1f);
+        painter.setTextSize(TEXT_SIZE);
 
         descriptor.update(headStockImageWidth, headStockImageHeight, headStockImagePosX, headStockImagePosY);
     }
@@ -106,7 +113,7 @@ public class HeadStockView extends View{
                 painter.setColor(Color.GREEN);
                 canvas.drawRect(ear.sx, ear.sy, ear.sx + descriptor.stringWidth, descriptor.stringBottom, painter);
             } else {
-                painter.setColor(Color.BLACK);
+                painter.setColor(Color.WHITE);
             }
             painter.setStrokeWidth(5);
             canvas.drawText(ear.name, ear.ex - TEXT_SIZE / 4, ear.ey + TEXT_SIZE / 4, painter);
