@@ -13,6 +13,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Binder;
@@ -21,9 +22,13 @@ import android.os.IBinder;
 import android.util.Log;
 import android.util.SparseArray;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static android.bluetooth.BluetoothDevice.TRANSPORT_LE;
 
 /**
  * FretXAppAndroid for FretX
@@ -243,7 +248,44 @@ public class BluetoothLEService extends Service {
     private void connect(BluetoothDevice device) {
         Log.d(TAG, "connecting...");
         state = State.CONNECTING;
-        gatt = device.connectGatt(this, false, gattCallback);
+
+        //if(TTTUtilities.isLollipopOrAbove()) {
+            // Little hack with reflect to use the connect gatt with defined transport in Lollipop
+            Method connectGattMethod = null;
+
+            try {
+                connectGattMethod = device.getClass().getMethod("connectGatt", Context.class, boolean.class, BluetoothGattCallback.class, int.class);
+            } catch (NoSuchMethodException e) {
+                notifyFailure("reflection failed");
+                e.printStackTrace();
+            }
+
+            try {
+                gatt = (BluetoothGatt) connectGattMethod.invoke(device, this, false, gattCallback, TRANSPORT_LE);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                gatt.close();
+                BluetoothLEService.this.gatt = null;
+                state = State.IDLE;
+                notifyFailure("reflection invocation failed");
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                gatt.close();
+                BluetoothLEService.this.gatt = null;
+                state = State.IDLE;
+                notifyFailure("reflection invocation failed");
+            } catch (InvocationTargetException e) {
+                gatt.close();
+                BluetoothLEService.this.gatt = null;
+                state = State.IDLE;
+                notifyFailure("reflection invocation failed");
+                e.printStackTrace();
+            }
+        //} else  {
+        //    gatt = device.connectGatt(this, true, gattCallback);
+        //}
+
+        //gatt = device.connectGatt(this, false, gattCallback);
     }
 
     private void iDisconnect() {
@@ -270,11 +312,11 @@ public class BluetoothLEService extends Service {
                 state = State.IDLE;
                 notifyDisconnection();
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
-                Log.d(TAG, "failure, disconnecting");
+                Log.d(TAG, "failure, disconnecting: " + status);
                 gatt.close();
                 BluetoothLEService.this.gatt = null;
                 state = State.IDLE;
-                notifyFailure("mysterious failure");
+                notifyFailure("error code " + status);
             }
         }
 
