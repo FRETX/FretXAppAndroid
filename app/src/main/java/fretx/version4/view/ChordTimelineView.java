@@ -41,10 +41,10 @@ public class ChordTimelineView extends View {
     private int verticalBarWidth = 10;
 
     //painters
-    private final Paint blockFillPainter = new Paint();
-    private final Paint blockStrokePainter = new Paint();
-    private final Paint backgroundPainter = new Paint();
-    private final Paint barPainter = new Paint();
+    private final Paint blockFillPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint blockStrokePainter = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint backgroundPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint barPainter = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     //colors
     private static final int PLAYING_COLOR = Color.parseColor("#009688");
@@ -74,7 +74,7 @@ public class ChordTimelineView extends View {
         blockStrokePainter.setStyle(Paint.Style.STROKE);
         blockFillPainter.setStyle(Paint.Style.FILL);
         barPainter.setColor(Color.WHITE);
-        blockFillPainter.setTypeface(gothamFontBold);
+
     }
 
     //public methods
@@ -187,6 +187,7 @@ public class ChordTimelineView extends View {
                 blockFillPainter.setColor(Color.WHITE);
                 blockFillPainter.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                 blockFillPainter.setTextSize( (int)((float)radius * 0.75) );
+                blockFillPainter.setTypeface(gothamFontBold);
                 precomputedCanvas.drawText(punch.root + punch.type, x + radius / 2, 5 * height / 8, blockFillPainter);
             }
 
