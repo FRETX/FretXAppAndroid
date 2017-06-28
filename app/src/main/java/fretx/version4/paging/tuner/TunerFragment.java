@@ -23,7 +23,7 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 public class TunerFragment extends Fragment {
     private static final String TAG = "KJKP6_TUNER";
-    private static final int UPDATE_DELAY_MS = 20;
+    private static final int UPDATE_DELAY_MS = 10;
     private static final int HALF_PITCH_RANGE_CTS = 100;
 
 	private final Handler handler = new Handler();
