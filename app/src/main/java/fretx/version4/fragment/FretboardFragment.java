@@ -1,4 +1,4 @@
-package fretx.version4.fragment.exercise;
+package fretx.version4.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

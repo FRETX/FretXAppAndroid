@@ -14,9 +14,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.fragment.exercise.ExerciseListener;
-import fretx.version4.fragment.exercise.PreviewFragment;
-import fretx.version4.fragment.exercise.PreviewListener;
+import fretx.version4.fragment.preview.PreviewFragment;
+import fretx.version4.fragment.preview.PreviewListener;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import fretx.version4.utils.bluetooth.Bluetooth;
@@ -69,24 +68,6 @@ public class PlayPreview extends Fragment implements PreviewListener, PlayPrevie
         previewFragment.setChords(exerciseChords);
         fragmentTransaction.replace(R.id.exercise_fragment_container, previewFragment);
         fragmentTransaction.commit();
-
-        final Button play = (Button) rootView.findViewById(R.id.play);
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayYoutubeFragment youtubeFragment = new PlayYoutubeFragment();
-                youtubeFragment.setSong(song);
-                mActivity.fragNavController.pushFragment(youtubeFragment);
-            }
-        });
-
-        final Button nextChord = (Button) rootView.findViewById(R.id.nextChord);
-        nextChord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                previewFragment.nextChord();
-            }
-        });
 
         final TextView title = (TextView) rootView.findViewById(R.id.songTitleText);
         title.setText(song.artist + " - " + song.song_title);
