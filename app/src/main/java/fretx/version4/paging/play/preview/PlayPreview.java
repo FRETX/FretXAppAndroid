@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import rocks.fretx.audioprocessing.Chord;
  */
 
 public class PlayPreview extends Fragment implements PreviewListener, PlayPreviewDialog.PlayPreviewDialogListener {
-    private static final String TAG = "KJKP6_GUIDED_EXERCISE";
+    private static final String TAG = "KJKP6_PLAY_PREVIEW";
 
     private PreviewFragment previewFragment;
 
@@ -66,18 +65,13 @@ public class PlayPreview extends Fragment implements PreviewListener, PlayPrevie
         previewFragment.setListener(this);
         previewFragment.setTargetChords(exerciseChords);
         previewFragment.setChords(exerciseChords);
-        fragmentTransaction.replace(R.id.exercise_fragment_container, previewFragment);
+        fragmentTransaction.replace(R.id.preview_fragment_container, previewFragment);
         fragmentTransaction.commit();
 
         final TextView title = (TextView) rootView.findViewById(R.id.songTitleText);
         title.setText(song.artist + " - " + song.song_title);
 
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     //when the exercise fragment reports the end of current exercise
