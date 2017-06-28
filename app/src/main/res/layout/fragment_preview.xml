@@ -108,13 +108,21 @@
                 android:id="@+id/next_chord_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Next Chord" />
+                android:background="@android:color/holo_blue_dark"
+                android:text="Next Chord"
+                android:textColor="@color/background" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
 
             <Button
                 android:id="@+id/play_song_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play song" />
+                android:background="@android:color/holo_blue_dark"
+                android:text="Play song"
+                android:textColor="@color/background" />
         </LinearLayout>
 
         <ImageView
