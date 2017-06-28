@@ -6,43 +6,46 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
 
         <ImageView
             android:id="@+id/eye_preview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             app:srcCompat="@drawable/eye" />
 
         <TextView
-                android:id="@+id/textChord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:background="@color/background"
-                android:textAlignment="center"
-                android:textColor="@color/primaryText"
-                android:textSize="28sp" />
+            android:id="@+id/textChord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@color/background"
+            android:textAlignment="center"
+            android:textColor="@color/primaryText"
+            android:textSize="28sp" />
 
-            <TextView
-                android:id="@+id/textNextChord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:background="@color/background"
-                android:textAlignment="center"
-                android:textColor="@color/primaryText"
-                android:layout_marginRight="5dp"
-                android:textSize="16sp" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/textNextChord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@color/background"
+            android:textAlignment="center"
+            android:textColor="@color/primaryText"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="12"
         android:visibility="visible">
 
         <FrameLayout
@@ -62,7 +65,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="2">
 
         <ImageView
             android:id="@+id/imageView4"
@@ -87,9 +91,9 @@
     </RelativeLayout>
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/playChordButton"
@@ -97,6 +101,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/speaker_on" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -114,7 +123,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="5dp" />
+                android:layout_height="10dp" />
 
             <Button
                 android:id="@+id/play_song_button"
@@ -123,7 +132,13 @@
                 android:background="@android:color/holo_blue_dark"
                 android:text="Play song"
                 android:textColor="@color/background" />
+
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/audio_thresold"
