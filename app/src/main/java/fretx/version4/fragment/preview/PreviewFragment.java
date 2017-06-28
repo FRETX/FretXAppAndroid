@@ -351,7 +351,7 @@ public class PreviewFragment extends Fragment implements Audio.AudioListener {
 
         //stop listening
         playButton.setClickable(false);
-        Audio.getInstance().stopListening();
+        //stopListeningRunnable.run();
 
         //check if music volume is up
         AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
@@ -363,7 +363,7 @@ public class PreviewFragment extends Fragment implements Audio.AudioListener {
         Midi.getInstance().playChord(exerciseChords.get(chordIndex));
 
         //start listening after delay
-        Handler handler = new Handler();
+        //Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
