@@ -158,6 +158,8 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         youtubePlayer.release();
     }
 }
