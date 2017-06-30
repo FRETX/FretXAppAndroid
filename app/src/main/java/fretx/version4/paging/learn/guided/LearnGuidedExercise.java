@@ -54,21 +54,10 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paging_learn_guided_exercise_layout, container, false);
 
         fragmentManager = getActivity().getSupportFragmentManager();
-
-        /*
-        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        exerciseFragment = new ExerciseFragment();
-        exerciseFragment.setListener(this);
-        final GuidedExercise exercise = exercises.get(exerciseId);
-        exerciseFragment.setTargetChords(exercise.getChords());
-        exerciseFragment.setChords(exercise.getChords(), exercise.getRepetition());
-        fragmentTransaction.replace(R.id.preview_fragment_container, exerciseFragment);
-        fragmentTransaction.commit();
-        */
 
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         final YouTubePlayerSupportFragment playerFragment = YouTubePlayerSupportFragment.newInstance();
@@ -87,7 +76,37 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
                         }
                     }
                 });
+                youtubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
+                    @Override
+                    public void onLoading() {
 
+                    }
+
+                    @Override
+                    public void onLoaded(String s) {
+                        youTubePlayer.play();
+                    }
+
+                    @Override
+                    public void onAdStarted() {
+
+                    }
+
+                    @Override
+                    public void onVideoStarted() {
+
+                    }
+
+                    @Override
+                    public void onVideoEnded() {
+                        startExercise();
+                    }
+
+                    @Override
+                    public void onError(YouTubePlayer.ErrorReason errorReason) {
+
+                    }
+                });
                 if (!wasRestored) {
                     youTubePlayer.loadVideo("avP5d16wEp0");
                 }
@@ -162,4 +181,17 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         youtubePlayer.release();
     }
+
+    private void startExercise() {
+        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        exerciseFragment = new ExerciseFragment();
+        exerciseFragment.setListener(LearnGuidedExercise.this);
+        final GuidedExercise exercise = exercises.get(exerciseId);
+        exerciseFragment.setTargetChords(exercise.getChords());
+        exerciseFragment.setChords(exercise.getChords(), exercise.getRepetition());
+        fragmentTransaction.replace(R.id.preview_fragment_container, exerciseFragment);
+        fragmentTransaction.commit();
+
+    }
+
 }
