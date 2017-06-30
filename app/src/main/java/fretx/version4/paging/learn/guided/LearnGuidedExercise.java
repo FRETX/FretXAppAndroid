@@ -16,7 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
+import java.util.HashMap;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
@@ -32,8 +32,9 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
     private ExerciseFragment exerciseFragment;
 
     //exercises
-    private List<GuidedExercise> exerciseList;
-    private int listIndex;
+    private HashMap<String, GuidedExercise> exercises;
+    private String exerciseId;
+    private HashMap<String, Boolean> scores;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         exerciseFragment = new ExerciseFragment();
         exerciseFragment.setListener(this);
-        final GuidedExercise exercise = exerciseList.get(listIndex);
+        final GuidedExercise exercise = exercises.get(exerciseId);
         exerciseFragment.setTargetChords(exercise.getChords());
         exerciseFragment.setChords(exercise.getChords(), exercise.getRepetition());
         fragmentTransaction.replace(R.id.preview_fragment_container, exerciseFragment);
@@ -64,19 +65,19 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
     //when the exercise fragment report the end of current exercise
     @Override
     public void onFinish(final int min, final int sec) {
+        scores.put(exerciseId, true);
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {
             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child("users").child(fUser.getUid()).child("score").child(exerciseId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    final String exerciseName = exerciseList.get(listIndex).getName();
-                    final Score prevScore = dataSnapshot.child("users").child(fUser.getUid()).child("score").child(exerciseName).getValue(Score.class);
+                    final Score prevScore = dataSnapshot.getValue(Score.class);
                     if (prevScore == null) {
-                        mDatabase.child("users").child(fUser.getUid()).child("score").child(exerciseName).setValue(new Score(min * 60 + sec));
+                        mDatabase.setValue(new Score(min * 60 + sec));
                     } else {
                         prevScore.add(min * 60 + sec);
-                        mDatabase.child("users").child(fUser.getUid()).child("score").child(exerciseName).setValue(prevScore);
+                        mDatabase.setValue(prevScore);
                     }
                 }
                 @Override
@@ -85,7 +86,7 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
             });
 
             LearnGuidedExerciseDialog dialog = LearnGuidedExerciseDialog.newInstance(this, min, sec,
-                    exerciseList == null || listIndex == exerciseList.size() - 1);
+                    exercises == null || exercises.get(exerciseId).getChildren().size() == 0);
             dialog.show(fragmentManager, "dialog");
         }
     }
@@ -97,15 +98,17 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         if (replay) {
             exerciseFragment.reset();
         } else {
-            LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
-            guidedChordExerciseFragment.setExercise(exerciseList, listIndex + 1);
+            final LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
+            final String nextExerciseId = exercises.get(exerciseId).getChildren().get(0);
+            guidedChordExerciseFragment.setExercise(exercises, nextExerciseId, scores);
             ((MainActivity)getActivity()).fragNavController.replaceFragment(guidedChordExerciseFragment);
         }
     }
 
     //setup exercise flow & current exercise
-    public void setExercise(List<GuidedExercise> exerciseList, int listIndex) {
-        this.exerciseList = exerciseList;
-        this.listIndex = listIndex;
+    public void setExercise(HashMap<String, GuidedExercise> exercises, String exerciseId, HashMap<String, Boolean> scores) {
+        this.exercises = exercises;
+        this.scores = scores;
+        this.exerciseId = exerciseId;
     }
 }

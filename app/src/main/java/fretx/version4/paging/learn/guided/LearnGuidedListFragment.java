@@ -68,8 +68,8 @@ public class LearnGuidedListFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
-                guidedChordExerciseFragment.setExercise(exercisesParsed, position);
+                final LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
+                guidedChordExerciseFragment.setExercise(exercises, exercisesParsed.get(position).getId(), scores);
                 ((MainActivity) getActivity()).fragNavController.pushFragment(guidedChordExerciseFragment);
             }
         });
@@ -125,13 +125,12 @@ public class LearnGuidedListFragment extends Fragment {
                 exercisesParsed.add(exercise);
                 toAdd.remove(0);
 
-                final Boolean score = scores.get(exercise.getName());
+                final Boolean score = scores.get(exercise.getId());
                 if (score != null) {
                     toAdd.addAll(toAdd.size(), exercise.getChildren());
                 }
             }
         }
-
         adapter.notifyDataSetChanged();
 	}
 
@@ -144,9 +143,9 @@ public class LearnGuidedListFragment extends Fragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                        final String exerciseName = snap.getKey();
-                        final String score = (String) dataSnapshot.child(exerciseName).child("score").getValue();
-                        scores.put(exerciseName, score != null);
+                        final String exerciseId = snap.getKey();
+                        final String score = (String) dataSnapshot.child(exerciseId).child("score").getValue();
+                        scores.put(exerciseId, score != null);
                         initExercises();
                     }
                 }
