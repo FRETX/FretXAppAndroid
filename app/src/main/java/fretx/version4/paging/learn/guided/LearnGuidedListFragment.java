@@ -39,8 +39,7 @@ public class LearnGuidedListFragment extends Fragment {
     private static final String TAG = "KJKP6_GUIDED_LIST";
 
     private HashMap<String, GuidedExercise> exercises = new HashMap<>();
-    private HashMap<String, Boolean> scores = new HashMap<>();
-    private ArrayList<GuidedExercise> exercisesParsed = new ArrayList<>();
+    private ArrayList<GuidedExercise> exercisesList = new ArrayList<>();
 
     private GridView gridView;
     private LearnGuidedListAdapter adapter;
@@ -48,7 +47,7 @@ public class LearnGuidedListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new LearnGuidedListAdapter(getActivity(), R.layout.paging_learn_guided_list_item, exercisesParsed);
+        adapter = new LearnGuidedListAdapter(getActivity(), R.layout.paging_learn_guided_list_item, exercisesList);
         initExercises();
         initScores();
     }
@@ -68,8 +67,10 @@ public class LearnGuidedListFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (exercisesList.get(position).isLocked())
+                    return;
                 final LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
-                guidedChordExerciseFragment.setExercise(exercises, exercisesParsed.get(position).getId(), scores);
+                guidedChordExerciseFragment.setExercise(exercises, exercisesList.get(position).getId());
                 ((MainActivity) getActivity()).fragNavController.pushFragment(guidedChordExerciseFragment);
             }
         });
@@ -117,18 +118,15 @@ public class LearnGuidedListFragment extends Fragment {
         if (exercise == null) {
             Log.d(TAG, "Cannot find root exercise");
         } else {
-            exercisesParsed.clear();
+            exercise.setLocked(false);
+            exercisesList.clear();
             final ArrayList<String> toAdd = new ArrayList<>();
             toAdd.add(exercise.getId());
             while (!toAdd.isEmpty()) {
                 exercise = exercises.get(toAdd.get(0));
-                exercisesParsed.add(exercise);
+                exercisesList.add(exercise);
                 toAdd.remove(0);
-
-                final Boolean score = scores.get(exercise.getId());
-                if (score != null) {
-                    toAdd.addAll(toAdd.size(), exercise.getChildren());
-                }
+                toAdd.addAll(toAdd.size(), exercise.getChildren());
             }
         }
         adapter.notifyDataSetChanged();
@@ -137,7 +135,6 @@ public class LearnGuidedListFragment extends Fragment {
 	private void initScores() {
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fUser != null) {
-            scores.clear();
             final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(fUser.getUid()).child("score");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -145,8 +142,12 @@ public class LearnGuidedListFragment extends Fragment {
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
                         final String exerciseId = snap.getKey();
                         final String score = (String) dataSnapshot.child(exerciseId).child("score").getValue();
-                        scores.put(exerciseId, score != null);
-                        initExercises();
+                        if (score != null) {
+                            for (String childId: exercises.get(exerciseId).getChildren()) {
+                                exercises.get(childId).setLocked(false);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
                     }
                 }
 

@@ -1,7 +1,5 @@
 package fretx.version4.paging.learn.guided;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,19 +9,12 @@ import java.util.ArrayList;
 import rocks.fretx.audioprocessing.Chord;
 
 public class GuidedExercise {
-	private String name;
-	private String id;
-	private ArrayList<Chord> chords;
-	private int nRepetitions;
-	private ArrayList<String> children;
-
-	public GuidedExercise(){
-		name = "";
-		id = "";
-		chords = new ArrayList<>();
-		nRepetitions = 0;
-        children = new ArrayList<>();
-    }
+	private String name = "";
+	private String id = "";
+	private final ArrayList<Chord> chords = new ArrayList<>();
+	private int nRepetitions = 0;
+	private final ArrayList<String> children = new ArrayList<>();
+    private boolean locked = true;
 
 	public GuidedExercise(JSONObject chordExercise){
 		try {
@@ -32,7 +23,6 @@ public class GuidedExercise {
 			this.nRepetitions = chordExercise.getInt("nRepetitions");
 			final JSONArray tmpChordsArray;
 			tmpChordsArray = chordExercise.getJSONArray("chords");
-			this.chords = new ArrayList<>();
 			for (int j = 0; j < tmpChordsArray.length(); j++) {
 				final JSONObject chordJson;
 				chordJson = tmpChordsArray.getJSONObject(j);
@@ -40,7 +30,6 @@ public class GuidedExercise {
 			}
 			final JSONArray tmpChildArray;
 			tmpChildArray = chordExercise.getJSONArray("children");
-			this.children = new ArrayList<>();
 			for (int j = 0; j < tmpChildArray.length(); j++) {
 				final JSONObject childJson;
 				childJson = tmpChildArray.getJSONObject(j);
@@ -69,5 +58,13 @@ public class GuidedExercise {
 
 	public ArrayList<String> getChildren() {
         return children;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }
