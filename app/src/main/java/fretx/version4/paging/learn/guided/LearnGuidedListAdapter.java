@@ -1,6 +1,8 @@
 package fretx.version4.paging.learn.guided;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +12,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import fretx.version4.R;
-import fretx.version4.activities.MainActivity;
 import rocks.fretx.audioprocessing.Chord;
 
 class LearnGuidedListAdapter extends ArrayAdapter<GuidedExercise> {
-
-	private MainActivity mActivity;
 	private int layoutResourceId;
 	private ArrayList<GuidedExercise> data = new ArrayList<>();
+	private FragmentActivity context;
 
-	LearnGuidedListAdapter(MainActivity context , int layoutResourceId, ArrayList<GuidedExercise> data){
+	LearnGuidedListAdapter(FragmentActivity context , int layoutResourceId, ArrayList<GuidedExercise> data){
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
-		this.mActivity = context;
+		this.context = context;
 		this.data = data;
 	}
 
@@ -32,7 +32,7 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedExercise> {
 		RecordHolder holder;
 
 		if (row == null) {
-			LayoutInflater inflater = mActivity.getLayoutInflater();
+			LayoutInflater inflater = context.getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
 
 			holder = new RecordHolder();
@@ -54,15 +54,6 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedExercise> {
 			chordsString += chord.toString() + " ";
 		}
 		holder.chords.setText(chordsString);
-
-		row.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
-				guidedChordExerciseFragment.setExercise(data, position);
-				mActivity.fragNavController.pushFragment(guidedChordExerciseFragment);
-			}
-		});
 
 		return row;
 	}
