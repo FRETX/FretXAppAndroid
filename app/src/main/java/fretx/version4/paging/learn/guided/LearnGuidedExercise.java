@@ -1,5 +1,7 @@
 package fretx.version4.paging.learn.guided;
 
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,11 +30,16 @@ import fretx.version4.fragment.exercise.ExerciseListener;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.firebase.Analytics;
 
+import static fretx.version4.R.id.player;
+
 public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         LearnGuidedExerciseDialog.LearnGuidedChordExerciseListener {
     private static final String TAG = "KJKP6_GUIDED_EXERCISE";
     private FragmentManager fragmentManager;
     private ExerciseFragment exerciseFragment;
+    private YouTubePlayer youtubePlayer;
+    private static final String API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
+
 
     //exercises
     private HashMap<String, GuidedExercise> exercises;
@@ -49,6 +59,7 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
+        /*
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         exerciseFragment = new ExerciseFragment();
         exerciseFragment.setListener(this);
@@ -57,9 +68,40 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         exerciseFragment.setChords(exercise.getChords(), exercise.getRepetition());
         fragmentTransaction.replace(R.id.preview_fragment_container, exerciseFragment);
         fragmentTransaction.commit();
+        */
+
+        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        final YouTubePlayerSupportFragment playerFragment = YouTubePlayerSupportFragment.newInstance();
+        fragmentTransaction.replace(R.id.preview_fragment_container, playerFragment);
+        fragmentTransaction.commit();
+
+        playerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean wasRestored) {
+                LearnGuidedExercise.this.youtubePlayer = youTubePlayer;
+                youTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
+                    @Override
+                    public void onFullscreen(boolean b) {
+                        if (!b) {
+                            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                        }
+                    }
+                });
+
+                if (!wasRestored) {
+                    youTubePlayer.loadVideo("avP5d16wEp0");
+                }
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+            }
+        });
 
         return rootView;
     }
+
 
     //when the exercise fragment report the end of current exercise
     @Override
@@ -111,5 +153,11 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
     public void setExercise(HashMap<String, GuidedExercise> exercises, String exerciseId) {
         this.exercises = exercises;
         this.exerciseId = exerciseId;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        youtubePlayer.release();
     }
 }
