@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import fretx.version4.utils.Preference;
 import fretx.version4.view.FretboardView;
 import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
@@ -66,7 +67,9 @@ implements LearnCustomBuilderDialog.LearnCustomBuilderDialogListener {
 		addedButton = (Button) rootView.findViewById(R.id.addedChordButton);
 		startButton = (Button) rootView.findViewById(R.id.startExerciseButton);
 
-
+		if (Preference.getInstance().isLeftHanded()) {
+			fretboardView.setScaleX(-1.0f);
+		}
 
 		return  rootView;
 	}
