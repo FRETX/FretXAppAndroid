@@ -58,56 +58,6 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
         fragmentTransaction.replace(R.id.preview_fragment_container, exerciseFragment);
         fragmentTransaction.commit();
 
-<<<<<<< Updated upstream
-=======
-        playerFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean wasRestored) {
-                LearnGuidedExercise.this.youtubePlayer = youTubePlayer;
-                youtubePlayer.setShowFullscreenButton(false);
-                youtubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
-                    @Override
-                    public void onLoading() {
-
-                    }
-
-                    @Override
-                    public void onLoaded(String s) {
-                        youTubePlayer.play();
-                    }
-
-                    @Override
-                    public void onAdStarted() {
-
-                    }
-
-                    @Override
-                    public void onVideoStarted() {
-
-                    }
-
-                    @Override
-                    public void onVideoEnded() {
-                        startExercise();
-                    }
-
-                    @Override
-                    public void onError(YouTubePlayer.ErrorReason errorReason) {
-
-                    }
-                });
-                if (!wasRestored) {
-                    youTubePlayer.loadVideo("avP5d16wEp0");
-                }
-            }
-
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-
-            }
-        });
-
->>>>>>> Stashed changes
         return rootView;
     }
 
@@ -154,21 +104,8 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener,
     }
 
     //setup exercise flow & current exercise
-<<<<<<< Updated upstream
     public void setExercise(List<GuidedExercise> exerciseList, int listIndex) {
         this.exerciseList = exerciseList;
         this.listIndex = listIndex;
-=======
-    public void setExercise(HashMap<String, GuidedExercise> exercises, String exerciseId) {
-        this.exercises = exercises;
-        this.exerciseId = exerciseId;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
->>>>>>> Stashed changes
     }
 }

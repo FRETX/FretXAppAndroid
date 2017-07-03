@@ -61,7 +61,7 @@
             android:name=".activities.HardwareActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|layoutDirection"
             android:label="@string/app_name"
-            android:screenOrientation="unspecified" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
@@ -73,7 +73,8 @@
 
         <service android:name=".utils.bluetooth.BluetoothLEService" />
 
-        <activity android:name=".activities.ExerciseActivity"></activity>
+        <activity android:name=".activities.ConnectivityActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

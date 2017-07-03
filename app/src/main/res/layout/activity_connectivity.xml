@@ -4,6 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fretx.version4.activities.ExerciseActivity">
+    tools:context="fretx.version4.activities.ConnectivityActivity">
 
+    <FrameLayout
+        android:id="@+id/connectivity_container"
+        android:layout_width="395dp"
+        android:layout_height="643dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>
