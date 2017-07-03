@@ -1,5 +1,6 @@
 package fretx.version4.paging.learn.guided;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -39,7 +40,25 @@ public class LearnGuidedListFragment extends Fragment {
 	public void onViewCreated(View v, Bundle b){
 		gridView = (GridView) mActivity.findViewById(R.id.guidedChordExerciseList);
 		initExercises();
+<<<<<<< Updated upstream
 		gridView.setAdapter(new LearnGuidedListAdapter(mActivity, R.layout.paging_learn_guided_list_item, exercises));
+=======
+		gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /*
+                if (exercisesList.get(position).isLocked())
+                    return;
+                final LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
+                guidedChordExerciseFragment.setExercise(exercises, exercisesList.get(position).getId());
+                ((MainActivity) getActivity()).fragNavController.pushFragment(guidedChordExerciseFragment);
+                 */
+                final Intent intent = new Intent(getActivity(), MainActivity.class);
+                getActivity().startActivityForResult(intent, 1);
+            }
+        });
+>>>>>>> Stashed changes
 	}
 
 	@Override

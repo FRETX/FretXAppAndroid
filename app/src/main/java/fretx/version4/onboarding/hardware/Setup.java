@@ -153,12 +153,6 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
         });
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        player.release();
-    }
-
     private void updateState() {
         Log.d(TAG, "state: " + state);
         if (state != urls.size()) {
