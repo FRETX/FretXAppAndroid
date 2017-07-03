@@ -123,7 +123,7 @@ public class OnboardingActivity extends BaseActivity {
                         saveData();
 
                         if (!FirebaseConfig.getInstance().isHardwareSetupSkipable()) {
-                            final Intent intent = new Intent(getActivity(), HardwareActivity.class);
+                            final Intent intent = new Intent(getActivity(), HardwareIntroActivity.class);
                             startActivity(intent);
                         } else {
                             final Intent intent = new Intent(getActivity(), MainActivity.class);

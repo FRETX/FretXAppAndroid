@@ -76,7 +76,8 @@
         <activity
             android:name=".activities.ConnectivityActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.LightActivity"></activity>
+        <activity android:name=".activities.LightActivity" />
+        <activity android:name=".activities.HardwareIntroActivity"></activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package fretx.version4.onboarding.hardware;
+package fretx.version4.onboarding.connectivity;
 
 import android.content.Intent;
 import android.os.Bundle;

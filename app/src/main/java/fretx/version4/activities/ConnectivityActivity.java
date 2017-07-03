@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 
 import fretx.version4.R;
-import fretx.version4.onboarding.hardware.Check;
+import fretx.version4.onboarding.connectivity.Check;
 
 public class ConnectivityActivity extends BaseActivity {
 
