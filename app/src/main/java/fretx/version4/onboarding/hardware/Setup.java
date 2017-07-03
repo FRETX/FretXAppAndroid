@@ -175,4 +175,8 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
             updateState();
         }
     }
+
+    public void setStart(int start) {
+        state = start;
+    }
 }

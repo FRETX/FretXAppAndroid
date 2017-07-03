@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import fretx.version4.R;
-import fretx.version4.onboarding.hardware.Check;
 import fretx.version4.onboarding.hardware.HardwareFragment;
 import fretx.version4.onboarding.hardware.Setup;
 
@@ -17,26 +16,32 @@ import fretx.version4.onboarding.hardware.Setup;
  */
 
 public class HardwareActivity extends BaseActivity{
-    private Fragment fragment;
+    private HardwareFragment fragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hardware);
 
+        final Bundle b = getIntent().getExtras();
+        int start = 0;
+        if(b != null)
+            start = b.getInt("start");
+
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragment = new Setup();
-        fragmentTransaction.add(R.id.hardware_container, fragment);
+        fragment.setStart(start);
+        fragmentTransaction.add(R.id.hardware_container, (Fragment) fragment);
         fragmentTransaction.commit();
     }
 
-    public void setFragment(Fragment fragment) {
+    public void setFragment(HardwareFragment fragment) {
         this.fragment = fragment;
     }
 
     @Override
     public void onBackPressed() {
-        ((HardwareFragment) fragment).onBackPressed();
+        fragment.onBackPressed();
     }
 }

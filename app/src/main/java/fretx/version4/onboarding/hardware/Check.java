@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import fretx.version4.R;
+import fretx.version4.activities.LightActivity;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothListener;
@@ -28,7 +29,7 @@ import io.intercom.android.sdk.Intercom;
  * Created by pandor on 31/05/17 17:17.
  */
 
-public class Check extends Fragment implements HardwareFragment{
+public class Check extends Fragment{
     private final static String TAG = "KJKP6_CHECK";
     private final static String CONNECTION_PROGRESS = "We are connecting...";
     private final static String CONNECTION_FAILED = "Couldn't connect your FretX";
@@ -127,12 +128,8 @@ public class Check extends Fragment implements HardwareFragment{
         Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
     }
 
-    @Override
-    public void onBackPressed() {
-    }
-
     private void onCheckSuccess(){
-        Intent intent = new Intent(getActivity(), MainActivity.class);
+        Intent intent = new Intent(getActivity(), LightActivity.class);
         startActivity(intent);
     }
 

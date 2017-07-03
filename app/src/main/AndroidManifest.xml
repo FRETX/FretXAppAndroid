@@ -73,8 +73,10 @@
 
         <service android:name=".utils.bluetooth.BluetoothLEService" />
 
-        <activity android:name=".activities.ConnectivityActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ConnectivityActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.LightActivity"></activity>
     </application>
 
 </manifest>
