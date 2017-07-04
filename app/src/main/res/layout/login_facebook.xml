@@ -63,7 +63,7 @@
         android:id="@+id/facebook_button_overlay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.09"
+        android:layout_weight="0.1"
         android:background="@drawable/btn_fb" />
 
     <com.facebook.login.widget.LoginButton
@@ -82,8 +82,7 @@
         android:id="@+id/other"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Other sing-in"
+        android:text="other sign-in"
         android:textAlignment="textEnd"
         android:textSize="25sp" />
 

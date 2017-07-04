@@ -26,7 +26,7 @@
             android:gravity="center_vertical|left"
             android:text="STANDARD TUNING"
             android:textColor="@color/primaryText"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/tuner_mode_switch" />
@@ -39,7 +39,7 @@
             android:layout_alignParentRight="true"
             android:text="Auto"
             android:gravity="center_vertical"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <Space

@@ -83,7 +83,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical"
             android:background="@color/primary"
-            android:text="Press here after turning your fretx On"
+            android:text="Press here after turning your FretX ON"
             android:textAllCaps="false"
             android:textColor="@color/tertiaryText" />
 

@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1.01"
             android:gravity="center"
-            android:text="Try this alternatives!"
+            android:text="Try these alternatives!"
             android:textAlignment="center"
             android:textColor="@color/primaryText"
             android:textSize="30sp" />
