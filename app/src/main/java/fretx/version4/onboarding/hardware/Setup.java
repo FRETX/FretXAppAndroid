@@ -3,13 +3,10 @@ package fretx.version4.onboarding.hardware;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,8 +22,6 @@ import java.util.ArrayList;
 
 import fretx.version4.R;
 import fretx.version4.activities.ConnectivityActivity;
-import fretx.version4.activities.HardwareActivity;
-import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.firebase.FirebaseConfig;
 import io.intercom.android.sdk.Intercom;
 
@@ -114,7 +109,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
         Log.d(TAG, "urls(" + urls.size() + "):" + urls.toString());
         youTubePlayerSupportFragment = new YouTubePlayerSupportFragment();
 
-        initializePlayer();
+        init();
     }
 
     @Override
@@ -126,7 +121,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                 player.setShowFullscreenButton(false);
         } catch (IllegalStateException e) {
             Log.v(TAG, "exception catched");
-            initializePlayer();
+            init();
         }
     }
 
@@ -142,6 +137,24 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
         return rootView;
     }
 
+    private void init() {
+        //check if music volume is up
+        final AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Audio volume")
+                    .setMessage("The video has audio, make sure to turn speakers ON")
+                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            initializePlayer();
+                        }
+                    }).show();
+        } else {
+            initializePlayer();
+        }
+    }
+
     private void initializePlayer() {
         youTubePlayerSupportFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -151,21 +164,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                     player.setShowFullscreenButton(false);
                     player.setFullscreen(true);
                     youTubePlayer.setPlayerStateChangeListener(stateListener);
-
-                    //check if music volume is up
-                    final AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-                    if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
-                        new AlertDialog.Builder(getActivity())
-                                .setMessage("The video has audio, make sure to turn speakers ON")
-                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        updateState();
-                                    }
-                                }).show();
-                    } else {
-                        updateState();
-                    }
+                    updateState();
                 }
             }
 

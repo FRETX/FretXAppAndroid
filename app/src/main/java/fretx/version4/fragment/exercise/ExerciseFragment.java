@@ -129,12 +129,6 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
                 playButton.setClickable(false);
                 Audio.getInstance().stopListening();
 
-                //check if music volume is up
-                final AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-                if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
-                    Toast.makeText(getActivity(), "Volume is low", Toast.LENGTH_SHORT).show();
-                }
-
                 //play the chord
                 Midi.getInstance().playChord(exerciseChords.get(chordIndex));
 

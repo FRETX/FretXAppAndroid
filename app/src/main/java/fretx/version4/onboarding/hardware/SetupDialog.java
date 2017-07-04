@@ -52,7 +52,7 @@ public class SetupDialog extends DialogFragment
             }
         });
 
-        final Button assistance = (Button) dialog.findViewById(R.id.assistance);
+        final TextView assistance = (TextView) dialog.findViewById(R.id.assistance);
         assistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
