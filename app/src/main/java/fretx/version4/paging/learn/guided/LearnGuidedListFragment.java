@@ -1,5 +1,6 @@
 package fretx.version4.paging.learn.guided;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

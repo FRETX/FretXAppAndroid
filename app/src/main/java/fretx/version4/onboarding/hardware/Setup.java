@@ -1,5 +1,7 @@
 package fretx.version4.onboarding.hardware;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +20,9 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import java.util.ArrayList;
 
 import fretx.version4.R;
+import fretx.version4.activities.ConnectivityActivity;
 import fretx.version4.activities.HardwareActivity;
+import fretx.version4.activities.MainActivity;
 import fretx.version4.utils.firebase.FirebaseConfig;
 import io.intercom.android.sdk.Intercom;
 
@@ -140,7 +144,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                 if (!wasRestored) {
                     player = youTubePlayer;
                     player.setShowFullscreenButton(false);
-                    player.setFullscreen(false);
+                    player.setFullscreen(true);
                     youTubePlayer.setPlayerStateChangeListener(stateListener);
                     updateState();
                 }
@@ -153,25 +157,14 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
         });
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        player.release();
-    }
-
     private void updateState() {
         Log.d(TAG, "state: " + state);
         if (state != urls.size()) {
             player.loadVideo(urls.get(state));
             videoEnded = false;
         } else {
-            final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            final Fragment fragment = new Check();
-            ((HardwareActivity) getActivity()).setFragment(fragment);
-            fragmentTransaction.replace(R.id.hardware_container, fragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            Intent intent = new Intent(getActivity(), ConnectivityActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -181,5 +174,9 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
             --state;
             updateState();
         }
+    }
+
+    public void setStart(int start) {
+        state = start;
     }
 }

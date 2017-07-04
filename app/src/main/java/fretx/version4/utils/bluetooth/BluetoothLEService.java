@@ -190,7 +190,8 @@ public class BluetoothLEService extends Service {
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
             final BluetoothDevice device = result.getDevice();
-            if (device.getName().equals(deviceName)) {
+            final String name = device.getName();
+            if (name != null && name.equals(deviceName)) {
                 Log.d(TAG, "New FRETX: " + device.getName());
                 devices.put(device.hashCode(), device);
             } else {

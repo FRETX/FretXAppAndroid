@@ -4,6 +4,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,51 +17,61 @@
         android:textSize="35dp" />
 
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+
     <Button
         android:id="@+id/assistance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/primary"
         android:text="Need Assistance?"
         android:textAllCaps="false"
-        android:background="@color/primary"
-        android:textColor="@color/tertiaryText"
-        android:layout_margin="10dp"
-        />
+        android:textColor="@color/tertiaryText" />
 
-    <RelativeLayout
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="25dp" />
 
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="25dp"
-            android:background="@color/primary"
-            android:text="Next"
-            android:textAllCaps="false"
-            android:textColor="@color/background" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/replayButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_weight="1"
             android:background="@color/primary"
             android:text="Replay"
             android:textAllCaps="false"
             android:textColor="@color/background" />
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_weight="1"
+            android:background="@color/primary"
+            android:text="Next"
+            android:textAllCaps="false"
+            android:textColor="@color/background" />
+
+    </LinearLayout>
 
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="25dp" />
 
 </LinearLayout>

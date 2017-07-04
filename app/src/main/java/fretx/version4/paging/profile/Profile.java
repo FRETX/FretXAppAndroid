@@ -22,6 +22,8 @@ import com.squareup.picasso.Picasso;
 
 
 import fretx.version4.R;
+import fretx.version4.activities.ConnectivityActivity;
+import fretx.version4.activities.LightActivity;
 import fretx.version4.activities.LoginActivity;
 import fretx.version4.activities.OnboardingActivity;
 import fretx.version4.utils.Preference;

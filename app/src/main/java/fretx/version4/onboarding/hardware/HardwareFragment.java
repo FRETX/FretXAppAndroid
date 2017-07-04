@@ -7,4 +7,5 @@ package fretx.version4.onboarding.hardware;
 
 public interface HardwareFragment {
     void onBackPressed();
+    void setStart(int start);
 }
