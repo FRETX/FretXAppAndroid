@@ -34,7 +34,7 @@ public class Check extends Fragment{
     private final static String CONNECTION_PROGRESS = "We are connecting...";
     private final static String CONNECTION_FAILED = "Couldn't connect your FretX";
     private LinearLayout errorLayout;
-    private FrameLayout progressLayout;
+    private LinearLayout progressLayout;
     private ImageView gifView;
     private TextView actionText;
     private BluetoothListener bluetoothListener = new BluetoothListener() {
@@ -69,7 +69,7 @@ public class Check extends Fragment{
         View rootView = inflater.inflate(R.layout.hardware_check, container, false);
 
         errorLayout = (LinearLayout) rootView.findViewById(R.id.error_layout);
-        progressLayout = (FrameLayout) rootView.findViewById(R.id.progress_layout);
+        progressLayout = (LinearLayout) rootView.findViewById(R.id.progress_layout);
         gifView = (ImageView) rootView.findViewById(R.id.gif);
         actionText = (TextView) rootView.findViewById(R.id.action_text);
 

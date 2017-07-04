@@ -58,6 +58,8 @@
         android:layout_height="wrap_content"
         android:background="@color/primary"
         android:text="I'm ready!"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:textAllCaps="false"
         android:layout_gravity="center"
         android:textColor="@color/tertiaryText" />

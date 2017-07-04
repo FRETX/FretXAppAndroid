@@ -45,7 +45,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.05" />
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/progress_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -58,13 +58,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible" />
-    </FrameLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/error_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
+        android:weightSum="1"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -72,21 +73,22 @@
             android:id="@+id/gif"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.9"
             app:srcCompat="@drawable/defaultthumb" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0.1"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/skip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="20dp"
+                android:layout_alignParentLeft="true"
                 android:background="@color/primary"
                 android:text="Skip"
                 android:textAllCaps="false"
@@ -96,14 +98,14 @@
                 android:id="@+id/retry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="20dp"
+                android:layout_alignParentRight="true"
                 android:background="@color/primary"
                 android:text="Retry"
                 android:textAllCaps="false"
                 android:textColor="@color/tertiaryText" />
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -116,9 +118,11 @@
         android:id="@+id/assistance"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.1"
+        android:layout_weight="0.08"
         android:background="@color/primary"
         android:text="Need Assistance?"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:textAllCaps="false"
         android:textColor="@color/tertiaryText"
         android:visibility="visible" />
