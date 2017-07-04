@@ -45,7 +45,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -70,14 +69,19 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-
-        <service android:name=".utils.bluetooth.BluetoothLEService" />
-
         <activity
             android:name=".activities.ConnectivityActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.LightActivity" />
-        <activity android:name=".activities.HardwareIntroActivity"></activity>
+        <activity
+            android:name=".activities.LightActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.HardwareIntroActivity"
+            android:screenOrientation="portrait"/>
+
+        <service android:name=".utils.bluetooth.BluetoothLEService" />
+
+
     </application>
 
 </manifest>

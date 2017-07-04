@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="25dp"
     android:orientation="vertical"
     tools:context="fretx.version4.activities.LightActivity">
 
@@ -57,9 +58,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="This is what you see:"
         android:textAlignment="center"
-        android:textColor="@color/primaryText"
-        android:text="This is what you see:" />
+        android:textColor="@color/primaryText" />
 
     <ImageView
         android:id="@+id/gif"
@@ -75,8 +76,6 @@
         android:id="@+id/ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
         android:background="@color/primary"
         android:text="Ok, understood!"
         android:textAllCaps="false"
@@ -91,10 +90,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Need Help? "
-        android:textAlignment="textEnd"
-        android:textColor="@color/primaryText" />
+        android:textAlignment="textEnd" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
 </LinearLayout>

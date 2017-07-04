@@ -71,14 +71,9 @@
         android:id="@+id/skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:text="I'll do this later. "
-        android:textAlignment="textEnd"
-        android:textColor="@color/primaryText"
-        android:layout_gravity="end"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp" />
+        android:textAlignment="textEnd" />
 
 
 </LinearLayout>

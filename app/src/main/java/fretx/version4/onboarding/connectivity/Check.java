@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ public class Check extends Fragment{
     private final static String TAG = "KJKP6_CHECK";
     private final static String CONNECTION_PROGRESS = "We are connecting...";
     private final static String CONNECTION_FAILED = "Couldn't connect your FretX";
-    private LinearLayout errorLayout;
+    private RelativeLayout errorLayout;
     private LinearLayout progressLayout;
     private ImageView gifView;
     private TextView actionText;
@@ -68,7 +69,7 @@ public class Check extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.hardware_check, container, false);
 
-        errorLayout = (LinearLayout) rootView.findViewById(R.id.error_layout);
+        errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
         progressLayout = (LinearLayout) rootView.findViewById(R.id.progress_layout);
         gifView = (ImageView) rootView.findViewById(R.id.gif);
         actionText = (TextView) rootView.findViewById(R.id.action_text);
@@ -83,14 +84,14 @@ public class Check extends Fragment{
                 Bluetooth.getInstance().connect();
             }
         });
-        final Button skip = (Button) rootView.findViewById(R.id.skip);
+        final TextView skip = (TextView) rootView.findViewById(R.id.skip);
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onCheckSuccess();
             }
         });
-        final Button assist = (Button) rootView.findViewById(R.id.assistance);
+        final TextView assist = (TextView) rootView.findViewById(R.id.assistance);
         assist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,9 +118,11 @@ public class Check extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        setProgressLayout();
         Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
-        Bluetooth.getInstance().connect();
+        if (!Bluetooth.getInstance().isConnected()) {
+            setProgressLayout();
+            Bluetooth.getInstance().connect();
+        }
     }
 
     @Override

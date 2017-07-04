@@ -138,10 +138,10 @@ public class OnboardingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (state > 0 && getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
             --state;
-            updateState();
+            //updateState();
         }
     }
 

@@ -250,41 +250,37 @@ public class BluetoothLEService extends Service {
         Log.d(TAG, "connecting...");
         state = State.CONNECTING;
 
-        //if(TTTUtilities.isLollipopOrAbove()) {
-            // Little hack with reflect to use the connect gatt with defined transport in Lollipop
-            Method connectGattMethod = null;
+        // Little hack with reflect to use the connect gatt with defined transport in Lollipop
+        Method connectGattMethod = null;
 
-            try {
-                connectGattMethod = device.getClass().getMethod("connectGatt", Context.class, boolean.class, BluetoothGattCallback.class, int.class);
-            } catch (NoSuchMethodException e) {
-                notifyFailure("reflection failed");
-                e.printStackTrace();
-            }
+        try {
+            connectGattMethod = device.getClass().getMethod("connectGatt", Context.class, boolean.class, BluetoothGattCallback.class, int.class);
+        } catch (NoSuchMethodException e) {
+            notifyFailure("No such method exception");
+            e.printStackTrace();
+        }
 
-            try {
-                gatt = (BluetoothGatt) connectGattMethod.invoke(device, this, false, gattCallback, TRANSPORT_LE);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                gatt.close();
-                BluetoothLEService.this.gatt = null;
-                state = State.IDLE;
-                notifyFailure("reflection invocation failed");
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-                gatt.close();
-                BluetoothLEService.this.gatt = null;
-                state = State.IDLE;
-                notifyFailure("reflection invocation failed");
-            } catch (InvocationTargetException e) {
-                gatt.close();
-                BluetoothLEService.this.gatt = null;
-                state = State.IDLE;
-                notifyFailure("reflection invocation failed");
-                e.printStackTrace();
-            }
-        //} else  {
-        //    gatt = device.connectGatt(this, true, gattCallback);
-        //}
+        try {
+            gatt = (BluetoothGatt) connectGattMethod.invoke(device, this, false, gattCallback, TRANSPORT_LE);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            gatt.close();
+            BluetoothLEService.this.gatt = null;
+            state = State.IDLE;
+            notifyFailure("Illegal Access Exception");
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            gatt.close();
+            BluetoothLEService.this.gatt = null;
+            state = State.IDLE;
+            notifyFailure("Illegal Argument Exception");
+        } catch (InvocationTargetException e) {
+            gatt.close();
+            BluetoothLEService.this.gatt = null;
+            state = State.IDLE;
+            notifyFailure("Invocation Target Exception");
+            e.printStackTrace();
+        }
 
         //gatt = device.connectGatt(this, false, gattCallback);
     }

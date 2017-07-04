@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="25dp"
     android:orientation="vertical"
     android:weightSum="1">
 
@@ -20,12 +19,12 @@
         <ImageView
             android:id="@+id/imageView7"
             android:layout_width="118dp"
-            android:layout_height="match_parent"
+            android:layout_height="104dp"
             app:srcCompat="@drawable/fred_emoji" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
@@ -47,7 +46,8 @@
                 android:gravity="center"
                 android:text="What's your name?"
                 android:textAlignment="center"
-                android:textColor="@color/primaryText" />
+                android:textColor="@color/primaryText"
+                android:textSize="25sp" />
 
         </LinearLayout>
 
@@ -63,8 +63,6 @@
         android:id="@+id/facebook_button_overlay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
         android:layout_weight="0.09"
         android:background="@drawable/btn_fb" />
 
@@ -87,7 +85,6 @@
         android:gravity="center"
         android:text="Other sing-in"
         android:textAlignment="textEnd"
-        android:textColor="@color/primaryText"
         android:textSize="25sp" />
 
 </LinearLayout>

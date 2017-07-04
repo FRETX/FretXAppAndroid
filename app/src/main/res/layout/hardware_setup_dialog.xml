@@ -36,15 +36,15 @@
 
     <Button
         android:id="@+id/nextButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:layout_gravity="center"
         android:background="@color/primary"
         android:text="I'm done, take me to the next video"
         android:textAllCaps="false"
-        android:textColor="@color/background"
-        android:layout_gravity="center"/>
+        android:textColor="@color/background" />
 
     <Space
         android:layout_width="match_parent"
@@ -56,8 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="replay video"
-        android:textAlignment="textEnd"
-        android:textColor="@color/primaryText" />
+        android:textAlignment="textEnd" />
 
     <Space
         android:layout_width="match_parent"
@@ -68,7 +67,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="or need assistance?"
-        android:textAlignment="textEnd"
-        android:textColor="@color/primaryText" />
+        android:textAlignment="textEnd" />
 
 </LinearLayout>
