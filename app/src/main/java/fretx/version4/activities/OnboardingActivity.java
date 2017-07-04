@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,6 +31,7 @@ public class OnboardingActivity extends BaseActivity {
     private Fragment fragment;
     private int state;
     private SeekBar seekBar;
+    private TextView title;
 
     private String guitar;
     private String hand;
@@ -40,12 +42,7 @@ public class OnboardingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = new Guitar();
-        fragmentTransaction.add(R.id.onboarding_fragment_container, fragment);
-        fragmentTransaction.commit();
-
+        title = (TextView) findViewById(R.id.title);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setOnTouchListener(new View.OnTouchListener(){
             @Override
@@ -54,14 +51,13 @@ public class OnboardingActivity extends BaseActivity {
             }
         });
 
+        updateState();
+
         final Button next = (Button) findViewById(R.id.next_button);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final FragmentManager fragmentManager;
-                final FragmentTransaction fragmentTransaction;
                 final RadioGroup group;
-
                 switch (state) {
                     case 0:
                         group = (RadioGroup) findViewById(R.id.radioGroup);
@@ -78,13 +74,8 @@ public class OnboardingActivity extends BaseActivity {
                             default:
                                 return;
                         }
-
-                        fragmentManager = getSupportFragmentManager();
-                        fragmentTransaction = fragmentManager.beginTransaction();
-                        fragment = new Hand();
-                        fragmentTransaction.replace(R.id.onboarding_fragment_container, fragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        ++state;
+                        updateState();
                         break;
 
                     case 1:
@@ -99,12 +90,8 @@ public class OnboardingActivity extends BaseActivity {
                             default:
                                 return;
                         }
-                        fragmentManager = getSupportFragmentManager();
-                        fragmentTransaction = fragmentManager.beginTransaction();
-                        fragment = new Level();
-                        fragmentTransaction.replace(R.id.onboarding_fragment_container, fragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        ++state;
+                        updateState();
                         break;
 
                     case 2:
@@ -131,8 +118,6 @@ public class OnboardingActivity extends BaseActivity {
                         }
                         break;
                 }
-                ++state;
-                seekBar.setProgress(state);
             }
         });
     }
@@ -148,7 +133,33 @@ public class OnboardingActivity extends BaseActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
             --state;
-            seekBar.setProgress(state);
+            updateState();
+        }
+    }
+
+    private void updateState() {
+        seekBar.setProgress(state);
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch (state) {
+            case 0:
+                title.setText("What kind of guitar do you have?");
+                fragment = new Guitar();
+                fragmentTransaction.replace(R.id.onboarding_fragment_container, fragment);
+                fragmentTransaction.commit();
+                break;
+            case 1:
+                title.setText("Are you a LEFT or RIGHT-HANDED?");
+                fragment = new Hand();
+                fragmentTransaction.replace(R.id.onboarding_fragment_container, fragment);
+                fragmentTransaction.commit();
+                break;
+            case 2:
+                title.setText("What is your level skill?");
+                fragment = new Level();
+                fragmentTransaction.replace(R.id.onboarding_fragment_container, fragment);
+                fragmentTransaction.commit();
+                break;
         }
     }
 }

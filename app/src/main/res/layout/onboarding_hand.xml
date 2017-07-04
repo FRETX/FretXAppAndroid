@@ -7,35 +7,33 @@
         android:id="@+id/radioGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0.7"
         android:orientation="vertical">
-
-        <RadioButton
-            android:id="@+id/rightRadio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Right" />
 
         <RadioButton
             android:id="@+id/leftRadio"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Left" />
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:text="LEFT handed" />
 
+        <RadioButton
+            android:id="@+id/rightRadio"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:text="RIGHT handed" />
 
 
     </RadioGroup>
 
-    <Button
-        android:id="@+id/not_sure_button"
+    <TextView
+        android:id="@+id/not_sure"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
         android:text="Not sure?"
-        android:textAllCaps="false"
-        android:background="@color/primary"
-        android:textColor="@color/tertiaryText"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        />
+        android:textAlignment="center"
+        android:textColor="@color/primaryText" />
 
 </LinearLayout>

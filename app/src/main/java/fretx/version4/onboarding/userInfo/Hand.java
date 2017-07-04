@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import fretx.version4.R;
@@ -41,7 +42,7 @@ public class Hand extends Fragment implements HandDialog.HandDialogListener {
                 //    Toast.makeText(getActivity(), "Right", Toast.LENGTH_SHORT).show();
             }
         });
-        final Button notSure = (Button) rootView.findViewById(R.id.not_sure_button);
+        final TextView notSure = (TextView) rootView.findViewById(R.id.not_sure);
         notSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
