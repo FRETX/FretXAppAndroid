@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.w3c.dom.Text;
+
 import fretx.version4.R;
 import fretx.version4.onboarding.login.User;
 import fretx.version4.onboarding.userInfo.Guitar;
@@ -50,6 +52,12 @@ public class OnboardingActivity extends BaseActivity {
                 return true;
             }
         });
+
+        final String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        if (displayName != null) {
+            final TextView name = (TextView) findViewById(R.id.name);
+            name.setText("Hi " + displayName);
+        }
 
         updateState();
 
