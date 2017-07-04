@@ -154,18 +154,21 @@ public class OnboardingActivity extends BaseActivity {
                 title.setText("What kind of guitar do you have?");
                 fragment = new Guitar();
                 fragmentTransaction.replace(R.id.onboarding_fragment_container, fragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 break;
             case 1:
                 title.setText("Are you a LEFT or RIGHT-HANDED?");
                 fragment = new Hand();
                 fragmentTransaction.replace(R.id.onboarding_fragment_container, fragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 break;
             case 2:
                 title.setText("What is your level skill?");
                 fragment = new Level();
                 fragmentTransaction.replace(R.id.onboarding_fragment_container, fragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 break;
         }
