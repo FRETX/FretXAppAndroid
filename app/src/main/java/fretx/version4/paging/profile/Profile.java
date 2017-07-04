@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 
 import fretx.version4.R;
+import fretx.version4.activities.ConnectivityActivity;
 import fretx.version4.activities.LightActivity;
 import fretx.version4.activities.LoginActivity;
 import fretx.version4.activities.OnboardingActivity;
@@ -81,7 +82,7 @@ public class Profile extends Fragment {
             onboardingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), OnboardingActivity.class);
+                    Intent intent = new Intent(getActivity(), ConnectivityActivity.class);
                     startActivity(intent);
                 }
             });
