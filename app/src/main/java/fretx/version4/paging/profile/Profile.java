@@ -82,7 +82,7 @@ public class Profile extends Fragment {
             onboardingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ConnectivityActivity.class);
+                    Intent intent = new Intent(getActivity(), OnboardingActivity.class);
                     startActivity(intent);
                 }
             });
