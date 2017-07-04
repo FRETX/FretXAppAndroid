@@ -1,12 +1,16 @@
 package fretx.version4.onboarding.hardware;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,6 +113,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
         urls = FirebaseConfig.getInstance().getSetupUrls();
         Log.d(TAG, "urls(" + urls.size() + "):" + urls.toString());
         youTubePlayerSupportFragment = new YouTubePlayerSupportFragment();
+
         initializePlayer();
     }
 
@@ -146,7 +151,21 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                     player.setShowFullscreenButton(false);
                     player.setFullscreen(true);
                     youTubePlayer.setPlayerStateChangeListener(stateListener);
-                    updateState();
+
+                    //check if music volume is up
+                    final AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+                    if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
+                        new AlertDialog.Builder(getActivity())
+                                .setMessage("The video has audio, make sure to turn speakers ON")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        updateState();
+                                    }
+                                }).show();
+                    } else {
+                        updateState();
+                    }
                 }
             }
 
