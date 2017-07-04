@@ -91,7 +91,9 @@ public class LoginActivity extends BaseActivity {
     public AlertDialog noInternetAccessDialod() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("No Internet Access");
-        builder.setMessage("Intenet access is required to login");
+        builder.setMessage("You don't seem to be connected to internet... " +
+                "Even though is great to have some time off," +
+                "please connect to the internet and try again.");
         builder.setCancelable(false);
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override

@@ -1,33 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    >
+    android:layout_margin="25dp"
+    android:orientation="vertical"
+    android:weightSum="1">
 
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.05"
-        />
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.10"
-        android:src="@drawable/fretx_logo"
-        />
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.25"
-        />
+        android:layout_weight="0.4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="118dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/fred_emoji" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Hi, I'm Fred!"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="What's your name?"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:id="@+id/space3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2" />
+
     <Button
         android:id="@+id/facebook_button_overlay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.09"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
+        android:layout_weight="0.09"
         android:background="@drawable/btn_fb" />
 
     <com.facebook.login.widget.LoginButton
@@ -40,23 +78,16 @@
     <android.support.v4.widget.Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.05"
-        />
-    <Button
-        android:id="@+id/other_button"
+        android:layout_weight="0.3" />
+
+    <TextView
+        android:id="@+id/other"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.07"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:textAllCaps="false"
-        android:background="@color/primary"
-        android:textColor="@color/tertiaryText"
-        android:text="Other Sign-in" />
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.39"
-        />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Other sing-in"
+        android:textAlignment="textEnd"
+        android:textColor="@color/primaryText"
+        android:textSize="25sp" />
 
 </LinearLayout>
