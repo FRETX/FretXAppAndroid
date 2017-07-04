@@ -40,11 +40,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:text="What you will need:"
         android:layout_gravity="center"
+        android:text="What you will need:"
         android:textAlignment="center"
-        android:textColor="@color/primaryText"/>
+        android:textColor="@color/primaryText"
+        tools:text="What you will need:" />
 
     <ImageView
         android:id="@+id/imageView3"
