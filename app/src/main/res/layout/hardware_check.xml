@@ -53,6 +53,10 @@
             android:layout_weight="1"
             android:visibility="visible" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
+
         <TextView
             android:id="@+id/interrupt"
             android:layout_width="match_parent"
