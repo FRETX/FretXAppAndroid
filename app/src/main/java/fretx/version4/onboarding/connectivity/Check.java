@@ -74,8 +74,6 @@ public class Check extends Fragment{
         gifView = (ImageView) rootView.findViewById(R.id.gif);
         actionText = (TextView) rootView.findViewById(R.id.action_text);
 
-        setProgressLayout();
-
         final Button retry = (Button) rootView.findViewById(R.id.retry);
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +109,24 @@ public class Check extends Fragment{
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
+        if (Bluetooth.getInstance().isEnabled() && !Bluetooth.getInstance().isConnected()) {
+            setProgressLayout();
+            Bluetooth.getInstance().connect();
+        } else {
+            onCheckSuccess();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
+    }
+
     private void setProgressLayout() {
         errorLayout.setVisibility(View.GONE);
         progressLayout.setVisibility(View.VISIBLE);
@@ -123,22 +139,6 @@ public class Check extends Fragment{
         actionText.setText(CONNECTION_FAILED);
         Glide.with(getActivity()).load(R.raw.on_light).into(gifView);
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
-        if (!Bluetooth.getInstance().isConnected()) {
-            setProgressLayout();
-            Bluetooth.getInstance().connect();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
     }
 
     private void onCheckSuccess(){
