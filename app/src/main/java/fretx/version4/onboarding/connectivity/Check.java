@@ -84,6 +84,7 @@ public class Check extends Fragment{
                 Bluetooth.getInstance().connect();
             }
         });
+
         final TextView skip = (TextView) rootView.findViewById(R.id.skip);
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +92,15 @@ public class Check extends Fragment{
                 onCheckSuccess();
             }
         });
+
+        final TextView interrupt = (TextView) rootView.findViewById(R.id.interrupt);
+        interrupt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckSuccess();
+            }
+        });
+
         final TextView assist = (TextView) rootView.findViewById(R.id.assistance);
         assist.setOnClickListener(new View.OnClickListener() {
             @Override
