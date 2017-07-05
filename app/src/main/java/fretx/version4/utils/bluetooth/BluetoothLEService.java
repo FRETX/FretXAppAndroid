@@ -13,8 +13,10 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Handler;
@@ -53,6 +55,26 @@ public class BluetoothLEService extends Service {
     private BluetoothGatt gatt;
     private BluetoothGattCharacteristic rx;
 
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int s = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch (s) {
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        Log.d(TAG, "Turning Bluetooth off...");
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        Log.d(TAG, "Bluetooth on");
+                        state = State.IDLE;
+                        iConnectDeviceNamed(deviceName);
+                        break;
+                }
+            }
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -65,6 +87,8 @@ public class BluetoothLEService extends Service {
         } else {
             Log.d(TAG, "Bluetooth adapter ok!");
         }
+        final IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mReceiver, filter);
         super.onCreate();
     }
 
@@ -149,6 +173,12 @@ public class BluetoothLEService extends Service {
     public IBinder onBind(Intent intent) {
         Log.v(TAG, "Service binded");
         return mBinder;
+    }
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(mReceiver);
+        super.onDestroy();
     }
 
     /* = = = = = = = = = = = = = = = = = = = = ENABLING = = = = = = = = = = = = = = = = = = = = = */
