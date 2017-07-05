@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.view.HeadStockView;
 import fretx.version4.R;
 import fretx.version4.view.TunerBarView;
@@ -164,6 +165,7 @@ public class TunerFragment extends Fragment {
         tunerBarView.setTargetPitch(centerPitchCts - HALF_PITCH_RANGE_CTS,
                 centerPitchCts, centerPitchCts + HALF_PITCH_RANGE_CTS);
         headStockView.setSelectedEar(index);
+        Bluetooth.getInstance().setString(index + 1);
     }
 
     //find the closest note to the one played (auto mode)

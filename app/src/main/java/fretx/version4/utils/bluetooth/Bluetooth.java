@@ -32,7 +32,25 @@ public class Bluetooth {
     private final byte[] correctIndicator = new byte[]{
             1,11,21,31,41,
             6,16,26,36,46, 0};
-    private final ArrayList<ServiceListener> serviceListeners = new ArrayList<>();
+    public final ArrayList<ServiceListener> serviceListeners = new ArrayList<>();
+    public static final byte[] F0 = new byte[] {1, 2, 3, 4, 5, 6, 0};
+    public static final byte[] F1 = new byte[] {11, 12, 13, 14, 15, 16, 0};
+    public static final byte[] F2 = new byte[] {21, 22, 23, 24, 25, 26, 0};
+    public static final byte[] F3 = new byte[] {31, 32, 33, 34, 35, 36, 0};
+    public static final byte[] F4 = new byte[] {41, 42, 43, 44, 45, 46, 0};
+    public static final byte[] S1 = new byte[] {1, 11, 21, 31, 41, 0};
+    public static final byte[] S2 = new byte[] {2, 12, 22, 32, 42, 0};
+    public static final byte[] S3 = new byte[] {3, 13, 23, 33, 43, 0};
+    public static final byte[] S4 = new byte[] {4, 14, 24, 34, 44, 0};
+    public static final byte[] S5 = new byte[] {5, 15, 25, 35, 45, 0};
+    public static final byte[] S6 = new byte[] {6, 16, 26, 36, 46, 0};
+    public static final byte[] S1_NO_F0 = new byte[] {11, 21, 31, 41, 0};
+    public static final byte[] S2_NO_F0 = new byte[] {12, 22, 32, 42, 0};
+    public static final byte[] S3_NO_F0 = new byte[] {13, 23, 33, 43, 0};
+    public static final byte[] S4_NO_F0 = new byte[] {14, 24, 34, 44, 0};
+    public static final byte[] S5_NO_F0 = new byte[] {15, 25, 35, 45, 0};
+    public static final byte[] S6_NO_F0 = new byte[] {16, 26, 36, 46, 0};
+    public static final byte[] BLANK = new byte[] {0};
 
     /* = = = = = = = = = = = = = = = = = SINGLETON PATTERN = = = = = = = = = = = = = = = = = = = */
     private static class Holder {
@@ -123,6 +141,33 @@ public class Bluetooth {
     public void clearMatrix() {
         BluetoothAnimator.getInstance().stopAnimation();
         service.send(clear);
+    }
+
+    public void setString(int string) {
+        BluetoothAnimator.getInstance().stopAnimation();
+        byte data[] = null;
+        switch (string) {
+            case 1:
+                data = S1_NO_F0;
+                break;
+            case 2:
+                data = S2_NO_F0;
+                break;
+            case 3:
+                data = S3_NO_F0;
+                break;
+            case 4:
+                data = S4_NO_F0;
+                break;
+            case 5:
+                data = S5_NO_F0;
+                break;
+            case 6:
+                data = S6_NO_F0;
+                break;
+            default:
+        }
+        service.send(data);
     }
 
     public void lightMatrix() {

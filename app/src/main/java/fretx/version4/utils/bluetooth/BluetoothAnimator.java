@@ -5,6 +5,25 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import static fretx.version4.utils.bluetooth.Bluetooth.BLANK;
+import static fretx.version4.utils.bluetooth.Bluetooth.F0;
+import static fretx.version4.utils.bluetooth.Bluetooth.F1;
+import static fretx.version4.utils.bluetooth.Bluetooth.F2;
+import static fretx.version4.utils.bluetooth.Bluetooth.F3;
+import static fretx.version4.utils.bluetooth.Bluetooth.F4;
+import static fretx.version4.utils.bluetooth.Bluetooth.S1;
+import static fretx.version4.utils.bluetooth.Bluetooth.S1_NO_F0;
+import static fretx.version4.utils.bluetooth.Bluetooth.S2;
+import static fretx.version4.utils.bluetooth.Bluetooth.S2_NO_F0;
+import static fretx.version4.utils.bluetooth.Bluetooth.S3;
+import static fretx.version4.utils.bluetooth.Bluetooth.S3_NO_F0;
+import static fretx.version4.utils.bluetooth.Bluetooth.S4;
+import static fretx.version4.utils.bluetooth.Bluetooth.S4_NO_F0;
+import static fretx.version4.utils.bluetooth.Bluetooth.S5;
+import static fretx.version4.utils.bluetooth.Bluetooth.S5_NO_F0;
+import static fretx.version4.utils.bluetooth.Bluetooth.S6;
+import static fretx.version4.utils.bluetooth.Bluetooth.S6_NO_F0;
+
 /**
  * FretXAppAndroid for FretX
  * Created by pandor on 23/05/17 11:29.
@@ -12,25 +31,6 @@ import java.util.ArrayList;
 
 public class BluetoothAnimator {
     private static final String TAG = "KJKP6_BLE_ANIM";
-    private static final byte[] F0 = new byte[] {1, 2, 3, 4, 5, 6, 0};
-    private static final byte[] F1 = new byte[] {11, 12, 13, 14, 15, 16, 0};
-    private static final byte[] F2 = new byte[] {21, 22, 23, 24, 25, 26, 0};
-    private static final byte[] F3 = new byte[] {31, 32, 33, 34, 35, 36, 0};
-    private static final byte[] F4 = new byte[] {41, 42, 43, 44, 45, 46, 0};
-    private static final byte[] S1 = new byte[] {1, 11, 21, 31, 41, 0};
-    private static final byte[] S2 = new byte[] {2, 12, 22, 32, 42, 0};
-    private static final byte[] S3 = new byte[] {3, 13, 23, 33, 43, 0};
-    private static final byte[] S4 = new byte[] {4, 14, 24, 34, 44, 0};
-    private static final byte[] S5 = new byte[] {5, 15, 25, 35, 45, 0};
-    private static final byte[] S6 = new byte[] {6, 16, 26, 36, 46, 0};
-    private static final byte[] S1_NO_F0 = new byte[] {11, 21, 31, 41, 0};
-    private static final byte[] S2_NO_F0 = new byte[] {12, 22, 32, 42, 0};
-    private static final byte[] S3_NO_F0 = new byte[] {13, 23, 33, 43, 0};
-    private static final byte[] S4_NO_F0 = new byte[] {14, 24, 34, 44, 0};
-    private static final byte[] S5_NO_F0 = new byte[] {15, 25, 35, 45, 0};
-    private static final byte[] S6_NO_F0 = new byte[] {16, 26, 36, 46, 0};
-    private static final byte[] BLANK = new byte[] {0};
-
     private static final int DEFAULT_DELAY_MS = 500;
 
     private final Handler handler = new Handler();
