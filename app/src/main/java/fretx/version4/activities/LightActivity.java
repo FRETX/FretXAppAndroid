@@ -2,6 +2,7 @@ package fretx.version4.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -32,6 +33,12 @@ public class LightActivity extends BaseActivity {
         help = (TextView) findViewById(R.id.need_help);
         ok = (Button) findViewById(R.id.ok);
         bar = (SeekBar) findViewById(R.id.seekbar);
+        bar.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -12,10 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 import fretx.version4.view.FretboardView;
 import fretx.version4.R;
 import fretx.version4.utils.Preference;
 import rocks.fretx.audioprocessing.Chord;
+import rocks.fretx.audioprocessing.FingerPositions;
+import rocks.fretx.audioprocessing.FretboardPosition;
 
 /**
  * FretXAppAndroid for FretX
@@ -53,15 +57,24 @@ public class FretboardFragment extends Fragment {
     }
 
     public void strum() {
+        final ArrayList<FretboardPosition> fretboardPositions = fretboardView.getFretboardPositions();
+
+
+
+
+        final float top = fretboardView.getTopStringHeight();
+        final float bottom = fretboardView.getBottomStringHeight();
+        Log.d(TAG, "strum: " + bottom + " - " + top);
+
         float pos;
         if (Preference.getInstance().isLeftHanded()) {
             //top to bottom
-            strummer.setY(0);
-            pos = strummer_container.getHeight() - strummer.getHeight();
+            strummer.setY(top - strummer.getHeight());
+            pos = bottom - strummer.getHeight();
         } else {
             //bottom to top
-            strummer.setY(strummer_container.getHeight() - strummer.getHeight());
-            pos = 0;
+            strummer.setY(bottom - strummer.getHeight());
+            pos = top - strummer.getHeight();
         }
         Log.d(TAG, "strumming");
         strumFadeIn(pos);
