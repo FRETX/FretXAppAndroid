@@ -114,6 +114,7 @@ public class BluetoothLEService extends Service implements BluetoothInterface {
         Log.d(TAG, "on destroy");
         gatt.disconnect();
         gatt.close();
+        Bluetooth.getInstance().state = Bluetooth.State.NOT_CONNECTED;
         super.onDestroy();
     }
 }

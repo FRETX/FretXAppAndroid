@@ -1,7 +1,10 @@
 package fretx.version4;
 
-import android.*;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,8 +22,8 @@ import fretx.version4.utils.bluetooth.Bluetooth;
  */
 
 public class FretXApp extends MultiDexApplication {
-    private static final String TAG = "KJKP6_Global";
-    private LocationListener locationListener = new LocationListener() {
+    private static final String TAG = "KJKP6_FRETXAPP";
+    private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {}
 
@@ -36,6 +39,39 @@ public class FretXApp extends MultiDexApplication {
         @Override
         public void onProviderDisabled(String provider) {}
     };
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            Log.d(TAG, "register bluetooth action");
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch (state) {
+                    case BluetoothAdapter.STATE_ON:
+                        Log.d(TAG, "bluetooth is enabled");
+                        Bluetooth.getInstance().connectFretX();
+                        break;
+                }
+
+            }
+        }
+    };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        final IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(broadcastReceiver, filter);
+        Log.d(TAG, "register bluetooth broadcast receiver");
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        Log.d(TAG, "unregister bluetooth broadcast receiver");
+        unregisterReceiver(broadcastReceiver);
+    }
 
     public void setLocationListener() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -46,4 +82,6 @@ public class FretXApp extends MultiDexApplication {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 100, locationListener);
         }
     }
+
+
 }

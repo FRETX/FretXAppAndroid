@@ -112,12 +112,12 @@ public class Bluetooth implements ServiceConnection {
 
     /* = = = = = = = = = = = = = = = = ENABLING / SCANNING = = = = = = = = = = = = = = = = = = = */
     public void connectFretX() {
-        if (!enabled || adapter == null)
+        if (!enabled || adapter == null) {
             Log.d(TAG, "Bluetooth connect request rejected!");
-        else if (!adapter.isEnabled()) {
+        } else if (!adapter.isEnabled()) {
             Log.d(TAG, "Bluetooth enabling adapter!");
             adapter.enable();
-        }  else if (state != State.NOT_CONNECTED) {
+        } else if (state != State.NOT_CONNECTED) {
             Log.d(TAG, "Scan or connection already ongoing!");
         } else if (manager != null && !manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             if (locationAsked)
@@ -181,7 +181,7 @@ public class Bluetooth implements ServiceConnection {
             } else if (errorCode == SCAN_FAILED_INTERNAL_ERROR) {
                 Log.d(TAG, "Scan failed: SCAN_FAILED_INTERNAL_ERROR");
             } else {
-                Log.d(TAG, "Scan failed: UNKNOWN_ERROR");
+                Log.d(TAG, "Scan failed: UNKNOWN_ERROR (" + errorCode + ")");
             }
             state = State.NOT_CONNECTED;
         }
