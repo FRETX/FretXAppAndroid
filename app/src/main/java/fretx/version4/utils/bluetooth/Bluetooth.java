@@ -297,7 +297,7 @@ public class Bluetooth implements ServiceConnection {
     void notifyConnection() {
         if (bluetoothListeners.size() > 0)
             for (BluetoothListener listener: bluetoothListeners)
-                listener.onDisconnect();
+                listener.onConnect();
         else
             Log.d(TAG, "No listener to notify scan failure");
     }
@@ -305,7 +305,7 @@ public class Bluetooth implements ServiceConnection {
     void notifyDisconnection() {
         if (bluetoothListeners.size() > 0)
             for (BluetoothListener listener: bluetoothListeners)
-                listener.onConnect();
+                listener.onDisconnect();
         else
             Log.d(TAG, "No listener to notify scan failure");
     }
