@@ -103,13 +103,6 @@ public class BluetoothLEService extends Service implements BluetoothInterface {
     }
 
     @Override
-    public void disconnect() {
-        gatt.disconnect();
-        gatt.close();
-        stopSelf();
-    }
-
-    @Override
     public void onDestroy() {
         Log.d(TAG, "on destroy");
         gatt.disconnect();

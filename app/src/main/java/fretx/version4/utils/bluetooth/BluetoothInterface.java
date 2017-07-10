@@ -9,6 +9,5 @@ import android.bluetooth.BluetoothDevice;
 
 interface BluetoothInterface {
     void connect(Bluetooth bt, BluetoothDevice device);
-    void disconnect();
     void send(byte data[]);
 }
