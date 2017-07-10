@@ -37,7 +37,7 @@ import static android.bluetooth.BluetoothDevice.TRANSPORT_LE;
  * Created by pandor on 06/06/17 17:20.
  */
 
-public class BluetoothLEService extends Service {
+public class BluetoothLEService_old extends Service {
     private final static String TAG = "KJKP6_BLE_SERVICE";
     private static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
     private static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
@@ -94,8 +94,8 @@ public class BluetoothLEService extends Service {
 
     /* = = = = = = = = = = = = = = = = = = = = BINDING = = = = = = = = = = = = = = = = = = = = = */
     private class LocalBinder extends Binder implements BluetoothInterface{
-        /* public BluetoothLEService getServiceInstance(){
-            return BluetoothLEService.this;
+        /* public BluetoothLEService_old getServiceInstance(){
+            return BluetoothLEService_old.this;
         } */
 
         public void connectDevice(String deviceName) {
@@ -299,18 +299,18 @@ public class BluetoothLEService extends Service {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             gatt.close();
-            BluetoothLEService.this.gatt = null;
+            BluetoothLEService_old.this.gatt = null;
             state = State.IDLE;
             notifyFailure("Illegal Access Exception");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             gatt.close();
-            BluetoothLEService.this.gatt = null;
+            BluetoothLEService_old.this.gatt = null;
             state = State.IDLE;
             notifyFailure("Illegal Argument Exception");
         } catch (InvocationTargetException e) {
             gatt.close();
-            BluetoothLEService.this.gatt = null;
+            BluetoothLEService_old.this.gatt = null;
             state = State.IDLE;
             notifyFailure("Invocation Target Exception");
             e.printStackTrace();
@@ -339,13 +339,13 @@ public class BluetoothLEService extends Service {
             } else if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_DISCONNECTED) {
                 Log.d(TAG, "disconnected");
                 gatt.close();
-                BluetoothLEService.this.gatt = null;
+                BluetoothLEService_old.this.gatt = null;
                 state = State.IDLE;
                 notifyDisconnection();
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "failure, disconnecting: " + status);
                 gatt.close();
-                BluetoothLEService.this.gatt = null;
+                BluetoothLEService_old.this.gatt = null;
                 state = State.IDLE;
                 notifyFailure("error code " + status);
             }
@@ -354,7 +354,7 @@ public class BluetoothLEService extends Service {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             super.onServicesDiscovered(gatt, status);
-            final BluetoothGattService RxService = BluetoothLEService.this.gatt.getService(RX_SERVICE_UUID);
+            final BluetoothGattService RxService = BluetoothLEService_old.this.gatt.getService(RX_SERVICE_UUID);
             rx = RxService.getCharacteristic(RX_CHAR_UUID);
             state = State.CONNECTED;
             BluetoothAnimator.getInstance().stringFall();

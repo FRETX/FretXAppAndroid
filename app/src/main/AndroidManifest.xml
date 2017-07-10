@@ -79,7 +79,7 @@
             android:name=".activities.HardwareIntroActivity"
             android:screenOrientation="portrait"/>
 
-        <service android:name=".utils.bluetooth.BluetoothLEService" />
+        <service android:name=".utils.bluetooth.BluetoothLEService_old" />
 
 
     </application>

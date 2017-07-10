@@ -57,8 +57,8 @@ public class BluetoothStdService extends Service {
 
     /* = = = = = = = = = = = = = = = = = = = = BINDING = = = = = = = = = = = = = = = = = = = = = */
     private class LocalBinder extends Binder implements BluetoothInterface{
-        /* public BluetoothLEService getServiceInstance(){
-            return BluetoothLEService.this;
+        /* public BluetoothLEService_old getServiceInstance(){
+            return BluetoothLEService_old.this;
         } */
 
         @Override
