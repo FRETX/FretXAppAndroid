@@ -1,4 +1,5 @@
 package fretx.version4.activities;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 
 import android.graphics.ColorMatrix;
@@ -7,8 +8,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -47,7 +50,6 @@ public class MainActivity extends BaseActivity {
     private String errorMessage = "no data";
 
 	//VIEWS
-    private Toolbar toolbar;
     private BottomBar bottomBar;
 	private MenuItem bluetoothItem;
 	public FragNavController fragNavController;
@@ -106,6 +108,11 @@ public class MainActivity extends BaseActivity {
             Log.d(TAG, "Bluetooth connection failed - " + errorMessage);
             runOnUiThread(setFailed);
         }
+
+        @Override
+        public void onMultipleScanResult(SparseArray<BluetoothDevice> results) {
+            Log.d(TAG, "ON MULTIPLE SCAN RESULTS");
+        }
     };
 
 	private UnreadConversationCountListener unreadListener = new UnreadConversationCountListener() {
@@ -122,10 +129,12 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 		setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_fretx_withtext));
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
         toolbar.setSubtitle("");
 
@@ -136,22 +145,20 @@ public class MainActivity extends BaseActivity {
 
         //// TODO: 24/04/17 move this to splashscreen
         Context ctx = getApplicationContext();
-		Network.initialize(ctx);
-		AppCache.initialize(ctx);
-		SongList.initialize();
+        Network.initialize(ctx);
+        AppCache.initialize(ctx);
+        SongList.initialize();
 
         final List<Fragment> fragments = new ArrayList<>();
-		fragments.add(new PlayFragmentSearchList());
-		fragments.add(new LearnFragment());
-		fragments.add(new TunerFragment());
-		fragments.add(new Profile());
-		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
+        fragments.add(new PlayFragmentSearchList());
+        fragments.add(new LearnFragment());
+        fragments.add(new TunerFragment());
+        fragments.add(new Profile());
+        fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
         bottomBar.selectTabAtPosition(INDEX_PLAY);
 
-		setGuiEventListeners();
-
         Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
-
+        setGuiEventListeners();
 		Preference.getInstance().init();
 	}
 
@@ -219,7 +226,7 @@ public class MainActivity extends BaseActivity {
                 } else {
                     item.setActionView(new ProgressBar(this));
                     Toast.makeText(getActivity(), "Connecting to FretX...", Toast.LENGTH_SHORT).show();
-                    Bluetooth.getInstance().connect();
+                    Bluetooth.getInstance().connectFretX();
                 }
             default:
                 return super.onOptionsItemSelected(item);

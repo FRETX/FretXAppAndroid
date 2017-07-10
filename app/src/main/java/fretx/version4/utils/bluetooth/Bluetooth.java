@@ -36,12 +36,12 @@ import static android.content.Context.BLUETOOTH_SERVICE;
  * Created by pandor on 08/06/17 10:31.
  */
 
-public class Bluetooth {
+public class Bluetooth implements ServiceConnection {
     private static final String TAG = "KJKP6_BLUETOOTH";
     private static final String DEVICE_NAME = "FretX";
     private static final int SCAN_DELAY_MS = 3000;
 
-    static final byte[] correctIndicator = new byte[]{1, 11, 21, 31, 41, 6, 16, 26, 36, 46, 0};
+    static final byte[] CORRECT_INDICATOR = new byte[]{1, 11, 21, 31, 41, 6, 16, 26, 36, 46, 0};
     static final byte[] F0 = new byte[] {1, 2, 3, 4, 5, 6, 0};
     static final byte[] F1 = new byte[] {11, 12, 13, 14, 15, 16, 0};
     static final byte[] F2 = new byte[] {21, 22, 23, 24, 25, 26, 0};
@@ -62,19 +62,16 @@ public class Bluetooth {
     static final byte[] BLANK = new byte[] {0};
 
     private final SparseArray<BluetoothDevice> devices = new SparseArray<>();
-    private final ArrayList<ServiceListener> serviceListeners = new ArrayList<>();
+    private final ArrayList<BluetoothListener> bluetoothListeners = new ArrayList<>();
     private final Handler handler = new Handler();
+
+    private BluetoothDevice connectDevice;
     private HashMap<String,FingerPositions> chordFingerings;
-
-
-    enum State {NOT_CONNECTED, CONNECTING, CONNECTED;}
+    enum State {NOT_CONNECTED, CONNECTING, CONNECTED}
     private LocationManager manager = null;
     State state = State.NOT_CONNECTED;
     private BluetoothAdapter adapter;
     private boolean enabled;
-    private BluetoothDevice connectDevice;
-    private ArrayList<BluetoothListener> bluetoothListener;
-    private ArrayList<ServiceListener> serviceListener;
     private BluetoothInterface service;
     private boolean locationAsked;
 
@@ -105,12 +102,16 @@ public class Bluetooth {
         chordFingerings = MusicUtils.parseChordDb();
     }
 
-    static Bluetooth getInstance() {
+    public static Bluetooth getInstance() {
         return Holder.instance;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     /* = = = = = = = = = = = = = = = = ENABLING / SCANNING = = = = = = = = = = = = = = = = = = = */
-    void connectFretX() {
+    public void connectFretX() {
         if (!enabled || adapter == null)
             Log.d(TAG, "Bluetooth connect request rejected!");
         else if (!adapter.isEnabled()) {
@@ -211,40 +212,42 @@ public class Bluetooth {
 
     /* = = = = = = = = = = = = = = = = = = CONNECTING = = = = = = = = = = = = = = = = = = = = = = */
     private void connect(BluetoothDevice device) {
+        final AppCompatActivity activity = BaseActivity.getActivity();
         if (state == State.CONNECTING) {
             Log.d(TAG, "connect request canceled, already connecting");
-        } else {
+        } else if (activity != null) {
             Log.d(TAG, "start connection service");
             state = State.CONNECTING;
             this.connectDevice = device;
-            final Context appContext = BaseActivity.getActivity().getApplicationContext();
-            final Intent intent = new Intent(appContext, BluetoothDevice.class);
-            //appContext.startService(intent);
-            appContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            final Context appContext = activity.getApplication();
+            final Intent intent = new Intent(appContext, BluetoothLEService.class);
+            appContext.bindService(intent, this, Context.BIND_AUTO_CREATE);
         }
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder serviceBinder) {
-            Log.d(TAG, "service connected");
-            final BluetoothBinderInterface binder = (BluetoothBinderInterface) serviceBinder;
-            service = binder.getService();
-            service.connect(Bluetooth.this, connectDevice);
-        }
+    @Override
+    public void onServiceConnected(ComponentName className, IBinder serviceBinder) {
+        Log.d(TAG, "service connected");
+        final BluetoothBinderInterface binder = (BluetoothBinderInterface) serviceBinder;
+        service = binder.getService();
+        service.connect(Bluetooth.this, connectDevice);
+    }
 
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            Log.d(TAG, "service disconnected");
-            adapter.disable();
-            service = null;
-            state = State.NOT_CONNECTED;
-        }
-    };
+    @Override
+    public void onServiceDisconnected(ComponentName arg0) {
+        Log.d(TAG, "service disconnected");
+        adapter.disable();
+        service = null;
+        state = State.NOT_CONNECTED;
+    }
 
-    void disconnect() {
-        if (state == State.CONNECTED)
-            service.disconnect();
+    public void disconnect() {
+        Log.d(TAG, "disconnect");
+        final AppCompatActivity activity = BaseActivity.getActivity();
+        if (activity != null && state == State.CONNECTED) {
+            final Context appContext = activity.getApplication();
+            appContext.unbindService(this);
+        }
     }
 
     public boolean isConnected() {
@@ -256,64 +259,52 @@ public class Bluetooth {
 
     /* = = = = = = = = = = = = = = = = = = LISTENING = = = = = = = = = = = = = = = = = = = = = = */
     public void registerBluetoothListener(BluetoothListener listener) {
-        if (!bluetoothListener.contains(listener)) {
-            bluetoothListener.add(listener);
+        if (!bluetoothListeners.contains(listener)) {
+            bluetoothListeners.add(listener);
         }
     }
 
     public void unregisterBluetoothListener(BluetoothListener listener) {
-        if (bluetoothListener.contains(listener)) {
-            bluetoothListener.remove(bluetoothListener.indexOf(listener));
-        }
-    }
-
-    public void registerServiceListener(ServiceListener listener) {
-        if (!serviceListeners.contains(listener)) {
-            serviceListeners.add(listener);
-        }
-    }
-
-    public void unregisterServiceListener(ServiceListener listener) {
-        if (serviceListeners.contains(listener)) {
-            serviceListeners.remove(serviceListeners.indexOf(listener));
+        if (bluetoothListeners.contains(listener)) {
+            bluetoothListeners.remove(bluetoothListeners.indexOf(listener));
         }
     }
 
     private void notifyScanFailure(String errorMessage) {
-        if (bluetoothListener.size() > 0)
-            for (BluetoothListener listener: bluetoothListener)
+        if (bluetoothListeners.size() > 0)
+            for (BluetoothListener listener: bluetoothListeners)
                 listener.onScanFailure(errorMessage);
         else
             Log.d(TAG, "No listener to notify scan failure");
     }
 
     private void notifyMultipleScanResults(SparseArray<BluetoothDevice> devices) {
-        if (bluetoothListener.size() > 0)
-            for (BluetoothListener listener: bluetoothListener)
+        if (bluetoothListeners.size() > 0)
+            for (BluetoothListener listener: bluetoothListeners)
                 listener.onMultipleScanResult(devices);
         else
             Log.d(TAG, "No listener to notify scan failure");
     }
 
     void notifyFailure(String errorMessage) {
-        if (bluetoothListener.size() > 0)
-            for (BluetoothListener listener: bluetoothListener)
+        if (bluetoothListeners.size() > 0)
+            for (BluetoothListener listener: bluetoothListeners)
                 listener.onFailure(errorMessage);
         else
             Log.d(TAG, "No listener to notify scan failure");
     }
 
     void notifyConnection() {
-        if (bluetoothListener.size() > 0)
-            for (BluetoothListener listener: bluetoothListener)
+        if (bluetoothListeners.size() > 0)
+            for (BluetoothListener listener: bluetoothListeners)
                 listener.onDisconnect();
         else
             Log.d(TAG, "No listener to notify scan failure");
     }
 
     void notifyDisconnection() {
-        if (bluetoothListener.size() > 0)
-            for (BluetoothListener listener: bluetoothListener)
+        if (bluetoothListeners.size() > 0)
+            for (BluetoothListener listener: bluetoothListeners)
                 listener.onConnect();
         else
             Log.d(TAG, "No listener to notify scan failure");
@@ -321,28 +312,38 @@ public class Bluetooth {
 
     /* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
     public void setMatrix(Chord chord) {
+        if (service == null)
+            return;
         BluetoothAnimator.getInstance().stopAnimation();
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chord.toString(), chordFingerings);
         service.send(bluetoothArray);
     }
 
     public void setMatrix(byte[] fingerings) {
+        if (service == null)
+            return;
         BluetoothAnimator.getInstance().stopAnimation();
         service.send(fingerings);
     }
 
     public void setMatrix(Scale scale) {
+        if (service == null)
+            return;
         BluetoothAnimator.getInstance().stopAnimation();
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(scale.toString(), chordFingerings);
         service.send(bluetoothArray);
     }
 
     public void clearMatrix() {
+        if (service == null)
+            return;
         BluetoothAnimator.getInstance().stopAnimation();
         service.send(BLANK);
     }
 
     public void setString(int string) {
+        if (service == null)
+            return;
         BluetoothAnimator.getInstance().stopAnimation();
         byte data[] = null;
         switch (string) {
@@ -370,7 +371,9 @@ public class Bluetooth {
     }
 
     public void lightMatrix() {
+        if (service == null)
+            return;
         BluetoothAnimator.getInstance().stopAnimation();
-        service.send(correctIndicator);
+        service.send(CORRECT_INDICATOR);
     }
 }

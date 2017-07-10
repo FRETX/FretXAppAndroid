@@ -1,5 +1,5 @@
 <resources>
-    <!-- App theme without action bar -->
+    <!-- FretXApp theme without action bar -->
     <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>

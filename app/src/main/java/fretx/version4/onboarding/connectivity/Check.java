@@ -1,10 +1,12 @@
 package fretx.version4.onboarding.connectivity;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +64,11 @@ public class Check extends Fragment{
             Log.d(TAG, "Failure!");
             onCheckFailure(errorMessage);
         }
+
+        @Override
+        public void onMultipleScanResult(SparseArray<BluetoothDevice> results) {
+            Log.d(TAG, "ON MULTIPLE SCAN RESULTS");
+        }
     };
 
     @Nullable
@@ -79,7 +86,7 @@ public class Check extends Fragment{
             @Override
             public void onClick(View v) {
                 setProgressLayout();
-                Bluetooth.getInstance().connect();
+                Bluetooth.getInstance().connectFretX();
             }
         });
 
@@ -115,7 +122,7 @@ public class Check extends Fragment{
         Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
         if (Bluetooth.getInstance().isEnabled() && !Bluetooth.getInstance().isConnected()) {
             setProgressLayout();
-            Bluetooth.getInstance().connect();
+            Bluetooth.getInstance().connectFretX();
         } else {
             onCheckSuccess();
         }

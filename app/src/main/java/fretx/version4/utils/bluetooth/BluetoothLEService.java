@@ -21,7 +21,7 @@ import static android.bluetooth.BluetoothDevice.TRANSPORT_LE;
  * Created by pandor on 07/07/17 10:13.
  */
 
-public class BluetoothService extends Service implements BluetoothInterface {
+public class BluetoothLEService extends Service implements BluetoothInterface {
     private final static String TAG = "KJKP6_BLE_SERVICE";
     private static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
     private static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
@@ -30,15 +30,9 @@ public class BluetoothService extends Service implements BluetoothInterface {
     private BluetoothGatt gatt;
     private BluetoothGattCharacteristic rx;
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        //TODO do something useful
-        return Service.START_NOT_STICKY;
-    }
-
     private class LocalBinder extends Binder implements BluetoothBinderInterface {
         public BluetoothInterface getService() {
-            return BluetoothService.this;
+            return BluetoothLEService.this;
         }
     }
 
@@ -66,13 +60,13 @@ public class BluetoothService extends Service implements BluetoothInterface {
                 gatt.close();
                 bt.state = Bluetooth.State.NOT_CONNECTED;
                 bt.notifyDisconnection();
-                BluetoothService.this.stopSelf();
+                BluetoothLEService.this.stopSelf();
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "failure, disconnecting: " + status);
                 gatt.close();
                 bt.state = Bluetooth.State.NOT_CONNECTED;
                 bt.notifyFailure("error code " + status);
-                BluetoothService.this.stopSelf();
+                BluetoothLEService.this.stopSelf();
             }
         }
 
@@ -85,7 +79,7 @@ public class BluetoothService extends Service implements BluetoothInterface {
                 return;
             }
 
-            final BluetoothGattService RxService = BluetoothService.this.gatt.getService(RX_SERVICE_UUID);
+            final BluetoothGattService RxService = BluetoothLEService.this.gatt.getService(RX_SERVICE_UUID);
             rx = RxService.getCharacteristic(RX_CHAR_UUID);
             if (rx == null) {
                 Log.d(TAG, "rx is null");
@@ -99,17 +93,27 @@ public class BluetoothService extends Service implements BluetoothInterface {
     };
 
     @Override
-    public void disconnect() {
-        gatt.disconnect();
-        //gatt.close();
-        //stopSelf();
+    public void send(byte[] data) {
+        if (gatt == null || rx == null) {
+            Log.d(TAG, "gatt or rx characteristic is null");
+        } else {
+            rx.setValue(data);
+            gatt.writeCharacteristic(rx);
+        }
     }
 
-    private void send(byte data[]) {
-        //BluetoothAnimator.getInstance().stopAnimation();
-        if (gatt == null || rx == null)
-            return;
-        rx.setValue(data);
-        gatt.writeCharacteristic(rx);
+    @Override
+    public void disconnect() {
+        gatt.disconnect();
+        gatt.close();
+        stopSelf();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "on destroy");
+        gatt.disconnect();
+        gatt.close();
+        super.onDestroy();
     }
 }
