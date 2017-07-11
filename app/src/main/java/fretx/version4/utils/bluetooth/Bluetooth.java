@@ -312,7 +312,7 @@ public class Bluetooth implements ServiceConnection {
 
     /* = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = */
     public void setMatrix(Chord chord) {
-        if (service == null)
+        if (service == null || chord == null)
             return;
         BluetoothAnimator.getInstance().stopAnimation();
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chord.toString(), chordFingerings);
@@ -320,14 +320,14 @@ public class Bluetooth implements ServiceConnection {
     }
 
     public void setMatrix(byte[] fingerings) {
-        if (service == null)
+        if (service == null || fingerings == null)
             return;
         BluetoothAnimator.getInstance().stopAnimation();
         service.send(fingerings);
     }
 
     public void setMatrix(Scale scale) {
-        if (service == null)
+        if (service == null || scale == null)
             return;
         BluetoothAnimator.getInstance().stopAnimation();
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(scale.toString(), chordFingerings);
@@ -366,6 +366,7 @@ public class Bluetooth implements ServiceConnection {
                 data = S6_NO_F0;
                 break;
             default:
+                data = BLANK;
         }
         service.send(data);
     }

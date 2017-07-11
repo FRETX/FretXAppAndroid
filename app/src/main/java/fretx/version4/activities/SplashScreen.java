@@ -37,7 +37,7 @@ public class SplashScreen extends BaseActivity {
     private IOnPermissionComplete onCompleteListener = new IOnPermissionComplete() {
         @Override
         public void onComplete(){
-            Log.d(TAG, "Complete!");
+            Log.d(TAG, "Permission Complete!");
             permission = true;
             complete();
         }
@@ -111,6 +111,7 @@ public class SplashScreen extends BaseActivity {
         Network.getInstance().init();
 
         initialized = true;
+        Log.d(TAG, "Initialization Complete!");
         complete();
     }
 

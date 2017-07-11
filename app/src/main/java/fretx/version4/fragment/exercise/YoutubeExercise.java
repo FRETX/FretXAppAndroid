@@ -1,12 +1,13 @@
-package fretx.version4.onboarding.hardware;
+package fretx.version4.fragment.exercise;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,46 +19,26 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
-import java.util.ArrayList;
-
 import fretx.version4.R;
-import fretx.version4.activities.ConnectivityActivity;
-import fretx.version4.utils.firebase.FirebaseConfig;
-import io.intercom.android.sdk.Intercom;
 
 /**
  * FretXAppAndroid for FretX
- * Created by pandor on 31/05/17 10:18.
+ * Created by pandor on 10/07/17 17:37.
  */
 
-public class Setup extends Fragment implements HardwareFragment, SetupListener {
-    private final static String TAG = "KJKP6_SETUP";
+public class YoutubeExercise extends Fragment {
+    private final static String TAG = "KJKP6_YOUTUBE_EXERCISE";
 
     private YouTubePlayerSupportFragment youTubePlayerSupportFragment;
-    private ArrayList<String> urls;
     private YouTubePlayer player;
-    private SetupListener setupListener = this;
     private static final String API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
-    private int state = 0;
     private boolean videoEnded;
+    private YoutubeListener listener;
 
-    @Override
-    //Setup dialog implementation
-    public void onReplay(){
-        videoEnded = false;
-        player.seekToMillis(0);
-        player.play();
-    }
-
-    @Override
-    public void onNext(){
-        ++state;
-        updateState();
-    }
-
-    @Override
-    public void onAssist() {
-        Intercom.client().displayMessageComposer("[Step " + (state + 1) + "]: need help!");
+    public static YoutubeExercise newInstance(@Nullable YoutubeListener listener) {
+        final YoutubeExercise exercise = new YoutubeExercise();
+        exercise.listener = listener;
+        return exercise;
     }
 
     private final YouTubePlayer.PlayerStateChangeListener stateListener = new YouTubePlayer.PlayerStateChangeListener() {
@@ -87,13 +68,11 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                 return;
             Log.d(TAG, "onVideoEnded");
             videoEnded = true;
-            if (state == urls.size() - 1) {
-                final SetupPhotoDialog photoDialog = SetupPhotoDialog.newInstance(setupListener);
-                photoDialog.show(getActivity().getSupportFragmentManager(), null);
-            } else {
-                final SetupDialog dialog = SetupDialog.newInstance(setupListener);
-                dialog.show(getActivity().getSupportFragmentManager(), null);
-            }
+            final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            Fragment fragment = new ExerciseFragment();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
         }
 
         @Override
@@ -105,30 +84,14 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        urls = FirebaseConfig.getInstance().getSetupUrls();
-        Log.d(TAG, "urls(" + urls.size() + "):" + urls.toString());
         youTubePlayerSupportFragment = new YouTubePlayerSupportFragment();
-
         init();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        try {
-            if (player != null)
-                player.setShowFullscreenButton(false);
-        } catch (IllegalStateException e) {
-            Log.v(TAG, "exception catched");
-            init();
-        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.hardware_setup, container, false);
+        final View rootView = inflater.inflate(R.layout.hardware_setup, container, false);
 
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.youtube_player_container, youTubePlayerSupportFragment);
@@ -155,6 +118,19 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            if (player != null)
+                player.setShowFullscreenButton(false);
+        } catch (IllegalStateException e) {
+            Log.v(TAG, "exception catched");
+            init();
+        }
+    }
+
     private void initializePlayer() {
         youTubePlayerSupportFragment.initialize(API_KEY, new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -164,7 +140,7 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                     player.setShowFullscreenButton(false);
                     player.setFullscreen(true);
                     youTubePlayer.setPlayerStateChangeListener(stateListener);
-                    updateState();
+                    player.loadVideo("smm6bdhKR6M");
                 }
             }
 
@@ -173,28 +149,5 @@ public class Setup extends Fragment implements HardwareFragment, SetupListener {
                 Toast.makeText(getActivity(), "Fail", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void updateState() {
-        Log.d(TAG, "state: " + state);
-        if (state != urls.size()) {
-            player.loadVideo(urls.get(state));
-            videoEnded = false;
-        } else {
-            final Intent intent = new Intent(getActivity(), ConnectivityActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (state > 0) {
-            --state;
-            updateState();
-        }
-    }
-
-    public void setStart(int start) {
-        state = start;
     }
 }

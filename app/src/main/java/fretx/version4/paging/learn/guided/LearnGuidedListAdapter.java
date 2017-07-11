@@ -1,49 +1,48 @@
 package fretx.version4.paging.learn.guided;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import fretx.version4.R;
-import fretx.version4.activities.MainActivity;
 import rocks.fretx.audioprocessing.Chord;
 
 class LearnGuidedListAdapter extends ArrayAdapter<GuidedExercise> {
-
-	private MainActivity mActivity;
 	private int layoutResourceId;
-	private ArrayList<GuidedExercise> data = new ArrayList<>();
+	private ArrayList<GuidedExercise> data;
+	private FragmentActivity context;
 
-	LearnGuidedListAdapter(MainActivity context , int layoutResourceId, ArrayList<GuidedExercise> data){
+	LearnGuidedListAdapter(FragmentActivity context , int layoutResourceId, ArrayList<GuidedExercise> data){
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
-		this.mActivity = context;
+		this.context = context;
 		this.data = data;
 	}
 
 	@NonNull
 	public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
-		View row = convertView;
 		RecordHolder holder;
 
-		if (row == null) {
-			LayoutInflater inflater = mActivity.getLayoutInflater();
-			row = inflater.inflate(layoutResourceId, parent, false);
+		if (convertView == null) {
+			final LayoutInflater inflater = context.getLayoutInflater();
+			convertView = inflater.inflate(layoutResourceId, parent, false);
 
 			holder = new RecordHolder();
 
-			holder.name = (TextView) row.findViewById(R.id.guidedChordExerciseName);
-			holder.chords = (TextView) row.findViewById(R.id.guidedChordExerciseChords);
+			holder.name = (TextView) convertView.findViewById(R.id.guidedChordExerciseName);
+			holder.chords = (TextView) convertView.findViewById(R.id.guidedChordExerciseChords);
+			holder.lock = (ImageView) convertView.findViewById(R.id.lock);
 
-			row.setTag(holder);
-
+			convertView.setTag(holder);
 		} else {
-			holder = (RecordHolder) row.getTag();
+			holder = (RecordHolder) convertView.getTag();
 		}
 
 		final GuidedExercise item = data.get(position);
@@ -55,20 +54,17 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedExercise> {
 		}
 		holder.chords.setText(chordsString);
 
-		row.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
-				guidedChordExerciseFragment.setExercise(data, position);
-				mActivity.fragNavController.pushFragment(guidedChordExerciseFragment);
-			}
-		});
+		if (data.get(position).isLocked())
+			holder.lock.setVisibility(View.VISIBLE);
+		else
+			holder.lock.setVisibility(View.INVISIBLE);
 
-		return row;
+		return convertView;
 	}
 
 	private static class RecordHolder{
 		TextView name;
 		TextView chords;
+		ImageView lock;
 	}
 }
