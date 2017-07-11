@@ -1,4 +1,4 @@
-package fretx.version4.paging.chords;
+package fretx.version4.paging.learn.chords;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

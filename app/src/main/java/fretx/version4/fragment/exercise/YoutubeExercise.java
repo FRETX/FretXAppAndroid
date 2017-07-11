@@ -6,8 +6,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,15 +62,7 @@ public class YoutubeExercise extends Fragment {
 
         @Override
         public void onVideoEnded() {
-            if (videoEnded)
-                return;
-            Log.d(TAG, "onVideoEnded");
-            videoEnded = true;
-            final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Fragment fragment = new ExerciseFragment();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.commit();
+            listener.onVideoEnded();
         }
 
         @Override

@@ -24,12 +24,12 @@ import static fretx.version4.activities.BaseActivity.getActivity;
  * Created by pandor on 10/07/17 19:47.
  */
 
-public class GuidedExerciseWrapper implements Serializable{
+public class GuidedExerciseList implements Serializable{
     private static final String TAG = "KJKP6_EXERCISE_WRAPPER";
     private final HashMap<String, GuidedExercise> exercises = new HashMap<>();
 
 
-    public GuidedExerciseWrapper() {
+    public GuidedExerciseList() {
         InputStream is = getActivity().getResources().openRawResource(R.raw.guided_chord_exercises_json);
 
         //read file
@@ -56,34 +56,36 @@ public class GuidedExerciseWrapper implements Serializable{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Log.d(TAG, "guided exercises correctly read");
     }
 
-    public ArrayList<GuidedExercise> getUnlockedExercises() {
+    public ArrayList<GuidedExercise> getArray() {
         //build exercise list
-        final ArrayList<GuidedExercise> exercisesList = new ArrayList<>();
-        GuidedExercise exercise = exercises.get("root");
+        final ArrayList<GuidedExercise> array = new ArrayList<>();
+        GuidedExercise exercise = this.exercises.get("root");
         if (exercise == null) {
             Log.d(TAG, "Cannot find root exercise");
         } else {
+            array.clear();
             exercise.setLocked(false);
-            exercisesList.clear();
             final ArrayList<String> toAdd = new ArrayList<>();
             toAdd.add(exercise.getId());
             while (!toAdd.isEmpty()) {
-                exercise = exercises.get(toAdd.get(0));
-                exercisesList.add(exercise);
+                exercise = this.exercises.get(toAdd.get(0));
+                array.add(exercise);
                 toAdd.remove(0);
                 toAdd.addAll(toAdd.size(), exercise.getChildren());
             }
         }
-        return exercisesList;
+        return array;
     }
 
     public HashMap<String, GuidedExercise> getExercises() {
         return exercises;
     }
 
-    public void setLocked(String exerciseId) {
+    public void setUnlocked(String exerciseId) {
         exercises.get(exerciseId).setLocked(false);
     }
 

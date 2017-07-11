@@ -4,11 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import rocks.fretx.audioprocessing.Chord;
 
-public class GuidedExercise {
+public class GuidedExercise implements Serializable{
 	private String name = "";
 	private String id = "";
 	private final ArrayList<Chord> chords = new ArrayList<>();
@@ -16,7 +17,7 @@ public class GuidedExercise {
 	private final ArrayList<String> children = new ArrayList<>();
 	private boolean locked = true;
 
-	public GuidedExercise(JSONObject chordExercise){
+	GuidedExercise(JSONObject chordExercise){
 		try {
 			this.name = chordExercise.getString("name");
 			this.id = chordExercise.getString("id");

@@ -69,6 +69,13 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     private boolean finished;
     private TimeUpdater timeUpdater;
 
+    public static ExerciseFragment newInstance(ExerciseListener listener, ArrayList<Chord> chords) {
+        final ExerciseFragment exerciseFragment = new ExerciseFragment();
+        exerciseFragment.setChords(chords);
+        exerciseFragment.setListener(listener);
+        return exerciseFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

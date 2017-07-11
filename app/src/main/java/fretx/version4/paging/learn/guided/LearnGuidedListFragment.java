@@ -20,37 +20,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import fretx.version4.R;
-import fretx.version4.activities.ConnectivityActivity;
 import fretx.version4.activities.ExerciseActivity;
-import fretx.version4.activities.MainActivity;
-import fretx.version4.fragment.exercise.YoutubeExercise;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 
 public class LearnGuidedListFragment extends Fragment {
 	private static final String TAG = "KJKP6_GUIDED_LIST";
-    private static final GuidedExerciseWrapper wrapper = new GuidedExerciseWrapper();
+    private static final GuidedExerciseList exercisesList = new GuidedExerciseList();
 
     private GridView gridView;
-    private ArrayList<GuidedExercise> exercisesList = new ArrayList<>();
 	private LearnGuidedListAdapter adapter;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		adapter = new LearnGuidedListAdapter(getActivity(), R.layout.paging_learn_guided_list_item, exercisesList);
+		adapter = new LearnGuidedListAdapter(getActivity(), R.layout.paging_learn_guided_list_item, exercisesList.getArray());
 		initScores();
 	}
 
@@ -68,12 +53,13 @@ public class LearnGuidedListFragment extends Fragment {
 		gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (exercisesList.get(position).isLocked())
-					return;
-				final Intent intent = new Intent(getActivity(), ExerciseActivity.class);
-                intent.putExtra("wrapper", wrapper);
-                intent.putExtra("exerciseId", exercisesList.get(position).getId());
-                startActivity(intent);
+                final GuidedExercise exercise = exercisesList.getArray().get(position);
+				if (!exercise.isLocked()) {
+                    final Intent intent = new Intent(getActivity(), ExerciseActivity.class);
+                    intent.putExtra("exerciseList", exercisesList);
+                    intent.putExtra("exerciseId", exercise.getId());
+                    startActivity(intent);
+                }
 			}
 		});
 	}
@@ -84,34 +70,33 @@ public class LearnGuidedListFragment extends Fragment {
 		BluetoothAnimator.getInstance().stringFall();
 	}
 
-	private void initExercises(){
-
-		adapter.notifyDataSetChanged();
-	}
-
 	private void initScores() {
+        Log.d(TAG, "init score");
 		final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
 		if (fUser != null) {
+            Log.d(TAG, "user not null");
 			final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(fUser.getUid()).child("score");
 			mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.d(TAG, "data change");
 					for (DataSnapshot snap : dataSnapshot.getChildren()) {
 						final String exerciseId = snap.getKey();
 						final String score = (String) dataSnapshot.child(exerciseId).child("score").getValue();
 						if (score != null) {
-							for (String childId: wrapper.getExercise(exerciseId).getChildren()) {
-                                wrapper.getExercise(childId).setLocked(false);
+							for (String childId: exercisesList.getExercise(exerciseId).getChildren()) {
+                                exercisesList.setUnlocked(childId);
+                                Log.d(TAG, "unlock exercise: " + childId);
 							}
 						}
-						exercisesList.clear();
-                        exercisesList.addAll(wrapper.getUnlockedExercises());
-						adapter.notifyDataSetChanged();
 					}
-				}
+                    adapter.notifyDataSetChanged();
+                    Log.d(TAG, "update unlocked exercises");
+                }
 
 				@Override
 				public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "canceled");
 				}
 			});
 		}
