@@ -2,6 +2,7 @@ package fretx.version4.activities;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseArray;
@@ -111,7 +113,9 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onMultipleScanResult(SparseArray<BluetoothDevice> results) {
+            MainActivity.this.errorMessage = "too many fretx";
             Log.d(TAG, "ON MULTIPLE SCAN RESULTS");
+            runOnUiThread(setFailed);
         }
     };
 
@@ -220,9 +224,21 @@ public class MainActivity extends BaseActivity {
             case R.id.action_bluetooth:
                 setGreyed(item);
                 if (Bluetooth.getInstance().isConnected()) {
-                    Bluetooth.getInstance().disconnect();
-                    Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Disconnected!");
+                    new AlertDialog.Builder(this)
+                            .setTitle("Disconnection")
+                            .setMessage("Are you sure you want to disconnect the device?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Bluetooth.getInstance().disconnect();
+                                    Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "Disconnected!");
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {}
+                            }).show();
                 } else {
                     item.setActionView(new ProgressBar(this));
                     Toast.makeText(getActivity(), "Connecting to FretX...", Toast.LENGTH_SHORT).show();

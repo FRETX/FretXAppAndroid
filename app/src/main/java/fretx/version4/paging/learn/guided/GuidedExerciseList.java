@@ -56,8 +56,6 @@ public class GuidedExerciseList implements Serializable{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        Log.d(TAG, "guided exercises correctly read");
     }
 
     public ArrayList<GuidedExercise> getArray() {

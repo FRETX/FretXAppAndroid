@@ -25,15 +25,12 @@ public class LearnGuidedExerciseDialog extends DialogFragment
     private static final String LAST_EXERCISE = "last_exercise";
     private Dialog dialog;
     private boolean replay = true;
+    private LearnGuidedChordExerciseListener listener;
 
-    public interface LearnGuidedChordExerciseListener {
-        void onUpdate(boolean replay);
-    }
-
-    public static LearnGuidedExerciseDialog newInstance(LearnGuidedChordExerciseListener listener, int min, int sec, boolean last) {
+    public static LearnGuidedExerciseDialog newInstance(@NonNull LearnGuidedChordExerciseListener listener, int min, int sec, boolean last) {
         LearnGuidedExerciseDialog dialog = new LearnGuidedExerciseDialog();
-        dialog.setTargetFragment((Fragment) listener, 4321);
-        Bundle args = new Bundle();
+        dialog.listener = listener;
+        final Bundle args = new Bundle();
         args.putInt(ELAPSED_TIME_MIN, min);
         args.putInt(ELAPSED_TIME_SEC, sec);
         args.putBoolean(LAST_EXERCISE, last);
@@ -87,8 +84,6 @@ public class LearnGuidedExerciseDialog extends DialogFragment
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
-
-        Fragment parentFragment = getTargetFragment();
-        ((LearnGuidedChordExerciseListener) parentFragment).onUpdate(replay);
+        listener.onUpdate(replay);
     }
 }

@@ -36,7 +36,6 @@ public class LearnGuidedListFragment extends Fragment {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		adapter = new LearnGuidedListAdapter(getActivity(), R.layout.paging_learn_guided_list_item, exercisesList.getArray());
-		initScores();
 	}
 
 	@Override
@@ -68,18 +67,16 @@ public class LearnGuidedListFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		BluetoothAnimator.getInstance().stringFall();
+		initScores();
 	}
 
 	private void initScores() {
-        Log.d(TAG, "init score");
 		final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
 		if (fUser != null) {
-            Log.d(TAG, "user not null");
 			final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(fUser.getUid()).child("score");
 			mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "data change");
 					for (DataSnapshot snap : dataSnapshot.getChildren()) {
 						final String exerciseId = snap.getKey();
 						final String score = (String) dataSnapshot.child(exerciseId).child("score").getValue();

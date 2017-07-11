@@ -29,8 +29,7 @@ import fretx.version4.fragment.exercise.ExerciseListener;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.firebase.Analytics;
 
-public class LearnGuidedExercise extends Fragment implements ExerciseListener,
-        LearnGuidedExerciseDialog.LearnGuidedChordExerciseListener {
+public class LearnGuidedExercise extends Fragment implements ExerciseListener, LearnGuidedChordExerciseListener {
     private static final String TAG = "KJKP6_GUIDED_EXERCISE";
     private FragmentManager fragmentManager;
     private ExerciseFragment exerciseFragment;
