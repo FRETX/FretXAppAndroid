@@ -44,6 +44,7 @@ public class ExerciseActivity extends BaseActivity implements YoutubeListener, E
         setContentView(R.layout.activity_exercise);
         container = (FrameLayout) findViewById(R.id.fragment_container);
 
+        fragmentManager = getSupportFragmentManager();
         exerciseList = (GuidedExerciseList) getIntent().getSerializableExtra("exerciseList");
         exerciseId = getIntent().getStringExtra("exerciseId");
         exercise = exerciseList.getExercise(exerciseId);
@@ -53,14 +54,17 @@ public class ExerciseActivity extends BaseActivity implements YoutubeListener, E
     }
 
     private void setYoutube() {
-        fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragment = YoutubeExercise.newInstance(this);
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
-        if (getResources().getConfiguration().orientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            container.setVisibility(View.INVISIBLE);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if (exercise.getYoutubeId().isEmpty()) {
+            setExercise();
+        } else {
+            final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragment = YoutubeExercise.newInstance(this, exercise.getYoutubeId());
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
+            if (getResources().getConfiguration().orientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                container.setVisibility(View.INVISIBLE);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
         }
     }
 

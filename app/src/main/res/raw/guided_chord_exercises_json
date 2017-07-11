@@ -13,6 +13,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e2"
@@ -33,6 +34,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e3"
@@ -53,6 +55,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e4"
@@ -73,6 +76,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e5"
@@ -93,6 +97,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e6"
@@ -113,6 +118,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e7"
@@ -133,6 +139,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e8"
@@ -153,6 +160,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e9"
@@ -173,6 +181,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e10"
@@ -193,6 +202,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e11"
@@ -213,6 +223,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e12"
@@ -232,8 +243,8 @@
 				"type" : "maj"
 			}
 		],
-		"nRepetitions" : 10
-	,
+		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e13"
@@ -254,6 +265,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e14"
@@ -274,6 +286,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : [
 			{
 				"id": "e15"
@@ -294,6 +307,7 @@
 			}
 		],
 		"nRepetitions" : 10,
+		"youtubeId" : "",
 		"children" : []
 	}
 ]

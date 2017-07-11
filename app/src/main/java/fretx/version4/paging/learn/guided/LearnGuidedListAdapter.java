@@ -49,7 +49,7 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedExercise> {
 
 		holder.name.setText(item.getName());
 		String chordsString = "";
-		for (Chord chord: item.getChords()) {
+		for (Chord chord: item.getSimpleChord()) {
 			chordsString += chord.toString() + " ";
 		}
 		holder.chords.setText(chordsString);

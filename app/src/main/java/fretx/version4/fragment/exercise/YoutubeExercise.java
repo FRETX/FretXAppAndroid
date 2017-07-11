@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -31,11 +32,13 @@ public class YoutubeExercise extends Fragment {
     private YouTubePlayer player;
     private static final String API_KEY = "AIzaSyAhxy0JS9M_oaDMW_bJMPyoi9R6oILFjNs";
     private boolean videoEnded;
+    private String id;
     private YoutubeListener listener;
 
-    public static YoutubeExercise newInstance(@Nullable YoutubeListener listener) {
+    public static YoutubeExercise newInstance(@Nullable YoutubeListener listener, @NonNull String id) {
         final YoutubeExercise exercise = new YoutubeExercise();
         exercise.listener = listener;
+        exercise.id = id;
         return exercise;
     }
 
@@ -130,7 +133,7 @@ public class YoutubeExercise extends Fragment {
                     player.setShowFullscreenButton(false);
                     player.setFullscreen(true);
                     youTubePlayer.setPlayerStateChangeListener(stateListener);
-                    player.loadVideo("smm6bdhKR6M");
+                    player.loadVideo(id);
                 }
             }
 
