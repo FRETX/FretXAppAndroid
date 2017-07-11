@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,7 +36,7 @@ public class Facebook extends Fragment implements LoginFragnent {
     private LoginActivity activity;
     private CallbackManager callbackManager;
     private Button facebookOverlay;
-    private Button otherButton;
+    private TextView other;
 
     private FacebookCallback<LoginResult> facebookCallback = new FacebookCallback<LoginResult>() {
         @Override
@@ -72,8 +73,8 @@ public class Facebook extends Fragment implements LoginFragnent {
         View rootView = inflater.inflate(R.layout.login_facebook, container, false);
 
         //goes to other kind of login
-        otherButton = (Button) rootView.findViewById(R.id.other_button);
-        otherButton.setOnClickListener(new View.OnClickListener() {
+        other = (TextView) rootView.findViewById(R.id.other);
+        other.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -111,7 +112,7 @@ public class Facebook extends Fragment implements LoginFragnent {
 
     private void buttonsClickable(boolean clickable) {
         facebookOverlay.setClickable(clickable);
-        otherButton.setClickable(clickable);
+        other.setClickable(clickable);
     }
 
     @Override

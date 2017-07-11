@@ -1,227 +1,313 @@
 [
 	{
-	    "name" : "Exercise 1",
-		"id": "",
+		"name" : "Exercise 1",
+		"id": "root",
 		"chords" : [
-				{
-					"root": "C",
-					"type" : "maj7"
-				},
-				{
-					"root": "D",
-					"type" : "sus2"
-				}
+			{
+				"root": "C",
+				"type" : "maj7"
+			},
+			{
+				"root": "D",
+				"type" : "sus2"
+			}
 		],
-		"nRepetitions" : 10
-	},
-		{
-	    "name" : "Exercise 2",
-		"id": "",
-		"chords" : [
-				{
-					"root": "C",
-					"type" : "maj7"
-				},
-				{
-					"root": "A",
-					"type" : "sus2"
-				}
-		],
-		"nRepetitions" : 10
-	},
-		{
-	    "name" : "Exercise 3",
-		"id": "",
-		"chords" : [
-				{
-					"root": "D",
-					"type" : "dim"
-				},
-				{
-					"root": "E",
-					"type" : "maj7"
-				}
-		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e2"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 4",
-		"id": "",
+		"name" : "Exercise 2",
+		"id": "e2",
 		"chords" : [
-				{
-					"root": "C#",
-					"type" : "m"
-				},
-				{
-					"root": "D",
-					"type" : "maj"
-				}
+			{
+				"root": "C",
+				"type" : "maj7"
+			},
+			{
+				"root": "A",
+				"type" : "sus2"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e3"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 5",
-		"id": "",
+		"name" : "Exercise 3",
+		"id": "e3",
 		"chords" : [
-				{
-					"root": "A",
-					"type" : "dim"
-				},
-				{
-					"root": "D",
-					"type" : "maj"
-				}
+			{
+				"root": "D",
+				"type" : "dim"
+			},
+			{
+				"root": "E",
+				"type" : "maj7"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e4"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 6",
-		"id": "",
+		"name" : "Exercise 4",
+		"id": "e4",
 		"chords" : [
-				{
-					"root": "B",
-					"type" : "m7"
-				},
-				{
-					"root": "A",
-					"type" : "maj"
-				}
+			{
+				"root": "C#",
+				"type" : "m"
+			},
+			{
+				"root": "D",
+				"type" : "maj"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e5"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 7",
-		"id": "",
+		"name" : "Exercise 5",
+		"id": "e5",
 		"chords" : [
-				{
-					"root": "C",
-					"type" : "maj"
-				},
-				{
-					"root": "A",
-					"type" : "maj"
-				}
+			{
+				"root": "A",
+				"type" : "dim"
+			},
+			{
+				"root": "D",
+				"type" : "maj"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e6"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 8",
-		"id": "",
+		"name" : "Exercise 6",
+		"id": "e6",
 		"chords" : [
-				{
-					"root": "E",
-					"type" : "maj"
-				},
-				{
-					"root": "A",
-					"type" : "maj"
-				}
+			{
+				"root": "B",
+				"type" : "m7"
+			},
+			{
+				"root": "A",
+				"type" : "maj"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e7"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 9",
-		"id": "",
+		"name" : "Exercise 7",
+		"id": "e7",
 		"chords" : [
-				{
-					"root": "A",
-					"type" : "m"
-				},
-				{
-					"root": "D",
-					"type" : "m"
-				}
+			{
+				"root": "C",
+				"type" : "maj"
+			},
+			{
+				"root": "A",
+				"type" : "maj"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e8"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 10",
-		"id": "",
+		"name" : "Exercise 8",
+		"id": "e8",
 		"chords" : [
-				{
-					"root": "C",
-					"type" : "maj"
-				},
-				{
-					"root": "D",
-					"type" : "m"
-				}
+			{
+				"root": "E",
+				"type" : "maj"
+			},
+			{
+				"root": "A",
+				"type" : "maj"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e9"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 11",
-		"id": "",
+		"name" : "Exercise 9",
+		"id": "e9",
 		"chords" : [
-				{
-					"root": "D",
-					"type" : "maj"
-				},
-				{
-					"root": "G",
-					"type" : "sus2"
-				}
+			{
+				"root": "A",
+				"type" : "m"
+			},
+			{
+				"root": "D",
+				"type" : "m"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e10"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 12",
-		"id": "",
+		"name" : "Exercise 10",
+		"id": "e10",
 		"chords" : [
-				{
-					"root": "E",
-					"type" : "m"
-				},
-				{
-					"root": "G",
-					"type" : "maj"
-				}
+			{
+				"root": "C",
+				"type" : "maj"
+			},
+			{
+				"root": "D",
+				"type" : "m"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e11"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 13",
-		"id": "",
+		"name" : "Exercise 11",
+		"id": "e11",
 		"chords" : [
-				{
-					"root": "G",
-					"type" : "maj"
-				},
-				{
-					"root": "A",
-					"type" : "m"
-				}
+			{
+				"root": "D",
+				"type" : "maj"
+			},
+			{
+				"root": "G",
+				"type" : "sus2"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e12"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 14",
-		"id": "",
+		"name" : "Exercise 12",
+		"id": "e12",
 		"chords" : [
-				{
-					"root": "A",
-					"type" : "m7"
-				},
-				{
-					"root": "D",
-					"type" : "m7"
-				}
+			{
+				"root": "E",
+				"type" : "m"
+			},
+			{
+				"root": "G",
+				"type" : "maj"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e13"
+			}
+		]
 	},
 	{
-	    "name" : "Exercise 15",
-		"id": "",
+		"name" : "Exercise 13",
+		"id": "e13",
 		"chords" : [
-				{
-					"root": "D",
-					"type" : "sus4"
-				},
-				{
-					"root": "A",
-					"type" : "maj7"
-				}
+			{
+				"root": "G",
+				"type" : "maj"
+			},
+			{
+				"root": "A",
+				"type" : "m"
+			}
 		],
-		"nRepetitions" : 10
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e14"
+			}
+		]
+	},
+	{
+		"name" : "Exercise 14",
+		"id": "e14",
+		"chords" : [
+			{
+				"root": "A",
+				"type" : "m7"
+			},
+			{
+				"root": "D",
+				"type" : "m7"
+			}
+		],
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : [
+			{
+				"id": "e15"
+			}
+		]
+	},
+	{
+		"name" : "Exercise 15",
+		"id": "e15",
+		"chords" : [
+			{
+				"root": "D",
+				"type" : "sus4"
+			},
+			{
+				"root": "A",
+				"type" : "maj7"
+			}
+		],
+		"nRepetitions" : 10,
+		"youtubeId" : "",
+		"children" : []
 	}
 ]

@@ -1,11 +1,9 @@
 package fretx.version4.paging.learn.guided;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,21 +21,17 @@ public class LearnGuidedExerciseDialog extends DialogFragment
     private static final String ELAPSED_TIME_MIN = "elapsed_time_min";
     private static final String ELAPSED_TIME_SEC = "elapsed_time_sec";
     private static final String LAST_EXERCISE = "last_exercise";
-    private Dialog dialog;
-    private boolean replay = true;
+    private LearnGuidedChordExerciseListener listener;
 
-    public interface LearnGuidedChordExerciseListener {
-        void onUpdate(boolean replay);
-    }
-
-    public static LearnGuidedExerciseDialog newInstance(LearnGuidedChordExerciseListener listener, int min, int sec, boolean last) {
+    public static LearnGuidedExerciseDialog newInstance(@NonNull LearnGuidedChordExerciseListener listener, int min, int sec, boolean last) {
         LearnGuidedExerciseDialog dialog = new LearnGuidedExerciseDialog();
-        dialog.setTargetFragment((Fragment) listener, 4321);
-        Bundle args = new Bundle();
+        dialog.listener = listener;
+        final Bundle args = new Bundle();
         args.putInt(ELAPSED_TIME_MIN, min);
         args.putInt(ELAPSED_TIME_SEC, sec);
         args.putBoolean(LAST_EXERCISE, last);
         dialog.setArguments(args);
+        dialog.setCancelable(false);
         return dialog;
     }
 
@@ -45,7 +39,7 @@ public class LearnGuidedExerciseDialog extends DialogFragment
     @NonNull
     @SuppressWarnings("unchecked")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        dialog = new Dialog(getContext());
+        final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.paging_learn_guided_exercise_dialog);
 
         //retrieve time from arguments
@@ -57,38 +51,39 @@ public class LearnGuidedExerciseDialog extends DialogFragment
         getArguments().remove(LAST_EXERCISE);
 
         //display elapsed time
-        TextView timeText = (TextView) dialog.findViewById(R.id.finishedElapsedTimeText);
+        TextView timeText = (TextView) dialog.findViewById(R.id.time);
         timeText.setText(String.format(Locale.getDefault(), "%1$02d:%2$02d", min, sec));
 
         //set button listeners
-        Button button = (Button) dialog.findViewById(R.id.finishedBackButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        final TextView replay = (TextView) dialog.findViewById(R.id.replay);
+        replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                dismiss();
+                listener.onReplay();
             }
         });
-        button = (Button) dialog.findViewById(R.id.finishedNextExerciseButton);
+        final Button next = (Button) dialog.findViewById(R.id.nextButton);
         if (last) {
-            button.setVisibility(View.GONE);
+            next.setVisibility(View.GONE);
         } else {
-            button.setOnClickListener(new View.OnClickListener() {
+            next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    replay = false;
-                    dialog.dismiss();
+                    dismiss();
+                    listener.onNext();
                 }
             });
         }
+        final TextView menu = (TextView) dialog.findViewById(R.id.menu);
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                listener.onGoBack();
+            }
+        });
 
         return dialog;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        super.onDismiss(dialogInterface);
-
-        Fragment parentFragment = getTargetFragment();
-        ((LearnGuidedChordExerciseListener) parentFragment).onUpdate(replay);
     }
 }

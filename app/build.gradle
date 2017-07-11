@@ -7,7 +7,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId 'fretx.app'
-        minSdkVersion 23
+        minSdkVersion 22
         targetSdkVersion 25
         versionCode 51
         versionName "0.8.30"

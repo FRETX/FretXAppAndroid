@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import fretx.version4.R;
 
@@ -33,7 +34,7 @@ public class SetupDialog extends DialogFragment
         dialog.setContentView(R.layout.hardware_setup_dialog);
 
         //set button listeners
-        final Button replay = (Button) dialog.findViewById(R.id.replayButton);
+        final TextView replay = (TextView) dialog.findViewById(R.id.replay);
         replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +52,7 @@ public class SetupDialog extends DialogFragment
             }
         });
 
-        final Button assistance = (Button) dialog.findViewById(R.id.assistance);
+        final TextView assistance = (TextView) dialog.findViewById(R.id.assistance);
         assistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

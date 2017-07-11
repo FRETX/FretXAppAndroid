@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="25dp"
     android:orientation="vertical"
     android:weightSum="1"
     tools:context="fretx.version4.activities.HardwareIntroActivity">
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,10 +37,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="What you will need:"
         android:layout_gravity="center"
+        android:text="What you will need:"
         android:textAlignment="center"
-        android:textColor="@color/primaryText"/>
+        android:textColor="@color/primaryText" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -54,14 +51,14 @@
 
     <Button
         android:id="@+id/next"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@color/primary"
-        android:text="I'm ready!"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:text="I'm ready!"
         android:textAllCaps="false"
-        android:layout_gravity="center"
         android:textColor="@color/tertiaryText" />
 
     <Space
@@ -72,14 +69,9 @@
         android:id="@+id/skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:text="I'll do this later. "
-        android:textAlignment="textEnd"
-        android:textColor="@color/primaryText"
-        android:layout_gravity="end"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp" />
+        android:textAlignment="textEnd" />
 
 
 </LinearLayout>

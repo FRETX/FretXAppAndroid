@@ -1,6 +1,7 @@
 package fretx.version4.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -40,7 +41,10 @@ public class ChordTimeline extends Fragment {
     }
 
     public void setPunches(ArrayList<SongPunch> punches) {
-        this.punches = punches;
+        if (punches == null)
+            this.punches = new ArrayList<>();
+        else
+            this.punches = punches;
     }
 
     public void setSpanMs(int leftSpanMs, int rightSpanMs) {

@@ -13,10 +13,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,17 +44,17 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     private ExerciseListener listener;
     private final Handler handler = new Handler();
     private SoundPoolPlayer sound;
-    private String title;
+    private boolean midiAutoPlay = true;
 
     //view
     private TextView chordText;
     private TextView chordNextText;
     private TextView timeText;
-    private ImageButton playButton;
-    private ProgressBar chordProgress;
+    private ImageView playButton;
     private ImageView thresholdImage;
     private ProgressBar exerciseProgress;
     private ImageView greenTick;
+    private Button nextChordButton;
 
     //childFragment
     private final FretboardFragment fretboardFragment = new FretboardFragment();
@@ -68,6 +68,13 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     private AlertDialog dialog;
     private boolean finished;
     private TimeUpdater timeUpdater;
+
+    public static ExerciseFragment newInstance(ExerciseListener listener, ArrayList<Chord> chords) {
+        final ExerciseFragment exerciseFragment = new ExerciseFragment();
+        exerciseFragment.setChords(chords);
+        exerciseFragment.setListener(listener);
+        return exerciseFragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,14 +92,14 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //setup view
-        RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.fragment_exercise, container, false);
+        final LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.fragment_exercise, container, false);
         timeText = (TextView) rootView.findViewById(R.id.time);
         chordText = (TextView) rootView.findViewById(R.id.textChord);
         chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);
-        playButton = (ImageButton) rootView.findViewById(R.id.playChordButton);
-        chordProgress = (ProgressBar) rootView.findViewById(R.id.chord_progress);
+        playButton = (ImageView) rootView.findViewById(R.id.playChordButton);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
         exerciseProgress = (SeekBar) rootView.findViewById(R.id.exercise_progress);
+        nextChordButton = (Button) rootView.findViewById(R.id.next_chord_button);
         greenTick = (ImageView) rootView.findViewById(R.id.green_tick);
 
         //avoid interaction with seekbar
@@ -122,31 +129,21 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (chordIndex < 0 || chordIndex == exerciseChords.size())
-                    return;
-
-                //stop listening
-                playButton.setClickable(false);
-                Audio.getInstance().stopListening();
-
-                //check if music volume is up
-                AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-                if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
-                    Toast.makeText(getActivity(), "Volume is low", Toast.LENGTH_SHORT).show();
+                if (midiAutoPlay) {
+                    playButton.setImageResource(R.drawable.speaker_off);
+                    midiAutoPlay = false;
+                } else {
+                    midiAutoPlay = true;
+                    playButton.setImageResource(R.drawable.speaker_on);
+                    //playMidi();
                 }
+            }
+        });
 
-                //play the chord
-                Midi.getInstance().playChord(exerciseChords.get(chordIndex));
-
-                //start listening after delay
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        playButton.setClickable(true);
-                        Audio.getInstance().startListening();
-                    }
-                }, 1500);
+        nextChordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextChord();
             }
         });
 
@@ -210,19 +207,13 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         double progress = Audio.getInstance().getProgress();
         //chord totally played
         if (progress >= 100) {
-            chordProgress.setProgress(100);
             ++chordIndex;
-
             Audio.getInstance().stopListening();
             greenTick.setVisibility(View.VISIBLE);
             Bluetooth.getInstance().lightMatrix();
             sound.playShortResource(R.raw.chime_bell_ding);
 
             handler.postDelayed(hideSuccess, SUCCESS_DELAY_MS);
-        }
-        //chord in progress
-        else {
-            chordProgress.setProgress((int)progress);
         }
     }
 
@@ -288,14 +279,15 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
             chordNextText.setText(exerciseChords.get(chordIndex + 1).toString());
         else
             chordNextText.setText("");
+        //play midi
+        if (midiAutoPlay)
+            playMidi();
         //update finger position
         fretboardFragment.setChord(actualChord);
         fretboardFragment.strum();
         //update chord listener
         Audio.getInstance().setTargetChord(actualChord);
         Audio.getInstance().startListening();
-        //setup the progress bar
-        chordProgress.setProgress(0);
         exerciseProgress.setProgress(chordIndex);
         //update led
         Bluetooth.getInstance().setMatrix(actualChord);
@@ -338,10 +330,39 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
             setChord();
         }
         if (chordIndex == exerciseChords.size()) {
+            exerciseProgress.setProgress(chordIndex);
             timeUpdater.pauseTimer();
             Audio.getInstance().stopListening();
             finished = true;
             listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
         }
+    }
+
+    private void playMidi() {
+        if (chordIndex < 0 || chordIndex == exerciseChords.size())
+            return;
+
+        //stop listening
+        playButton.setClickable(false);
+        Audio.getInstance().stopListening();
+
+        //check if music volume is up
+        AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
+            Toast.makeText(getActivity(), "Volume is low", Toast.LENGTH_SHORT).show();
+        }
+
+        //play the chord
+        Midi.getInstance().playChord(exerciseChords.get(chordIndex));
+
+        //start listening after delay
+        //Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                playButton.setClickable(true);
+                Audio.getInstance().startListening();
+            }
+        }, 1500);
     }
 }

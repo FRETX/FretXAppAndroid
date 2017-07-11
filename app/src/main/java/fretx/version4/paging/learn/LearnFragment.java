@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
-import fretx.version4.paging.chords.ChordFragment;
+import fretx.version4.paging.learn.chords.ChordFragment;
 import fretx.version4.paging.learn.custom.LearnCustomBuilderFragment;
 import fretx.version4.paging.learn.guided.LearnGuidedListFragment;
 import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;

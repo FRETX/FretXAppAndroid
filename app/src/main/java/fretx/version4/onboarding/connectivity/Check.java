@@ -1,10 +1,12 @@
 package fretx.version4.onboarding.connectivity;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +36,7 @@ public class Check extends Fragment{
     private final static String TAG = "KJKP6_CHECK";
     private final static String CONNECTION_PROGRESS = "We are connecting...";
     private final static String CONNECTION_FAILED = "Couldn't connect your FretX";
-    private LinearLayout errorLayout;
+    private RelativeLayout errorLayout;
     private LinearLayout progressLayout;
     private ImageView gifView;
     private TextView actionText;
@@ -61,6 +64,11 @@ public class Check extends Fragment{
             Log.d(TAG, "Failure!");
             onCheckFailure(errorMessage);
         }
+
+        @Override
+        public void onMultipleScanResult(SparseArray<BluetoothDevice> results) {
+            Log.d(TAG, "ON MULTIPLE SCAN RESULTS");
+        }
     };
 
     @Nullable
@@ -68,29 +76,37 @@ public class Check extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.hardware_check, container, false);
 
-        errorLayout = (LinearLayout) rootView.findViewById(R.id.error_layout);
+        errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
         progressLayout = (LinearLayout) rootView.findViewById(R.id.progress_layout);
         gifView = (ImageView) rootView.findViewById(R.id.gif);
         actionText = (TextView) rootView.findViewById(R.id.action_text);
-
-        setProgressLayout();
 
         final Button retry = (Button) rootView.findViewById(R.id.retry);
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setProgressLayout();
-                Bluetooth.getInstance().connect();
+                Bluetooth.getInstance().connectFretX();
             }
         });
-        final Button skip = (Button) rootView.findViewById(R.id.skip);
+
+        final TextView skip = (TextView) rootView.findViewById(R.id.skip);
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onCheckSuccess();
             }
         });
-        final Button assist = (Button) rootView.findViewById(R.id.assistance);
+
+        final TextView interrupt = (TextView) rootView.findViewById(R.id.interrupt);
+        interrupt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckSuccess();
+            }
+        });
+
+        final TextView assist = (TextView) rootView.findViewById(R.id.assistance);
         assist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +114,24 @@ public class Check extends Fragment{
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
+        if (Bluetooth.getInstance().isEnabled() && !Bluetooth.getInstance().isConnected()) {
+            setProgressLayout();
+            Bluetooth.getInstance().connectFretX();
+        } else {
+            onCheckSuccess();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
     }
 
     private void setProgressLayout() {
@@ -112,20 +146,6 @@ public class Check extends Fragment{
         actionText.setText(CONNECTION_FAILED);
         Glide.with(getActivity()).load(R.raw.on_light).into(gifView);
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setProgressLayout();
-        Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
-        Bluetooth.getInstance().connect();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Bluetooth.getInstance().unregisterBluetoothListener(bluetoothListener);
     }
 
     private void onCheckSuccess(){

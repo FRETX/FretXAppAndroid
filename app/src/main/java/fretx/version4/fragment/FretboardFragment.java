@@ -12,10 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 import fretx.version4.view.FretboardView;
 import fretx.version4.R;
 import fretx.version4.utils.Preference;
 import rocks.fretx.audioprocessing.Chord;
+import rocks.fretx.audioprocessing.FingerPositions;
+import rocks.fretx.audioprocessing.FretboardPosition;
 
 /**
  * FretXAppAndroid for FretX

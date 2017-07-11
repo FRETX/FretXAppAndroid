@@ -1,6 +1,7 @@
 package fretx.version4.paging.play.preview;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,7 +38,7 @@ public class PlayPreview extends Fragment implements PreviewListener, PlayPrevie
     //exercises
     private ArrayList<Chord> exerciseChords;
 
-    static public PlayPreview newInstance(SongItem song) {
+    static public PlayPreview newInstance(@NonNull SongItem song) {
         final PlayPreview fragment = new PlayPreview();
         fragment.song = song;
         return fragment;

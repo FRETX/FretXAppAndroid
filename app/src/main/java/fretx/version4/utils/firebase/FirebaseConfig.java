@@ -73,6 +73,8 @@ public class FirebaseConfig {
     }
 
     public ArrayList<String> getSetupUrls() {
+        if (mFirebaseRemoteConfig == null)
+            return new ArrayList<>();
         final String urls = mFirebaseRemoteConfig.getString(SETUP_URLS);
         Log.d(TAG, "urls: " + urls);
         if (urls == null)

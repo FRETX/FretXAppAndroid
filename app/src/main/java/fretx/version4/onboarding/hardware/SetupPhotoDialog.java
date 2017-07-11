@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -55,7 +56,7 @@ public class SetupPhotoDialog extends DialogFragment{
         dialog.setContentView(R.layout.hardware_setup_photo_dialog);
 
         //set button listeners
-        final Button replay = (Button) dialog.findViewById(R.id.replayButton);
+        final TextView replay = (TextView) dialog.findViewById(R.id.replay);
         replay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +65,7 @@ public class SetupPhotoDialog extends DialogFragment{
             }
         });
 
-        final Button assistance = (Button) dialog.findViewById(R.id.assistance_button);
+        final TextView assistance = (TextView) dialog.findViewById(R.id.assistance);
         assistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

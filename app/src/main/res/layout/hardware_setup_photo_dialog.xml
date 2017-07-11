@@ -3,86 +3,74 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="25dp"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Take a photo"
-        android:textAlignment="center"
-        android:textColor="@color/primaryText"
-        android:textSize="35dp" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp" />
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="25dp">
 
-        <ImageView
-            android:id="@+id/photo"
-            android:layout_width="185dp"
-            android:layout_height="match_parent"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
-
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingLeft="25dp">
+            android:text="Take a photo"
+            android:textAlignment="center"
+            android:textColor="@color/primaryText"
+            android:textSize="35dp" />
 
-            <Button
-                android:id="@+id/assistance_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/primary"
-                android:text="Need Assistance?"
-                android:textAllCaps="false"
-                android:textColor="@color/tertiaryText" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_weight="1" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="25dp" />
+        <Button
+            android:id="@+id/ready"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1"
+            android:background="@color/primary"
+            android:text="Ready!"
+            android:textAllCaps="false"
+            android:textColor="@color/background" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
 
-                <Button
-                    android:id="@+id/replayButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginRight="25dp"
-                    android:layout_weight="1"
-                    android:background="@color/primary"
-                    android:text="Replay"
-                    android:textAllCaps="false"
-                    android:textColor="@color/background" />
+        <TextView
+            android:id="@+id/replay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="replay video"
+            android:textAlignment="textEnd" />
 
-                <Button
-                    android:id="@+id/ready"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_weight="1"
-                    android:background="@color/primary"
-                    android:text="Ready!"
-                    android:textAllCaps="false"
-                    android:textColor="@color/background" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="1" />
 
-            </LinearLayout>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/assistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="or need assistance?"
+            android:textAlignment="textEnd" />
 
     </LinearLayout>
 

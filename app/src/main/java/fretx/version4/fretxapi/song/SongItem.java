@@ -80,6 +80,8 @@ public class SongItem {
         final ArrayList<SongPunch> punches = punches();
         final ArrayList<Chord> chords = new ArrayList<>();
 
+        if (punches == null)
+            return chords;
         for (int i = 0; i < punches.size(); i++) {
             final SongPunch tmpSp = punches.get(i);
             final String root = tmpSp.root;

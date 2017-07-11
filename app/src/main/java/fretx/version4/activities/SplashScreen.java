@@ -17,12 +17,11 @@ import com.greysonparrelli.permiso.IOnRationaleProvided;
 import com.greysonparrelli.permiso.Permiso;
 import com.greysonparrelli.permiso.ResultSet;
 
+import fretx.version4.FretXApp;
 import fretx.version4.R;
 import fretx.version4.utils.Network;
 import fretx.version4.utils.audio.Audio;
-import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.audio.Midi;
-import fretx.version4.utils.bluetooth.ServiceListener;
 import fretx.version4.utils.firebase.Analytics;
 import fretx.version4.utils.firebase.FirebaseConfig;
 import io.intercom.android.sdk.Intercom;
@@ -34,24 +33,16 @@ public class SplashScreen extends BaseActivity {
     private static final String TAG = "KJKP6_PERMISO";
     private boolean initialized;
     private boolean permission;
-    private boolean binded;
 
     private IOnPermissionComplete onCompleteListener = new IOnPermissionComplete() {
         @Override
         public void onComplete(){
-            Log.d(TAG, "Complete!");
+            Log.d(TAG, "Permission Complete!");
             permission = true;
             complete();
         }
     };
-    private ServiceListener serviceListener = new ServiceListener() {
-        @Override
-        public void onBind() {
-            binded = true;
-            Bluetooth.getInstance().unregisterServiceListener(serviceListener);
-            complete();
-        }
-    };
+
     private IOnPermissionResult onPermissionResult = new IOnPermissionResult() {
         @Override
         public void onPermissionResult(ResultSet resultSet) {
@@ -68,7 +59,7 @@ public class SplashScreen extends BaseActivity {
             if (resultSet.isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 // Location permission granted!
                 Log.d(TAG,"Location permissions granted");
-                initBluetooth();
+                ((FretXApp) getApplication()).setLocationListener();
             }
             if (resultSet.isPermissionGranted(Manifest.permission.CAMERA)) {
                 // Camera permission granted!
@@ -120,6 +111,7 @@ public class SplashScreen extends BaseActivity {
         Network.getInstance().init();
 
         initialized = true;
+        Log.d(TAG, "Initialization Complete!");
         complete();
     }
 
@@ -147,17 +139,8 @@ public class SplashScreen extends BaseActivity {
         }
     }
 
-    //init bluetooth
-    private void initBluetooth() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && !Bluetooth.getInstance().isEnabled()) {
-            Bluetooth.getInstance().registerServiceListener(serviceListener);
-            Bluetooth.getInstance().init();
-        }
-    }
-
     private void complete() {
-        if (!initialized || !permission || !binded)
+        if (!initialized || !permission)
             return;
 
         final FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();

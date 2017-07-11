@@ -1,14 +1,19 @@
 package fretx.version4.activities;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -38,6 +43,7 @@ import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.bluetooth.BluetoothListener;
+import fretx.version4.utils.bluetooth.ScanResultDialog;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UnreadConversationCountListener;
 
@@ -47,7 +53,6 @@ public class MainActivity extends BaseActivity {
     private String errorMessage = "no data";
 
 	//VIEWS
-    private Toolbar toolbar;
     private BottomBar bottomBar;
 	private MenuItem bluetoothItem;
 	public FragNavController fragNavController;
@@ -69,14 +74,17 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
             setGreyed(bluetoothItem);
             invalidateOptionsMenu();
+            Bluetooth.getInstance().disconnect();
 		}
 	};
     private Runnable setFailed = new Runnable() {
         @Override
         public void run() {
-            Toast.makeText(getActivity(), "FretX connection failed - " + errorMessage, Toast.LENGTH_SHORT).show();
+            if (errorMessage != null)
+                Toast.makeText(getActivity(), "FretX connection failed - " + errorMessage, Toast.LENGTH_SHORT).show();
             setGreyed(bluetoothItem);
             invalidateOptionsMenu();
+            Bluetooth.getInstance().disconnect();
         }
     };
     private final BluetoothListener bluetoothListener = new BluetoothListener() {
@@ -106,6 +114,14 @@ public class MainActivity extends BaseActivity {
             Log.d(TAG, "Bluetooth connection failed - " + errorMessage);
             runOnUiThread(setFailed);
         }
+
+        @Override
+        public void onMultipleScanResult(SparseArray<BluetoothDevice> results) {
+            MainActivity.this.errorMessage = null;
+            runOnUiThread(setFailed);
+
+            ScanResultDialog.newInstance(results).show(getSupportFragmentManager(), "dialog");
+        }
     };
 
 	private UnreadConversationCountListener unreadListener = new UnreadConversationCountListener() {
@@ -122,10 +138,12 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 		setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_fretx_withtext));
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayShowTitleEnabled(false);
         toolbar.setTitle("");
         toolbar.setSubtitle("");
 
@@ -136,22 +154,20 @@ public class MainActivity extends BaseActivity {
 
         //// TODO: 24/04/17 move this to splashscreen
         Context ctx = getApplicationContext();
-		Network.initialize(ctx);
-		AppCache.initialize(ctx);
-		SongList.initialize();
+        Network.initialize(ctx);
+        AppCache.initialize(ctx);
+        SongList.initialize();
 
         final List<Fragment> fragments = new ArrayList<>();
-		fragments.add(new PlayFragmentSearchList());
-		fragments.add(new LearnFragment());
-		fragments.add(new TunerFragment());
-		fragments.add(new Profile());
-		fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
+        fragments.add(new PlayFragmentSearchList());
+        fragments.add(new LearnFragment());
+        fragments.add(new TunerFragment());
+        fragments.add(new Profile());
+        fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
         bottomBar.selectTabAtPosition(INDEX_PLAY);
 
-		setGuiEventListeners();
-
         Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
-
+        setGuiEventListeners();
 		Preference.getInstance().init();
 	}
 
@@ -213,13 +229,26 @@ public class MainActivity extends BaseActivity {
             case R.id.action_bluetooth:
                 setGreyed(item);
                 if (Bluetooth.getInstance().isConnected()) {
-                    Bluetooth.getInstance().disconnect();
-                    Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Disconnected!");
+                    new AlertDialog.Builder(this)
+                            .setMessage("You're about to TURN the FRET Device OFF\n\n"
+                                    + "By disconnecting your Bluetooth you automatically turn your FRETX Device OFF.\n\n"
+                                    + "If you want to Connect it again, make sure you TURN ON your Hardware Device.")
+                            .setPositiveButton("I'll disconnect", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Bluetooth.getInstance().disconnect();
+                                    Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "disconnected!");
+                                }
+                            })
+                            .setNegativeButton("Remain connected", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {}
+                            }).show();
                 } else {
                     item.setActionView(new ProgressBar(this));
                     Toast.makeText(getActivity(), "Connecting to FretX...", Toast.LENGTH_SHORT).show();
-                    Bluetooth.getInstance().connect();
+                    Bluetooth.getInstance().connectFretX();
                 }
             default:
                 return super.onOptionsItemSelected(item);

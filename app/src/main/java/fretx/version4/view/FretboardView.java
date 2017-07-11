@@ -2,13 +2,9 @@ package fretx.version4.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.CountDownTimer;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -24,6 +20,7 @@ public class FretboardView extends View {
     private ArrayList<FretboardPosition> fretboardPositions;
 
 	private float width, height, nStrings, nFrets, xPadding, yPaddingTop, yPaddingBottom, stringStep, fretStep;
+    private float minStringHeight, maxStringHeight;
 
     //drawables
 	private final Drawable fretboardImage;
@@ -47,11 +44,7 @@ public class FretboardView extends View {
         blueLed = getContext().getResources().getDrawable(R.drawable.fretboard_blue_led, null);
 	}
 
-	public void setFretboardPositions(ArrayList<FretboardPosition> fp){
-		fretboardPositions = fp;
-		invalidate();
-	}
-
+    @Override
 	protected void onDraw(Canvas canvas){
 
 		drawFretboard(canvas);
@@ -90,4 +83,40 @@ public class FretboardView extends View {
 
 		fretStep = (1 - (2 * xPadding)) / (nFrets - 1);
 	}
+
+    public void setFretboardPositions(ArrayList<FretboardPosition> fp){
+        fretboardPositions = fp;
+        int min = 6;
+        int max = 1;
+        for (FretboardPosition pos: fretboardPositions) {
+            final int currentString = pos.getString();
+            final int currentFret = pos.getFret();
+            if (currentFret < 0)
+                continue;
+            if (currentString < minStringHeight)
+                min = currentString;
+            if (currentString > maxStringHeight)
+                max = currentString;
+        }
+        if (min >= max) {
+            minStringHeight = -1;
+            maxStringHeight = -1;
+        } else {
+            minStringHeight = (1f - (yPaddingTop + (((int) nStrings - min) * stringStep))) * height;
+            maxStringHeight = (1f - (yPaddingTop + (((int) nStrings - max) * stringStep))) * height;
+        }
+        invalidate();
+    }
+
+    public ArrayList<FretboardPosition> getFretboardPositions() {
+        return fretboardPositions;
+    }
+
+    public float getBottomStringHeight() {
+        return minStringHeight;
+    }
+
+    public float getTopStringHeight() {
+        return maxStringHeight;
+    }
 }

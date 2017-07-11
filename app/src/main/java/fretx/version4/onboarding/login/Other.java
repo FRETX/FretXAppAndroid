@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -52,8 +53,8 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
 
     private LoginActivity activity;
     private Button loginButton;
-    private Button recoverButton;
-    private Button forgotButton;
+    private TextView recoverButton;
+    private TextView forgotButton;
     private SignInButton googleButton;
     private TwitterLoginButton twitterButton;
     private Button twitterOverlay;
@@ -115,7 +116,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             }
         });
 
-        recoverButton = (Button) rootView.findViewById(R.id.recover_button);
+        recoverButton = (TextView) rootView.findViewById(R.id.recover);
         recoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +131,7 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             }
         });
 
-        forgotButton = (Button) rootView.findViewById(R.id.register_button);
+        forgotButton = (TextView) rootView.findViewById(R.id.register);
         forgotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
