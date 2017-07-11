@@ -152,16 +152,21 @@ public class LearnGuidedExercise extends Fragment implements ExerciseListener, L
 
     //retrieve result of the finished exercise dialog
     @Override
-    public void onUpdate(boolean replay) {
-        //replay the actual exercise
-        if (replay) {
-            exerciseFragment.reset();
-        } else {
-            final LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
-            final String nextExerciseId = exercises.get(exerciseId).getChildren().get(0);
-            guidedChordExerciseFragment.setExercise(exercises, nextExerciseId);
-            ((MainActivity)getActivity()).fragNavController.replaceFragment(guidedChordExerciseFragment);
-        }
+    public void onReplay() {
+        exerciseFragment.reset();
+    }
+
+    @Override
+    public void onGoBack() {
+
+    }
+
+    @Override
+    public void onNext() {
+        final LearnGuidedExercise guidedChordExerciseFragment = new LearnGuidedExercise();
+        final String nextExerciseId = exercises.get(exerciseId).getChildren().get(0);
+        guidedChordExerciseFragment.setExercise(exercises, nextExerciseId);
+        ((MainActivity)getActivity()).fragNavController.replaceFragment(guidedChordExerciseFragment);
     }
 
     //setup exercise flow & current exercise

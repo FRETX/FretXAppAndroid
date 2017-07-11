@@ -112,15 +112,20 @@ public class ExerciseActivity extends BaseActivity implements YoutubeListener, E
 
     //retrieve result of the finished exercise dialog
     @Override
-    public void onUpdate(boolean replay) {
-        //replay the actual exercise
-        if (replay) {
-            ((ExerciseFragment) fragment).reset();
-        } else {
-            exerciseId = exercise.getChildren().get(0);
-            exercise = exerciseList.getExercise(exerciseId);
-            setYoutube();
-        }
+    public void onReplay() {
+        ((ExerciseFragment) fragment).reset();
+    }
+
+    @Override
+    public void onGoBack() {
+        finish();
+    }
+
+    @Override
+    public void onNext() {
+        exerciseId = exercise.getChildren().get(0);
+        exercise = exerciseList.getExercise(exerciseId);
+        setYoutube();
     }
 
     @Override

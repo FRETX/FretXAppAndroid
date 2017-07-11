@@ -6,5 +6,7 @@ package fretx.version4.paging.learn.guided;
  */
 
 public interface LearnGuidedChordExerciseListener {
-    void onUpdate(boolean replay);
+    void onNext();
+    void onReplay();
+    void onGoBack();
 }
