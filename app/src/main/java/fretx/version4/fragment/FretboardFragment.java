@@ -57,24 +57,15 @@ public class FretboardFragment extends Fragment {
     }
 
     public void strum() {
-        final ArrayList<FretboardPosition> fretboardPositions = fretboardView.getFretboardPositions();
-
-
-
-
-        final float top = fretboardView.getTopStringHeight();
-        final float bottom = fretboardView.getBottomStringHeight();
-        Log.d(TAG, "strum: " + bottom + " - " + top);
-
         float pos;
         if (Preference.getInstance().isLeftHanded()) {
             //top to bottom
-            strummer.setY(top - strummer.getHeight());
-            pos = bottom - strummer.getHeight();
+            strummer.setY(0);
+            pos = strummer_container.getHeight() - strummer.getHeight();
         } else {
             //bottom to top
-            strummer.setY(bottom - strummer.getHeight());
-            pos = top - strummer.getHeight();
+            strummer.setY(strummer_container.getHeight() - strummer.getHeight());
+            pos = 0;
         }
         Log.d(TAG, "strumming");
         strumFadeIn(pos);

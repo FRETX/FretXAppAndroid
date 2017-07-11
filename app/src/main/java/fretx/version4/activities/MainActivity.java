@@ -74,6 +74,7 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
             setGreyed(bluetoothItem);
             invalidateOptionsMenu();
+            Bluetooth.getInstance().disconnect();
 		}
 	};
     private Runnable setFailed = new Runnable() {
@@ -83,6 +84,7 @@ public class MainActivity extends BaseActivity {
                 Toast.makeText(getActivity(), "FretX connection failed - " + errorMessage, Toast.LENGTH_SHORT).show();
             setGreyed(bluetoothItem);
             invalidateOptionsMenu();
+            Bluetooth.getInstance().disconnect();
         }
     };
     private final BluetoothListener bluetoothListener = new BluetoothListener() {

@@ -60,13 +60,11 @@ public class BluetoothLEService extends Service implements BluetoothInterface {
                 gatt.close();
                 bt.state = Bluetooth.State.NOT_CONNECTED;
                 bt.notifyDisconnection();
-                Bluetooth.getInstance().disconnect();
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG, "failure, disconnecting: " + status);
                 gatt.close();
                 bt.state = Bluetooth.State.NOT_CONNECTED;
                 bt.notifyFailure("error code " + status);
-                Bluetooth.getInstance().disconnect();
             }
         }
 
