@@ -211,7 +211,7 @@ public class Bluetooth implements ServiceConnection {
     };
 
     /* = = = = = = = = = = = = = = = = = = CONNECTING = = = = = = = = = = = = = = = = = = = = = = */
-    private void connect(BluetoothDevice device) {
+    public void connect(BluetoothDevice device) {
         final AppCompatActivity activity = BaseActivity.getActivity();
         if (state == State.CONNECTING) {
             Log.d(TAG, "connect request canceled, already connecting");

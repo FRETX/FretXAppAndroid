@@ -43,6 +43,7 @@ import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.bluetooth.BluetoothListener;
+import fretx.version4.utils.bluetooth.ScanResultDialog;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UnreadConversationCountListener;
 
@@ -78,7 +79,8 @@ public class MainActivity extends BaseActivity {
     private Runnable setFailed = new Runnable() {
         @Override
         public void run() {
-            Toast.makeText(getActivity(), "FretX connection failed - " + errorMessage, Toast.LENGTH_SHORT).show();
+            if (errorMessage != null)
+                Toast.makeText(getActivity(), "FretX connection failed - " + errorMessage, Toast.LENGTH_SHORT).show();
             setGreyed(bluetoothItem);
             invalidateOptionsMenu();
         }
@@ -113,9 +115,10 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onMultipleScanResult(SparseArray<BluetoothDevice> results) {
-            MainActivity.this.errorMessage = "too many fretx";
-            Log.d(TAG, "ON MULTIPLE SCAN RESULTS");
+            MainActivity.this.errorMessage = null;
             runOnUiThread(setFailed);
+
+            ScanResultDialog.newInstance(results).show(getSupportFragmentManager(), "dialog");
         }
     };
 
@@ -225,17 +228,18 @@ public class MainActivity extends BaseActivity {
                 setGreyed(item);
                 if (Bluetooth.getInstance().isConnected()) {
                     new AlertDialog.Builder(this)
-                            .setTitle("Disconnection")
-                            .setMessage("Are you sure you want to disconnect the device?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setMessage("You're about to TURN the FRET Device OFF\n\n"
+                                    + "By disconnecting your Bluetooth you automatically turn your FRETX Device OFF.\n\n"
+                                    + "If you want to Connect it again, make sure you TURN ON your Hardware Device.")
+                            .setPositiveButton("I'll disconnect", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Bluetooth.getInstance().disconnect();
                                     Toast.makeText(getActivity(), "FretX disconnected", Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG, "Disconnected!");
+                                    Log.d(TAG, "disconnected!");
                                 }
                             })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("Remain connected", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {}
                             }).show();
