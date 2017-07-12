@@ -21,7 +21,7 @@ public class Audio {
     static private final double BUFFER_SIZE_S = 0.1;
     static private final double BUFFER_SIZE_TUNER_S = 0.05;
 
-    static public enum modeOptimization {
+    public enum modeOptimization {
         TUNER,
         CHORD
     }
@@ -76,10 +76,12 @@ public class Audio {
         return mode;
     }
 
-    public void setMode(modeOptimization newMode){
+    public void setMode(modeOptimization newMode) {
+        if (!enabled)
+            return;
         mode = newMode;
         audio.stop();
-        this.start();
+        start();
     }
 
     public void start() {
