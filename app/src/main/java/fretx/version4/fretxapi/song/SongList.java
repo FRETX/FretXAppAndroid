@@ -151,25 +151,27 @@ public class SongList {
     private static void checkSongsInCache() {
         for(int i = 0; i < index.length(); i++) {
             try {
-                JSONObject entry       = index.getJSONObject(i);
-                String     fretx_id    = entry.getString("fretx_id");
+                final JSONObject entry = index.getJSONObject(i);
+                final String fretx_id = entry.getString("fretx_id");
+                final String updatedAt = entry.getString("updated_at");
+                final DateTime uploadedAtDatetime = new DateTime(updatedAt);
 
-                if(entry.getString("uploaded_on") == null){
-                    Log.e(TAG,"Uploaded date null for" + fretx_id);
+                //forced update
+                if(AppCache.exists(fretx_id + ".json") || updatedAt == null){
+                    Log.e(TAG,"File not in cache or updatedAt is null for" + fretx_id);
                     getSongFromServer(fretx_id);
-                    continue;
                 }
-                Log.d(TAG, entry.getString("uploaded_on"));
-                DateTime   uploaded_on = new DateTime(entry.getString("uploaded_on"));
-                boolean is_latest   = AppCache.last_modified(fretx_id + ".json") > uploaded_on.getValue();
-                //Log.d(TAG,"Parsed JSON for " + fretx_id);
-                if(AppCache.exists(fretx_id + ".json") && is_latest ) {
-                    continue;
+                //time update
+                else if (AppCache.last_modified(fretx_id + ".json") <= uploadedAtDatetime.getValue()) {
+                    Log.d(TAG, "File " + fretx_id + "is too old");
+                    getSongFromServer(fretx_id);
                 }
-                //Log.d(TAG, "Getting Song From Server: " + entry.getString("title"));
-                getSongFromServer(fretx_id);
+                //up to date
+                else {
+                    Log.d(TAG, "File " + fretx_id + "is up to date");
+                }
             } catch (Exception e) {
-                Log.d(TAG, String.format("Failed Checking Song In Cache\r\n%s", e.toString()));
+                Log.d(TAG, String.format("Failed Checking Song In Cache\n%s", e.toString()));
             }
         }
     }
