@@ -29,8 +29,6 @@ public class SongItem {
     public boolean published;
 
     public SongItem(JSONObject song, SimpleDateFormat dateFormat) {
-
-        Log.d(TAG, "json: " + song.toString());
         try {
             fretx_id = song.getString("fretx_id");
             youtube_id = song.getString("youtube_id");

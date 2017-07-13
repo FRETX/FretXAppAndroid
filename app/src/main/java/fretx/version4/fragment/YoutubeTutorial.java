@@ -36,6 +36,7 @@ public class YoutubeTutorial extends Fragment {
     private YoutubeListener listener;
 
     public static YoutubeTutorial newInstance(@Nullable YoutubeListener listener, @NonNull String id) {
+        Log.d(TAG, "YT new instance");
         final YoutubeTutorial exercise = new YoutubeTutorial();
         exercise.listener = listener;
         exercise.id = id;
@@ -65,7 +66,8 @@ public class YoutubeTutorial extends Fragment {
 
         @Override
         public void onVideoEnded() {
-            listener.onVideoEnded();
+            player.setFullscreen(false);
+            //listener.onVideoEnded();
         }
 
         @Override
