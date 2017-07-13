@@ -21,7 +21,10 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
@@ -167,12 +170,15 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
     @Override
     public void onUpdate(boolean requesting, JSONArray index) {
         if (requesting) {
+            Log.d(TAG, "requesting song list");
             retry.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
         } else if (index == null){
+            Log.d(TAG, "song list update failed");
             progressBar.setVisibility(View.INVISIBLE);
             retry.setVisibility(View.VISIBLE);
         } else {
+            Log.d(TAG, "song list update succeeded");
             retry.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             refreshData();
@@ -183,13 +189,19 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
 
     private void refreshData() {
         rawData.clear();
-        final int length = SongList.length();
-        for(int i = 0; i < length; ++i) {
-            final SongItem item = SongList.getSongItem(i);
-            if (item != null && item.published) {
-                rawData.add(item);
+        rawData.addAll(SongList.getSongItems());
+
+        Collections.sort(rawData, new Comparator<SongItem>() {
+            @Override
+            public int compare(SongItem o1, SongItem o2) {
+                if (o1 == null)
+                    return 1;
+                else if (o2 == null)
+                    return -1;
+                else
+                    return o2.updated_at.compareTo(o1.updated_at);
             }
-        }
+        });
 
         filteredData.clear();
         filteredData.addAll(rawData);

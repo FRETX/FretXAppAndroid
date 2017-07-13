@@ -1,4 +1,4 @@
-package fretx.version4.fragment.exercise;
+package fretx.version4.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,14 +19,13 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import fretx.version4.R;
-import fretx.version4.fragment.YoutubeListener;
 
 /**
  * FretXAppAndroid for FretX
  * Created by pandor on 10/07/17 17:37.
  */
 
-public class YoutubeExercise extends Fragment {
+public class YoutubeTutorial extends Fragment {
     private final static String TAG = "KJKP6_YOUTUBE_EXERCISE";
 
     private YouTubePlayerSupportFragment youTubePlayerSupportFragment;
@@ -36,8 +35,8 @@ public class YoutubeExercise extends Fragment {
     private String id;
     private YoutubeListener listener;
 
-    public static YoutubeExercise newInstance(@Nullable YoutubeListener listener, @NonNull String id) {
-        final YoutubeExercise exercise = new YoutubeExercise();
+    public static YoutubeTutorial newInstance(@Nullable YoutubeListener listener, @NonNull String id) {
+        final YoutubeTutorial exercise = new YoutubeTutorial();
         exercise.listener = listener;
         exercise.id = id;
         return exercise;
@@ -97,6 +96,7 @@ public class YoutubeExercise extends Fragment {
     private void init() {
         //check if music volume is up
         final AudioManager audio = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        /*
         if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) < 5) {
             new AlertDialog.Builder(getActivity())
                     .setTitle("Audio volume")
@@ -108,8 +108,9 @@ public class YoutubeExercise extends Fragment {
                         }
                     }).show();
         } else {
-            initializePlayer();
-        }
+        */
+        initializePlayer();
+        //}
     }
 
     @Override

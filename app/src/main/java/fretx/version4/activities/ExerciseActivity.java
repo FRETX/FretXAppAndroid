@@ -22,7 +22,7 @@ import fretx.version4.R;
 import fretx.version4.fragment.exercise.ExerciseFragment;
 import fretx.version4.fragment.exercise.ExerciseListener;
 import fretx.version4.fragment.exercise.YoutubeExercise;
-import fretx.version4.fragment.exercise.YoutubeListener;
+import fretx.version4.fragment.YoutubeListener;
 import fretx.version4.paging.learn.guided.GuidedExercise;
 import fretx.version4.paging.learn.guided.GuidedExerciseList;
 import fretx.version4.paging.learn.guided.LearnGuidedChordExerciseListener;

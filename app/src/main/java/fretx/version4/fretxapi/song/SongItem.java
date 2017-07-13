@@ -2,11 +2,16 @@ package fretx.version4.fretxapi.song;
 
 import android.util.Log;
 
+import com.google.api.client.util.DateTime;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import fretx.version4.utils.Util;
 import fretx.version4.fretxapi.AppCache;
@@ -20,16 +25,27 @@ public class SongItem {
     public String artist;
     public String song_title;
     public String uploaded_on;
+    public Date updated_at;
     public boolean published;
 
-    public SongItem(JSONObject song) {
+    public SongItem(JSONObject song, SimpleDateFormat dateFormat) {
+
+        Log.d(TAG, "json: " + song.toString());
         try {
-            this.fretx_id = song.getString("fretx_id");
-            this.youtube_id = song.getString("youtube_id");
-            this.title = song.getString("title");
-            this.artist = song.getString("artist");
-            this.song_title = song.getString("song_title");
-            this.uploaded_on = song.getString("uploaded_on");
+            fretx_id = song.getString("fretx_id");
+            youtube_id = song.getString("youtube_id");
+            title = song.getString("title");
+            artist = song.getString("artist");
+            song_title = song.getString("song_title");
+            uploaded_on = song.getString("uploaded_on");
+            try {
+                updated_at = dateFormat.parse(song.getString("updated_at"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                updated_at = null;
+                Log.d(TAG, song_title + " is null");
+            }
+            Log.d(TAG, "updated at: " + updated_at);
             this.published = song.getString("published").equals("true");
         } catch (JSONException e) {
             e.printStackTrace();

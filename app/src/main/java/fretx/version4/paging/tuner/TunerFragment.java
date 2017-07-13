@@ -61,7 +61,7 @@ public class TunerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "created");
 
-        final View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
+        final View rootView = inflater.inflate(R.layout.paging_tuner_fragment, container, false);
 		headStockView = (HeadStockView) rootView.findViewById(R.id.headStockView);
         tunerBarView = (TunerBarView) rootView.findViewById(R.id.tuner_bar);
         tunerLowText = (TextView) rootView.findViewById(R.id.tuner_low_text);

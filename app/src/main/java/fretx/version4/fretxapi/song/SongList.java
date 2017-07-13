@@ -3,7 +3,9 @@ package fretx.version4.fretxapi.song;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +26,7 @@ import fretx.version4.fretxapi.Network;
 public class SongList {
     private static final String TAG = "KJKP6_API_SONGLIST";
     private static final String API_BASE = "http://player.fretx.rocks/api/v1/";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss.SSS'Z'";
 
     private static JSONArray index;
     private static AlertDialog dialog;
@@ -35,13 +38,7 @@ public class SongList {
     /* = = = = = = = = = = = = = = = = = = = = = PUBLIC = = = = = = = = = = = = = = = = = = = = = */
     public static void initialize() {
         dialog = createConnectionRetryDialog(BaseActivity.getActivity());
-        if (getIndexFromCache()) {
-            Log.d(TAG, "Data already in cache");
-            notifyListener();
-        } else {
-            Log.d(TAG, "Need to retrieve data");
-            getIndexFromServer();
-        }
+        getIndexFromServer();
     }
 
     //// TODO: 06/05/17 remove code duplicate
@@ -75,6 +72,9 @@ public class SongList {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     Log.d(TAG, "failure");
+                    if (getIndexFromCache()) {
+                        checkSongsInCache();
+                    }
                     requesting = false;
                     notifyListener();
                 }
@@ -104,14 +104,34 @@ public class SongList {
         return index != null ? index.length() : 0;
     }
 
-    public static SongItem getSongItem(int i) {
+    public static ArrayList<SongItem> getSongItems() {
+        final SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+        final ArrayList<SongItem> list = new ArrayList<>();
+        final int length = SongList.length();
+        for(int i = 0; i < length; ++i) {
+            final SongItem item = SongList.getSongItem(i, df);
+            if (item != null && item.published) {
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
+    private static SongItem getSongItem(int i, SimpleDateFormat df) {
         try {
             JSONObject song = index.getJSONObject(i);
-            return new SongItem(song);
+            return new SongItem(song, df);
         } catch (Exception e) {
-            Log.d(TAG, String.format("Failed Getting Song Item\n%s", e.toString()));
+            Log.d(TAG, String.format("Failed getting song %s", e.toString()));
             return null;
         }
+    }
+
+    public static SongItem getRandomSongItem() {
+        final Random randomGen = new Random();
+        final int randomIndex = randomGen.nextInt(SongList.length());
+        final SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+        return getSongItem(randomIndex, df);
     }
 
     /* = = = = = = = = = = = = = = = = = = = = = PRIVATE = = = = = = = = = = = = = = = = = = = = */
@@ -158,20 +178,20 @@ public class SongList {
 
                 //forced update
                 if(AppCache.exists(fretx_id + ".json") || updatedAt == null){
-                    Log.e(TAG,"File not in cache or updatedAt is null for" + fretx_id);
+                    Log.d(TAG,"File not in cache or updatedAt is null for " + fretx_id);
                     getSongFromServer(fretx_id);
                 }
                 //time update
                 else if (AppCache.last_modified(fretx_id + ".json") <= uploadedAtDatetime.getValue()) {
-                    Log.d(TAG, "File " + fretx_id + "is too old");
+                    Log.d(TAG, "File " + fretx_id + " is too old");
                     getSongFromServer(fretx_id);
                 }
                 //up to date
                 else {
-                    Log.d(TAG, "File " + fretx_id + "is up to date");
+                    Log.d(TAG, "File " + fretx_id + " is up to date");
                 }
             } catch (Exception e) {
-                Log.d(TAG, String.format("Failed Checking Song In Cache\n%s", e.toString()));
+                Log.d(TAG, String.format("Failed Checking Song In Cache - %s", e.toString()));
             }
         }
     }

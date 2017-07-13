@@ -38,6 +38,7 @@ import fretx.version4.paging.learn.LearnFragment;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.profile.Profile;
 import fretx.version4.paging.tuner.TunerFragment;
+import fretx.version4.paging.tuner.TunerPage;
 import fretx.version4.utils.Preference;
 import fretx.version4.utils.audio.Audio;
 import fretx.version4.utils.bluetooth.Bluetooth;
@@ -161,7 +162,7 @@ public class MainActivity extends BaseActivity {
         final List<Fragment> fragments = new ArrayList<>();
         fragments.add(new PlayFragmentSearchList());
         fragments.add(new LearnFragment());
-        fragments.add(new TunerFragment());
+        fragments.add(new TunerPage());
         fragments.add(new Profile());
         fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
         bottomBar.selectTabAtPosition(INDEX_PLAY);

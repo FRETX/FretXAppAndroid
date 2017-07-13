@@ -87,9 +87,7 @@ public class PlayerEndDialog extends DialogFragment
             randomImage.setVisibility(View.GONE);
         } else {
             while (randomItem == null || randomItem.imageURL() == null) {
-                final Random randomGen = new Random();
-                final int randomIndex = randomGen.nextInt(length);
-                randomItem  = SongList.getSongItem(randomIndex);
+                randomItem  = SongList.getRandomSongItem();
             }
             Picasso.with(BaseActivity.getActivity()).load(randomItem.imageURL()).placeholder(R.drawable.defaultthumb).into(randomImage);
             randomImage.setOnClickListener(new View.OnClickListener() {
