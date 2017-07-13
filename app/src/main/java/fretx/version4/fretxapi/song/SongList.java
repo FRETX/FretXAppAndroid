@@ -178,17 +178,11 @@ public class SongList {
 
                 //forced update
                 if(AppCache.exists(fretx_id + ".json") || updatedAt == null){
-                    Log.d(TAG,"File not in cache or updatedAt is null for " + fretx_id);
                     getSongFromServer(fretx_id);
                 }
                 //time update
                 else if (AppCache.last_modified(fretx_id + ".json") <= uploadedAtDatetime.getValue()) {
-                    Log.d(TAG, "File " + fretx_id + " is too old");
                     getSongFromServer(fretx_id);
-                }
-                //up to date
-                else {
-                    Log.d(TAG, "File " + fretx_id + " is up to date");
                 }
             } catch (Exception e) {
                 Log.d(TAG, String.format("Failed Checking Song In Cache - %s", e.toString()));

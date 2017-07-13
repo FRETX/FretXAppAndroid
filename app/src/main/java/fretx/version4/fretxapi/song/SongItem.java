@@ -43,9 +43,7 @@ public class SongItem {
             } catch (ParseException e) {
                 e.printStackTrace();
                 updated_at = null;
-                Log.d(TAG, song_title + " is null");
             }
-            Log.d(TAG, "updated at: " + updated_at);
             this.published = song.getString("published").equals("true");
         } catch (JSONException e) {
             e.printStackTrace();

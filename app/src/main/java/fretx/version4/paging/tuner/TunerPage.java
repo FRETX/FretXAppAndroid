@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import fretx.version4.utils.firebase.Analytics;
  */
 
 public class TunerPage extends Fragment implements YoutubeListener {
+    private final static String TAG = "KJKP6_TUNER_PAGE";
     private FrameLayout fragmentContainer;
     private Fragment fragment;
     private String youtubeId = "mLaL0exs0GA";
@@ -30,8 +33,33 @@ public class TunerPage extends Fragment implements YoutubeListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "OnCreate");
         fragmentManager = getActivity().getSupportFragmentManager();
         Analytics.getInstance().logSelectEvent("TAB", "Learn");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstance");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "OnDestroy");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "OnPause");
     }
 
     @Override
@@ -44,34 +72,25 @@ public class TunerPage extends Fragment implements YoutubeListener {
 
     private void setYoutube() {
         if (youtubeId.isEmpty()) {
-            setTuner();
+            Log.d(TAG, "no video to display");
         } else {
+            Log.d(TAG, "display the video");
             final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragment = YoutubeTutorial.newInstance(TunerPage.this, youtubeId);
             fragmentTransaction.replace(R.id.container, fragment);
             fragmentTransaction.commit();
-            /*
-            if (getResources().getConfiguration().orientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                fragmentContainer.setVisibility(View.INVISIBLE);
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-            */
         }
     }
 
     private void setTuner() {
-        //final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragment = new TunerFragment();
-        //fragmentTransaction.replace(R.id.container, fragment);
-        //fragmentTransaction.commit();
-        if (getResources().getConfiguration().orientation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-            fragmentContainer.setVisibility(View.INVISIBLE);
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        Log.d(TAG, "display the tuner");
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment = new TunerFragment();
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
     public void onVideoEnded() {
-        setTuner();
     }
 }
