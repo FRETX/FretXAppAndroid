@@ -17,13 +17,13 @@ import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
 
-public class LearnFragment extends Fragment {
+public class LearnPage extends Fragment {
     CardView btCustomChordExercise;
 	CardView btScaleChordExercise;
     CardView btGuidedChordExercise;
     CardView btChord;
 
-    public LearnFragment(){}
+    public LearnPage(){}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {

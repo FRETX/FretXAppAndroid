@@ -66,8 +66,7 @@ public class YoutubeTutorial extends Fragment {
 
         @Override
         public void onVideoEnded() {
-            player.setFullscreen(false);
-            //listener.onVideoEnded();
+            listener.onVideoEnded();
         }
 
         @Override
@@ -135,7 +134,6 @@ public class YoutubeTutorial extends Fragment {
                 if (!wasRestored) {
                     player = youTubePlayer;
                     player.setShowFullscreenButton(false);
-                    player.setFullscreen(true);
                     youTubePlayer.setPlayerStateChangeListener(stateListener);
                     player.loadVideo(id);
                 }

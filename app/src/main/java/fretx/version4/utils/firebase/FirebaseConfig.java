@@ -30,6 +30,7 @@ public class FirebaseConfig {
     public final static String SKIP_USER_INFO = "skipUserInfo";
     public final static String SKIP_HARDWARE_SETUP = "skipHardwareSetup";
     public final static String SETUP_URLS = "setup_urls";
+    public final static String TUNER_URL = "tuner_url";
 
     /* = = = = = = = = = = = = = = = = = SINGLETON PATTERN = = = = = = = = = = = = = = = = = = = */
     private static class Holder {
@@ -65,10 +66,14 @@ public class FirebaseConfig {
     }
 
     public boolean isUserInfoSkipable() {
+        if (mFirebaseRemoteConfig == null)
+            return false;
         return mFirebaseRemoteConfig.getBoolean(SKIP_USER_INFO);
     }
 
     public boolean isHardwareSetupSkipable() {
+        if (mFirebaseRemoteConfig == null)
+            return false;
         return mFirebaseRemoteConfig.getBoolean(SKIP_HARDWARE_SETUP);
     }
 
@@ -80,5 +85,15 @@ public class FirebaseConfig {
         if (urls == null)
             return null;
         return new ArrayList<>(Arrays.asList(urls.split("\\s+")));
+    }
+
+    public String getTunerUrl() {
+        if (mFirebaseRemoteConfig == null)
+            return "";
+        final String url = mFirebaseRemoteConfig.getString(TUNER_URL);
+        Log.d(TAG, "url: " + url);
+        if (url == null)
+            return "";
+        return url;
     }
 }

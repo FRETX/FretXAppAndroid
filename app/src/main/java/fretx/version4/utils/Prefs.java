@@ -7,6 +7,8 @@ import com.nostra13.universalimageloader.utils.L;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fretx.version4.activities.BaseActivity;
+
 /**
  * FretXAppAndroid for FretX
  * Created by pandor on 09/06/17 12:55.
@@ -25,17 +27,26 @@ public class Prefs {
     public String guitar;
     public String hand;
     public String level;
+    public String tunerTutorial;
+    public String previewTutorial;
+    public String playTutorial;
 
     public Prefs() {
         guitar = ACCOUSTIC_GUITAR;
         level = LEVEL_BEGINNER;
         hand = RIGHT_HANDED;
+        tunerTutorial = "true";
+        previewTutorial = "true";
+        playTutorial = "true";
     }
 
     public Prefs(Prefs prefs) {
         this.guitar = prefs.guitar;
         this.hand = prefs.hand;
         this.level = prefs.level;
+        this.tunerTutorial= prefs.tunerTutorial;
+        this.previewTutorial = prefs.previewTutorial;
+        this.playTutorial = prefs.playTutorial;
     }
 
     public String toJson() {
@@ -45,6 +56,12 @@ public class Prefs {
         sb.append(hand);
         sb.append("\",\"level\":\"");
         sb.append(level);
+        sb.append("\",\"tunerTutorial\":\"");
+        sb.append(tunerTutorial);
+        sb.append("\",\"previewTutorial\":\"");
+        sb.append(previewTutorial);
+        sb.append("\",\"playTutorial\":\"");
+        sb.append(playTutorial);
         sb.append("\"}");
         return sb.toString();
     }
@@ -55,7 +72,16 @@ public class Prefs {
             final String hand = jsonRoot.getString("hand");
             final String guitar = jsonRoot.getString("guitar");
             final String level = jsonRoot.getString("level");
-            final Builder builder = new Builder().setHand(hand).setGuitar(guitar).setLevel(level);
+            final String tunerTutorial = jsonRoot.getString("tunerTutorial");
+            final String previewTutorial = jsonRoot.getString("previewTutorial");
+            final String playTutorial = jsonRoot.getString("playTutorial");
+            final Builder builder = new Builder()
+                    .setHand(hand)
+                    .setGuitar(guitar)
+                    .setLevel(level)
+                    .setTunerTurorial(tunerTutorial)
+                    .setPreviewTurorial(previewTutorial)
+                    .setPlayTurorial(playTutorial);
             return builder.build();
         } catch (JSONException e) {
             Log.v(TAG, "parsing from json failed");
@@ -86,6 +112,20 @@ public class Prefs {
             return this;
         }
 
+        public Builder setTunerTurorial(String tunerTurorial) {
+            prefs.tunerTutorial = tunerTurorial;
+            return this;
+        }
+
+        public Builder setPreviewTurorial(String previewTurorial) {
+            prefs.tunerTutorial = previewTurorial;
+            return this;
+        }
+
+        public Builder setPlayTurorial(String playTurorial) {
+            prefs.tunerTutorial = playTurorial;
+            return this;
+        }
         public Prefs build() {
             return prefs;
         }

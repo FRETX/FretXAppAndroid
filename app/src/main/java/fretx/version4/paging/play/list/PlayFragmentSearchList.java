@@ -227,7 +227,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
     private void startSongPreview(SongItem item) {
         //Launch exercise with sequence of chords
         final PlayPreview fragmentChordExercise = PlayPreview.newInstance(item);
-
         mActivity.fragNavController.pushFragment(fragmentChordExercise);
     }
 

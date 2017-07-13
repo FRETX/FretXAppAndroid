@@ -143,4 +143,7 @@ public class Preference {
     public boolean isElectricGuitar(){
         return prefs.guitar.equals(Prefs.ELECTRIC_GUITAR);
     }
+    public boolean needTunerTutoral() { return prefs.tunerTutorial.equals("true");}
+    public boolean needPreviewTutoral() { return prefs.previewTutorial.equals("true");}
+    public boolean needPlaytoral() { return prefs.playTutorial.equals("true");}
 }

@@ -34,10 +34,9 @@ import fretx.version4.R;
 import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.song.SongList;
-import fretx.version4.paging.learn.LearnFragment;
+import fretx.version4.paging.learn.LearnPage;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
 import fretx.version4.paging.profile.Profile;
-import fretx.version4.paging.tuner.TunerFragment;
 import fretx.version4.paging.tuner.TunerPage;
 import fretx.version4.utils.Preference;
 import fretx.version4.utils.audio.Audio;
@@ -161,7 +160,7 @@ public class MainActivity extends BaseActivity {
 
         final List<Fragment> fragments = new ArrayList<>();
         fragments.add(new PlayFragmentSearchList());
-        fragments.add(new LearnFragment());
+        fragments.add(new LearnPage());
         fragments.add(new TunerPage());
         fragments.add(new Profile());
         fragNavController= new FragNavController(savedInstanceState, getSupportFragmentManager(), R.id.main_relative_layout, fragments, INDEX_PLAY);
@@ -231,7 +230,7 @@ public class MainActivity extends BaseActivity {
                 setGreyed(item);
                 if (Bluetooth.getInstance().isConnected()) {
                     new AlertDialog.Builder(this)
-                            .setMessage("You're about to TURN the FRET Device OFF\n\n"
+                            .setMessage("You're about to TURN the FRETX Device OFF\n\n"
                                     + "By disconnecting your Bluetooth you automatically turn your FRETX Device OFF.\n\n"
                                     + "If you want to Connect it again, make sure you TURN ON your Hardware Device.")
                             .setPositiveButton("I'll disconnect", new DialogInterface.OnClickListener() {

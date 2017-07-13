@@ -16,7 +16,10 @@ import android.widget.FrameLayout;
 import fretx.version4.R;
 import fretx.version4.fragment.YoutubeListener;
 import fretx.version4.fragment.YoutubeTutorial;
+import fretx.version4.utils.Preference;
+import fretx.version4.utils.Prefs;
 import fretx.version4.utils.firebase.Analytics;
+import fretx.version4.utils.firebase.FirebaseConfig;
 
 /**
  * FretXAppAndroid for FretX
@@ -27,7 +30,7 @@ public class TunerPage extends Fragment implements YoutubeListener {
     private final static String TAG = "KJKP6_TUNER_PAGE";
     private FrameLayout fragmentContainer;
     private Fragment fragment;
-    private String youtubeId = "mLaL0exs0GA";
+    private String youtubeId = "";
     private FragmentManager fragmentManager;
 
     @Override
@@ -66,13 +69,19 @@ public class TunerPage extends Fragment implements YoutubeListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
         fragmentContainer = (FrameLayout) rootView.findViewById(R.id.container);
+
+        if (Preference.getInstance().needTunerTutoral()) {
+            Log.d(TAG, "need to display video");
+            youtubeId = FirebaseConfig.getInstance().getTunerUrl();
+            Log.d(TAG, "video id: " + youtubeId);
+        }
         setYoutube();
         return rootView;
     }
 
     private void setYoutube() {
         if (youtubeId.isEmpty()) {
-            Log.d(TAG, "no video to display");
+            setTuner();
         } else {
             Log.d(TAG, "display the video");
             final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -92,5 +101,8 @@ public class TunerPage extends Fragment implements YoutubeListener {
 
     @Override
     public void onVideoEnded() {
+        final Prefs prefs = new Prefs.Builder().setTunerTurorial("false").build();
+        Preference.getInstance().save(prefs);
+        setTuner();
     }
 }
