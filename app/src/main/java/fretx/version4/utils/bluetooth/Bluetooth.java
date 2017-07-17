@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import fretx.version4.activities.BaseActivity;
+import fretx.version4.utils.Preference;
 import rocks.fretx.audioprocessing.Chord;
 import rocks.fretx.audioprocessing.FingerPositions;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -316,6 +317,8 @@ public class Bluetooth implements ServiceConnection {
             return;
         BluetoothAnimator.getInstance().stopAnimation();
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(chord.toString(), chordFingerings);
+        if (Preference.getInstance().isLeftHanded())
+            bluetoothArray = convertToLeftHanded(bluetoothArray);
         service.send(bluetoothArray);
     }
 
@@ -323,6 +326,8 @@ public class Bluetooth implements ServiceConnection {
         if (service == null || fingerings == null)
             return;
         BluetoothAnimator.getInstance().stopAnimation();
+        if (Preference.getInstance().isLeftHanded())
+            fingerings = convertToLeftHanded(fingerings);
         service.send(fingerings);
     }
 
@@ -331,6 +336,8 @@ public class Bluetooth implements ServiceConnection {
             return;
         BluetoothAnimator.getInstance().stopAnimation();
         byte[] bluetoothArray = MusicUtils.getBluetoothArrayFromChord(scale.toString(), chordFingerings);
+        if (Preference.getInstance().isLeftHanded())
+            bluetoothArray = convertToLeftHanded(bluetoothArray);
         service.send(bluetoothArray);
     }
 
@@ -345,25 +352,37 @@ public class Bluetooth implements ServiceConnection {
         if (service == null)
             return;
         BluetoothAnimator.getInstance().stopAnimation();
-        byte data[] = null;
+        byte data[];
         switch (string) {
             case 1:
                 data = S1_NO_F0;
+                if (Preference.getInstance().isLeftHanded())
+                    data = S6_NO_F0;
                 break;
             case 2:
                 data = S2_NO_F0;
+                if (Preference.getInstance().isLeftHanded())
+                    data = S5_NO_F0;
                 break;
             case 3:
                 data = S3_NO_F0;
+                if (Preference.getInstance().isLeftHanded())
+                    data = S4_NO_F0;
                 break;
             case 4:
                 data = S4_NO_F0;
+                if (Preference.getInstance().isLeftHanded())
+                    data = S3_NO_F0;
                 break;
             case 5:
                 data = S5_NO_F0;
+                if (Preference.getInstance().isLeftHanded())
+                    data = S2_NO_F0;
                 break;
             case 6:
                 data = S6_NO_F0;
+                if (Preference.getInstance().isLeftHanded())
+                    data = S1_NO_F0;
                 break;
             default:
                 data = BLANK;
@@ -376,5 +395,26 @@ public class Bluetooth implements ServiceConnection {
             return;
         BluetoothAnimator.getInstance().stopAnimation();
         service.send(CORRECT_INDICATOR);
+    }
+
+    private byte[] convertToLeftHanded(byte bluetoothArray[]) {
+        byte convertedArray[] = new byte[bluetoothArray.length];
+        for (int index = 0; index < convertedArray.length; ++index) {
+            int b = bluetoothArray[index];
+            if (b == 0) {
+                convertedArray[index] = 0;
+            } else {
+                Log.d(TAG, "b (byte): " + bluetoothArray[index]);
+                Log.d(TAG, "b (int): " + b);
+                int s = b % 10;
+                int f = b - s * 10;
+                s = 7 - s;
+                Log.d(TAG, "s (int): " + s);
+                Log.d(TAG, "f (int): " + f);
+                convertedArray[index] = (byte)(f + s);
+            }
+
+        }
+        return convertedArray;
     }
 }
