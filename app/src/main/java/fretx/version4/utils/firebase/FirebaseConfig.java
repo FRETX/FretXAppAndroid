@@ -31,6 +31,7 @@ public class FirebaseConfig {
     public final static String SKIP_HARDWARE_SETUP = "skipHardwareSetup";
     public final static String SETUP_URLS = "setup_urls";
     public final static String TUNER_URL = "tuner_url";
+    public final static String PLAY_URL = "play_url";
 
     /* = = = = = = = = = = = = = = = = = SINGLETON PATTERN = = = = = = = = = = = = = = = = = = = */
     private static class Holder {
@@ -49,7 +50,7 @@ public class FirebaseConfig {
         Log.d(TAG, "init");
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+//                .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
@@ -60,6 +61,7 @@ public class FirebaseConfig {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             mFirebaseRemoteConfig.activateFetched();
+                            Log.d(TAG,"Firebase Remote Config activate fetched");
                         }
                     }
                 });
@@ -95,5 +97,16 @@ public class FirebaseConfig {
         if (url == null)
             return "";
         return url;
+    }
+
+    public String getPlayUrl() {
+        return "P7fcILR75NQ";
+//        if (mFirebaseRemoteConfig == null)
+//            return "";
+//        final String url = mFirebaseRemoteConfig.getString(PLAY_URL);
+//        Log.d(TAG, "url: " + url);
+//        if (url == null)
+//            return "";
+//        return url;
     }
 }

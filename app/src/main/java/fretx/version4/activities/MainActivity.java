@@ -36,6 +36,7 @@ import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.learn.LearnPage;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
+import fretx.version4.paging.play.list.PlayPage;
 import fretx.version4.paging.profile.Profile;
 import fretx.version4.paging.tuner.TunerPage;
 import fretx.version4.utils.Preference;
@@ -138,6 +139,8 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+        Preference.getInstance().init();
+
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 		setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_fretx_withtext));
@@ -159,7 +162,7 @@ public class MainActivity extends BaseActivity {
         SongList.initialize();
 
         final List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new PlayFragmentSearchList());
+        fragments.add(new PlayPage());
         fragments.add(new LearnPage());
         fragments.add(new TunerPage());
         fragments.add(new Profile());
@@ -168,7 +171,7 @@ public class MainActivity extends BaseActivity {
 
         Bluetooth.getInstance().registerBluetoothListener(bluetoothListener);
         setGuiEventListeners();
-		Preference.getInstance().init();
+
 	}
 
     @Override

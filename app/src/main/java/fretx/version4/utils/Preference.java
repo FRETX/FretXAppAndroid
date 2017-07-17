@@ -54,6 +54,7 @@ public class Preference {
     }
 
     private boolean localSave(Prefs prefs) {
+        Log.d(TAG,"preferences local save");
         final FileOutputStream outputStream;
         try {
             outputStream = BaseActivity.getActivity().openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -67,6 +68,7 @@ public class Preference {
     }
 
     private void remoteSave(Prefs prefs) {
+        Log.d(TAG,"preferences remote save");
         mDatabasePrefs.setValue(prefs);
     }
 
@@ -143,7 +145,7 @@ public class Preference {
     public boolean isElectricGuitar(){
         return prefs.guitar.equals(Prefs.ELECTRIC_GUITAR);
     }
-    public boolean needTunerTutoral() { return prefs.tunerTutorial.equals("true");}
-    public boolean needPreviewTutoral() { return prefs.previewTutorial.equals("true");}
-    public boolean needPlaytoral() { return prefs.playTutorial.equals("true");}
+    public boolean needTunerTutorial() { return prefs.tunerTutorial.equals("true");}
+    public boolean needPreviewTutorial() { return prefs.previewTutorial.equals("true");}
+    public boolean needPlayTutorial() { return prefs.playTutorial.equals("true");}
 }

@@ -2,12 +2,8 @@ package fretx.version4.utils;
 
 import android.util.Log;
 
-import com.nostra13.universalimageloader.utils.L;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import fretx.version4.activities.BaseActivity;
 
 /**
  * FretXAppAndroid for FretX
@@ -79,9 +75,9 @@ public class Prefs {
                     .setHand(hand)
                     .setGuitar(guitar)
                     .setLevel(level)
-                    .setTunerTurorial(tunerTutorial)
-                    .setPreviewTurorial(previewTutorial)
-                    .setPlayTurorial(playTutorial);
+                    .setTunerTutorial(tunerTutorial)
+                    .setPreviewTutorial(previewTutorial)
+                    .setPlayTutorial(playTutorial);
             return builder.build();
         } catch (JSONException e) {
             Log.v(TAG, "parsing from json failed");
@@ -112,18 +108,18 @@ public class Prefs {
             return this;
         }
 
-        public Builder setTunerTurorial(String tunerTurorial) {
-            prefs.tunerTutorial = tunerTurorial;
+        public Builder setTunerTutorial(String tunerTutorial) {
+            prefs.tunerTutorial = tunerTutorial;
             return this;
         }
 
-        public Builder setPreviewTurorial(String previewTurorial) {
-            prefs.tunerTutorial = previewTurorial;
+        public Builder setPreviewTutorial(String previewTutorial) {
+            prefs.previewTutorial = previewTutorial;
             return this;
         }
 
-        public Builder setPlayTurorial(String playTurorial) {
-            prefs.tunerTutorial = playTurorial;
+        public Builder setPlayTutorial(String playTutorial) {
+            prefs.playTutorial = playTutorial;
             return this;
         }
         public Prefs build() {
