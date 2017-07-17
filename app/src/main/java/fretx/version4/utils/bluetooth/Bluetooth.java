@@ -404,16 +404,10 @@ public class Bluetooth implements ServiceConnection {
             if (b == 0) {
                 convertedArray[index] = 0;
             } else {
-                Log.d(TAG, "b (byte): " + bluetoothArray[index]);
-                Log.d(TAG, "b (int): " + b);
                 int s = b % 10;
                 int f = b - s * 10;
-                s = 7 - s;
-                Log.d(TAG, "s (int): " + s);
-                Log.d(TAG, "f (int): " + f);
-                convertedArray[index] = (byte)(f + s);
+                convertedArray[index] = (byte)(f + 7 - s);
             }
-
         }
         return convertedArray;
     }
