@@ -111,6 +111,12 @@ public class Preference {
                 if (remotePrefs != null) {
                     prefs = remotePrefs;
                     Log.w(TAG, "remote prefs retrieval succeeded");
+                    Log.w(TAG, "hand: " + prefs.hand);
+                    Log.w(TAG, "guitar: " + prefs.guitar);
+                    Log.w(TAG, "level: " + prefs.level);
+                    Log.w(TAG, "tuner: " + prefs.tunerTutorial);
+                    Log.w(TAG, "preview: " + prefs.previewTutorial);
+                    Log.w(TAG, "play: " + prefs.playTutorial);
                 }
             }
 

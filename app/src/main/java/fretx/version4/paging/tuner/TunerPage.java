@@ -66,7 +66,6 @@ public class TunerPage extends Fragment implements YoutubeListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.paging_tuner, container, false);
-        fragmentContainer = (FrameLayout) rootView.findViewById(R.id.container);
 
         if (Preference.getInstance().needTunerTutorial()) {
             Log.d(TAG, "need to display video");

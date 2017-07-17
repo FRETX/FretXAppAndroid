@@ -17,32 +17,33 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
+import fretx.version4.fragment.YoutubeListener;
+import fretx.version4.fragment.YoutubeTutorial;
 import fretx.version4.fretxapi.song.SongCallback;
 import fretx.version4.fretxapi.song.SongItem;
 import fretx.version4.fretxapi.song.SongList;
-import fretx.version4.paging.play.player.PlayOfflinePlayerFragment;
 import fretx.version4.paging.play.player.PlayYoutubeFragment;
 import fretx.version4.paging.play.preview.PlayPreview;
+import fretx.version4.utils.Preference;
+import fretx.version4.utils.Prefs;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
-import rocks.fretx.audioprocessing.Chord;
+import fretx.version4.utils.firebase.FirebaseConfig;
 
 import static fretx.version4.activities.MainActivity.setGreyed;
 import static fretx.version4.activities.MainActivity.setNonGreyed;
 
 public class PlayFragmentSearchList extends Fragment implements SongCallback,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener, YoutubeListener {
     private static final String TAG = "KJKP6_PLAYFRAGMENT_LIST";
     private MainActivity mActivity;
     private final ArrayList<SongItem> rawData = new ArrayList<>();
@@ -50,10 +51,12 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
     private PlaySongGridViewAdapter adapter;
     private MenuItem searchItem;
     private MenuItem previewItem;
+    private SongItem selectedItem;
     private boolean previewEnabled = true;
     private GridView listView;
     private Button retry;
     private ProgressBar progressBar;
+    private String youtubeId = "";
 
     /*----------------------------------- LIFECYCLE ----------------------------------------------*/
 
@@ -90,12 +93,15 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final SongItem item = filteredData.get(position);
+                selectedItem = filteredData.get(position);
 
-                if(previewEnabled){
-                    startSongPreview(item);
+                if (Preference.getInstance().needPlayTutorial()) {
+                    Log.d(TAG, "need to display video");
+                    youtubeId = FirebaseConfig.getInstance().getPlayUrl();
+                    Log.d(TAG, "video id: " + youtubeId);
+                    startTutorial();
                 } else {
-                    startSong(item);
+                    start();
                 }
             }
         });
@@ -224,15 +230,32 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
         adapter.notifyDataSetChanged();
     }
 
-    private void startSongPreview(SongItem item) {
+    private void start() {
+        if (previewEnabled)
+            startSong();
+        else
+            startSongPreview();
+    }
+
+    private void startSongPreview() {
         //Launch exercise with sequence of chords
-        final PlayPreview fragmentChordExercise = PlayPreview.newInstance(item);
+        final PlayPreview fragmentChordExercise = PlayPreview.newInstance(selectedItem);
         mActivity.fragNavController.pushFragment(fragmentChordExercise);
     }
 
-    private void startSong(SongItem item) {
-        final PlayYoutubeFragment fragment = PlayYoutubeFragment.newInstance(item);
+    private void startSong() {
+        final PlayYoutubeFragment fragment = PlayYoutubeFragment.newInstance(selectedItem);
         mActivity.fragNavController.pushFragment(fragment);
+    }
+
+    private void startTutorial() {
+        if (youtubeId.isEmpty()) {
+            start();
+        } else {
+            Log.d(TAG, "display the video");
+            final YoutubeTutorial fragment = YoutubeTutorial.newInstance(PlayFragmentSearchList.this, youtubeId);
+            mActivity.fragNavController.pushFragment(fragment);
+        }
     }
 
     private void updateMenu() {
@@ -243,5 +266,12 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
                 setGreyed(previewItem);
             }
         }
+    }
+
+    @Override
+    public void onVideoEnded() {
+        final Prefs prefs = new Prefs.Builder().setPlayTutorial("false").build();
+        Preference.getInstance().save(prefs);
+        start();
     }
 }
