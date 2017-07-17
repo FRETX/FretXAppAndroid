@@ -72,6 +72,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
     public static ExerciseFragment newInstance(ExerciseListener listener, ArrayList<Chord> chords) {
         final ExerciseFragment exerciseFragment = new ExerciseFragment();
         exerciseFragment.setChords(chords);
+        exerciseFragment.setTargetChords(chords);
         exerciseFragment.setListener(listener);
         return exerciseFragment;
     }
@@ -254,6 +255,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
             if (!rootExist)
                 targetChords.add(majorChord);
         }
+        Log.d(TAG,"added targetChords: " + targetChords);
     }
 
     //setup exercises chords form list of chords
