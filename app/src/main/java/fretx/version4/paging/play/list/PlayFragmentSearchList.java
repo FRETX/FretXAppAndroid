@@ -232,9 +232,9 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
 
     private void start() {
         if (previewEnabled)
-            startSong();
-        else
             startSongPreview();
+        else
+            startSong();
     }
 
     private void startSongPreview() {
