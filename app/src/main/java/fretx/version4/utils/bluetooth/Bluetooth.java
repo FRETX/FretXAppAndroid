@@ -403,10 +403,15 @@ public class Bluetooth implements ServiceConnection {
             int b = bluetoothArray[index];
             if (b == 0) {
                 convertedArray[index] = 0;
+            } else if (b < 10){
+                int s = b;
+                s = 7 - s;
+                convertedArray[index] = (byte)(s);
             } else {
                 int s = b % 10;
-                int f = b - s * 10;
-                convertedArray[index] = (byte)(f + 7 - s);
+                int f = b - s;
+                s = 7 - s;
+                convertedArray[index] = (byte)(f + s);
             }
         }
         return convertedArray;
