@@ -19,6 +19,8 @@ public class Prefs {
     public final static String CLASSICAL_GUITAR = "classical";
     public final static String LEVEL_BEGINNER = "beginner";
     public final static String LEVEL_PLAYER = "player";
+    public final static String NO_SONG_PREVIEW = "true";
+    public final static String SONG_PREVIEW = "false";
 
     public String guitar;
     public String hand;
@@ -26,6 +28,7 @@ public class Prefs {
     public String tunerTutorial;
     public String previewTutorial;
     public String playTutorial;
+    public String songPreview;
 
     public Prefs() {
         guitar = ACCOUSTIC_GUITAR;
@@ -34,6 +37,7 @@ public class Prefs {
         tunerTutorial = "true";
         previewTutorial = "true";
         playTutorial = "true";
+        songPreview = "true";
     }
 
     public Prefs(Prefs prefs) {
@@ -43,6 +47,7 @@ public class Prefs {
         this.tunerTutorial= prefs.tunerTutorial;
         this.previewTutorial = prefs.previewTutorial;
         this.playTutorial = prefs.playTutorial;
+        this.songPreview = prefs.songPreview;
     }
 
     public String toJson() {
@@ -58,6 +63,8 @@ public class Prefs {
         sb.append(previewTutorial);
         sb.append("\",\"playTutorial\":\"");
         sb.append(playTutorial);
+        sb.append("\",\"songPreview\":\"");
+        sb.append(songPreview);
         sb.append("\"}");
         return sb.toString();
     }
@@ -71,13 +78,15 @@ public class Prefs {
             final String tunerTutorial = jsonRoot.getString("tunerTutorial");
             final String previewTutorial = jsonRoot.getString("previewTutorial");
             final String playTutorial = jsonRoot.getString("playTutorial");
+            final String songPreview = jsonRoot.getString("songPreview");
             final Builder builder = new Builder()
                     .setHand(hand)
                     .setGuitar(guitar)
                     .setLevel(level)
                     .setTunerTutorial(tunerTutorial)
                     .setPreviewTutorial(previewTutorial)
-                    .setPlayTutorial(playTutorial);
+                    .setPlayTutorial(playTutorial)
+                    .setSongPreview(songPreview);
             return builder.build();
         } catch (JSONException e) {
             Log.v(TAG, "parsing from json failed");
@@ -122,6 +131,12 @@ public class Prefs {
             prefs.playTutorial = playTutorial;
             return this;
         }
+
+        public Builder setSongPreview(String songPreview) {
+            prefs.songPreview = songPreview;
+            return this;
+        }
+
         public Prefs build() {
             return prefs;
         }

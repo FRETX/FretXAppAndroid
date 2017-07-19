@@ -61,6 +61,7 @@ public class FretXApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
         final IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(broadcastReceiver, filter);
         Log.d(TAG, "register bluetooth broadcast receiver");

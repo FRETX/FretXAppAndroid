@@ -1,46 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
     android:orientation="vertical">
-
-    <Switch
-        android:id="@+id/switch2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Left handed mode" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Type of neck"
-            android:textColor="@color/primaryText" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/com_facebook_close" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Handeness"
+                android:textColor="@color/primaryText" />
 
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Guitar"
+                android:textColor="@color/primaryText" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Level"
+                android:textColor="@color/primaryText"
+                tools:text="Skill level" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Preview"
+                android:textColor="@color/primaryText"
+                tools:text="Preview" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/com_facebook_close" />
+            android:layout_weight="0.6"
+            android:orientation="vertical">
+
+            <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/hand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                app:sc_border_width="2dp"
+                app:sc_corner_radius="10dp"
+                app:sc_tint_color="@color/accent">
+
+                <RadioButton
+                    android:id="@+id/right"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Right"
+                    android:textSize="17sp" />
+
+                <RadioButton
+                    android:id="@+id/left"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Left"
+                    android:textSize="17sp" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+            <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/guitar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                app:sc_border_width="2dp"
+                app:sc_corner_radius="10dp"
+                app:sc_tint_color="@color/accent">
+
+                <RadioButton
+                    android:id="@+id/classical"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Classical"
+                    android:textSize="17sp" />
+
+                <RadioButton
+                    android:id="@+id/electric"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Electric"
+                    android:textSize="17sp"/>
+
+                <RadioButton
+                    android:id="@+id/acoustic"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Acoustic"
+                    android:textSize="17sp" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+            <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/level"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                app:sc_border_width="2dp"
+                app:sc_corner_radius="10dp"
+                app:sc_tint_color="@color/accent">
+
+                <RadioButton
+                    android:id="@+id/beginner"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Beginner"
+                    android:textSize="17sp" />
+
+                <RadioButton
+                    android:id="@+id/player"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Player"
+                    android:textSize="17sp" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+            <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                app:sc_border_width="2dp"
+                app:sc_corner_radius="10dp"
+                app:sc_tint_color="@color/accent">
+
+                <RadioButton
+                    android:id="@+id/previewOn"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="On"
+                    android:textSize="17sp" />
+
+                <RadioButton
+                    android:id="@+id/previewOff"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Off"
+                    android:textSize="17sp" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <Switch
-        android:id="@+id/switch1"
+    <TextView
+        android:id="@+id/setup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Song preview" />
+        android:layout_margin="5dp"
+        android:background="#fff"
+        android:clickable="true"
+        android:elevation="4dp"
+        android:padding="20dp"
+        android:text="FretX Set Up"
+        android:textAlignment="center"
+        android:textColor="@color/primaryText" />
+
+    <TextView
+        android:id="@+id/upgrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="#fff"
+        android:clickable="true"
+        android:elevation="4dp"
+        android:padding="20dp"
+        android:text="Upgrade FretX"
+        android:textAlignment="center"
+        android:textColor="@color/primaryText" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="#fff"
+        android:clickable="true"
+        android:elevation="4dp"
+        android:padding="20dp"
+        android:text="Leave us a message"
+        android:textAlignment="center"
+        android:textColor="@color/primaryText" />
+
+    <TextView
+        android:id="@+id/signout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="#fff"
+        android:clickable="true"
+        android:elevation="4dp"
+        android:padding="20dp"
+        android:text="Signout"
+        android:textAlignment="center"
+        android:textColor="@color/primaryText"
+        android:visibility="gone" />
+
 </LinearLayout>

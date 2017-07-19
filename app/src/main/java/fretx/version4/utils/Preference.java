@@ -114,9 +114,10 @@ public class Preference {
                     Log.w(TAG, "hand: " + prefs.hand);
                     Log.w(TAG, "guitar: " + prefs.guitar);
                     Log.w(TAG, "level: " + prefs.level);
-                    Log.w(TAG, "tuner: " + prefs.tunerTutorial);
-                    Log.w(TAG, "preview: " + prefs.previewTutorial);
-                    Log.w(TAG, "play: " + prefs.playTutorial);
+                    Log.w(TAG, "tunerTuto: " + prefs.tunerTutorial);
+                    Log.w(TAG, "previewTuto: " + prefs.previewTutorial);
+                    Log.w(TAG, "playTuto: " + prefs.playTutorial);
+                    Log.w(TAG, "songPreview: " + prefs.songPreview);
                 }
             }
 
@@ -145,13 +146,15 @@ public class Preference {
         return new Prefs(prefs);
     }
 
-    public boolean isLeftHanded(){
-        return prefs.hand.equals(Prefs.LEFT_HANDED);
-    }
-    public boolean isElectricGuitar(){
-        return prefs.guitar.equals(Prefs.ELECTRIC_GUITAR);
-    }
-    public boolean needTunerTutorial() { return prefs.tunerTutorial.equals("true");}
-    public boolean needPreviewTutorial() { return prefs.previewTutorial.equals("true");}
-    public boolean needPlayTutorial() { return prefs.playTutorial.equals("true");}
+    public boolean isLeftHanded(){return prefs.hand.equals(Prefs.LEFT_HANDED);}
+    public boolean isClassicalGuitar(){return prefs.guitar.equals(Prefs.CLASSICAL_GUITAR);}
+    public boolean isElectricGuitar(){return prefs.guitar.equals(Prefs.ELECTRIC_GUITAR);}
+    public boolean isAcousticGuitar(){return prefs.guitar.equals(Prefs.ACCOUSTIC_GUITAR);}
+    public boolean isSongPreview() {return prefs.songPreview.equals("true");}
+    public boolean isBeginner() {return prefs.level.equals(Prefs.LEVEL_BEGINNER);}
+    public boolean isPlayer() {return prefs.level.equals(Prefs.LEVEL_PLAYER);}
+
+    public boolean needTunerTutorial() {return prefs.tunerTutorial.equals("true");}
+    public boolean needPreviewTutorial() {return prefs.previewTutorial.equals("true");}
+    public boolean needPlayTutorial() {return prefs.playTutorial.equals("true");}
 }
