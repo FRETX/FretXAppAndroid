@@ -94,8 +94,7 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="Level"
-                        android:textColor="@color/primaryText"
-                        tools:text="Skill level" />
+                        android:textColor="@color/primaryText" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -103,8 +102,7 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="Preview"
-                        android:textColor="@color/primaryText"
-                        tools:text="Preview" />
+                        android:textColor="@color/primaryText" />
                 </LinearLayout>
 
                 <LinearLayout

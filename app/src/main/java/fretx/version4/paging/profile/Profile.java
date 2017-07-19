@@ -1,5 +1,6 @@
 package fretx.version4.paging.profile;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,8 +58,8 @@ public class Profile extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paging_profile, container, false);
 
-        final ImageView photo = (ImageView) rootView.findViewById(R.id.user_profile_photo);
-
+        final ImageView photo = (ImageView) rootView.findViewById(R.id.photo);
+        final TextView name = (TextView) rootView.findViewById(R.id.name);
         final SegmentedGroup hand = (SegmentedGroup) rootView.findViewById(R.id.hand);
         final RadioButton left = (RadioButton) rootView.findViewById(R.id.left);
         final RadioButton right = (RadioButton) rootView.findViewById(R.id.right);
@@ -72,7 +73,6 @@ public class Profile extends Fragment {
         final SegmentedGroup preview = (SegmentedGroup) rootView.findViewById(R.id.preview);
         final RadioButton previewOn = (RadioButton) rootView.findViewById(R.id.previewOn);
         final RadioButton previewOff = (RadioButton) rootView.findViewById(R.id.previewOff);
-
         final TextView setup = (TextView) rootView.findViewById(R.id.setup);
         final TextView upgrade = (TextView) rootView.findViewById(R.id.upgrade);
         final TextView message = (TextView) rootView.findViewById(R.id.message);
@@ -81,7 +81,13 @@ public class Profile extends Fragment {
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             Log.d(TAG, "user connected");
+            name.setText(user.getDisplayName());
+            final Uri url = user.getPhotoUrl();
+            if (url != null) {
+                Picasso.with(getActivity()).load(url).placeholder(R.drawable.defaultthumb).into(photo);
+            }
             signout.setVisibility(View.VISIBLE);
+
         }
 
         /* HAND */
@@ -193,6 +199,19 @@ public class Profile extends Fragment {
             public void onClick(View v) {
                 final Intent intent = new Intent(getActivity(), OnboardingActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        /* UPGRADE */
+        upgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    final Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://store.fretx.rocks/"));
+                    startActivity(myIntent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
