@@ -36,7 +36,6 @@ import fretx.version4.fretxapi.Network;
 import fretx.version4.fretxapi.song.SongList;
 import fretx.version4.paging.learn.LearnPage;
 import fretx.version4.paging.play.list.PlayFragmentSearchList;
-import fretx.version4.paging.play.list.PlayPage;
 import fretx.version4.paging.profile.Profile;
 import fretx.version4.paging.tuner.TunerPage;
 import fretx.version4.utils.Preference;
@@ -162,7 +161,7 @@ public class MainActivity extends BaseActivity {
         SongList.initialize();
 
         final List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new PlayPage());
+        fragments.add(new PlayFragmentSearchList());
         fragments.add(new LearnPage());
         fragments.add(new TunerPage());
         fragments.add(new Profile());
