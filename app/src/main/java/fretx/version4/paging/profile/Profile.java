@@ -35,6 +35,7 @@ import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import info.hoang8f.android.segmented.SegmentedGroup;
 import io.intercom.android.sdk.Intercom;
 import io.intercom.android.sdk.UnreadConversationCountListener;
+import io.intercom.android.sdk.blocks.models.Image;
 
 /**
  * FretXAppAndroid for FretX
@@ -55,6 +56,8 @@ public class Profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.paging_profile, container, false);
+
+        final ImageView photo = (ImageView) rootView.findViewById(R.id.user_profile_photo);
 
         final SegmentedGroup hand = (SegmentedGroup) rootView.findViewById(R.id.hand);
         final RadioButton left = (RadioButton) rootView.findViewById(R.id.left);
