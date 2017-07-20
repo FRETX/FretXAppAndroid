@@ -8,8 +8,10 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -23,11 +25,12 @@ import fretx.version4.utils.Preference;
 public class HeadStockView extends View{
     private static final String TAG = "KJKP6_HSV";
     private int TEXT_SIZE = 40;
-    //headstock
     private HeadstockViewDescriptor descriptor;
-    private final Bitmap headStockBitmap;
+    private final Bitmap headStockBitmapRight;
+    private final Bitmap headStockBitmapLeft;
     private final int headStockImageIntrinsicHeight;
     private final int headStockImageIntrinsicWidth;
+    private int viewWidth;
     private final Matrix headStockMatrix = new Matrix();
     private int selectedEarIndex;
     private boolean clickable = true;
@@ -43,13 +46,16 @@ public class HeadStockView extends View{
     public HeadStockView(Context context, AttributeSet attrs){
         super(context, attrs);
 
-        if (Preference.getInstance().isElectricGuitar())
+        if (Preference.getInstance().isElectricGuitar()) {
             descriptor = new HeadstockViewDescriptor(HeadstockViewDescriptor.Headstock.ELECTRIC);
-        else
+        } else {
             descriptor = new HeadstockViewDescriptor(HeadstockViewDescriptor.Headstock.CLASSIC);
-        headStockBitmap = BitmapFactory.decodeResource(context.getResources(), descriptor.ressourceId);
-        headStockImageIntrinsicHeight = headStockBitmap.getHeight();
-        headStockImageIntrinsicWidth = headStockBitmap.getWidth();
+        }
+        headStockBitmapRight = BitmapFactory.decodeResource(context.getResources(), descriptor.ressourceId);
+        headStockBitmapLeft = flip(headStockBitmapRight);
+        headStockImageIntrinsicHeight = headStockBitmapRight.getHeight();
+        headStockImageIntrinsicWidth = headStockBitmapRight.getWidth();
+        viewWidth = headStockImageIntrinsicWidth;
 
         painter.setTextSize(TEXT_SIZE);
         painter.setTypeface(gothamFontBold);
@@ -59,6 +65,7 @@ public class HeadStockView extends View{
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
+        viewWidth = w;
         final float ratioX = ((float) w) / headStockImageIntrinsicWidth;
         final float ratioY = ((float) h) / headStockImageIntrinsicHeight;
         float headStockImageRatio;
@@ -87,16 +94,32 @@ public class HeadStockView extends View{
             final float x = event.getX();
             final float y = event.getY();
 
-            for (int index = 0; index < descriptor.ears.length; ++index) {
-                final float dx = descriptor.ears[index].ex - x;
-                final float dy = descriptor.ears[index].ey - y;
-                if (dx * dx + dy * dy < descriptor.earRadius * descriptor.earRadius) {
-                    if (selectedEarIndex != index) {
-                        selectedEarIndex = index;
-                        if (listener != null) {
-                            listener.onEarSelected(selectedEarIndex);
+            if(Preference.getInstance().isLeftHanded()) {
+                for (int index = 0; index < descriptor.ears.length; ++index) {
+                    final float dx = viewWidth - descriptor.ears[index].exm - x;
+                    final float dy = descriptor.ears[index].ey - y;
+                    if (dx * dx + dy * dy < descriptor.earRadius * descriptor.earRadius) {
+                        if (selectedEarIndex != index) {
+                            selectedEarIndex = index;
+                            if (listener != null) {
+                                listener.onEarSelected(selectedEarIndex);
+                            }
+                            invalidate();
                         }
-                        invalidate();
+                    }
+                }
+            } else {
+                for (int index = 0; index < descriptor.ears.length; ++index) {
+                    final float dx = descriptor.ears[index].ex - x;
+                    final float dy = descriptor.ears[index].ey - y;
+                    if (dx * dx + dy * dy < descriptor.earRadius * descriptor.earRadius) {
+                        if (selectedEarIndex != index) {
+                            selectedEarIndex = index;
+                            if (listener != null) {
+                                listener.onEarSelected(selectedEarIndex);
+                            }
+                            invalidate();
+                        }
                     }
                 }
             }
@@ -106,19 +129,33 @@ public class HeadStockView extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawBitmap(headStockBitmap, headStockMatrix, null);
-        for (int index = 0; index < descriptor.ears.length; ++index) {
-            final HeadstockViewDescriptor.Ear ear = descriptor.ears[index];
-            if (index == selectedEarIndex) {
-                painter.setColor(Color.GREEN);
-                canvas.drawRect(ear.sx, ear.sy, ear.sx + descriptor.stringWidth, descriptor.stringBottom, painter);
-            } else {
-                painter.setColor(Color.WHITE);
+        if(Preference.getInstance().isLeftHanded()) {
+            canvas.drawBitmap(headStockBitmapLeft, headStockMatrix, null);
+            for (int index = 0; index < descriptor.ears.length; ++index) {
+                final HeadstockViewDescriptor.Ear ear = descriptor.ears[index];
+                if (index == selectedEarIndex) {
+                    painter.setColor(Color.GREEN);
+                    canvas.drawRect(viewWidth - ear.sxm - descriptor.stringWidth, ear.sy, viewWidth - ear.sxm, descriptor.stringBottom, painter);
+                } else {
+                    painter.setColor(Color.WHITE);
+                }
+                painter.setStrokeWidth(5);
+                canvas.drawText(ear.name, viewWidth - ear.exm - TEXT_SIZE / 4, ear.ey + TEXT_SIZE / 4, painter);
             }
-            painter.setStrokeWidth(5);
-            canvas.drawText(ear.name, ear.ex - TEXT_SIZE / 4, ear.ey + TEXT_SIZE / 4, painter);
+        } else {
+            canvas.drawBitmap(headStockBitmapRight, headStockMatrix, null);
+            for (int index = 0; index < descriptor.ears.length; ++index) {
+                final HeadstockViewDescriptor.Ear ear = descriptor.ears[index];
+                if (index == selectedEarIndex) {
+                    painter.setColor(Color.GREEN);
+                    canvas.drawRect(ear.sx, ear.sy, ear.sx + descriptor.stringWidth, descriptor.stringBottom, painter);
+                } else {
+                    painter.setColor(Color.WHITE);
+                }
+                painter.setStrokeWidth(5);
+                canvas.drawText(ear.name, ear.ex - TEXT_SIZE / 4, ear.ey + TEXT_SIZE / 4, painter);
+            }
         }
-        //canvas.drawCircle(ear.ex, ear.ey, earClickRadius, painter);
     }
 
     public void setOnEarSelectedListener(@Nullable OnEarSelectedListener listener) {
@@ -132,5 +169,14 @@ public class HeadStockView extends View{
 
     public void setClickable(boolean clickable) {
         this.clickable = clickable;
+    }
+
+    private Bitmap flip(Bitmap src)
+    {
+        Matrix m = new Matrix();
+        m.preScale(-1, 1);
+        final Bitmap dst = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, false);
+        dst.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+        return dst;
     }
 }

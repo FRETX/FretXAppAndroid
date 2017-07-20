@@ -1,140 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
     android:orientation="vertical">
 
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:background="@color/primary">
+
+        <FrameLayout
+            android:id="@+id/user_profile_frame"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            app:layout_aspectRatio="100%"
+            app:layout_widthPercent="25%">
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/circular_border"
+                android:elevation="5dp" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_profile_frame"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical"
+            android:text="Anonymous"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </android.support.percent.PercentRelativeLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="0dp"
-            android:layout_weight="0.4"
-            android:background="@color/primary"
-            >
-            <android.support.percent.PercentRelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <FrameLayout
-                    android:id="@+id/user_profile_frame"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_centerHorizontal="true"
-                    app:layout_widthPercent="25%"
-                    app:layout_aspectRatio="100%">
-                    <ImageView
-                        android:id="@+id/user_profile_photo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
-                    <ImageView
-                        android:id="@+id/user_profile_photo_border"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/circular_border"
-                        android:elevation="5dp"
-                        />
-                </FrameLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/name_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="Anonymous"
-                    android:layout_below="@id/user_profile_frame"
-                    android:layout_centerHorizontal="true"
-                    android:textColor="#fff"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </android.support.percent.PercentRelativeLayout>
-
-
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.6"
-            >
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/email_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:textColor="#fff"
-                    android:textSize="14sp" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    >
+                    android:layout_weight="0.25"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/left_hand_textview"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:textColor="@color/primaryText"
-                        android:text="Left-handed" />
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Hand"
+                        android:textColor="@color/primaryText" />
 
-                    <Switch
-                        android:id="@+id/left_handed_switch"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Guitar"
+                        android:textColor="@color/primaryText" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Level"
+                        android:textColor="@color/primaryText" />
+
+                    <TextView
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Preview"
+                        android:textColor="@color/primaryText" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/disconnect_button"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="#fff"
-                    android:clickable="true"
-                    android:elevation="4dp"
-                    android:padding="20dp"
-                    android:textColor="@color/primaryText"
-                    android:text="Sign Out" />
+                    android:layout_weight="0.6"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/onboarding_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="#fff"
-                    android:clickable="true"
-                    android:elevation="4dp"
-                    android:padding="20dp"
-                    android:text="Onboarding"
-                    android:textColor="@color/primaryText"
-                    android:visibility="gone" />
+                    <info.hoang8f.android.segmented.SegmentedGroup
+                        android:id="@+id/hand"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:orientation="horizontal"
+                        app:sc_border_width="2dp"
+                        app:sc_corner_radius="10dp"
+                        app:sc_tint_color="@color/accent">
 
-                <TextView
-                    android:id="@+id/feedback_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="#fff"
-                    android:clickable="true"
-                    android:elevation="4dp"
-                    android:padding="20dp"
-                    android:text="Leave a feedback"
-                    android:textColor="@color/primaryText"
-                    android:visibility="gone" />
+                        <RadioButton
+                            android:id="@+id/right"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Right"
+                            android:textSize="17sp" />
+
+                        <RadioButton
+                            android:id="@+id/left"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Left"
+                            android:textSize="17sp" />
+                    </info.hoang8f.android.segmented.SegmentedGroup>
+
+                    <info.hoang8f.android.segmented.SegmentedGroup
+                        android:id="@+id/guitar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:orientation="horizontal"
+                        app:sc_border_width="2dp"
+                        app:sc_corner_radius="10dp"
+                        app:sc_tint_color="@color/accent">
+
+                        <RadioButton
+                            android:id="@+id/classical"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Classical"
+                            android:textSize="17sp" />
+
+                        <RadioButton
+                            android:id="@+id/electric"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Electric"
+                            android:textSize="17sp" />
+
+                        <RadioButton
+                            android:id="@+id/acoustic"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Acoustic"
+                            android:textSize="17sp" />
+                    </info.hoang8f.android.segmented.SegmentedGroup>
+
+                    <info.hoang8f.android.segmented.SegmentedGroup
+                        android:id="@+id/level"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:orientation="horizontal"
+                        app:sc_border_width="2dp"
+                        app:sc_corner_radius="10dp"
+                        app:sc_tint_color="@color/accent">
+
+                        <RadioButton
+                            android:id="@+id/beginner"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Beginner"
+                            android:textSize="17sp" />
+
+                        <RadioButton
+                            android:id="@+id/player"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Player"
+                            android:textSize="17sp" />
+                    </info.hoang8f.android.segmented.SegmentedGroup>
+
+                    <info.hoang8f.android.segmented.SegmentedGroup
+                        android:visibility="gone"
+                        android:id="@+id/preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:orientation="horizontal"
+                        app:sc_border_width="2dp"
+                        app:sc_corner_radius="10dp"
+                        app:sc_tint_color="@color/accent">
+
+                        <RadioButton
+                            android:id="@+id/previewOn"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="On"
+                            android:textSize="17sp" />
+
+                        <RadioButton
+                            android:id="@+id/previewOff"
+                            style="@style/RadioButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Off"
+                            android:textSize="17sp" />
+                    </info.hoang8f.android.segmented.SegmentedGroup>
+
+                </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/setup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="FretX Set Up"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText" />
+
+            <TextView
+                android:id="@+id/upgrade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="Upgrade FretX"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText" />
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="Leave us a message"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText" />
+
+            <TextView
+                android:id="@+id/signout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#fff"
+                android:clickable="true"
+                android:elevation="4dp"
+                android:padding="20dp"
+                android:text="Signout"
+                android:textAlignment="center"
+                android:textColor="@color/primaryText"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

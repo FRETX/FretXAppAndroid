@@ -126,7 +126,6 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
     }
 
     /*----------------------------------- OPTION MENU --------------------------------------------*/
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "");
