@@ -97,6 +97,7 @@
                         android:textColor="@color/primaryText" />
 
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -211,6 +212,7 @@
                     </info.hoang8f.android.segmented.SegmentedGroup>
 
                     <info.hoang8f.android.segmented.SegmentedGroup
+                        android:visibility="gone"
                         android:id="@+id/preview"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
