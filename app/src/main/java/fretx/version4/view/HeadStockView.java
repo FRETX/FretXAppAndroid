@@ -25,7 +25,6 @@ import fretx.version4.utils.Preference;
 public class HeadStockView extends View{
     private static final String TAG = "KJKP6_HSV";
     private int TEXT_SIZE = 40;
-    //headstock
     private HeadstockViewDescriptor descriptor;
     private final Bitmap headStockBitmapRight;
     private final Bitmap headStockBitmapLeft;
