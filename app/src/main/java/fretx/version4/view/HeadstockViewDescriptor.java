@@ -1,5 +1,7 @@
 package fretx.version4.view;
 
+import android.util.Log;
+
 import fretx.version4.R;
 import rocks.fretx.audioprocessing.MusicUtils;
 
@@ -64,6 +66,8 @@ public class HeadstockViewDescriptor {
         public float ey = 0;
         public float sx = 0;
         public float sy = 0;
+        public float exm = 0;
+        public float sxm = 0;
         public String name;
 
         Ear(float erx, float ery, float srx, float sry, String name) {
@@ -75,10 +79,16 @@ public class HeadstockViewDescriptor {
         }
 
         void update(int x, int y, int px, int py) {
+            Log.d("KJKP6_DESCRIPTOR", "x = " + x);
+            Log.d("KJKP6_DESCRIPTOR", "px = " + px);
             ex = px + erx * x;
             ey = py + ery * y;
             sx = px + srx * x;
             sy = py + sry * y;
+            exm = px + erx * x;
+            Log.d("KJKP6_DESCRIPTOR", "exm = " + exm);
+            sxm = px + srx * x;
+            Log.d("KJKP6_DESCRIPTOR", "sxm = " + sxm);
         }
     }
 }
