@@ -107,4 +107,8 @@ public class FretboardFragment extends Fragment {
         if (chord != null)
             fretboardView.setFretboardPositions(chord.getFingerPositions());
     }
+
+    public void setFingerings(ArrayList<FretboardPosition> fingerings) {
+        fretboardView.setFretboardPositions(fingerings);
+    }
 }

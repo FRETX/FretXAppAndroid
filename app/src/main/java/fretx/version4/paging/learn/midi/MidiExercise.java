@@ -1,6 +1,7 @@
 package fretx.version4.paging.learn.midi;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.pdrogfer.mididroid.MidiFile;
 import com.pdrogfer.mididroid.event.MidiEvent;
@@ -21,8 +23,10 @@ import com.pdrogfer.mididroid.util.MidiProcessor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import fretx.version4.R;
+import fretx.version4.fragment.FretboardFragment;
 import fretx.version4.utils.bluetooth.Bluetooth;
 import rocks.fretx.audioprocessing.FretboardPosition;
 import rocks.fretx.audioprocessing.MusicUtils;
@@ -34,14 +38,20 @@ import rocks.fretx.audioprocessing.MusicUtils;
 
 public class MidiExercise extends Fragment {
     private static final String TAG = "KJKP6_MIDI_EXERCISE";
+    private final FretboardFragment fretboardFragment = new FretboardFragment();
+    private final SparseArray<FretboardPosition> notes = new SparseArray<>();
+    private final ArrayList<FretboardPosition> positions = new ArrayList<>();
+    private final Handler handler = new Handler();
     private MidiProcessor processor;
     private MidiFile midiFile;
     private Button playPause;
-    private final SparseArray<Byte> notes = new SparseArray<>();
+    private String filename;
+    private boolean touched;
 
     public static MidiExercise newInstance(File mdf) {
         final MidiExercise fragment = new MidiExercise();
         try {
+            fragment.filename = mdf.getName();
             fragment.midiFile = new MidiFile(mdf);
         } catch (IOException e) {
             fragment.midiFile = null;
@@ -67,6 +77,13 @@ public class MidiExercise extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.paging_learn_midi_exercise, container, false);
+
+        final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fretboard_fragment_container, fretboardFragment);
+        fragmentTransaction.commit();
+
+        TextView name = (TextView) rootView.findViewById(R.id.name);
+        name.setText(filename);
 
         playPause = (Button) rootView.findViewById(R.id.playpause);
         playPause.setText("play");
@@ -114,21 +131,24 @@ public class MidiExercise extends Fragment {
                 NoteOn noteOn = (NoteOn) event;
                 if (noteOn.getVelocity() == 0) {
                     if (notes.get(noteOn.getNoteValue()) != null) {
+                        touched = true;
                         notes.remove(noteOn.getNoteValue());
                     }
                 } else {
                     if (notes.get(noteOn.getNoteValue()) == null) {
-                        FretboardPosition pos = MusicUtils.midiNoteToFretboardPosition(noteOn.getNoteValue());
-                        notes.put(noteOn.getNoteValue(), pos.getByteCode());
+                        final FretboardPosition pos = MusicUtils.midiNoteToFretboardPosition(noteOn.getNoteValue());
+                        touched = true;
+                        notes.put(noteOn.getNoteValue(), pos);
                     }
                 }
-                updateBluetooth();
+                handler.post(updateBluetooth);
             } else if (event instanceof NoteOff) {
                 NoteOff noteOff = (NoteOff) event;
                 if (notes.get(noteOff.getNoteValue()) != null) {
+                    touched = true;
                     notes.remove(noteOff.getNoteValue());
                 }
-                updateBluetooth();
+                handler.post(updateBluetooth);
             }
         }
 
@@ -142,12 +162,20 @@ public class MidiExercise extends Fragment {
         }
     }
 
-    private void updateBluetooth() {
-        byte fingerings[] = new byte[notes.size()];
-        for(int i = 0; i < notes.size(); i++) {
-            int key = notes.keyAt(i);
-            fingerings[i] = notes.get(key);
+    private Runnable updateBluetooth = new Runnable() {
+        @Override
+        public void run() {
+            SparseArray<FretboardPosition> notesClone = notes.clone();
+            byte fingerings[] = new byte[notesClone.size()];
+            positions.clear();
+            touched = false;
+            for(int i = 0; !touched && i < notesClone.size(); i++) {
+                int key = notesClone.keyAt(i);
+                fingerings[i] = notesClone.get(key).getByteCode();
+                positions.add(notesClone.get(key));
+            }
+            fretboardFragment.setFingerings(positions);
+            Bluetooth.getInstance().setMatrix(fingerings);
         }
-        Bluetooth.getInstance().setMatrix(fingerings);
-    }
+    };
 }
