@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import fretx.version4.activities.MainActivity;
 import fretx.version4.R;
 import fretx.version4.paging.learn.chords.ChordFragment;
-import fretx.version4.paging.learn.custom.LearnCustomBuilderFragment;
 import fretx.version4.paging.learn.guided.LearnGuidedListFragment;
+import fretx.version4.paging.learn.midi.LearnMidiListFragment;
 import fretx.version4.paging.learn.scale.LearnScaleExerciseFragment;
 import fretx.version4.utils.bluetooth.BluetoothAnimator;
 import fretx.version4.utils.firebase.Analytics;
@@ -53,7 +53,7 @@ public class LearnPage extends Fragment {
         btCustomChordExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).fragNavController.pushFragment(new LearnCustomBuilderFragment());
+                ((MainActivity)getActivity()).fragNavController.pushFragment(new LearnMidiListFragment());
             }
         });
         btScaleChordExercise.setOnClickListener(new View.OnClickListener() {
