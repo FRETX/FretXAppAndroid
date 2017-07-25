@@ -66,13 +66,13 @@
             android:id="@+id/imageView4"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/exercise_progress"
+            android:layout_alignBottom="@+id/seekbar"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             app:srcCompat="@drawable/final_flag" />
 
         <SeekBar
-            android:id="@+id/exercise_progress"
+            android:id="@+id/seekbar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

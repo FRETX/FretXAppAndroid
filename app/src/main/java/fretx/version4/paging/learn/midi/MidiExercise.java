@@ -11,15 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.pdrogfer.mididroid.MidiFile;
-import com.pdrogfer.mididroid.event.MidiEvent;
-import com.pdrogfer.mididroid.event.NoteOff;
-import com.pdrogfer.mididroid.event.NoteOn;
-import com.pdrogfer.mididroid.event.meta.Tempo;
-import com.pdrogfer.mididroid.util.MidiEventListener;
-import com.pdrogfer.mididroid.util.MidiProcessor;
+import com.fretx.midi.MidiFile;
+import com.fretx.midi.event.MidiEvent;
+import com.fretx.midi.event.NoteOff;
+import com.fretx.midi.event.NoteOn;
+import com.fretx.midi.event.meta.Tempo;
+import com.fretx.midi.util.MidiEventListener;
+import com.fretx.midi.util.MidiProcessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,10 +43,13 @@ public class MidiExercise extends Fragment {
     private final SparseArray<FretboardPosition> notes = new SparseArray<>();
     private final ArrayList<FretboardPosition> positions = new ArrayList<>();
     private final Handler handler = new Handler();
+    private SeekBar seekbar;
     private MidiProcessor processor;
     private MidiFile midiFile;
     private Button playPause;
     private String filename;
+    private long totalTicks;
+    private long currentTick;
     private boolean touched;
 
     public static MidiExercise newInstance(File mdf) {
@@ -53,6 +57,8 @@ public class MidiExercise extends Fragment {
         try {
             fragment.filename = mdf.getName();
             fragment.midiFile = new MidiFile(mdf);
+            fragment.totalTicks = fragment.midiFile.getLengthInTicks();
+            Log.d(TAG, "length: " + fragment.totalTicks);
         } catch (IOException e) {
             fragment.midiFile = null;
             e.printStackTrace();
@@ -63,6 +69,8 @@ public class MidiExercise extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        currentTick = 0;
 
         // Create a new MidiProcessor:
         processor = new MidiProcessor(midiFile);
@@ -81,9 +89,27 @@ public class MidiExercise extends Fragment {
         final android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fretboard_fragment_container, fretboardFragment);
         fragmentTransaction.commit();
+        //fretboardFragment.strum();
 
         TextView name = (TextView) rootView.findViewById(R.id.name);
         name.setText(filename);
+
+        seekbar = (SeekBar) rootView.findViewById(R.id.seekbar);
+        seekbar.setMax((int)totalTicks);
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                notes.clear();
+                processor.seekTo(seekBar.getProgress());
+            }
+        });
 
         playPause = (Button) rootView.findViewById(R.id.playpause);
         playPause.setText("play");
@@ -91,10 +117,8 @@ public class MidiExercise extends Fragment {
             @Override
             public void onClick(View v) {
                 if (processor.isRunning()) {
-                    playPause.setText("play");
                     processor.stop();
                 } else {
-                    playPause.setText("pause");
                     processor.start();
                 }
             }
@@ -106,7 +130,6 @@ public class MidiExercise extends Fragment {
     public void onPause() {
         super.onPause();
         processor.stop();
-        playPause.setText("play");
     }
 
     private class EventPrinter implements MidiEventListener {
@@ -118,6 +141,7 @@ public class MidiExercise extends Fragment {
 
         @Override
         public void onStart(boolean fromBeginning) {
+            handler.post(updatePauseButton);
             if (fromBeginning) {
                 Log.d(TAG, mLabel + " Started!");
             } else {
@@ -129,6 +153,8 @@ public class MidiExercise extends Fragment {
         public void onEvent(MidiEvent event, long ms) {
             if (event instanceof NoteOn) {
                 NoteOn noteOn = (NoteOn) event;
+
+                seekbar.setProgress((int)event.getTick());
                 if (noteOn.getVelocity() == 0) {
                     if (notes.get(noteOn.getNoteValue()) != null) {
                         touched = true;
@@ -154,6 +180,7 @@ public class MidiExercise extends Fragment {
 
         @Override
         public void onStop(boolean finished) {
+            handler.post(updatePlayButton);
             if (finished) {
                 Log.d(TAG, mLabel + " Finished!");
             } else {
@@ -176,6 +203,20 @@ public class MidiExercise extends Fragment {
             }
             fretboardFragment.setFingerings(positions);
             Bluetooth.getInstance().setMatrix(fingerings);
+        }
+    };
+
+    private Runnable updatePlayButton = new Runnable() {
+        @Override
+        public void run() {
+            playPause.setText("play");
+        }
+    };
+
+    private Runnable updatePauseButton = new Runnable() {
+        @Override
+        public void run() {
+            playPause.setText("pause");
         }
     };
 }

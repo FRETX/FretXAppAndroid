@@ -12,6 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/com_facebook_close" />
+
         <TextView
             android:id="@+id/item_text"
             android:layout_width="212dp"

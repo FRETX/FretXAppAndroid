@@ -1,6 +1,7 @@
 package fretx.version4.paging.learn.midi;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,14 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.util.ArrayList;
 
 import fretx.version4.R;
 import fretx.version4.activities.MainActivity;
-import fretx.version4.fretxapi.song.SongItem;
 
 /**
  * 
@@ -23,16 +21,15 @@ import fretx.version4.fretxapi.song.SongItem;
  *
  */
 class MidiGridViewAdapter extends ArrayAdapter<File> {
+    private static final String TAG = "KJKP6_MIDI_ADAPTER";
 	private MainActivity mActivity;
 	private int layoutResourceId;
-	private ArrayList<File> data = new ArrayList<>();
 
 	MidiGridViewAdapter(MainActivity context, int layoutResourceId,
                             ArrayList<File> data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.mActivity = context;
-		this.data = data;
 	}
 
 	@Override
@@ -48,20 +45,35 @@ class MidiGridViewAdapter extends ArrayAdapter<File> {
 			holder = new RecordHolder();
 
 			holder.txtPrimary = (TextView) row.findViewById(R.id.item_text);
+			holder.delete = (ImageView) row.findViewById(R.id.delete);
 
 			row.setTag(holder);
 		} else {
 			holder = (RecordHolder) row.getTag();
 		}
 
-		final File item = data.get(position);
+		final File item = getItem(position);
 
 		holder.txtPrimary.setText(item.getName());
+		holder.delete.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MidiGridViewAdapter.this.remove(item);
+                if (item.exists()) {
+                    if (item.delete()) {
+                        Log.d(TAG, "file Deleted");
+                    } else {
+                        Log.d(TAG, "file not Deleted");
+                    }
+                }
+			}
+		});
 
 		return row;
 	}
 
 	private static class RecordHolder {
 		TextView txtPrimary;
+		ImageView delete;
 	}
 }
