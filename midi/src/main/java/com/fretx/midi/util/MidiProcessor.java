@@ -42,6 +42,7 @@ public class MidiProcessor
     private long mTickLoopStop;
     private boolean firstLoop;
     private Thread thread;
+    private double multiplier;
 
     private int mMPQN;
     private int mPPQ;
@@ -57,6 +58,7 @@ public class MidiProcessor
         mEventsToListeners = new HashMap<>();
         mListenersToEvents = new HashMap<>();
         mMetronome = new MetronomeTick(new TimeSignature(), mPPQ);
+        multiplier = 1;
         this.reset();
     }
 
@@ -112,6 +114,10 @@ public class MidiProcessor
 
     public boolean isLooping() {
         return mLooping;
+    }
+
+    public void setMultiplier(double multiplier) {
+        this.multiplier = multiplier;
     }
 
     public double getTick() {
@@ -248,7 +254,7 @@ public class MidiProcessor
                 }
                 continue;
             }
-            double ticksElapsed = MidiUtil.msToTicks(msElapsed, mMPQN, mPPQ);
+            double ticksElapsed = MidiUtil.msToTicks((int)(msElapsed * multiplier), mMPQN, mPPQ);
             if(ticksElapsed < 1) {
                 continue;
             }

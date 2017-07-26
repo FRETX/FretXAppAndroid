@@ -104,12 +104,9 @@ public class MidiExercise extends Fragment {
         seekbar.setMax((int)totalTicks);
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
-
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
-
+            public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 notes.clear();
@@ -162,6 +159,24 @@ public class MidiExercise extends Fragment {
                 }
             }
         });
+
+        final TextView speed_text = (TextView) rootView.findViewById(R.id.speed_text);
+        final SeekBar speed_bar = (SeekBar) rootView.findViewById(R.id.speed_bar);
+        speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                double p = (speed_bar.getProgress() + 1) * 0.25;
+                processor.setMultiplier(p);
+                speed_text.setText(String.valueOf(p));
+            }
+        });
+        seekbar.setProgress(3);
+        speed_text.setText("1.0");
 
         playPause = (Button) rootView.findViewById(R.id.playpause);
         playPause.setText("play");

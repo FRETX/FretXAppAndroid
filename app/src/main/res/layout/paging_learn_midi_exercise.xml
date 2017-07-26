@@ -106,5 +106,27 @@
             android:text="B"
             android:textColor="@color/tertiaryText"
             android:textSize="12dp" />
+
     </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <TextView
+        android:id="@+id/speed_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/primaryText" />
+
+    <SeekBar
+        android:id="@+id/speed_bar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="6"
+        android:progress="3" />
+
 </LinearLayout>
