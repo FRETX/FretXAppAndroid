@@ -1,6 +1,5 @@
 package fretx.version4.paging.learn.midi;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -23,8 +22,6 @@ import com.fretx.midi.event.NoteOn;
 import com.fretx.midi.event.meta.Tempo;
 import com.fretx.midi.util.MidiEventListener;
 import com.fretx.midi.util.MidiProcessor;
-import com.fretx.midi.util.MidiUtil;
-import com.nostra13.universalimageloader.utils.L;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,6 +107,7 @@ public class MidiExercise extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 notes.clear();
+                processor.stopLoop();
                 processor.seekTo(seekBar.getProgress());
             }
         });
@@ -179,7 +177,6 @@ public class MidiExercise extends Fragment {
         speed_text.setText("1.0");
 
         playPause = (Button) rootView.findViewById(R.id.playpause);
-        playPause.setText("play");
         playPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,14 +275,14 @@ public class MidiExercise extends Fragment {
     private Runnable updatePlayButton = new Runnable() {
         @Override
         public void run() {
-            playPause.setText("play");
+            playPause.setBackground(getResources().getDrawable(R.drawable.ic_playbutton));
         }
     };
 
     private Runnable updatePauseButton = new Runnable() {
         @Override
         public void run() {
-            playPause.setText("pause");
+            playPause.setBackground(getResources().getDrawable(R.drawable.ic_pausebutton));
         }
     };
 
