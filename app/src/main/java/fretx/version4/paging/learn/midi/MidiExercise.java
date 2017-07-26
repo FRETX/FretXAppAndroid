@@ -1,5 +1,6 @@
 package fretx.version4.paging.learn.midi;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -21,6 +23,8 @@ import com.fretx.midi.event.NoteOn;
 import com.fretx.midi.event.meta.Tempo;
 import com.fretx.midi.util.MidiEventListener;
 import com.fretx.midi.util.MidiProcessor;
+import com.fretx.midi.util.MidiUtil;
+import com.nostra13.universalimageloader.utils.L;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +55,8 @@ public class MidiExercise extends Fragment {
     private long totalTicks;
     private long currentTick;
     private boolean touched;
+    private long loopStartTick = -1;
+    private long loopStopTick = -1;
 
     public static MidiExercise newInstance(File mdf) {
         final MidiExercise fragment = new MidiExercise();
@@ -111,6 +117,52 @@ public class MidiExercise extends Fragment {
             }
         });
 
+        final Button loopA = (Button) rootView.findViewById(R.id.loopA);
+        loopA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loopStartTick >= 0) {
+                    loopStartTick = -1;
+                    deactivateButton(loopA);
+                } else if (loopStopTick < 0 || currentTick < loopStopTick) {
+                    loopStartTick = currentTick;
+                    Log.d(TAG, "loopA: " + loopStartTick);
+                    activateButton(loopA);
+                }
+            }
+        });
+
+        final Button loopB = (Button) rootView.findViewById(R.id.loopB);
+        loopB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loopStopTick >= 0) {
+                    loopStopTick = -1;
+                    deactivateButton(loopB);
+                } else if (loopStartTick < 0 || loopStartTick < currentTick) {
+                    loopStopTick = currentTick;
+                    Log.d(TAG, "loopB: " + loopStopTick);
+                    activateButton(loopB);
+                }
+            }
+        });
+
+        final Button loop = (Button) rootView.findViewById(R.id.loop);
+        loop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (processor.isLooping()) {
+                    processor.stopLoop();
+                    Log.d(TAG, "stop looping");
+                    deactivateButton(loop);
+                } else if (loopStartTick > 0 && loopStopTick > 0) {
+                    processor.startLoop(loopStartTick, loopStopTick);
+                    Log.d(TAG, "start looping");
+                    activateButton(loop);
+                }
+            }
+        });
+
         playPause = (Button) rootView.findViewById(R.id.playpause);
         playPause.setText("play");
         playPause.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +203,8 @@ public class MidiExercise extends Fragment {
 
         @Override
         public void onEvent(MidiEvent event, long ms) {
+            currentTick = event.getTick();
+            Log.d(TAG, "ticks: " + event.getTick());
             if (event instanceof NoteOn) {
                 NoteOn noteOn = (NoteOn) event;
 
@@ -219,4 +273,12 @@ public class MidiExercise extends Fragment {
             playPause.setText("pause");
         }
     };
+
+    private void deactivateButton(Button b){
+        b.setBackgroundColor(getResources().getColor(R.color.inactiveButton));
+    }
+
+    private void activateButton(Button b) {
+        b.setBackgroundColor(getResources().getColor(R.color.activeButton));
+    }
 }

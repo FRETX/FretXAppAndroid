@@ -37,6 +37,10 @@ public class MidiProcessor
     private boolean mRunning;
     private double mTicksElapsed;
     private long mMsElapsed;
+    private boolean mLooping;
+    private long mTickLoopStart;
+    private long mTickLoopStop;
+    private boolean firstLoop;
     private Thread thread;
 
     private int mMPQN;
@@ -44,6 +48,7 @@ public class MidiProcessor
 
     private MetronomeTick mMetronome;
     private MidiTrackEventQueue[] mEventQueues;
+    private MidiTrackEventQueue[] mEventQueuesSaved;
 
     public MidiProcessor(MidiFile input) {
         mMidiFile = input;
@@ -103,6 +108,14 @@ public class MidiProcessor
     public boolean isRunning()
     {
         return mRunning;
+    }
+
+    public boolean isLooping() {
+        return mLooping;
+    }
+
+    public double getTick() {
+        return mTicksElapsed;
     }
 
     protected void onStart(boolean fromBeginning) {
@@ -200,14 +213,25 @@ public class MidiProcessor
         double msElapsed = MidiUtil.ticksToMs(ticksElapsed, mMPQN, mPPQ);
         mMsElapsed += msElapsed;
         mTicksElapsed += ticksElapsed;
-        for(int i = 0; i < mEventQueues.length; i++) {
-            MidiTrackEventQueue queue = mEventQueues[i];
+        for(MidiTrackEventQueue queue: mEventQueues) {
             if (queue.hasMoreEvents()) {
                 queue.getNextEventsUpToTick(mTicksElapsed);
             }
         }
         mMetronome.update(ticksElapsed);
         start();
+    }
+
+    public void startLoop(long start, long stop) {
+        mTickLoopStart = start;
+        mTickLoopStop = stop;
+        mLooping = true;
+        firstLoop = true;
+    }
+
+    public void stopLoop() {
+        mLooping = false;
+        mEventQueuesSaved = null;
     }
 
     private void process() {
@@ -234,6 +258,24 @@ public class MidiProcessor
             lastMs = now;
             mMsElapsed += msElapsed;
             mTicksElapsed += ticksElapsed;
+
+            if (mLooping && firstLoop) {
+                firstLoop = false;
+                ArrayList<MidiTrack> tracks = mMidiFile.getTracks();
+                for(int i = 0; i < tracks.size(); i++) {
+                    mEventQueues[i] = new MidiTrackEventQueue(tracks.get(i));
+                    mEventQueues[i].getNextEventsUpToTick(mTickLoopStart);
+                }
+            }
+
+            if (mLooping && mTicksElapsed >= mTickLoopStop) {
+                mTicksElapsed = mTickLoopStart;
+                mMsElapsed = MidiUtil.ticksToMs(mTickLoopStart, mMPQN, mPPQ);
+                firstLoop = true;
+                lastMs = System.currentTimeMillis();
+                continue;
+            }
+
             boolean more = false;
             for(int i = 0; i < mEventQueues.length; i++) {
                 MidiTrackEventQueue queue = mEventQueues[i];
