@@ -97,21 +97,6 @@ public class MidiExercise extends Fragment {
         TextView name = (TextView) rootView.findViewById(R.id.name);
         name.setText(filename);
 
-        seekbar = (SeekBar) rootView.findViewById(R.id.seekbar);
-        seekbar.setMax((int)totalTicks);
-        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                notes.clear();
-                processor.stopLoop();
-                processor.seekTo(seekBar.getProgress());
-            }
-        });
-
         final Button loopA = (Button) rootView.findViewById(R.id.loopA);
         loopA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +142,24 @@ public class MidiExercise extends Fragment {
                 }
             }
         });
+
+        seekbar = (SeekBar) rootView.findViewById(R.id.seekbar);
+        seekbar.setMax((int)totalTicks);
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                notes.clear();
+                processor.stopLoop();
+                deactivateButton(loop);
+                processor.seekTo(seekBar.getProgress());
+            }
+        });
+
+
 
         final TextView speed_text = (TextView) rootView.findViewById(R.id.speed_text);
         final SeekBar speed_bar = (SeekBar) rootView.findViewById(R.id.speed_bar);
