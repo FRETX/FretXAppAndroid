@@ -66,7 +66,7 @@ public class LearnPage extends Fragment {
         btChord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).fragNavController.pushFragment(new ChordFragment());
+                ((MainActivity)getActivity()).fragNavController.pushFragment(new LearnMidiListFragment());
             }
         });
     }

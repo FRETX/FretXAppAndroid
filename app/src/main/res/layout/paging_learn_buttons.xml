@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:fontFamily="sans-serif"
-                android:text="Chords"
+                android:text="Midi Exercise"
                 android:textAlignment="viewStart"
                 android:textColor="@color/tertiaryText"
                 android:textSize="26sp" />
@@ -155,7 +155,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif"
-                android:text="Learn all chords"
+                android:text="Learn your favorite songs"
                 android:textAlignment="viewStart"
                 android:textColor="@color/tertiaryText"
                 android:textSize="14sp" />
