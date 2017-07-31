@@ -15,8 +15,9 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="15dp"
         android:clickable="true"
-        app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:fabSize="normal"
+        android:background="@color/primary"
+        app:srcCompat="@drawable/ic_add" />
 
     <GridView
         android:id="@+id/list"
