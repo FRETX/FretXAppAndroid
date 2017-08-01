@@ -134,11 +134,13 @@ public class MidiExercise extends Fragment {
                 if (processor.isLooping()) {
                     processor.stopLoop();
                     Log.d(TAG, "stop looping");
-                    deactivateButton(loop);
+                    loop.setBackground(getResources().getDrawable(R.drawable.ic_loop_inactive));
+//                    deactivateButton(loop);
                 } else if (loopStartTick > 0 && loopStopTick > 0) {
                     processor.startLoop(loopStartTick, loopStopTick);
                     Log.d(TAG, "start looping");
-                    activateButton(loop);
+//                    activateButton(loop);
+                    loop.setBackground(getResources().getDrawable(R.drawable.ic_loop_active));
                 }
             }
         });
@@ -154,7 +156,8 @@ public class MidiExercise extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 notes.clear();
                 processor.stopLoop();
-                deactivateButton(loop);
+//                deactivateButton(loop);
+                loop.setBackground(getResources().getDrawable(R.drawable.ic_loop_active));
                 processor.seekTo(seekBar.getProgress());
             }
         });
