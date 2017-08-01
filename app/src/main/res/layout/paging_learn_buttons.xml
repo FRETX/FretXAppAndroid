@@ -155,7 +155,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif"
-                android:text="Learn your favorite songs"
+                android:text="Import your own MIDI"
                 android:textAlignment="viewStart"
                 android:textColor="@color/tertiaryText"
                 android:textSize="14sp" />
