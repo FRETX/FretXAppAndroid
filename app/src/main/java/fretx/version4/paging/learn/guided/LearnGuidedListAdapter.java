@@ -19,7 +19,7 @@ class LearnGuidedListAdapter extends ArrayAdapter<GuidedExercise> {
 	private ArrayList<GuidedExercise> data;
 	private FragmentActivity context;
 
-	LearnGuidedListAdapter(FragmentActivity context , int layoutResourceId, ArrayList<GuidedExercise> data){
+	LearnGuidedListAdapter(FragmentActivity context, int layoutResourceId, ArrayList<GuidedExercise> data){
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;

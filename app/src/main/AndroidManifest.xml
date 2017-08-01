@@ -32,12 +32,24 @@
         android:largeHeap="true"
         android:theme="@style/AppThemeNoActionBar"
         tools:replace="android:theme">
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9c2102608533348ff0f99bddd1be48cd90eaf806" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="fretx.version4.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
 
         <activity
             android:name=".activities.SplashScreen"

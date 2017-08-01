@@ -99,7 +99,7 @@ public class ExerciseFragment extends Fragment implements Audio.AudioListener {
         chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);
         playButton = (ImageView) rootView.findViewById(R.id.playChordButton);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
-        exerciseProgress = (SeekBar) rootView.findViewById(R.id.exercise_progress);
+        exerciseProgress = (SeekBar) rootView.findViewById(R.id.seekbar);
         nextChordButton = (Button) rootView.findViewById(R.id.next_chord_button);
         greenTick = (ImageView) rootView.findViewById(R.id.green_tick);
 

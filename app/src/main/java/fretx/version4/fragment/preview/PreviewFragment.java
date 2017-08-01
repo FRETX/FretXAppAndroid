@@ -91,7 +91,7 @@ public class PreviewFragment extends Fragment implements Audio.AudioListener {
         chordNextText = (TextView) rootView.findViewById(R.id.textNextChord);
         playButton = (ImageView) rootView.findViewById(R.id.playChordButton);
         thresholdImage = (ImageView) rootView.findViewById(R.id.audio_thresold);
-        exerciseProgress = (SeekBar) rootView.findViewById(R.id.exercise_progress);
+        exerciseProgress = (SeekBar) rootView.findViewById(R.id.seekbar);
         greenTick = (ImageView) rootView.findViewById(R.id.green_tick);
         nextChordButton = (Button) rootView.findViewById(R.id.next_chord_button);
         playSongButton = (Button) rootView.findViewById(R.id.play_song_button);

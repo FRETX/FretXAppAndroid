@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/primaryText"
+        android:textSize="30sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <TextView
+        android:id="@+id/speed_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1.0"
+        android:textAlignment="center"
+        android:textColor="@color/primaryText" />
+
+    <SeekBar
+        android:id="@+id/speed_bar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="6"
+        android:progress="3" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <FrameLayout
+        android:id="@+id/fretboard_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="center" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/playpause"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/ic_playbutton"
+            android:textColor="@color/tertiaryText"
+
+            />
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_toStartOf="@+id/imageView4"
+            android:layout_weight="1"
+            android:progress="0"
+            android:progressDrawable="@drawable/custom_progress_bar"
+            android:thumb="@drawable/fred_emoji_thumb"
+            android:thumbOffset="0dip" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@+id/seekbar"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/final_flag" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <Button
+            android:id="@+id/loopA"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/inactiveButton"
+            android:text="A"
+            android:textColor="@color/tertiaryText"
+            android:textSize="12dp" />
+
+        <Button
+            android:id="@+id/loop"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@drawable/ic_loop_inactive"
+            android:textColor="@color/tertiaryText" />
+
+        <Button
+            android:id="@+id/loopB"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/inactiveButton"
+            android:text="B"
+            android:textColor="@color/tertiaryText"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+</LinearLayout>

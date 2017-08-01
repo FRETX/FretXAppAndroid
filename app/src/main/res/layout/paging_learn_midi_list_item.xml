@@ -1,0 +1,36 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="344dp"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="8dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            app:srcCompat="@drawable/com_facebook_close" />
+
+        <TextView
+            android:id="@+id/item_text"
+            android:layout_width="212dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/primaryText"
+            android:textSize="14sp"/>
+
+    </RelativeLayout>
+
+
+
+</android.support.v7.widget.CardView>
