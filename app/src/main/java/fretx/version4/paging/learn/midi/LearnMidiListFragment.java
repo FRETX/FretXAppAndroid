@@ -9,6 +9,7 @@ import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.TextViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -37,6 +39,7 @@ public class LearnMidiListFragment extends Fragment {
     private static final int REQUEST_CODE = 1;
     private final ArrayList<File> files = new ArrayList<>();
     private GridView listView;
+    private TextView intro;
     private MidiGridViewAdapter adapter;
 
 	@Override
@@ -44,6 +47,7 @@ public class LearnMidiListFragment extends Fragment {
 		final RelativeLayout rootView = (RelativeLayout) inflater.inflate(R.layout.paging_learn_midi_list, container, false);
 
         listView = (GridView) rootView.findViewById(R.id.list);
+        intro = (TextView) rootView.findViewById(R.id.intro);
         adapter = new MidiGridViewAdapter((MainActivity) getActivity(),
                 R.layout.paging_learn_midi_list_item, files);
         listView.setAdapter(adapter);
@@ -138,5 +142,10 @@ public class LearnMidiListFragment extends Fragment {
         files.addAll(Arrays.asList(directory.listFiles()));
         Log.d(TAG, "Size: "+ files.size());
         adapter.notifyDataSetChanged();
+        if (files.isEmpty()) {
+            intro.setVisibility(View.VISIBLE);
+        } else {
+            intro.setVisibility(View.GONE);
+        }
     }
 }
