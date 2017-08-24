@@ -180,7 +180,7 @@ public class PreviewFragment extends Fragment implements Audio.AudioListener {
         sound.release();
 
         //if the last chord has been played, display dialog
-        if (chordIndex == exerciseChords.size() && !finished) {
+        if (exerciseChords.size() != 0 && chordIndex == exerciseChords.size() && !finished) {
             Bluetooth.getInstance().clearMatrix();
             finished = true;
             listener.onFinish(timeUpdater.getMinute(), timeUpdater.getSecond());
