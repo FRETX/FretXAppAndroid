@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-    <LinearLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -14,24 +11,16 @@
         android:layout_alignParentStart="true"
         android:weightSum="1">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.02"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.05"
-            android:textSize="18sp"
-            android:textAllCaps="false"
-            android:textColor="@color/primaryText"
-            android:id="@+id/songTitleText"
-            android:text="Song Title"
-            android:textAlignment="center"
-            android:layout_marginBottom="5dp"
-            />
+    <TextView
+        android:id="@+id/songTitleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Song Title"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/primaryText"
+        android:textSize="18sp" />
 
         <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->
@@ -42,19 +31,17 @@
             <!--android:layout_gravity="center"-->
             <!--android:orientation="horizontal">-->
 
-            <FrameLayout
-                android:id="@+id/youtube_view"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="0.23"
-                android:minHeight="110dp"
-                android:minWidth="200dp"
-                android:layout_gravity="center"
-                >
+    <FrameLayout
+        android:id="@+id/youtube_view"
+        android:layout_width="wrap_content"
+        android:layout_height="115dp"
+        android:layout_gravity="center"
+        android:minHeight="115dp"
+        android:minWidth="205dp">
 
-            </FrameLayout>
+    </FrameLayout>
 
-            <!--<TextView-->
+    <!--<TextView-->
                 <!--android:id="@+id/textView2"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="wrap_content"-->
@@ -67,17 +54,11 @@
         <!--</LinearLayout>-->
 
 
-
-
-        <fretx.version4.view.FretboardView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.45"
-            android:id="@+id/fretboardCurrent"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
-            />
+    <fretx.version4.view.FretboardView
+        android:id="@+id/fretboardCurrent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
         <Space
             android:layout_width="match_parent"
@@ -85,227 +66,192 @@
             android:layout_weight="0.015"
             />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.07"
-            android:orientation="horizontal"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-            <Button
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="3dp"
-                android:background="@drawable/ic_pausebutton"
-                android:textColor="@color/tertiaryText"
-                android:id="@+id/playPauseButton"
+        <Button
+            android:id="@+id/playPauseButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/ic_pausebutton"
+            android:textColor="@color/tertiaryText"
 
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/elapsedTimeText"
-                android:text="00:00"
-                android:layout_gravity="center_vertical"
-                android:textAlignment="center"
-                android:layout_marginLeft="3dp"
-                android:textColor="@color/primaryText"
-                android:textSize="12sp"/>
-
-            <SeekBar
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/timeSeekbar"
-                android:layout_weight="0.8"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/totalTimeText"
-                android:text="00:00"
-                android:layout_marginRight="3dp"
-                android:layout_marginLeft="3dp"
-                android:textColor="@color/primaryText"
-                android:layout_gravity="center_vertical"
-                android:textSize="12sp"/>
-
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.02"
             />
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        xmlns:sothree="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sliding_layout"
+        <TextView
+            android:id="@+id/elapsedTimeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="00:00"
+            android:textAlignment="center"
+            android:textColor="@color/primaryText"
+            android:textSize="12sp" />
+
+        <SeekBar
+            android:id="@+id/timeSeekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/totalTimeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@color/primaryText"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.145"
+        android:layout_weight="0.125" />
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:gravity="bottom"
         sothree:umanoPanelHeight="20dp"
         sothree:umanoShadowHeight="6dp">
 
-
         <FrameLayout
             android:id="@+id/timeline_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-        </FrameLayout>
+            android:layout_height="50dp"></FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="70dp"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 sothree:srcCompat="@drawable/up_arrow" />
             <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="15dp"-->
-                <!--android:text="Slide up for more options"-->
-                <!--android:textAllCaps="false"-->
-                <!--android:textColor="@color/primaryText"-->
-                <!--android:textSize="10dp"-->
-                <!--android:textAlignment="center"-->
-                <!--/>-->
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="1dp" />
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="15dp"-->
+            <!--android:text="Slide up for more options"-->
+            <!--android:textAllCaps="false"-->
+            <!--android:textColor="@color/primaryText"-->
+            <!--android:textSize="10dp"-->
+            <!--android:textAlignment="center"-->
+            <!--/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
-                >
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
+                android:visibility="visible">
 
-                    <Button
-                        android:id="@+id/buttonA"
-                        android:layout_width="40dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/inactiveButton"
-                        android:text="A"
-                        android:textColor="@color/tertiaryText"
-                        android:textSize="12dp" />
+                <Button
+                    android:id="@+id/buttonA"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/inactiveButton"
+                    android:text="A"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="12dp" />
 
-                    <Button
-                        android:id="@+id/buttonLoop"
-                        android:layout_width="40dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:background="@drawable/ic_loop_inactive"
-                        android:textColor="@color/tertiaryText" />
+                <Button
+                    android:id="@+id/buttonLoop"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/ic_loop_inactive"
+                    android:textColor="@color/tertiaryText" />
 
-                    <Button
-                        android:id="@+id/buttonB"
-                        android:layout_width="40dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/inactiveButton"
-                        android:text="B"
-                        android:textColor="@color/tertiaryText"
-                        android:textSize="12dp" />
-                </LinearLayout>
-                <Space
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:visibility="visible" />
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
+                <Button
+                    android:id="@+id/buttonB"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/inactiveButton"
+                    android:text="B"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="12dp" />
 
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/ic_clock" />
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_clock" />
 
-                    <Button
-                        android:id="@+id/buttonEarly1"
-                        android:layout_width="40dp"
-                        android:layout_height="36dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="2dp"
-                        android:background="@color/inactiveButton"
-                        android:text="-1s"
-                        android:textAllCaps="false"
-                        android:textColor="@color/tertiaryText"
-                        android:textSize="12dp"
-                        android:textStyle="normal" />
+                <Button
+                    android:id="@+id/buttonEarly1"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:background="@color/inactiveButton"
+                    android:text="-1s"
+                    android:textAllCaps="false"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="12dp"
+                    android:textStyle="normal" />
 
-                    <Button
-                        android:id="@+id/buttonEarly05"
-                        android:layout_width="40dp"
-                        android:layout_height="36dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="2dp"
-                        android:background="@color/inactiveButton"
-                        android:text="-0.5s"
-                        android:textAllCaps="false"
-                        android:textColor="@color/tertiaryText"
-                        android:textSize="12dp"
-                        android:textStyle="normal" />
+                <Button
+                    android:id="@+id/buttonEarly05"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:background="@color/inactiveButton"
+                    android:text="-0.5s"
+                    android:textAllCaps="false"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="12dp"
+                    android:textStyle="normal" />
 
-                    <Button
-                        android:id="@+id/buttonEarly025"
-                        android:layout_width="40dp"
-                        android:layout_height="36dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="2dp"
-                        android:background="@color/inactiveButton"
-                        android:text="-0.25s"
-                        android:textAllCaps="false"
-                        android:textColor="@color/tertiaryText"
-                        android:textSize="12dp"
-                        android:textStyle="normal" />
+                <Button
+                    android:id="@+id/buttonEarly025"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:background="@color/inactiveButton"
+                    android:text="-0.25s"
+                    android:textAllCaps="false"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="12dp"
+                    android:textStyle="normal" />
 
-                    <Button
-                        android:id="@+id/buttonEarly0"
-                        android:layout_width="40dp"
-                        android:layout_height="36dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="2dp"
-                        android:background="@color/primary"
-                        android:text="0s"
-                        android:textAllCaps="false"
-                        android:textColor="@color/tertiaryText"
-                        android:textSize="12dp"
-                        android:textStyle="normal" />
-                </LinearLayout>
+                <Button
+                    android:id="@+id/buttonEarly0"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:background="@color/primary"
+                    android:text="0s"
+                    android:textAllCaps="false"
+                    android:textColor="@color/tertiaryText"
+                    android:textSize="12dp"
+                    android:textStyle="normal" />
+
             </LinearLayout>
+
         </LinearLayout>
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-
-
-
-    </LinearLayout>
+</LinearLayout>
 
