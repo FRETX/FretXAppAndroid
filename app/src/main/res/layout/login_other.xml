@@ -44,24 +44,6 @@
 
     <!-- Re-Enable if we decide to allow Twitter logins -->
 
-    <com.twitter.sdk.android.core.identity.TwitterLoginButton
-        android:id="@+id/twitter_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/twitter_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_weight="0.07"
-        android:background="@drawable/tw__btn_composer_tweet"
-        android:text="twitter"
-        android:textColor="@color/background"
-        android:visibility="gone" />
     <!-- Re-Enable if we decide to allow Twitter logins -->
 
 

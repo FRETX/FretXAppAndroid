@@ -56,9 +56,6 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
     private TextView recoverButton;
     private TextView forgotButton;
     private SignInButton googleButton;
-    private TwitterLoginButton twitterButton;
-    private Button twitterOverlay;
-
     private GoogleSignInOptions gso;
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 666;
@@ -162,40 +159,6 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
             }
         });
 
-        twitterButton = (TwitterLoginButton) rootView.findViewById(R.id.twitter_button);
-        twitterButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                Log.v(TAG, "Twitter login success");
-                final TwitterSession session = result.data;
-                AuthCredential credential = TwitterAuthProvider.getCredential(
-                        session.getAuthToken().token,
-                        session.getAuthToken().secret);
-                activity.onServiceLoginSuccess(credential);
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-                Log.d(TAG, "Twitter login failed");
-                activity.onServiceLoginFailed("Twitter");
-                onLoginFailure();
-            }
-        });
-
-        twitterOverlay = (Button) rootView.findViewById(R.id.twitter_overlay);
-        twitterOverlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard();
-                if (((LoginActivity)getActivity()).isInternetAvailable()) {
-                    onLoginStart();
-                    twitterButton.performClick();
-                } else {
-                    ((LoginActivity)getActivity()).noInternetAccessDialod().show();
-                }
-            }
-        });
-
         return rootView;
     }
 
@@ -230,9 +193,6 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                 Log.d(TAG, "google login failed (code: " + result.getStatus().getStatusCode() + ")");
                 activity.onServiceLoginFailed("Google");
             }
-        } else {
-            Log.v(TAG, "Twitter on activity result");
-            twitterButton.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -249,7 +209,6 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
         recoverButton.setClickable(clickable);
         forgotButton.setClickable(clickable);
         googleButton.setClickable(clickable);
-        twitterOverlay.setClickable(clickable);
     }
 
     private void hideKeyboard() {

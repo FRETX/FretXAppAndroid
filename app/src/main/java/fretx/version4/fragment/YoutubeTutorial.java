@@ -26,7 +26,7 @@ import fretx.version4.R;
  */
 
 public class YoutubeTutorial extends Fragment {
-    private final static String TAG = "KJKP6_YOUTUBE_EXERCISE";
+    private final static String TAG = "KJKP6_YOUTUBE_TUTORIAL";
 
     private YouTubePlayerSupportFragment youTubePlayerSupportFragment;
     private YouTubePlayer player;
@@ -36,7 +36,7 @@ public class YoutubeTutorial extends Fragment {
     private YoutubeListener listener;
 
     public static YoutubeTutorial newInstance(@Nullable YoutubeListener listener, @NonNull String id) {
-        Log.d(TAG, "YT new instance");
+        Log.d(TAG, "YT new instance: " + listener);
         final YoutubeTutorial exercise = new YoutubeTutorial();
         exercise.listener = listener;
         exercise.id = id;
