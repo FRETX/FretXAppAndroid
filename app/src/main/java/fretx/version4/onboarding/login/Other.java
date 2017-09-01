@@ -29,14 +29,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.TwitterAuthProvider;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
@@ -81,10 +73,6 @@ public class Other extends Fragment implements GoogleApiClient.OnConnectionFaile
                         }
                     });
         }
-        //twitter setup
-        TwitterAuthConfig authConfig = new TwitterAuthConfig("OUWR4SvbsSYZAVdlJaLWCQ9Jw",
-                "wz7H5TUVwPHIgFNxHcpbRqDqYl9WYVIf0ByNaqtqGZOfUy268B");
-        Fabric.with(getActivity(), new Twitter(authConfig));
     }
 
     @Override
