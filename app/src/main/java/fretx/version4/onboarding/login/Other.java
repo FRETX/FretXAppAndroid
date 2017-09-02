@@ -32,7 +32,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import fretx.version4.R;
 import fretx.version4.activities.LoginActivity;
-import io.fabric.sdk.android.Fabric;
 
 /**
  * FretXAppAndroid for FretX
