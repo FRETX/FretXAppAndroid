@@ -1,6 +1,7 @@
 package fretx.version4.fretxapi.song;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 import com.loopj.android.http.AsyncHttpClient;
@@ -22,6 +24,8 @@ import fretx.version4.R;
 import fretx.version4.activities.BaseActivity;
 import fretx.version4.fretxapi.AppCache;
 import fretx.version4.fretxapi.Network;
+
+import static fretx.version4.activities.BaseActivity.getActivity;
 
 public class SongList {
     private static final String TAG = "KJKP6_API_SONGLIST";
@@ -37,7 +41,8 @@ public class SongList {
 
     /* = = = = = = = = = = = = = = = = = = = = = PUBLIC = = = = = = = = = = = = = = = = = = = = = */
     public static void initialize() {
-        dialog = createConnectionRetryDialog(BaseActivity.getActivity());
+        dialog = createConnectionRetryDialog(getActivity());
+        async_client.setConnectTimeout(20000);
         getIndexFromServer();
     }
 
@@ -146,12 +151,36 @@ public class SongList {
     }
 
     private static void saveIndexToCache() {
+//        Log.d(TAG,"dumping song index");
+//        Log.d(TAG,index.toString());
+        JSONArray tmpIndex = new JSONArray();
+        JSONObject tmpObj = new JSONObject();
+        boolean tmpPublished;
+        Log.d(TAG,"pre-filter index length: " + Integer.toString(index.length()));
+        for (int i = 0; i < index.length(); i++) {
+            tmpPublished = false;
+            try {
+                tmpObj = index.getJSONObject(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                tmpPublished = tmpObj.getBoolean("published");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if(tmpPublished){
+                tmpIndex.put(tmpObj);
+            }
+        }
+        index = tmpIndex;
+        Log.d(TAG,"post-filter index length: " + Integer.toString(index.length()));
         byte[] index_bytes = index.toString().getBytes();
         AppCache.saveToCache("index.json", index_bytes);
     }
 
     private static void getSongFromServer(final String fretx_id) {
-
+        Log.d(TAG,"Trying to get song " + fretx_id);
         String path = API_BASE + String.format( "/songs/%s.json", fretx_id );
 
         async_client.get(path, new AsyncHttpResponseHandler() {
@@ -162,26 +191,47 @@ public class SongList {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d(TAG,"getSongFromServer Fail");
                 Log.d(TAG, error.toString());
+                getSongFromServer(fretx_id);
             }
         });
 
     }
 
     private static void checkSongsInCache() {
+        boolean toastShown = false;
         for(int i = 0; i < index.length(); i++) {
             try {
                 final JSONObject entry = index.getJSONObject(i);
                 final String fretx_id = entry.getString("fretx_id");
                 final String updatedAt = entry.getString("updated_at");
                 final DateTime uploadedAtDatetime = new DateTime(updatedAt);
-
+                final boolean published = entry.getBoolean("published");
+                if(published == false)
+                    continue;
                 //forced update
                 if(AppCache.exists(fretx_id + ".json") || updatedAt == null){
+                    Log.d(TAG,"forced update for " + fretx_id);
+                    Log.d(TAG,"last_modified: " + Long.toString(AppCache.last_modified(fretx_id + ".json")));
+                    Log.d(TAG,"uploaded_at: " + Long.toString(uploadedAtDatetime.getValue()));
+                    if(!toastShown){
+                        Toast.makeText(getActivity(), "Downloading new song content...", Toast.LENGTH_LONG).show();
+                        toastShown = true;
+                    }
                     getSongFromServer(fretx_id);
                 }
                 //time update
                 else if (AppCache.last_modified(fretx_id + ".json") <= uploadedAtDatetime.getValue()) {
+                    long timeDiff = AppCache.last_modified(fretx_id + ".json") - uploadedAtDatetime.getValue();
+                    Log.d(TAG,"time update for " + fretx_id);
+                    Log.d(TAG,"last_modified: " + Long.toString(AppCache.last_modified(fretx_id + ".json")));
+                    Log.d(TAG,"uploaded_at: " + Long.toString(uploadedAtDatetime.getValue()));
+                    Log.d(TAG,"time diff: " + Long.toString(timeDiff));
+                    if(!toastShown){
+                        Toast.makeText(getActivity(), "Downloading new song content...", Toast.LENGTH_LONG).show();
+                        toastShown = true;
+                    }
                     getSongFromServer(fretx_id);
                 }
             } catch (Exception e) {
