@@ -19,11 +19,21 @@
         android:background="@color/primary"
         app:srcCompat="@drawable/ic_add" />
 
+    <TextView
+        android:id="@+id/intro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:text="Click + to start adding your favourite midi files"
+        android:textColor="@color/primaryText"
+        android:visibility="gone" />
+
     <GridView
         android:id="@+id/list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
         android:gravity="center"
         android:numColumns="1"
         android:verticalSpacing="10dp"

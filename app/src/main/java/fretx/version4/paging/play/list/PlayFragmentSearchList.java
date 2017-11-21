@@ -65,6 +65,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
         super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
         Analytics.getInstance().logSelectEvent("TAB", "Play");
+        previewEnabled = Preference.getInstance().isSongPreview();
         setHasOptionsMenu(true);
     }
 
@@ -252,7 +253,7 @@ public class PlayFragmentSearchList extends Fragment implements SongCallback,
             start();
         } else {
             Log.d(TAG, "display the video");
-            final YoutubeTutorial fragment = YoutubeTutorial.newInstance(PlayFragmentSearchList.this, youtubeId);
+            final YoutubeTutorial fragment = YoutubeTutorial.newInstance(this, youtubeId);
             mActivity.fragNavController.pushFragment(fragment);
         }
     }

@@ -71,21 +71,21 @@ public class TunerPage extends Fragment implements YoutubeListener {
             Log.d(TAG, "need to display video");
             youtubeId = FirebaseConfig.getInstance().getTunerUrl();
             Log.d(TAG, "video id: " + youtubeId);
-        }
-        setYoutube();
+            if (youtubeId.isEmpty())
+                setTuner();
+            else
+                setTutorial();
+        } else
+            setTuner();
         return rootView;
     }
 
-    private void setYoutube() {
-        if (youtubeId.isEmpty()) {
-            setTuner();
-        } else {
-            Log.d(TAG, "display the video");
-            final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragment = YoutubeTutorial.newInstance(TunerPage.this, youtubeId);
-            fragmentTransaction.replace(R.id.container, fragment);
-            fragmentTransaction.commit();
-        }
+    private void setTutorial() {
+        Log.d(TAG, "display the video");
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment = YoutubeTutorial.newInstance(TunerPage.this, youtubeId);
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.commit();
     }
 
     private void setTuner() {
