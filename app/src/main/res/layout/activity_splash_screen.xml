@@ -16,6 +16,7 @@
         android:layout_height="150dp"
         android:layout_margin="20dp"
         android:src="@drawable/fretx_logo"
+        android:visibility="invisible"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp" />
 
@@ -26,7 +27,8 @@
         android:text="It's time to play!"
         android:textAlignment="center"
         android:textColor="@color/primaryText"
-        android:textSize="35dp" />
+        android:textSize="35dp"
+        android:visibility="invisible" />
 
     <Space
         android:layout_width="match_parent"
