@@ -182,6 +182,7 @@ public class MainActivity extends BaseActivity {
 		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 			Intercom.client().addUnreadConversationCountListener(unreadListener);
 		}
+        Intercom.initialize(getApplication(), "android_sdk-073d0705faff270ed9274399ebff4d4c55c58d67", "p1olv87a");
     }
 
 	@Override
