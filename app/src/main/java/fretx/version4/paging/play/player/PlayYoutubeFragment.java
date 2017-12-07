@@ -396,16 +396,21 @@ public class PlayYoutubeFragment extends Fragment implements PlayerEndDialog.Pla
 
         //update current chord
         boolean changed = false;
-        while (punchesIndex < punches.size() && punches.get(punchesIndex).timeMs < currentTime) {
-            punchesIndex++;
-            changed = true;
-        }
-        if (punchesIndex == 0) {
-            currentChord = null;
+        if(punches != null){
+            while (punchesIndex < punches.size() && punches.get(punchesIndex).timeMs < currentTime) {
+                punchesIndex++;
+                changed = true;
+            }
+            if (punchesIndex == 0) {
+                currentChord = null;
+            } else {
+                final SongPunch punch = punches.get(punchesIndex - 1);
+                currentChord = new Chord(punch.root, punch.type);
+            }
         } else {
-            final SongPunch punch = punches.get(punchesIndex - 1);
-            currentChord = new Chord(punch.root, punch.type);
+            currentChord = null;
         }
+
 
         //update the chord timeline
         timelineFragment.update(currentTime);
